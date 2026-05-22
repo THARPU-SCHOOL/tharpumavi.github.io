@@ -5,11 +5,15 @@ cat > /mnt/user-data/outputs/index.html << 'HTMLEOF'
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#7B1C1C">
 <meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="manifest.json">
-<title>THARPU SECONDARY SCHOOL — Result Management System</title>
+<link rel="icon" href="icon-192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="icon-512.png">
+<title>Tharpu Secondary School — Result Management System</title>
 <style>
   :root {
     --maroon: #7B1C1C;
@@ -35,249 +39,153 @@ cat > /mnt/user-data/outputs/index.html << 'HTMLEOF'
     min-height: 100vh;
   }
 
-  /* ====== LOGIN SCREEN ====== */
+  /* ===== LOGIN ===== */
   #login-screen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
     min-height: 100vh;
     background: linear-gradient(160deg, var(--maroon) 0%, var(--maroon-dark) 100%);
     padding: 1.5rem;
   }
   .login-card {
-    background: var(--white);
-    border-radius: 18px;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.25);
+    background: var(--white); border-radius: 18px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.28);
     padding: 2rem 1.8rem 2.2rem;
-    width: 100%;
-    max-width: 380px;
+    width: 100%; max-width: 380px;
   }
-  .login-logo {
-    text-align: center;
-    margin-bottom: 1.4rem;
-  }
-  .login-logo .school-emblem {
-    width: 72px; height: 72px;
-    border-radius: 50%;
+  .login-logo { text-align: center; margin-bottom: 1.4rem; }
+  .school-emblem {
+    width: 72px; height: 72px; border-radius: 50%;
     background: var(--maroon);
     display: flex; align-items: center; justify-content: center;
     margin: 0 auto 0.7rem;
-    font-size: 2rem; color: var(--gold-light);
-    font-weight: 700; letter-spacing: 1px;
-    border: 3px solid var(--gold);
+    font-size: 1.9rem; color: var(--gold-light);
+    font-weight: 700; border: 3px solid var(--gold);
+    overflow: hidden;
   }
-  .login-logo h1 {
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: var(--maroon);
-    line-height: 1.3;
-  }
-  .login-logo p {
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    margin-top: 2px;
-  }
-  .login-divider {
-    height: 1px;
-    background: var(--cream-dark);
-    margin: 1rem 0 1.4rem;
-  }
-  .login-label {
-    display: block;
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--text-muted);
-    margin-bottom: 5px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .input-wrap {
-    position: relative;
-    margin-bottom: 1rem;
-  }
+  .school-emblem img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+  .login-logo h1 { font-size: 1.05rem; font-weight: 700; color: var(--maroon); line-height: 1.3; }
+  .login-logo p { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+  .login-divider { height: 1px; background: var(--cream-dark); margin: 1rem 0 1.4rem; }
+  .login-label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .input-wrap { position: relative; margin-bottom: 1rem; }
   .input-wrap input {
-    width: 100%;
-    padding: 0.7rem 2.6rem 0.7rem 0.9rem;
-    border: 1.5px solid var(--border);
-    border-radius: 9px;
-    font-size: 0.97rem;
-    color: var(--text);
-    background: var(--cream);
-    outline: none;
-    transition: border-color 0.2s;
+    width: 100%; padding: 0.72rem 2.6rem 0.72rem 0.9rem;
+    border: 1.5px solid var(--border); border-radius: 9px;
+    font-size: 0.97rem; color: var(--text); background: var(--cream);
+    outline: none; transition: border-color 0.2s;
   }
-  .input-wrap input:focus {
-    border-color: var(--maroon);
-    background: #fff;
-  }
-  .input-wrap .toggle-pw {
-    position: absolute;
-    right: 10px; top: 50%;
+  .input-wrap input:focus { border-color: var(--maroon); background: #fff; }
+  .toggle-pw {
+    position: absolute; right: 10px; top: 50%;
     transform: translateY(-50%);
-    background: none; border: none;
-    cursor: pointer;
-    color: var(--text-muted);
-    font-size: 1.15rem;
-    padding: 2px 4px;
+    background: none; border: none; cursor: pointer;
+    color: var(--text-muted); font-size: 1.1rem; padding: 2px 4px;
     display: flex; align-items: center;
   }
   .toggle-pw svg { width: 20px; height: 20px; }
   #login-error {
-    display: none;
-    background: #fff0f0;
-    color: var(--danger);
-    border: 1px solid #f5c6c6;
-    border-radius: 8px;
-    padding: 0.55rem 0.8rem;
-    font-size: 0.85rem;
-    margin-bottom: 0.9rem;
-    text-align: center;
+    display: none; background: #fff0f0; color: var(--danger);
+    border: 1px solid #f5c6c6; border-radius: 8px;
+    padding: 0.55rem 0.8rem; font-size: 0.85rem;
+    margin-bottom: 0.9rem; text-align: center;
   }
   .btn-login {
-    width: 100%;
-    padding: 0.82rem;
-    background: var(--maroon);
-    color: var(--white);
-    border: none;
-    border-radius: 9px;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    letter-spacing: 0.5px;
-    transition: background 0.2s, transform 0.1s;
+    width: 100%; padding: 0.85rem; background: var(--maroon);
+    color: var(--white); border: none; border-radius: 9px;
+    font-size: 1rem; font-weight: 700; cursor: pointer;
+    letter-spacing: 0.5px; transition: background 0.2s, transform 0.1s;
     margin-top: 0.3rem;
   }
   .btn-login:active { transform: scale(0.98); background: var(--maroon-dark); }
-  .login-hint {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    text-align: center;
-    margin-top: 1rem;
-    opacity: 0.8;
+  .login-hint { font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 1rem; opacity: 0.8; }
+
+  /* ===== CHANGE PASSWORD MODAL ===== */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.55); z-index: 999;
+    align-items: center; justify-content: center; padding: 1.5rem;
   }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: white; border-radius: 16px; padding: 1.5rem;
+    width: 100%; max-width: 360px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  }
+  .modal-box h3 { font-size: 1rem; color: var(--maroon); margin-bottom: 1rem; font-weight: 700; }
+  .modal-box .form-group { margin-bottom: 0.8rem; }
+  .modal-actions { display: flex; gap: 8px; margin-top: 1rem; }
 
-  /* ====== MAIN APP ====== */
+  /* ===== MAIN APP ===== */
   #main-app { display: none; }
-
-  /* HEADER */
   .app-header {
-    background: var(--maroon);
-    color: white;
+    background: var(--maroon); color: white;
     padding: 0.7rem 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display: flex; align-items: center; justify-content: space-between;
     position: sticky; top: 0; z-index: 100;
     box-shadow: 0 2px 8px rgba(0,0,0,0.18);
   }
   .app-header-left { display: flex; align-items: center; gap: 10px; }
   .header-emblem {
-    width: 36px; height: 36px;
-    border-radius: 50%;
+    width: 36px; height: 36px; border-radius: 50%;
     background: rgba(255,255,255,0.15);
     border: 1.5px solid rgba(255,255,255,0.4);
     display: flex; align-items: center; justify-content: center;
     font-weight: 700; font-size: 0.85rem; color: var(--gold-light);
+    overflow: hidden;
   }
+  .header-emblem img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
   .header-title { font-size: 0.88rem; font-weight: 700; line-height: 1.25; }
   .header-sub { font-size: 0.7rem; opacity: 0.75; }
-  .btn-logout {
-    background: rgba(255,255,255,0.15);
-    border: 1px solid rgba(255,255,255,0.3);
-    color: white;
-    border-radius: 7px;
-    padding: 5px 11px;
-    font-size: 0.78rem;
-    cursor: pointer;
-    font-weight: 600;
+  .header-actions { display: flex; gap: 6px; }
+  .btn-sm {
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+    color: white; border-radius: 7px; padding: 5px 10px;
+    font-size: 0.75rem; cursor: pointer; font-weight: 600;
+    white-space: nowrap;
   }
 
-  /* SUMMARY CARDS */
-  .summary-row {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    padding: 1rem 1rem 0;
-  }
+  .summary-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 1rem 1rem 0; }
   .summary-card {
-    background: var(--white);
-    border-radius: 12px;
-    padding: 0.85rem 1rem;
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow);
-    text-align: center;
+    background: var(--white); border-radius: 12px; padding: 0.85rem 1rem;
+    border: 1px solid var(--border); box-shadow: var(--shadow); text-align: center;
   }
   .summary-card .sc-num { font-size: 1.7rem; font-weight: 700; color: var(--maroon); line-height: 1; }
   .summary-card .sc-lbl { font-size: 0.72rem; color: var(--text-muted); margin-top: 3px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
 
-  /* NAV TABS */
   .nav-tabs {
-    display: flex;
-    gap: 0;
-    padding: 0.9rem 1rem 0;
-    overflow-x: auto;
-    scrollbar-width: none;
+    display: flex; padding: 0.9rem 1rem 0;
+    overflow-x: auto; scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
   }
   .nav-tabs::-webkit-scrollbar { display: none; }
   .nav-tab {
-    display: flex; flex-direction: column; align-items: center;
-    gap: 3px;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
     padding: 8px 13px;
     border-radius: 10px 10px 0 0;
-    border: 1px solid transparent;
-    border-bottom: none;
-    cursor: pointer;
-    font-size: 0.72rem;
-    font-weight: 600;
-    color: var(--text-muted);
-    background: transparent;
-    white-space: nowrap;
-    transition: all 0.18s;
-    flex-shrink: 0;
+    border: 1px solid transparent; border-bottom: none;
+    cursor: pointer; font-size: 0.72rem; font-weight: 600;
+    color: var(--text-muted); background: transparent;
+    white-space: nowrap; transition: all 0.18s; flex-shrink: 0;
   }
   .nav-tab .tab-icon { font-size: 1.15rem; }
-  .nav-tab.active {
-    background: var(--white);
-    color: var(--maroon);
-    border-color: var(--border);
-  }
-  .tab-bar-line {
-    height: 2px;
-    background: var(--white);
-    margin: 0 1rem;
-    border-radius: 2px 2px 0 0;
-    border-top: 1px solid var(--border);
-    border-left: 1px solid var(--border);
-    border-right: 1px solid var(--border);
-    display: none;
-  }
+  .nav-tab.active { background: var(--white); color: var(--maroon); border-color: var(--border); }
 
-  /* TAB PANELS */
   .tab-panel { display: none; padding: 1rem; }
   .tab-panel.active { display: block; }
 
-  /* SECTION CARDS */
   .section-card {
-    background: var(--white);
-    border-radius: 13px;
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow);
-    margin-bottom: 1rem;
-    overflow: hidden;
+    background: var(--white); border-radius: 13px;
+    border: 1px solid var(--border); box-shadow: var(--shadow);
+    margin-bottom: 1rem; overflow: hidden;
   }
   .section-head {
-    background: var(--maroon);
-    color: white;
-    padding: 0.7rem 1rem;
-    font-size: 0.9rem;
-    font-weight: 700;
+    background: var(--maroon); color: white;
+    padding: 0.7rem 1rem; font-size: 0.9rem; font-weight: 700;
     display: flex; align-items: center; gap: 8px;
   }
   .section-body { padding: 1rem; }
 
-  /* FORM ELEMENTS */
   .form-group { margin-bottom: 0.85rem; }
   .form-group label {
     display: block; font-size: 0.8rem; font-weight: 600;
@@ -286,17 +194,12 @@ cat > /mnt/user-data/outputs/index.html << 'HTMLEOF'
   }
   .form-group select,
   .form-group input[type="text"],
-  .form-group input[type="number"] {
-    width: 100%;
-    padding: 0.62rem 0.85rem;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    font-size: 0.93rem;
-    color: var(--text);
-    background: var(--cream);
-    outline: none;
-    transition: border-color 0.2s;
-    -webkit-appearance: none;
+  .form-group input[type="number"],
+  .form-group input[type="password"] {
+    width: 100%; padding: 0.62rem 0.85rem;
+    border: 1.5px solid var(--border); border-radius: 8px;
+    font-size: 0.93rem; color: var(--text); background: var(--cream);
+    outline: none; transition: border-color 0.2s; -webkit-appearance: none;
   }
   .form-group select:focus,
   .form-group input:focus { border-color: var(--maroon); background: #fff; }
@@ -304,229 +207,123 @@ cat > /mnt/user-data/outputs/index.html << 'HTMLEOF'
   .radio-group { display: flex; gap: 10px; flex-wrap: wrap; }
   .radio-opt {
     display: flex; align-items: center; gap: 5px;
-    padding: 7px 14px;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--text-muted);
-    background: var(--cream);
-    transition: all 0.15s;
+    padding: 7px 14px; border: 1.5px solid var(--border); border-radius: 8px;
+    cursor: pointer; font-size: 0.85rem; font-weight: 600;
+    color: var(--text-muted); background: var(--cream); transition: all 0.15s;
     user-select: none;
   }
   .radio-opt input { display: none; }
   .radio-opt.selected { border-color: var(--maroon); background: #fdf0f0; color: var(--maroon); }
 
-  /* BUTTONS */
   .btn {
     display: inline-flex; align-items: center; gap: 6px;
-    padding: 0.65rem 1.1rem;
-    border-radius: 9px;
-    border: none;
-    font-size: 0.88rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: opacity 0.15s, transform 0.1s;
-    text-decoration: none;
+    padding: 0.65rem 1.1rem; border-radius: 9px; border: none;
+    font-size: 0.88rem; font-weight: 700; cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s; text-decoration: none;
   }
   .btn:active { transform: scale(0.97); }
   .btn-primary { background: var(--maroon); color: white; }
   .btn-secondary { background: var(--cream-dark); color: var(--maroon); border: 1.5px solid var(--border); }
   .btn-success { background: var(--success); color: white; }
+  .btn-danger { background: var(--danger); color: white; }
   .btn-gold { background: var(--gold); color: white; }
   .btn-full { width: 100%; justify-content: center; }
   .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 0.8rem; }
 
-  /* STUDENT LIST */
   .student-item {
     display: flex; align-items: center; gap: 10px;
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid var(--cream-dark);
-    cursor: pointer;
-    transition: background 0.13s;
+    padding: 0.75rem 1rem; border-bottom: 1px solid var(--cream-dark);
+    cursor: pointer; transition: background 0.13s;
   }
   .student-item:last-child { border-bottom: none; }
   .student-item:hover { background: var(--cream); }
   .student-avatar {
-    width: 38px; height: 38px;
-    border-radius: 50%;
-    background: var(--maroon);
-    color: var(--gold-light);
+    width: 38px; height: 38px; border-radius: 50%;
+    background: var(--maroon); color: var(--gold-light);
     display: flex; align-items: center; justify-content: center;
-    font-weight: 700; font-size: 0.82rem;
-    flex-shrink: 0;
+    font-weight: 700; font-size: 0.82rem; flex-shrink: 0;
   }
   .student-info { flex: 1; min-width: 0; }
   .student-name { font-weight: 600; font-size: 0.92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .student-meta { font-size: 0.75rem; color: var(--text-muted); margin-top: 1px; }
-  .badge {
-    font-size: 0.7rem; font-weight: 700;
-    padding: 3px 8px; border-radius: 6px;
-    background: var(--cream-dark); color: var(--text-muted);
-    flex-shrink: 0;
-  }
+  .badge { font-size: 0.7rem; font-weight: 700; padding: 3px 8px; border-radius: 6px; background: var(--cream-dark); color: var(--text-muted); flex-shrink: 0; }
   .badge-plant { background: #e8f5e9; color: #1b5e20; }
   .badge-general { background: #e3f2fd; color: #0d47a1; }
   .badge-marked { background: #e8f5e9; color: #1b5e20; }
   .badge-unmarked { background: #fff3e0; color: #e65100; }
 
-  /* FILTER TABS */
   .filter-tabs { display: flex; gap: 6px; margin-bottom: 0.9rem; flex-wrap: wrap; }
   .filter-tab {
-    padding: 5px 13px;
-    border-radius: 20px;
-    font-size: 0.78rem; font-weight: 600;
-    border: 1.5px solid var(--border);
-    background: var(--cream);
-    color: var(--text-muted);
-    cursor: pointer;
-    transition: all 0.15s;
+    padding: 5px 13px; border-radius: 20px; font-size: 0.78rem; font-weight: 600;
+    border: 1.5px solid var(--border); background: var(--cream); color: var(--text-muted);
+    cursor: pointer; transition: all 0.15s;
   }
   .filter-tab.active { background: var(--maroon); color: white; border-color: var(--maroon); }
 
-  /* MARKS TABLE */
   .marks-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
   .marks-table th {
-    background: var(--cream-dark);
-    padding: 7px 8px;
-    text-align: left;
-    font-weight: 700;
-    color: var(--text-muted);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
+    background: var(--cream-dark); padding: 7px 8px; text-align: left;
+    font-weight: 700; color: var(--text-muted); font-size: 0.75rem;
+    text-transform: uppercase; letter-spacing: 0.3px;
   }
-  .marks-table td {
-    padding: 7px 8px;
-    border-bottom: 1px solid var(--cream-dark);
-    vertical-align: middle;
-  }
+  .marks-table td { padding: 7px 8px; border-bottom: 1px solid var(--cream-dark); vertical-align: middle; }
   .marks-table input[type="number"] {
-    width: 55px; padding: 4px 6px;
-    border: 1.5px solid var(--border);
-    border-radius: 6px;
-    font-size: 0.85rem;
-    text-align: center;
-    background: var(--cream);
+    width: 55px; padding: 4px 6px; border: 1.5px solid var(--border);
+    border-radius: 6px; font-size: 0.85rem; text-align: center; background: var(--cream);
   }
   .marks-table input:focus { border-color: var(--maroon); outline: none; background: white; }
   .grade-cell { font-weight: 700; font-size: 0.88rem; }
-  .grade-A-plus { color: #155724; }
-  .grade-A { color: #1a5e20; }
-  .grade-B-plus { color: #1b5e20; }
-  .grade-B { color: #194d1b; }
-  .grade-C-plus { color: #7f6000; }
-  .grade-C { color: #8b5e00; }
-  .grade-D { color: #7a3800; }
-  .grade-NG { color: var(--danger); }
+  .grade-A-plus { color: #155724; } .grade-A { color: #1a5e20; } .grade-B-plus { color: #1b5e20; }
+  .grade-B { color: #194d1b; } .grade-C-plus { color: #7f6000; } .grade-C { color: #8b5e00; }
+  .grade-D { color: #7a3800; } .grade-NG { color: var(--danger); }
 
-  /* RESULT CARD */
-  .result-card {
-    background: white;
-    border: 2px solid var(--maroon);
-    border-radius: 14px;
-    overflow: hidden;
-    margin-bottom: 1rem;
-  }
-  .result-header {
-    background: var(--maroon);
-    color: white;
-    text-align: center;
-    padding: 1rem 1rem 0.8rem;
-  }
+  .result-card { background: white; border: 2px solid var(--maroon); border-radius: 14px; overflow: hidden; margin-bottom: 1rem; }
+  .result-header { background: var(--maroon); color: white; text-align: center; padding: 1rem 1rem 0.8rem; }
   .result-header h2 { font-size: 1rem; font-weight: 700; }
   .result-header p { font-size: 0.76rem; opacity: 0.85; margin-top: 2px; }
-  .result-student-info {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    padding: 0.9rem;
-    background: var(--cream);
-    border-bottom: 1px solid var(--border);
-  }
-  .rsi-item { }
+  .result-student-info { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0.9rem; background: var(--cream); border-bottom: 1px solid var(--border); }
   .rsi-label { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
   .rsi-val { font-size: 0.9rem; font-weight: 700; color: var(--text); }
   .result-table-wrap { padding: 0.7rem; }
   .result-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
-  .result-table th {
-    background: var(--cream-dark);
-    padding: 6px 7px;
-    font-size: 0.7rem; font-weight: 700;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    text-align: center;
-  }
+  .result-table th { background: var(--cream-dark); padding: 6px 7px; font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; text-align: center; }
   .result-table th:first-child { text-align: left; }
-  .result-table td {
-    padding: 6px 7px;
-    border-bottom: 1px solid var(--cream-dark);
-    text-align: center;
-  }
+  .result-table td { padding: 6px 7px; border-bottom: 1px solid var(--cream-dark); text-align: center; }
   .result-table td:first-child { text-align: left; font-size: 0.77rem; }
-  .result-cgpa-row {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0.9rem;
-    background: var(--cream);
-    border-top: 2px solid var(--maroon);
-  }
+  .result-cgpa-row { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem; background: var(--cream); border-top: 2px solid var(--maroon); }
   .cgpa-label { font-size: 0.82rem; font-weight: 700; color: var(--text-muted); }
   .cgpa-value { font-size: 1.3rem; font-weight: 700; color: var(--maroon); }
   .cgpa-grade { font-size: 1rem; font-weight: 700; color: var(--gold); margin-left: 8px; }
-  .result-status {
-    text-align: center; padding: 8px;
-    font-weight: 700; font-size: 0.9rem;
-    border-top: 1px solid var(--border);
-  }
+  .result-status { text-align: center; padding: 8px; font-weight: 700; font-size: 0.9rem; border-top: 1px solid var(--border); }
   .status-pass { background: #e8f5e9; color: #1b5e20; }
   .status-fail { background: #ffebee; color: var(--danger); }
 
-  /* GRADING TABLE */
   .grade-guide-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
-  .grade-guide-table th {
-    background: var(--maroon); color: white;
-    padding: 8px 10px; font-size: 0.78rem;
-    text-transform: uppercase; letter-spacing: 0.3px;
-  }
-  .grade-guide-table td {
-    padding: 8px 10px;
-    border-bottom: 1px solid var(--cream-dark);
-  }
+  .grade-guide-table th { background: var(--maroon); color: white; padding: 8px 10px; font-size: 0.78rem; text-transform: uppercase; }
+  .grade-guide-table td { padding: 8px 10px; border-bottom: 1px solid var(--cream-dark); }
   .grade-guide-table tr:nth-child(even) td { background: var(--cream); }
-  .grade-pill {
-    display: inline-block; padding: 3px 10px;
-    border-radius: 12px; font-weight: 700;
-    font-size: 0.82rem;
-  }
-  .gp-aplus { background: #c8e6c9; color: #1b5e20; }
-  .gp-a { background: #dcedc8; color: #33691e; }
-  .gp-bplus { background: #e8f5e9; color: #2e7d32; }
-  .gp-b { background: #f1f8e9; color: #388e3c; }
-  .gp-cplus { background: #fff9c4; color: #f57f17; }
-  .gp-c { background: #fff3e0; color: #e65100; }
-  .gp-d { background: #ffe0b2; color: #bf360c; }
-  .gp-ng { background: #ffcdd2; color: #b71c1c; }
+  .grade-pill { display: inline-block; padding: 3px 10px; border-radius: 12px; font-weight: 700; font-size: 0.82rem; }
+  .gp-aplus{background:#c8e6c9;color:#1b5e20}.gp-a{background:#dcedc8;color:#33691e}
+  .gp-bplus{background:#e8f5e9;color:#2e7d32}.gp-b{background:#f1f8e9;color:#388e3c}
+  .gp-cplus{background:#fff9c4;color:#f57f17}.gp-c{background:#fff3e0;color:#e65100}
+  .gp-d{background:#ffe0b2;color:#bf360c}.gp-ng{background:#ffcdd2;color:#b71c1c}
 
-  /* EMPTY STATE */
   .empty-state { text-align: center; padding: 2rem 1rem; color: var(--text-muted); }
   .empty-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
   .empty-state p { font-size: 0.88rem; }
 
-  /* EXPORT NOTICE */
-  .export-notice {
-    background: #fff8e1;
-    border: 1px solid var(--gold);
-    border-radius: 10px;
-    padding: 0.8rem 1rem;
-    font-size: 0.8rem;
-    color: #6d4c00;
-    margin-bottom: 1rem;
-    display: flex; align-items: flex-start; gap: 8px;
-  }
+  /* users management table */
+  .users-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  .users-table th { background: var(--cream-dark); padding: 8px 10px; font-weight: 700; color: var(--text-muted); font-size: 0.78rem; text-transform: uppercase; text-align: left; }
+  .users-table td { padding: 9px 10px; border-bottom: 1px solid var(--cream-dark); }
+  .users-table tr:last-child td { border-bottom: none; }
+
+  .info-box { background: #fff8e1; border: 1px solid var(--gold); border-radius: 10px; padding: 0.8rem 1rem; font-size: 0.8rem; color: #6d4c00; margin-bottom: 1rem; }
 
   @media print {
+    body > *:not(#main-app) { display: none !important; }
     #main-app > *:not(#tab-results) { display: none !important; }
-    .app-header, .nav-tabs, .btn-row, .form-group { display: none !important; }
+    .app-header, .nav-tabs, .btn-row, .form-group, .section-card:not(:last-child) { display: none !important; }
     .result-card { border: 1.5px solid #333; }
     body { background: white; }
   }
@@ -534,92 +331,104 @@ cat > /mnt/user-data/outputs/index.html << 'HTMLEOF'
 </head>
 <body>
 
-<!-- ===== LOGIN SCREEN ===== -->
+<!-- LOGIN -->
 <div id="login-screen">
   <div class="login-card">
     <div class="login-logo">
-      <div class="school-emblem">TS</div>
+      <div class="school-emblem">
+        <img src="icon-512.png" alt="School Logo" onerror="this.style.display='none';this.parentNode.textContent='TS'">
+      </div>
       <h1>Tharpu Secondary School</h1>
       <p>Yangwarak-4, Panchthar · School Code: TSS-PAN</p>
     </div>
     <div class="login-divider"></div>
-
     <div id="login-error">❌ Incorrect username or password.</div>
-
     <div class="form-group">
       <label class="login-label" for="inp-user">Username</label>
       <div class="input-wrap">
-        <input type="text" id="inp-user" placeholder="Enter username" autocomplete="username" autocapitalize="none" />
-        <button class="toggle-pw" id="toggle-user-vis" onclick="toggleUsernameVis()" title="Show/Hide" tabindex="-1">
-          <svg id="eye-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-        </button>
+        <input type="text" id="inp-user" placeholder="Enter username" autocomplete="username" autocapitalize="none" spellcheck="false" />
       </div>
     </div>
-
     <div class="form-group">
       <label class="login-label" for="inp-pass">Password</label>
       <div class="input-wrap">
         <input type="password" id="inp-pass" placeholder="Enter password" autocomplete="current-password" />
-        <button class="toggle-pw" id="toggle-pw-btn" onclick="togglePassword()" title="Show/Hide" tabindex="-1">
-          <svg id="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        <button class="toggle-pw" onclick="togglePw('inp-pass','eye1')" tabindex="-1" type="button">
+          <svg id="eye1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
         </button>
       </div>
     </div>
-
-    <div id="login-error-msg" style="display:none; color:#991b1b; font-size:0.83rem; margin-bottom:0.7rem; text-align:center;"></div>
-
     <button class="btn-login" onclick="doLogin()">🔓 Sign In</button>
     <p class="login-hint">Result Management System — Class XI · 2082/83</p>
   </div>
 </div>
 
-<!-- ===== MAIN APP ===== -->
-<div id="main-app">
+<!-- CHANGE PASSWORD MODAL -->
+<div class="modal-overlay" id="pw-modal">
+  <div class="modal-box">
+    <h3>🔑 Manage Users & Passwords</h3>
+    <div id="users-list-area"></div>
+    <hr style="margin:1rem 0;border-color:var(--cream-dark)">
+    <p style="font-size:0.82rem;font-weight:700;color:var(--text-muted);margin-bottom:0.7rem;">ADD / UPDATE USER</p>
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" id="new-uname" placeholder="e.g. teacher2" autocapitalize="none" />
+    </div>
+    <div class="form-group">
+      <label>New Password</label>
+      <div class="input-wrap" style="margin-bottom:0">
+        <input type="password" id="new-pw" placeholder="Enter password" />
+        <button class="toggle-pw" onclick="togglePw('new-pw','eye2')" tabindex="-1" type="button">
+          <svg id="eye2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" style="flex:1" onclick="saveUser()">💾 Save User</button>
+      <button class="btn btn-secondary" onclick="closeModal('pw-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
 
+<!-- MAIN APP -->
+<div id="main-app">
   <div class="app-header">
     <div class="app-header-left">
-      <div class="header-emblem">TS</div>
+      <div class="header-emblem">
+        <img src="icon-192.png" alt="Logo" onerror="this.style.display='none';this.parentNode.textContent='TS'">
+      </div>
       <div>
         <div class="header-title">Tharpu Secondary School</div>
         <div class="header-sub">Result Management System · Class XI</div>
       </div>
     </div>
-    <button class="btn-logout" onclick="doLogout()">⬅ Logout</button>
+    <div class="header-actions">
+      <button class="btn-sm" onclick="openModal('pw-modal');renderUsersList()">🔑 Users</button>
+      <button class="btn-sm" onclick="doLogout()">⬅ Logout</button>
+    </div>
   </div>
 
   <div class="summary-row">
-    <div class="summary-card">
-      <div class="sc-num" id="sc-total">17</div>
-      <div class="sc-lbl">Total Students</div>
-    </div>
-    <div class="summary-card">
-      <div class="sc-num" id="sc-plant">17</div>
-      <div class="sc-lbl">Plant Science</div>
-    </div>
-    <div class="summary-card">
-      <div class="sc-num" id="sc-general">0</div>
-      <div class="sc-lbl">General Stream</div>
-    </div>
-    <div class="summary-card">
-      <div class="sc-num" id="sc-marked">0</div>
-      <div class="sc-lbl">Marks Saved</div>
-    </div>
+    <div class="summary-card"><div class="sc-num" id="sc-total">17</div><div class="sc-lbl">Total Students</div></div>
+    <div class="summary-card"><div class="sc-num" id="sc-plant">17</div><div class="sc-lbl">Plant Science</div></div>
+    <div class="summary-card"><div class="sc-num" id="sc-general">0</div><div class="sc-lbl">General Stream</div></div>
+    <div class="summary-card"><div class="sc-num" id="sc-marked">0</div><div class="sc-lbl">Marks Saved</div></div>
   </div>
 
   <div class="nav-tabs">
-    <button class="nav-tab active" onclick="showTab('students', this)"><span class="tab-icon">👥</span>Students</button>
-    <button class="nav-tab" onclick="showTab('marks', this)"><span class="tab-icon">✏️</span>Enter Marks</button>
-    <button class="nav-tab" onclick="showTab('results', this)"><span class="tab-icon">📄</span>Results</button>
-    <button class="nav-tab" onclick="showTab('grading', this)"><span class="tab-icon">📊</span>Grading</button>
-    <button class="nav-tab" onclick="showTab('register', this)"><span class="tab-icon">➕</span>Register</button>
+    <button class="nav-tab active" onclick="showTab('students',this)"><span class="tab-icon">👥</span>Students</button>
+    <button class="nav-tab" onclick="showTab('marks',this)"><span class="tab-icon">✏️</span>Enter Marks</button>
+    <button class="nav-tab" onclick="showTab('results',this)"><span class="tab-icon">📄</span>Results</button>
+    <button class="nav-tab" onclick="showTab('grading',this)"><span class="tab-icon">📊</span>Grading</button>
+    <button class="nav-tab" onclick="showTab('register',this)"><span class="tab-icon">➕</span>Register</button>
   </div>
 
-  <!-- ===== STUDENTS TAB ===== -->
+  <!-- STUDENTS TAB -->
   <div class="tab-panel active" id="tab-students">
     <div class="filter-tabs">
-      <button class="filter-tab active" onclick="filterStudents('all', this)">All</button>
-      <button class="filter-tab" onclick="filterStudents('Plant Science', this)">🌱 Plant</button>
-      <button class="filter-tab" onclick="filterStudents('General', this)">📚 General</button>
+      <button class="filter-tab active" onclick="filterStudents('all',this)">All</button>
+      <button class="filter-tab" onclick="filterStudents('Plant Science',this)">🌱 Plant</button>
+      <button class="filter-tab" onclick="filterStudents('General',this)">📚 General</button>
     </div>
     <div class="section-card">
       <div class="section-head">👥 Registered Students</div>
@@ -627,16 +436,14 @@ cat > /mnt/user-data/outputs/index.html << 'HTMLEOF'
     </div>
   </div>
 
-  <!-- ===== MARKS TAB ===== -->
+  <!-- MARKS TAB -->
   <div class="tab-panel" id="tab-marks">
     <div class="section-card">
       <div class="section-head">✏️ Subject Marks Entry</div>
       <div class="section-body">
         <div class="form-group">
           <label>Select Student</label>
-          <select id="marks-student-sel" onchange="loadMarksForm()">
-            <option value="">— Choose student —</option>
-          </select>
+          <select id="marks-student-sel" onchange="loadMarksForm()"><option value="">— Choose student —</option></select>
         </div>
         <div class="form-group">
           <label>Examination</label>
@@ -652,16 +459,14 @@ cat > /mnt/user-data/outputs/index.html << 'HTMLEOF'
     <div id="marks-form-area"></div>
   </div>
 
-  <!-- ===== RESULTS TAB ===== -->
+  <!-- RESULTS TAB -->
   <div class="tab-panel" id="tab-results">
     <div class="section-card">
       <div class="section-head">📄 Generate Result Sheet</div>
       <div class="section-body">
         <div class="form-group">
           <label>Select Student</label>
-          <select id="result-student-sel" onchange="loadResult()">
-            <option value="">— Choose student —</option>
-          </select>
+          <select id="result-student-sel" onchange="loadResult()"><option value="">— Choose student —</option></select>
         </div>
         <div class="form-group">
           <label>Examination</label>
@@ -681,7 +486,7 @@ cat > /mnt/user-data/outputs/index.html << 'HTMLEOF'
     <div id="result-display"></div>
   </div>
 
-  <!-- ===== GRADING TAB ===== -->
+  <!-- GRADING TAB -->
   <div class="tab-panel" id="tab-grading">
     <div class="section-card">
       <div class="section-head">📊 NEB Grading Scale — Class 11 & 12</div>
@@ -700,8 +505,8 @@ cat > /mnt/user-data/outputs/index.html << 'HTMLEOF'
       </div>
     </div>
     <div class="section-card">
-      <div class="section-head">📚 Subject List — Plant Science Stream</div>
-      <div class="section-body" style="padding:0; overflow-x:auto;">
+      <div class="section-head">📚 Plant Science Stream Subjects</div>
+      <div class="section-body" style="padding:0;overflow-x:auto;">
         <table class="marks-table">
           <tr><th>Subject</th><th>Theory</th><th>Practical</th><th>Total</th></tr>
           <tr><td>Compulsory English</td><td>75</td><td>25</td><td>100</td></tr>
@@ -717,8 +522,8 @@ cat > /mnt/user-data/outputs/index.html << 'HTMLEOF'
       </div>
     </div>
     <div class="section-card">
-      <div class="section-head">📚 Subject List — General Stream</div>
-      <div class="section-body" style="padding:0; overflow-x:auto;">
+      <div class="section-head">📚 General Stream Subjects</div>
+      <div class="section-body" style="padding:0;overflow-x:auto;">
         <table class="marks-table">
           <tr><th>Subject</th><th>Theory</th><th>Practical</th><th>Total</th></tr>
           <tr><td>Compulsory English</td><td>75</td><td>25</td><td>100</td></tr>
@@ -734,76 +539,64 @@ cat > /mnt/user-data/outputs/index.html << 'HTMLEOF'
     </div>
   </div>
 
-  <!-- ===== REGISTER TAB ===== -->
+  <!-- REGISTER TAB -->
   <div class="tab-panel" id="tab-register">
     <div class="section-card">
       <div class="section-head">➕ Register Student — Class 11</div>
       <div class="section-body">
-        <div class="form-group">
-          <label>Full Name</label>
-          <input type="text" id="reg-name" placeholder="Student full name" />
-        </div>
-        <div class="form-group">
-          <label>Roll No.</label>
-          <input type="text" id="reg-roll" placeholder="e.g. 10200222" />
-        </div>
+        <div class="form-group"><label>Full Name</label><input type="text" id="reg-name" placeholder="Student full name" /></div>
+        <div class="form-group"><label>Roll No.</label><input type="text" id="reg-roll" placeholder="e.g. 10200222" /></div>
         <div class="form-group">
           <label>Stream</label>
           <div class="radio-group">
-            <label class="radio-opt selected" id="opt-plant">
-              <input type="radio" name="stream" value="Plant Science" checked onchange="selectStream(this)"> 🌱 Plant Science
-            </label>
-            <label class="radio-opt" id="opt-general">
-              <input type="radio" name="stream" value="General" onchange="selectStream(this)"> 📚 General
-            </label>
+            <label class="radio-opt selected" id="opt-plant"><input type="radio" name="stream" value="Plant Science" checked onchange="selectStream(this)"> 🌱 Plant Science</label>
+            <label class="radio-opt" id="opt-general"><input type="radio" name="stream" value="General" onchange="selectStream(this)"> 📚 General</label>
           </div>
         </div>
-        <div class="form-group">
-          <label>Academic Year</label>
-          <input type="text" id="reg-year" value="2082/83" />
-        </div>
+        <div class="form-group"><label>Academic Year</label><input type="text" id="reg-year" value="2082/83" /></div>
         <button class="btn btn-primary btn-full" onclick="registerStudent()">➕ Add Student</button>
       </div>
     </div>
-    <div class="export-notice">
-      📦 <span><b>How to share:</b> After adding students and marks, use <b>Export &amp; Share</b> from the browser menu to download a file with all data embedded. Do not use browser "Save As" — it saves a blank copy.</span>
-    </div>
+    <div class="info-box">📦 <b>Export & Share:</b> Click Export below to download a self-contained HTML file with all student data and marks embedded. Share it with other teachers or open it on any device.</div>
     <div class="btn-row">
-      <button class="btn btn-gold btn-full" onclick="exportShare()">📦 Export &amp; Share</button>
+      <button class="btn btn-gold btn-full" onclick="exportShare()">📦 Export & Share Data</button>
     </div>
   </div>
 
 </div><!-- /main-app -->
 
 <script>
-// ==================== CREDENTIALS ====================
-// Change these to your desired username and password
-var USERS = [
-  { username: "admin", password: "tharpu2082" },
-  { username: "teacher", password: "school123" }
+// =============================================
+// USERS — stored in localStorage for persistence
+// Default accounts (used only if no saved users exist)
+var DEFAULT_USERS = [
+  { username: "admin",   password: "tharpu2082" },
+  { username: "teacher", password: "school123"  }
 ];
 
-// ==================== LOGIN ====================
-function togglePassword() {
-  var inp = document.getElementById('inp-pass');
-  var icon = document.getElementById('eye-icon');
+function loadUsers() {
+  try {
+    var saved = localStorage.getItem('tss_users');
+    if (saved) return JSON.parse(saved);
+  } catch(e) {}
+  return DEFAULT_USERS.map(function(u){ return Object.assign({}, u); });
+}
+function saveUsers(arr) {
+  try { localStorage.setItem('tss_users', JSON.stringify(arr)); } catch(e) {}
+}
+var USERS = loadUsers();
+
+// =============================================
+// LOGIN
+function togglePw(inputId, iconId) {
+  var inp = document.getElementById(inputId);
+  var ico = document.getElementById(iconId);
   if (inp.type === 'password') {
     inp.type = 'text';
-    icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>';
+    ico.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>';
   } else {
     inp.type = 'password';
-    icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
-  }
-}
-function toggleUsernameVis() {
-  var inp = document.getElementById('inp-user');
-  var icon = document.getElementById('eye-user');
-  if (inp.type === 'text') {
-    inp.type = 'password';
-    icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>';
-  } else {
-    inp.type = 'text';
-    icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+    ico.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
   }
 }
 document.getElementById('inp-pass').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
@@ -813,13 +606,12 @@ function doLogin() {
   var u = document.getElementById('inp-user').value.trim();
   var p = document.getElementById('inp-pass').value;
   var ok = USERS.some(function(x){ return x.username===u && x.password===p; });
-  var err = document.getElementById('login-error');
+  document.getElementById('login-error').style.display = ok ? 'none' : 'block';
   if (ok) {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('main-app').style.display = 'block';
     renderStudentList(); populateStudentSelects(); updateSummary();
   } else {
-    err.style.display = 'block';
     document.getElementById('inp-pass').value = '';
     document.getElementById('inp-pass').focus();
   }
@@ -832,7 +624,49 @@ function doLogout() {
   document.getElementById('login-error').style.display = 'none';
 }
 
-// ==================== DATA ====================
+// =============================================
+// USER MANAGEMENT MODAL
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function renderUsersList() {
+  var html = '<table class="users-table"><tr><th>Username</th><th>Password</th><th></th></tr>';
+  USERS.forEach(function(u, i) {
+    html += '<tr><td><b>'+u.username+'</b></td><td><span style="font-family:monospace">'+u.password+'</span></td>'
+      +'<td><button class="btn btn-danger" style="padding:3px 8px;font-size:0.75rem;" onclick="deleteUser('+i+')">🗑</button></td></tr>';
+  });
+  html += '</table>';
+  document.getElementById('users-list-area').innerHTML = html;
+}
+
+function saveUser() {
+  var uname = document.getElementById('new-uname').value.trim();
+  var pw = document.getElementById('new-pw').value;
+  if (!uname || !pw) { alert('Enter both username and password.'); return; }
+  var idx = USERS.findIndex(function(u){ return u.username === uname; });
+  if (idx >= 0) {
+    USERS[idx].password = pw;
+    alert('✅ Password updated for "' + uname + '"');
+  } else {
+    USERS.push({ username: uname, password: pw });
+    alert('✅ User "' + uname + '" added.');
+  }
+  saveUsers(USERS);
+  document.getElementById('new-uname').value = '';
+  document.getElementById('new-pw').value = '';
+  renderUsersList();
+}
+
+function deleteUser(i) {
+  if (USERS.length <= 1) { alert('Cannot delete the last user.'); return; }
+  if (!confirm('Delete user "' + USERS[i].username + '"?')) return;
+  USERS.splice(i, 1);
+  saveUsers(USERS);
+  renderUsersList();
+}
+
+// =============================================
+// DATA
 var students = [
   {name:"BINITA DAHAL",roll:"10200205",stream:"Plant Science",year:"2082/83"},
   {name:"BINOD DAHAL",roll:"10200206",stream:"Plant Science",year:"2082/83"},
@@ -881,299 +715,230 @@ var marksData = {};
 var currentFilter = 'all';
 
 function getKey(roll, exam) { return roll + '||' + exam; }
-
 function getGrade(pct) {
-  if(pct>=90) return {g:'A+',gpa:4.0};
-  if(pct>=80) return {g:'A',gpa:3.6};
-  if(pct>=70) return {g:'B+',gpa:3.2};
-  if(pct>=60) return {g:'B',gpa:2.8};
-  if(pct>=50) return {g:'C+',gpa:2.4};
-  if(pct>=40) return {g:'C',gpa:2.0};
-  if(pct>=35) return {g:'D',gpa:1.6};
-  return {g:'NG',gpa:0.0};
+  if(pct>=90)return{g:'A+',gpa:4.0};if(pct>=80)return{g:'A',gpa:3.6};
+  if(pct>=70)return{g:'B+',gpa:3.2};if(pct>=60)return{g:'B',gpa:2.8};
+  if(pct>=50)return{g:'C+',gpa:2.4};if(pct>=40)return{g:'C',gpa:2.0};
+  if(pct>=35)return{g:'D',gpa:1.6};return{g:'NG',gpa:0.0};
 }
 function gradeClass(g) { return 'grade-'+g.replace('+','-plus'); }
+function initials(name) { var p=name.trim().split(' '); return p.length>=2?p[0][0]+p[p.length-1][0]:name.substring(0,2); }
 
-function initials(name) {
-  var parts = name.trim().split(' ');
-  if(parts.length>=2) return parts[0][0]+parts[parts.length-1][0];
-  return name.substring(0,2);
-}
-
-// ==================== TABS ====================
+// =============================================
+// TABS
 function showTab(id, btn) {
   document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
   document.querySelectorAll('.nav-tab').forEach(function(b){ b.classList.remove('active'); });
   document.getElementById('tab-'+id).classList.add('active');
   btn.classList.add('active');
-  if(id==='marks') { populateStudentSelects(); loadMarksForm(); }
-  if(id==='results') { populateStudentSelects(); loadResult(); }
+  if(id==='marks'){ populateStudentSelects(); loadMarksForm(); }
+  if(id==='results'){ populateStudentSelects(); loadResult(); }
 }
 
-// ==================== STUDENTS ====================
+// =============================================
+// STUDENTS
 function filterStudents(f, btn) {
   currentFilter = f;
   document.querySelectorAll('.filter-tab').forEach(function(b){ b.classList.remove('active'); });
   btn.classList.add('active');
   renderStudentList();
 }
-
 function renderStudentList() {
   var list = document.getElementById('student-list');
-  var filtered = students.filter(function(s){
-    if(currentFilter==='all') return true;
-    return s.stream===currentFilter;
-  });
-  if(!filtered.length) {
-    list.innerHTML = '<div class="empty-state"><div class="empty-icon">👤</div><p>No students found.</p></div>';
-    return;
-  }
+  var filtered = students.filter(function(s){ return currentFilter==='all'||s.stream===currentFilter; });
+  if (!filtered.length) { list.innerHTML='<div class="empty-state"><div class="empty-icon">👤</div><p>No students found.</p></div>'; return; }
   list.innerHTML = filtered.map(function(s) {
     var hasMarks = Object.keys(marksData).some(function(k){ return k.startsWith(s.roll+'||'); });
-    var streamBadge = s.stream==='Plant Science' ? 'badge-plant' : 'badge-general';
-    var marksBadge = hasMarks ? '<span class="badge badge-marked">✓ Marks</span>' : '<span class="badge badge-unmarked">No marks</span>';
+    var sc = s.stream==='Plant Science'?'badge-plant':'badge-general';
     return '<div class="student-item" onclick="quickEnterMarks(\''+s.roll+'\')">'
-      + '<div class="student-avatar">'+initials(s.name)+'</div>'
-      + '<div class="student-info"><div class="student-name">'+s.name+'</div>'
-      + '<div class="student-meta">Roll No. <b>'+s.roll+'</b> | '+s.year+'</div></div>'
-      + '<span class="badge '+streamBadge+'">'+( s.stream==='Plant Science'?'🌱 Plant':'📚 General')+'</span>'
-      + marksBadge + '</div>';
+      +'<div class="student-avatar">'+initials(s.name)+'</div>'
+      +'<div class="student-info"><div class="student-name">'+s.name+'</div>'
+      +'<div class="student-meta">Roll No. <b>'+s.roll+'</b> | '+s.year+'</div></div>'
+      +'<span class="badge '+sc+'">'+(s.stream==='Plant Science'?'🌱 Plant':'📚 General')+'</span>'
+      +(hasMarks?'<span class="badge badge-marked">✓ Marks</span>':'<span class="badge badge-unmarked">No marks</span>')
+      +'</div>';
   }).join('');
 }
-
 function quickEnterMarks(roll) {
-  var tabBtn = document.querySelector('[onclick="showTab(\'marks\', this)"]');
-  showTab('marks', tabBtn);
+  var btn = document.querySelector('[onclick="showTab(\'marks\',this)"]');
+  showTab('marks', btn);
   document.getElementById('marks-student-sel').value = roll;
   loadMarksForm();
 }
-
 function updateSummary() {
   var plant = students.filter(function(s){ return s.stream==='Plant Science'; }).length;
-  var general = students.filter(function(s){ return s.stream==='General'; }).length;
+  var gen = students.filter(function(s){ return s.stream==='General'; }).length;
   var marked = students.filter(function(s){ return Object.keys(marksData).some(function(k){ return k.startsWith(s.roll+'||'); }); }).length;
   document.getElementById('sc-total').textContent = students.length;
   document.getElementById('sc-plant').textContent = plant;
-  document.getElementById('sc-general').textContent = general;
+  document.getElementById('sc-general').textContent = gen;
   document.getElementById('sc-marked').textContent = marked;
 }
 
-// ==================== REGISTER ====================
+// =============================================
+// REGISTER
 function selectStream(inp) {
   document.querySelectorAll('.radio-opt').forEach(function(o){ o.classList.remove('selected'); });
   inp.closest('.radio-opt').classList.add('selected');
 }
-
 function registerStudent() {
   var name = document.getElementById('reg-name').value.trim().toUpperCase();
   var roll = document.getElementById('reg-roll').value.trim();
   var stream = document.querySelector('input[name="stream"]:checked').value;
   var year = document.getElementById('reg-year').value.trim();
-  if(!name || !roll) { alert('Please enter both Name and Roll No.'); return; }
-  if(students.some(function(s){ return s.roll===roll; })) { alert('Roll No. already exists!'); return; }
-  students.push({name:name, roll:roll, stream:stream, year:year});
-  document.getElementById('reg-name').value = '';
-  document.getElementById('reg-roll').value = '';
+  if (!name||!roll) { alert('Please enter both Name and Roll No.'); return; }
+  if (students.some(function(s){ return s.roll===roll; })) { alert('Roll No. already exists!'); return; }
+  students.push({name:name,roll:roll,stream:stream,year:year});
+  document.getElementById('reg-name').value='';
+  document.getElementById('reg-roll').value='';
   renderStudentList(); populateStudentSelects(); updateSummary();
   alert('✅ Student "'+name+'" registered successfully!');
 }
 
-// ==================== MARKS ====================
+// =============================================
+// MARKS
 function populateStudentSelects() {
   ['marks-student-sel','result-student-sel'].forEach(function(id) {
-    var sel = document.getElementById(id);
-    var cur = sel.value;
+    var sel = document.getElementById(id), cur = sel.value;
     sel.innerHTML = '<option value="">— Choose student —</option>';
-    students.forEach(function(s){
-      sel.innerHTML += '<option value="'+s.roll+'">'+s.name+' ('+s.roll+')</option>';
-    });
-    if(cur) sel.value = cur;
+    students.forEach(function(s){ sel.innerHTML += '<option value="'+s.roll+'">'+s.name+' ('+s.roll+')</option>'; });
+    if (cur) sel.value = cur;
   });
 }
-
 function loadMarksForm() {
   var roll = document.getElementById('marks-student-sel').value;
   var exam = document.getElementById('marks-exam-sel').value;
   var area = document.getElementById('marks-form-area');
-  if(!roll) { area.innerHTML=''; return; }
+  if (!roll) { area.innerHTML=''; return; }
   var st = students.find(function(s){ return s.roll===roll; });
-  if(!st) return;
+  if (!st) return;
   var subs = SUBJECTS[st.stream];
   var saved = marksData[getKey(roll,exam)] || {};
-
   var rows = subs.map(function(sub) {
-    var thVal = (saved[sub.name] && saved[sub.name].th!==undefined) ? saved[sub.name].th : '';
-    var prVal = (saved[sub.name] && saved[sub.name].pr!==undefined) ? saved[sub.name].pr : '';
+    var k = sub.name.replace(/\W/g,'_');
+    var thVal = (saved[sub.name]&&saved[sub.name].th!==undefined)?saved[sub.name].th:'';
+    var prVal = (saved[sub.name]&&saved[sub.name].pr!==undefined)?saved[sub.name].pr:'';
     var prInput = sub.prMax>0
-      ? '<input type="number" id="pr_'+sub.name.replace(/\W/g,'_')+'" min="0" max="'+sub.prMax+'" value="'+prVal+'" placeholder="0" oninput="recalcRow(\''+sub.name.replace(/\W/g,'_')+'\','+sub.thMax+','+sub.prMax+')" />'
-      : '<span style="color:#aaa">—</span>';
-    var total = '';
-    var grade = '';
-    if(thVal!=='' && (sub.prMax===0 || prVal!=='')) {
-      var t = parseInt(thVal||0)+parseInt(prVal||0);
-      var pct = t/(sub.thMax+sub.prMax)*100;
-      var g = getGrade(pct);
-      total = t;
-      grade = '<span class="'+gradeClass(g.g)+'">'+g.g+'</span>';
+      ?'<input type="number" id="pr_'+k+'" min="0" max="'+sub.prMax+'" value="'+prVal+'" placeholder="0" oninput="recalcRow(\''+k+'\','+sub.thMax+','+sub.prMax+')" />'
+      :'<span style="color:#aaa">—</span>';
+    var total='',grade='';
+    if(thVal!==''&&(sub.prMax===0||prVal!=='')){
+      var t=parseInt(thVal||0)+parseInt(prVal||0);
+      var g=getGrade(t/(sub.thMax+sub.prMax)*100);
+      total=t; grade='<span class="'+gradeClass(g.g)+'">'+g.g+'</span>';
     }
-    return '<tr>'
-      +'<td style="font-size:0.78rem;">'+sub.name+'</td>'
-      +'<td><input type="number" id="th_'+sub.name.replace(/\W/g,'_')+'" min="0" max="'+sub.thMax+'" value="'+thVal+'" placeholder="0" oninput="recalcRow(\''+sub.name.replace(/\W/g,'_')+'\','+sub.thMax+','+sub.prMax+')" /></td>'
+    return '<tr><td style="font-size:0.78rem;">'+sub.name+'</td>'
+      +'<td><input type="number" id="th_'+k+'" min="0" max="'+sub.thMax+'" value="'+thVal+'" placeholder="0" oninput="recalcRow(\''+k+'\','+sub.thMax+','+sub.prMax+')" /></td>'
       +'<td>'+prInput+'</td>'
       +'<td><small style="color:#888">/'+sub.thMax+'</small></td>'
-      +'<td id="tot_'+sub.name.replace(/\W/g,'_')+'">'+total+'</td>'
-      +'<td id="grd_'+sub.name.replace(/\W/g,'_')+'" class="grade-cell">'+grade+'</td>'
-      +'</tr>';
+      +'<td id="tot_'+k+'">'+total+'</td>'
+      +'<td id="grd_'+k+'" class="grade-cell">'+grade+'</td></tr>';
   }).join('');
-
   area.innerHTML = '<div class="section-card"><div class="section-head">📝 '+st.name+' — '+exam+'</div>'
-    +'<div style="overflow-x:auto;"><table class="marks-table">'
-    +'<tr><th>Subject</th><th>Theory</th><th>Practical</th><th>Max</th><th>Total</th><th>Grade</th></tr>'
+    +'<div style="overflow-x:auto;"><table class="marks-table"><tr><th>Subject</th><th>Theory</th><th>Practical</th><th>Max</th><th>Total</th><th>Grade</th></tr>'
     +rows+'</table></div>'
-    +'<div style="padding:1rem;">'
-    +'<button class="btn btn-success btn-full" onclick="saveMarks(\''+roll+'\',\''+exam+'\')">💾 Save Marks</button>'
-    +'</div></div>';
+    +'<div style="padding:1rem;"><button class="btn btn-success btn-full" onclick="saveMarks(\''+roll+'\',\''+exam+'\')">💾 Save Marks</button></div></div>';
 }
-
-function recalcRow(key, thMax, prMax) {
-  var thEl = document.getElementById('th_'+key);
-  var prEl = document.getElementById('pr_'+key);
-  var th = thEl ? parseInt(thEl.value||0) : 0;
-  var pr = prEl && prEl.tagName==='INPUT' ? parseInt(prEl.value||0) : 0;
-  var total = th + pr;
-  var pct = total/(thMax+prMax)*100;
-  var g = getGrade(pct);
-  var totEl = document.getElementById('tot_'+key);
-  var grdEl = document.getElementById('grd_'+key);
-  if(totEl) totEl.textContent = (thEl && thEl.value!=='' && (prMax===0 || (prEl && prEl.value!==''))) ? total : '';
-  if(grdEl) {
-    if(thEl && thEl.value!=='' && (prMax===0 || (prEl && prEl.value!==''))) {
-      grdEl.innerHTML = '<span class="'+gradeClass(g.g)+'">'+g.g+'</span>';
-    } else { grdEl.innerHTML=''; }
-  }
+function recalcRow(key,thMax,prMax) {
+  var thEl=document.getElementById('th_'+key),prEl=document.getElementById('pr_'+key);
+  var th=thEl?parseInt(thEl.value||0):0,pr=prEl&&prEl.tagName==='INPUT'?parseInt(prEl.value||0):0;
+  var g=getGrade((th+pr)/(thMax+prMax)*100);
+  var totEl=document.getElementById('tot_'+key),grdEl=document.getElementById('grd_'+key);
+  var hasData=thEl&&thEl.value!==''&&(prMax===0||(prEl&&prEl.value!==''));
+  if(totEl) totEl.textContent=hasData?(th+pr):'';
+  if(grdEl) grdEl.innerHTML=hasData?'<span class="'+gradeClass(g.g)+'">'+g.g+'</span>':'';
 }
-
-function saveMarks(roll, exam) {
-  var st = students.find(function(s){ return s.roll===roll; });
-  var subs = SUBJECTS[st.stream];
-  var obj = {};
-  subs.forEach(function(sub) {
-    var k = sub.name.replace(/\W/g,'_');
-    var thEl = document.getElementById('th_'+k);
-    var prEl = document.getElementById('pr_'+k);
-    if(thEl) {
-      obj[sub.name] = {
-        th: thEl.value !== '' ? parseInt(thEl.value) : undefined,
-        pr: prEl && prEl.tagName==='INPUT' && prEl.value !== '' ? parseInt(prEl.value) : undefined
-      };
-    }
+function saveMarks(roll,exam) {
+  var st=students.find(function(s){ return s.roll===roll; });
+  var subs=SUBJECTS[st.stream],obj={};
+  subs.forEach(function(sub){
+    var k=sub.name.replace(/\W/g,'_');
+    var thEl=document.getElementById('th_'+k),prEl=document.getElementById('pr_'+k);
+    if(thEl) obj[sub.name]={
+      th:thEl.value!==''?parseInt(thEl.value):undefined,
+      pr:prEl&&prEl.tagName==='INPUT'&&prEl.value!==''?parseInt(prEl.value):undefined
+    };
   });
-  marksData[getKey(roll,exam)] = obj;
+  marksData[getKey(roll,exam)]=obj;
   updateSummary(); renderStudentList();
   alert('✅ Marks saved for '+st.name+' — '+exam);
 }
 
-// ==================== RESULTS ====================
+// =============================================
+// RESULTS
 function loadResult() {
-  var roll = document.getElementById('result-student-sel').value;
-  var exam = document.getElementById('result-exam-sel').value;
-  var area = document.getElementById('result-display');
-  if(!roll) { area.innerHTML=''; return; }
-  var st = students.find(function(s){ return s.roll===roll; });
-  if(!st) return;
-  var subs = SUBJECTS[st.stream];
-  var saved = marksData[getKey(roll,exam)];
-  if(!saved) {
-    area.innerHTML = '<div class="empty-state"><div class="empty-icon">📄</div><p>No marks saved for this student and examination.<br>Please enter marks first.</p></div>';
-    return;
-  }
-
-  var totalGPA=0; var count=0; var anyNG=false;
-  var rows = subs.map(function(sub) {
-    var d = saved[sub.name] || {};
-    var th = d.th !== undefined ? d.th : '—';
-    var pr = d.pr !== undefined ? d.pr : (sub.prMax===0 ? '—' : '—');
-    var total = '—'; var g = {g:'—',gpa:0}; var pct = 0;
-    if(d.th !== undefined && (sub.prMax===0 || d.pr !== undefined)) {
-      var t = (d.th||0) + (d.pr||0);
-      pct = t/(sub.thMax+sub.prMax)*100;
-      g = getGrade(pct);
-      total = t;
-      if(g.g!=='NG') { totalGPA += g.gpa; count++; } else { anyNG=true; }
+  var roll=document.getElementById('result-student-sel').value;
+  var exam=document.getElementById('result-exam-sel').value;
+  var area=document.getElementById('result-display');
+  if(!roll){area.innerHTML='';return;}
+  var st=students.find(function(s){return s.roll===roll;});
+  if(!st)return;
+  var subs=SUBJECTS[st.stream],saved=marksData[getKey(roll,exam)];
+  if(!saved){area.innerHTML='<div class="empty-state"><div class="empty-icon">📄</div><p>No marks saved yet.<br>Please enter marks first.</p></div>';return;}
+  var totalGPA=0,count=0,anyNG=false;
+  var rows=subs.map(function(sub){
+    var d=saved[sub.name]||{};
+    var th=d.th!==undefined?d.th:'—',pr=d.pr!==undefined?d.pr:(sub.prMax===0?'—':'—');
+    var total='—',g={g:'—',gpa:0};
+    if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
+      var t=(d.th||0)+(d.pr||0);
+      g=getGrade(t/(sub.thMax+sub.prMax)*100);
+      total=t;
+      if(g.g!=='NG'){totalGPA+=g.gpa;count++;}else{anyNG=true;}
     }
-    return '<tr><td>'+sub.name+'</td>'
-      +'<td>'+(th!=='—'?th:th)+'</td>'
-      +'<td>'+(pr!=='—'?pr:pr)+'</td>'
-      +'<td>'+(total!=='—'?total:total)+'</td>'
+    return '<tr><td>'+sub.name+'</td><td>'+th+'</td><td>'+pr+'</td><td>'+total+'</td>'
       +'<td class="grade-cell '+(g.g!=='—'?gradeClass(g.g):'')+'">'+g.g+'</td>'
-      +'<td>'+(g.gpa>0?g.gpa.toFixed(1):'—')+'</td>'
-      +'</tr>';
+      +'<td>'+(g.gpa>0?g.gpa.toFixed(1):'—')+'</td></tr>';
   }).join('');
-
-  var cgpa = count>0 ? (totalGPA/count).toFixed(2) : '—';
-  var cgpaGrade = count>0 ? getGrade(parseFloat(cgpa)/4*100).g : '—';
-  var pass = !anyNG && count===subs.length && parseFloat(cgpa)>=1.6;
-
-  area.innerHTML = '<div class="result-card">'
+  var cgpa=count>0?(totalGPA/count).toFixed(2):'—';
+  var pass=!anyNG&&count===subs.length&&parseFloat(cgpa)>=1.6;
+  area.innerHTML='<div class="result-card">'
     +'<div class="result-header"><h2>THARPU SECONDARY SCHOOL</h2>'
-    +'<p>Yangwarak-4, Panchthar, Koshi Province, Nepal | School Code: TSS-PAN</p>'
-    +'<p style="margin-top:6px;font-weight:700;font-size:0.9rem;">'+exam+' — Academic Year '+st.year+'</p>'
-    +'</div>'
+    +'<p>Yangwarak-4, Panchthar, Koshi Province, Nepal | Code: TSS-PAN</p>'
+    +'<p style="margin-top:6px;font-weight:700;font-size:0.9rem;">'+exam+' — Academic Year '+st.year+'</p></div>'
     +'<div class="result-student-info">'
     +'<div class="rsi-item"><div class="rsi-label">Student Name</div><div class="rsi-val">'+st.name+'</div></div>'
     +'<div class="rsi-item"><div class="rsi-label">Roll No.</div><div class="rsi-val">'+st.roll+'</div></div>'
     +'<div class="rsi-item"><div class="rsi-label">Stream</div><div class="rsi-val">'+st.stream+'</div></div>'
-    +'<div class="rsi-item"><div class="rsi-label">Class</div><div class="rsi-val">XI · 2082/83</div></div>'
-    +'</div>'
+    +'<div class="rsi-item"><div class="rsi-label">Class</div><div class="rsi-val">XI · 2082/83</div></div></div>'
     +'<div class="result-table-wrap" style="overflow-x:auto;">'
-    +'<table class="result-table">'
-    +'<tr><th>Subject</th><th>Theory</th><th>Practical</th><th>Total</th><th>Grade</th><th>GPA</th></tr>'
-    +rows
-    +'</table></div>'
-    +'<div class="result-cgpa-row">'
-    +'<div><div class="cgpa-label">CGPA (NEB Method)</div>'
+    +'<table class="result-table"><tr><th>Subject</th><th>Theory</th><th>Practical</th><th>Total</th><th>Grade</th><th>GPA</th></tr>'
+    +rows+'</table></div>'
+    +'<div class="result-cgpa-row"><div><div class="cgpa-label">CGPA (NEB Method)</div>'
     +'<div style="font-size:0.75rem;color:var(--text-muted);">'+count+'/'+subs.length+' subjects graded</div></div>'
-    +'<div style="display:flex;align-items:baseline;">'
-    +'<span class="cgpa-value">'+cgpa+'</span>'
-    +'<span class="cgpa-grade">'+cgpaGrade+'</span>'
-    +'</div></div>'
+    +'<div style="display:flex;align-items:baseline;"><span class="cgpa-value">'+cgpa+'</span>'
+    +'<span class="cgpa-grade">'+getGrade(parseFloat(cgpa)/4*100).g+'</span></div></div>'
     +'<div class="result-status '+(pass?'status-pass':'status-fail')+'">'
-    +(pass ? '✅ PASSED' : (anyNG ? '❌ NOT GRADED — One or more subjects below 35%' : count<subs.length?'⏳ Marks incomplete':'❌ FAILED — CGPA below 1.6'))
+    +(pass?'✅ PASSED':(anyNG?'❌ NOT GRADED — One or more subjects below 35%':count<subs.length?'⏳ Marks incomplete':'❌ FAILED'))
     +'</div></div>';
 }
-
-function saveResultHTML() {
-  var content = document.getElementById('result-display').innerHTML;
-  if(!content) { alert('Please select a student first.'); return; }
-  var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Result</title></head><body style="font-family:sans-serif;padding:20px;">'+content+'</body></html>';
-  var a = document.createElement('a');
-  a.href = 'data:text/html;charset=utf-8,'+encodeURIComponent(html);
-  a.download = 'result.html';
-  a.click();
+function saveResultHTML(){
+  var content=document.getElementById('result-display').innerHTML;
+  if(!content){alert('Please select a student first.');return;}
+  var a=document.createElement('a');
+  a.href='data:text/html;charset=utf-8,'+encodeURIComponent('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Result</title></head><body style="font-family:sans-serif;padding:20px;">'+content+'</body></html>');
+  a.download='result.html'; a.click();
+}
+function exportShare(){
+  var data=JSON.stringify({students:students,marks:marksData});
+  var inject='<script>var _savedData='+data+';<\/script>';
+  var out=document.documentElement.outerHTML.replace('</head>',inject+'</head>');
+  var a=document.createElement('a');
+  a.href='data:text/html;charset=utf-8,'+encodeURIComponent(out);
+  a.download='tharpu-school-data.html'; a.click();
 }
 
-function exportShare() {
-  var data = JSON.stringify({students:students, marks:marksData});
-  var src = document.documentElement.outerHTML;
-  var inject = '<script>var _savedData='+data+';<\/script>';
-  var out = src.replace('</head>', inject+'</head>');
-  var a = document.createElement('a');
-  a.href = 'data:text/html;charset=utf-8,'+encodeURIComponent(out);
-  a.download = 'tharpu-school-data.html';
-  a.click();
-}
-
-// on load: restore exported data
-if(typeof _savedData !== 'undefined') {
-  students = _savedData.students || students;
-  marksData = _savedData.marks || marksData;
+// Restore exported data
+if(typeof _savedData!=='undefined'){
+  students=_savedData.students||students;
+  marksData=_savedData.marks||marksData;
 }
 </script>
 </body>
 </html>
 HTMLEOF
-echo "Done"
+echo "index.html written: $(wc -c < /mnt/user-data/outputs/index.html) bytes"
 Output
 
-Done
+index.html written: 46938 bytes
 Done
