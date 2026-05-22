@@ -1,0 +1,18 @@
+{
+  "name": "Tharpu Secondary School",
+  "short_name": "Tharpu SMS",
+  "description": "Result Management System for Class XI",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FDF6EC",
+  "theme_color": "#7B1C1C",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
