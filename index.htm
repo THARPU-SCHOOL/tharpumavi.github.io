@@ -1,0 +1,1621 @@
+
+
+
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THARPU SECONDARY SCHOOL— Result Management System</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&amp;family=DM+Mono:wght@400;500&amp;family=Source+Sans+3:wght@300;400;600;700&amp;display=swap" rel="stylesheet">
+
+<!-- ══ EMBEDDED DATABASE — updated on every Export ══ -->
+<script id="embedded-db" type="application/json">
+{"students":[{"id":1779381676194,"name":"BINITA DAHAL","roll":"10200205","stream":"plant","year":"2082/83"},{"id":1779381690142,"name":"BINOD DAHAL","roll":"10200206","stream":"plant","year":"2082/83"},{"id":1779381710668,"name":"DIBYA MABO","roll":"10200207","stream":"plant","year":"2082/83"},{"id":1779381727815,"name":"JENI LAKSAM","roll":"10200208","stream":"plant","year":"2082/83"},{"id":1779381813460,"name":"MISEK LINGDEN","roll":"10200209","stream":"plant","year":"2082/83"},{"id":1779381832423,"name":"NABIN ADHIKARI","roll":"10200210","stream":"plant","year":"2082/83"},{"id":1779381850089,"name":"NILIMA MAGAR","roll":"10200211","stream":"plant","year":"2082/83"},{"id":1779381903750,"name":"NISKARSHA ADHIKARI","roll":"10200212","stream":"plant","year":"2082/83"},{"id":1779381928234,"name":"PRAJU SIWAKOTI","roll":"10200213","stream":"plant","year":"2082/83"},{"id":1779381957929,"name":"PRERIT KAMBANG","roll":"10200214","stream":"plant","year":"2082/83"},{"id":1779381977231,"name":"PUJA SUBEDI","roll":"10200215","stream":"plant","year":"2082/83"},{"id":1779382010478,"name":"RAMESH KUMAR PAUDEL","roll":"10200216","stream":"plant","year":"2082/83"},{"id":1779382030862,"name":"RITU PARA MABO","roll":"10200217","stream":"plant","year":"2082/83"},{"id":1779382052761,"name":"SAGAR YONGHANG","roll":"10200218","stream":"plant","year":"2082/83"},{"id":1779382075858,"name":"SOBHIYA YONGHANG","roll":"10200219","stream":"plant","year":"2082/83"},{"id":1779382101725,"name":"SUDARSHAN KOIRALA","roll":"10200220","stream":"plant","year":"2082/83"},{"id":1779382131005,"name":"SUJAN KATUWAL","roll":"10200221","stream":"plant","year":"2082/83"}],"marksDB":{}}
+</script>
+
+<style>
+:root {
+  --maroon:#7B1C1C; --maroon-dark:#5A1212; --maroon-mid:#8C2A2A;
+  --gold:#C9922B; --gold-light:#E8B84B; --gold-pale:#FFF3D6;
+  --cream:#FDF6EC; --cream-dark:#F4E8D0;
+  --slate:#2C3040; --slate-light:#4A5168;
+  --green:#2D6A4F; --green-light:#52B788; --green-pale:#D8F3DC;
+  --blue:#1E6091; --blue-pale:#D0E4F7;
+  --red:#C1121F; --red-pale:#FFE8E8;
+  --border:#D4B896; --border-light:#EAD9C0;
+  --shadow-sm:0 2px 8px rgba(123,28,28,0.08);
+  --shadow:0 4px 24px rgba(123,28,28,0.12);
+  --shadow-lg:0 8px 40px rgba(123,28,28,0.16);
+  --radius:14px; --radius-sm:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Source Sans 3',sans-serif;background:var(--cream);color:var(--slate);min-height:100vh}
+
+/* ── SHARE REMINDER BANNER ── */
+#share-banner{
+  background:linear-gradient(90deg,#7B1C1C,#A0391C);
+  color:#fff;padding:10px 20px;text-align:center;
+  font-size:0.82rem;letter-spacing:0.02em;display:none;
+  align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;
+  border-bottom:2px solid var(--gold);position:sticky;top:0;z-index:200;
+  animation:pulseBar 2s ease-in-out infinite;
+}
+#share-banner.visible{display:flex}
+@keyframes pulseBar{0%,100%{background:linear-gradient(90deg,#7B1C1C,#A0391C)}50%{background:linear-gradient(90deg,#5A1212,#7B1C1C)}}
+#share-banner strong{color:var(--gold-light)}
+.banner-btn{
+  padding:5px 14px;background:var(--gold);color:#fff;border:none;
+  border-radius:6px;font-weight:700;font-size:0.78rem;cursor:pointer;
+  font-family:'Source Sans 3',sans-serif;letter-spacing:0.04em;transition:all 0.2s;
+}
+.banner-btn:hover{background:var(--gold-light);color:#5A1212}
+
+/* ── HEADER ── */
+header{
+  background:linear-gradient(135deg,var(--maroon-dark) 0%,var(--maroon) 55%,#A0391C 100%);
+  color:#fff; border-bottom:4px solid var(--gold); position:relative; overflow:hidden;
+}
+header::before{
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse at 80% 50%, rgba(201,146,43,0.18) 0%, transparent 65%);
+}
+header::after{
+  content:''; position:absolute; inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M20 0L40 20L20 40L0 20Z'/%3E%3C/g%3E%3C/svg%3E");
+}
+.header-inner{
+  position:relative;z-index:1;
+  display:flex;align-items:center;gap:20px;
+  padding:20px 36px; max-width:1280px; margin:0 auto;
+}
+.school-emblem{
+  width:80px;height:80px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--gold) 0%,var(--gold-light) 100%);
+  border-radius:50%;border:3px solid rgba(255,255,255,0.35);
+  display:flex;align-items:center;justify-content:center;
+  font-size:34px;box-shadow:0 4px 16px rgba(0,0,0,0.25);
+}
+.school-title h1{
+  font-family:'DM Serif Display',serif;font-size:1.75rem;line-height:1.1;letter-spacing:0.01em;
+}
+.school-title .subtitle{font-size:0.8rem;opacity:0.78;margin-top:4px;font-weight:300;letter-spacing:0.1em;text-transform:uppercase}
+.school-title .addr{font-size:0.76rem;opacity:0.65;margin-top:3px}
+.header-right{margin-left:auto;text-align:right}
+.header-right .sys-badge{
+  font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;
+  background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);
+  padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:7px;
+}
+.header-right .neb-text{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--gold-light);line-height:1.6}
+.export-btn-header{
+  margin-left:18px;padding:10px 20px;border:2px solid var(--gold-light);
+  background:rgba(201,146,43,0.18);color:var(--gold-light);border-radius:8px;
+  font-family:'Source Sans 3',sans-serif;font-size:0.82rem;font-weight:700;
+  cursor:pointer;transition:all 0.2s;letter-spacing:0.04em;white-space:nowrap;
+}
+.export-btn-header:hover{background:var(--gold);color:#fff;border-color:var(--gold)}
+.export-btn-header.pulse{animation:exportPulse 1.2s ease-in-out infinite}
+@keyframes exportPulse{0%,100%{box-shadow:0 0 0 0 rgba(201,146,43,0.6)}50%{box-shadow:0 0 0 8px rgba(201,146,43,0)}}
+
+/* ── NAV TABS ── */
+.nav-tabs{
+  background:var(--maroon-dark);display:flex;
+  max-width:100%;overflow-x:auto;border-bottom:2px solid var(--gold);
+  position:sticky;top:0;z-index:100;
+}
+.nav-tab{
+  padding:13px 26px;font-size:0.8rem;font-weight:600;letter-spacing:0.06em;
+  text-transform:uppercase;color:rgba(255,255,255,0.55);
+  cursor:pointer;border:none;background:none;
+  border-bottom:3px solid transparent;margin-bottom:-2px;
+  white-space:nowrap;transition:all 0.2s;display:flex;align-items:center;gap:7px;
+}
+.nav-tab:hover{color:rgba(255,255,255,0.85);background:rgba(255,255,255,0.05)}
+.nav-tab.active{color:var(--gold);border-bottom-color:var(--gold);background:rgba(201,146,43,0.08)}
+
+/* ── MAIN ── */
+.main{max-width:1280px;margin:0 auto;padding:30px 24px}
+.panel{display:none}.panel.active{display:block}
+
+/* ── CARDS ── */
+.card{
+  background:#fff;border:1px solid var(--border-light);
+  border-radius:var(--radius);box-shadow:var(--shadow-sm);margin-bottom:24px;
+  overflow:hidden;
+}
+.card-header{
+  background:linear-gradient(90deg,var(--maroon) 0%,var(--maroon-mid) 100%);
+  color:#fff;padding:15px 24px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+}
+.card-header-left{display:flex;align-items:center;gap:10px}
+.card-header h2{font-family:'DM Serif Display',serif;font-size:1.1rem;letter-spacing:0.01em}
+.card-header .icon{font-size:1.15rem}
+.card-body{padding:24px}
+
+/* ── STAT STRIP ── */
+.stat-strip{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;
+  margin-bottom:24px;
+}
+.stat-card{
+  background:#fff;border:1px solid var(--border-light);border-radius:var(--radius-sm);
+  padding:16px 18px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden;
+  transition:transform 0.15s,box-shadow 0.15s;
+}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.stat-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--maroon),var(--gold));
+}
+.stat-card .stat-num{font-family:'DM Serif Display',serif;font-size:2rem;color:var(--maroon);line-height:1}
+.stat-card .stat-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--slate-light);margin-top:4px}
+
+/* ── FORM ELEMENTS ── */
+.form-row{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.form-group{display:flex;flex-direction:column;gap:5px;flex:1;min-width:160px}
+.form-group label{font-size:0.72rem;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--maroon)}
+.form-group input,.form-group select{
+  padding:10px 14px;border:1.5px solid var(--border);
+  border-radius:var(--radius-sm);font-family:'Source Sans 3',sans-serif;
+  font-size:0.9rem;color:var(--slate);background:var(--cream);transition:all 0.2s;
+}
+.form-group input:focus,.form-group select:focus{
+  outline:none;border-color:var(--maroon);background:#fff;
+  box-shadow:0 0 0 3px rgba(123,28,28,0.08);
+}
+.form-group input.error{border-color:var(--red);background:var(--red-pale)}
+
+/* ── BUTTONS ── */
+.btn{
+  padding:10px 22px;border:none;border-radius:var(--radius-sm);
+  font-family:'Source Sans 3',sans-serif;font-size:0.87rem;font-weight:700;
+  cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:7px;
+  letter-spacing:0.02em;
+}
+.btn-primary{background:linear-gradient(135deg,var(--maroon),var(--maroon-mid));color:#fff;box-shadow:0 2px 8px rgba(123,28,28,0.25)}
+.btn-primary:hover{background:linear-gradient(135deg,var(--maroon-dark),var(--maroon));transform:translateY(-1px);box-shadow:0 4px 14px rgba(123,28,28,0.3)}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:#fff;box-shadow:0 2px 8px rgba(201,146,43,0.3)}
+.btn-gold:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btn-green{background:linear-gradient(135deg,var(--green),#52B788);color:#fff;box-shadow:0 2px 8px rgba(45,106,79,0.25)}
+.btn-green:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btn-outline{background:transparent;color:var(--maroon);border:1.5px solid var(--maroon)}
+.btn-outline:hover{background:var(--cream-dark)}
+.btn-sm{padding:6px 14px;font-size:0.76rem}
+.btn-danger{background:var(--red);color:#fff}
+.btn-danger:hover{background:#8B0000}
+
+/* ── GRADE TABLE ── */
+.grade-table{width:100%;border-collapse:collapse;font-size:0.87rem}
+.grade-table th{
+  background:var(--cream-dark);padding:11px 14px;text-align:left;
+  font-size:0.7rem;letter-spacing:0.09em;text-transform:uppercase;
+  color:var(--maroon);border-bottom:2px solid var(--border);
+}
+.grade-table td{padding:11px 14px;border-bottom:1px solid var(--cream-dark);vertical-align:middle}
+.grade-table tr:last-child td{border-bottom:none}
+.grade-table tbody tr:hover td{background:var(--cream)}
+.grade-table td input{
+  width:82px;padding:6px 8px;border:1.5px solid var(--border);
+  border-radius:6px;font-family:'DM Mono',monospace;font-size:0.85rem;
+  text-align:center;background:var(--cream);transition:all 0.2s;
+}
+.grade-table td input:focus{outline:none;border-color:var(--maroon);background:#fff;box-shadow:0 0 0 2px rgba(123,28,28,0.1)}
+.grade-table td input.error{border-color:var(--red);background:var(--red-pale)}
+
+/* ── GRADE BADGES ── */
+.grade-badge{
+  display:inline-block;padding:3px 11px;border-radius:20px;
+  font-family:'DM Mono',monospace;font-size:0.78rem;font-weight:600;
+  letter-spacing:0.05em;
+}
+.grade-Ap{background:#1a472a;color:#fff}
+.grade-A {background:#2d6a4f;color:#fff}
+.grade-Bp{background:#1e6091;color:#fff}
+.grade-B {background:#0d4f8c;color:#fff}
+.grade-Cp{background:#7b5e00;color:#fff}
+.grade-C {background:#946900;color:#fff}
+.grade-D {background:#7a4100;color:#fff}
+.grade-NG{background:#c1121f;color:#fff}
+
+/* ── STUDENT ROW ── */
+.student-row{
+  display:flex;align-items:center;gap:14px;
+  padding:13px 18px;border:1.5px solid var(--border-light);
+  border-radius:10px;margin-bottom:9px;background:#fff;
+  cursor:default;transition:all 0.15s;
+}
+.student-row:hover{border-color:var(--maroon);box-shadow:var(--shadow-sm);transform:translateX(3px)}
+.student-avatar{
+  width:42px;height:42px;border-radius:50%;
+  background:linear-gradient(135deg,var(--maroon),var(--maroon-mid));color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:0.88rem;flex-shrink:0;
+  box-shadow:0 2px 8px rgba(123,28,28,0.2);
+}
+.student-info{flex:1}
+.student-info .name{font-weight:700;font-size:0.95rem}
+.student-info .meta{font-size:0.74rem;color:var(--slate-light);margin-top:2px}
+
+/* ── BADGES ── */
+.badge-stream{display:inline-block;padding:2px 10px;border-radius:20px;font-size:0.68rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase}
+.badge-plant{background:var(--green-pale);color:#1b4332}
+.badge-general{background:var(--blue-pale);color:#1a3a5c}
+.section-label{
+  font-size:0.68rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;
+  color:#fff;padding:4px 13px;background:var(--maroon-dark);
+  border-radius:20px;display:inline-block;margin-bottom:14px;
+}
+
+/* ── MARKS ENTRY LIVE GPA BAR ── */
+.live-cgpa-bar{
+  background:linear-gradient(135deg,var(--maroon-dark),var(--maroon));
+  border-radius:12px;padding:18px 24px;color:#fff;
+  display:flex;align-items:center;gap:24px;margin-bottom:20px;
+  box-shadow:var(--shadow);
+}
+.live-cgpa-num{font-family:'DM Serif Display',serif;font-size:2.6rem;line-height:1;color:var(--gold-light)}
+.live-cgpa-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.12em;opacity:0.75;margin-top:3px}
+.live-cgpa-grade{font-size:1.1rem;font-weight:700;color:var(--gold-light);margin-top:4px}
+.cgpa-progress{flex:1}
+.cgpa-bar-track{background:rgba(255,255,255,0.15);border-radius:6px;height:10px;margin-top:8px;overflow:hidden}
+.cgpa-bar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--gold),var(--gold-light));transition:width 0.4s ease}
+
+/* ── RESULT SHEET (screen) ── */
+.result-sheet{background:#fff;border:2px solid var(--maroon);border-radius:var(--radius);overflow:hidden;font-family:'Source Sans 3',sans-serif}
+.result-header{
+  background:linear-gradient(135deg,var(--maroon-dark) 0%,var(--maroon) 60%,#A0391C 100%);
+  color:#fff;padding:22px 28px;text-align:center;position:relative;overflow:hidden;
+}
+.result-header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(201,146,43,0.2) 0%,transparent 60%)}
+.result-header-logo{font-size:2rem;margin-bottom:6px;position:relative;z-index:1}
+.result-header h2{font-family:'DM Serif Display',serif;font-size:1.5rem;position:relative;z-index:1;letter-spacing:0.01em}
+.result-header .school-sub{font-size:0.78rem;opacity:0.8;margin-top:3px;position:relative;z-index:1}
+.result-header .exam-badge{
+  display:inline-block;margin-top:10px;
+  background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);
+  padding:5px 20px;border-radius:20px;font-size:0.85rem;font-weight:600;
+  letter-spacing:0.08em;position:relative;z-index:1;
+}
+.result-info-strip{
+  display:flex;flex-wrap:wrap;gap:0;
+  border-bottom:2px solid var(--border);
+}
+.result-info-item{
+  flex:1;min-width:120px;padding:11px 16px;
+  border-right:1px solid var(--border-light);
+}
+.result-info-item:last-child{border-right:none}
+.result-info-label{font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--maroon);margin-bottom:3px}
+.result-info-val{font-size:0.87rem;font-weight:600;color:var(--slate)}
+.result-body{padding:18px 24px}
+.result-footer{
+  background:linear-gradient(135deg,var(--maroon-dark),var(--maroon));
+  color:#fff;padding:18px 24px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;
+}
+.cgpa-showcase{text-align:center}
+.cgpa-showcase .cgpa-big{font-family:'DM Serif Display',serif;font-size:2.6rem;color:var(--gold-light);line-height:1}
+.cgpa-showcase .cgpa-denom{font-size:0.85rem;opacity:0.7;margin-top:2px}
+.cgpa-showcase .cgpa-tag{font-size:0.62rem;text-transform:uppercase;letter-spacing:0.14em;opacity:0.65;margin-bottom:4px}
+.remarks-block{text-align:center}
+.remarks-block .r-label{font-size:0.62rem;text-transform:uppercase;letter-spacing:0.12em;opacity:0.6;margin-bottom:6px}
+.remarks-block .r-val{font-family:'DM Serif Display',serif;font-size:1.3rem;color:var(--gold-light)}
+.remarks-block .r-sub{font-size:0.72rem;opacity:0.65;margin-top:3px}
+.sig-row{display:flex;gap:44px}
+.sig-block{text-align:center}
+.sig-line{border-top:1px solid rgba(255,255,255,0.35);padding-top:6px;font-size:0.68rem;opacity:0.65;min-width:110px;margin-top:32px}
+.result-watermark{
+  text-align:center;padding:8px;font-size:0.63rem;
+  color:var(--slate-light);background:var(--cream-dark);letter-spacing:0.06em;
+}
+
+/* ── GRADE REFERENCE ── */
+.grade-ref{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:11px;margin-top:14px}
+.grade-ref-item{
+  padding:12px 15px;border-radius:10px;border:1.5px solid var(--border-light);
+  background:var(--cream);transition:all 0.15s;
+}
+.grade-ref-item:hover{border-color:var(--border);box-shadow:var(--shadow-sm)}
+.grade-ref-item .g-sym{font-family:'DM Mono',monospace;font-weight:700;font-size:1.1rem}
+.grade-ref-item .g-range{font-size:0.71rem;color:var(--slate-light);margin-top:2px}
+.grade-ref-item .g-gpa{font-size:0.71rem;font-family:'DM Mono',monospace;color:var(--maroon);font-weight:600}
+.grade-ref-item .g-desc{font-size:0.68rem;color:var(--slate-light);margin-top:3px;font-style:italic}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:28px;right:28px;z-index:9999;
+  background:var(--green);color:#fff;padding:14px 22px;
+  border-radius:10px;font-size:0.87rem;font-weight:600;
+  box-shadow:0 6px 30px rgba(0,0,0,0.2);
+  animation:slideUp 0.3s ease;display:flex;align-items:center;gap:10px;
+  max-width:320px;
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── MISC ── */
+.flex{display:flex}.gap-8{gap:8px}.gap-12{gap:12px}.gap-16{gap:16px}
+.align-center{align-items:center}.justify-between{justify-content:space-between}
+.flex-wrap{flex-wrap:wrap}.mt-8{margin-top:8px}.mt-16{margin-top:16px}
+.text-center{text-align:center}
+.hint{font-size:0.74rem;color:var(--slate-light);margin-top:5px;line-height:1.5}
+.divider{border:none;border-top:1px solid var(--border-light);margin:20px 0}
+.empty-state{text-align:center;padding:44px 20px;color:var(--slate-light)}
+.empty-state .icon{font-size:3rem;display:block;margin-bottom:10px}
+
+/* ── SHARE INFO BOX ── */
+.share-info-box{
+  background:linear-gradient(135deg,#FFF8E8,var(--gold-pale));
+  border:1.5px solid var(--gold);border-radius:10px;
+  padding:14px 18px;margin-top:14px;
+  display:flex;align-items:flex-start;gap:12px;
+}
+.share-info-box .sib-icon{font-size:1.4rem;flex-shrink:0;margin-top:2px}
+.share-info-box .sib-text{font-size:0.8rem;color:var(--slate);line-height:1.55}
+.share-info-box .sib-text strong{color:var(--maroon)}
+
+/* ══════════════════════════════════════
+   PRINT STYLES — single page
+══════════════════════════════════════ */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 8mm 8mm 8mm 8mm;
+  }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+  html, body { width: 100%; height: auto; margin: 0; padding: 0; background: #fff !important; }
+  #share-banner, header, .nav-tabs, .no-print { display: none !important; }
+  .main { padding: 0 !important; max-width: 100% !important; }
+  .panel { display: none !important; }
+  .panel.active { display: block !important; }
+  #tab-results { display: block !important; }
+  #result-actions { display: none !important; }
+  .result-sheet {
+    border-radius: 0 !important;
+    border: 1.5px solid #7B1C1C !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    font-size: 0.78rem !important;
+  }
+  .result-header { padding: 14px 20px !important; }
+  .result-header h2 { font-size: 1.2rem !important; }
+  .result-header .school-sub { font-size: 0.7rem !important; }
+  .result-header .exam-badge { margin-top: 6px !important; font-size: 0.72rem !important; padding: 3px 14px !important; }
+  .result-info-strip { }
+  .result-info-item { padding: 8px 12px !important; }
+  .result-info-label { font-size: 0.55rem !important; }
+  .result-info-val { font-size: 0.78rem !important; }
+  .result-body { padding: 10px 16px !important; }
+  .grade-table { font-size: 0.73rem !important; }
+  .grade-table th { padding: 7px 10px !important; font-size: 0.6rem !important; }
+  .grade-table td { padding: 6px 10px !important; }
+  .grade-badge { padding: 2px 7px !important; font-size: 0.65rem !important; }
+  .result-footer { padding: 12px 18px !important; gap: 10px !important; }
+  .cgpa-showcase .cgpa-big { font-size: 1.9rem !important; }
+  .remarks-block .r-val { font-size: 1rem !important; }
+  .sig-line { margin-top: 22px !important; }
+  .result-watermark { padding: 5px !important; font-size: 0.55rem !important; }
+  /* Compact the CGPA summary bar */
+  .cgpa-summary-bar { padding: 10px 14px !important; margin-bottom: 10px !important; }
+}
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+
+<!-- ══ SHARE REMINDER BANNER ══ -->
+<div id="share-banner" class="visible">
+  <span>⚠️ <strong>Unsaved changes detected!</strong> Use the Export &amp; Share button to download an HTML file that keeps your data when shared.</span>
+  <button class="banner-btn" onclick="exportSnapshot()">📦 Export &amp; Share Now</button>
+  <button onclick="document.getElementById('share-banner').classList.remove('visible')" style="background:none;border:none;color:rgba(255,255,255,0.6);cursor:pointer;font-size:1.1rem;padding:0 4px">✕</button>
+</div>
+
+<!-- ══ HEADER ══ -->
+<header class="no-print">
+  <div class="header-inner">
+    <div class="school-emblem">🏫</div>
+    <div class="school-title">
+      <h1>Tharpu Secondary School</h1>
+      <div class="subtitle">Result Management System</div>
+      <div class="addr">Yangwarak-4, Panchthar, Koshi Province, Nepal &nbsp;|&nbsp; School Code: TSS-PAN</div>
+    </div>
+    <div class="header-right">
+      <div class="sys-badge">NEB Grading System</div>
+      <div class="neb-text">National Examination Board Nepal<br>A+ → NG &nbsp;·&nbsp; 4.0 GPA Scale &nbsp;·&nbsp; CGPA</div>
+    </div>
+    <button class="export-btn-header no-print pulse" id="export-btn" onclick="exportSnapshot()">📦 Export &amp; Share</button>
+    <button class="export-btn-header no-print" id="excel-btn" onclick="exportAllToExcel()" style="background:rgba(34,139,34,0.18);border-color:#4CAF50;color:#90EE90">📊 Export Excel</button>
+  </div>
+</header>
+
+<!-- ══ NAV ══ -->
+<div class="nav-tabs no-print">
+  <button class="nav-tab active" onclick="switchTab('students',this)">👥 Students</button>
+  <button class="nav-tab" onclick="switchTab('marks',this)">✏️ Enter Marks</button>
+  <button class="nav-tab" onclick="switchTab('results',this)">📄 Results</button>
+  <button class="nav-tab" onclick="switchTab('grading',this)">📊 Grading Guide</button>
+</div>
+
+<!-- ══ MAIN ══ -->
+<div class="main">
+
+  <!-- ▸ TAB: STUDENTS -->
+  <div id="tab-students" class="panel active">
+
+    <!-- Stats strip -->
+    <div class="stat-strip" id="stat-strip">
+      <div class="stat-card"><div class="stat-num" id="stat-total">17</div><div class="stat-label">Total Students</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-plant">17</div><div class="stat-label">Plant Science</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-general">0</div><div class="stat-label">General Stream</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-marks">0</div><div class="stat-label">With Marks Saved</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-header-left"><span class="icon">➕</span><h2>Register Student — Class 11</h2></div>
+      </div>
+      <div class="card-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="st-name" placeholder="Student's full name">
+          </div>
+          <div class="form-group" style="max-width:130px">
+            <label>Roll No.</label>
+            <input type="text" id="st-roll" placeholder="001">
+          </div>
+          <div class="form-group" style="max-width:210px">
+            <label>Stream</label>
+            <select id="st-stream">
+              <option value="plant">🌱 Plant Science</option>
+              <option value="general">📚 General</option>
+            </select>
+          </div>
+          <div class="form-group" style="max-width:160px">
+            <label>Academic Year</label>
+            <input type="text" id="st-year" value="2081/82" placeholder="2081/82">
+          </div>
+        </div>
+        <div class="flex gap-12 flex-wrap">
+          <button class="btn btn-primary" onclick="addStudent()">➕ Add Student</button>
+        </div>
+
+        <div class="share-info-box" style="margin-top:16px">
+          <span class="sib-icon">📤</span>
+          <div class="sib-text">
+            <strong>How to share this file with all student data intact:</strong><br>
+            After adding students and marks, click the <strong>"📦 Export &amp; Share"</strong> button at the top right.
+            This downloads an HTML file with <em>all data embedded inside it</em> — anyone you send it to will see the complete student list and marks. 
+            <strong>Do not use browser "Save As"</strong> — that saves a blank copy without the data.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-header-left"><span class="icon">👥</span><h2>Registered Students</h2></div>
+        <div class="flex gap-8">
+          <button class="btn btn-outline btn-sm" onclick="filterStudents('all')">All</button>
+          <button class="btn btn-outline btn-sm" onclick="filterStudents('plant')">🌱 Plant</button>
+          <button class="btn btn-outline btn-sm" onclick="filterStudents('general')">📚 General</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div id="student-list">
+      <div class="student-row">
+        <div class="student-avatar">BD</div>
+        <div class="student-info">
+          <div class="name">BINITA DAHAL</div>
+          <div class="meta">Roll No. <strong>10200205</strong> &nbsp;|&nbsp; <span class="badge-stream badge-plant">🌱 Plant Science</span> &nbsp;|&nbsp; 2082/83</div>
+        </div>
+        <div style="margin-right:8px"><span style="font-size:0.72rem;color:var(--slate-light)">No marks</span></div>
+        <button class="btn btn-danger btn-sm" onclick="deleteStudent(1779381676194)">🗑️</button>
+      </div>
+      <div class="student-row">
+        <div class="student-avatar">BD</div>
+        <div class="student-info">
+          <div class="name">BINOD DAHAL</div>
+          <div class="meta">Roll No. <strong>10200206</strong> &nbsp;|&nbsp; <span class="badge-stream badge-plant">🌱 Plant Science</span> &nbsp;|&nbsp; 2082/83</div>
+        </div>
+        <div style="margin-right:8px"><span style="font-size:0.72rem;color:var(--slate-light)">No marks</span></div>
+        <button class="btn btn-danger btn-sm" onclick="deleteStudent(1779381690142)">🗑️</button>
+      </div>
+      <div class="student-row">
+        <div class="student-avatar">DM</div>
+        <div class="student-info">
+          <div class="name">DIBYA MABO</div>
+          <div class="meta">Roll No. <strong>10200207</strong> &nbsp;|&nbsp; <span class="badge-stream badge-plant">🌱 Plant Science</span> &nbsp;|&nbsp; 2082/83</div>
+        </div>
+        <div style="margin-right:8px"><span style="font-size:0.72rem;color:var(--slate-light)">No marks</span></div>
+        <button class="btn btn-danger btn-sm" onclick="deleteStudent(1779381710668)">🗑️</button>
+      </div>
+      <div class="student-row">
+        <div class="student-avatar">JL</div>
+        <div class="student-info">
+          <div class="name">JENI LAKSAM</div>
+          <div class="meta">Roll No. <strong>10200208</strong> &nbsp;|&nbsp; <span class="badge-stream badge-plant">🌱 Plant Science</span> &nbsp;|&nbsp; 2082/83</div>
+        </div>
+        <div style="margin-right:8px"><span style="font-size:0.72rem;color:var(--slate-light)">No marks</span></div>
+        <button class="btn btn-danger btn-sm" onclick="deleteStudent(1779381727815)">🗑️</button>
+      </div>
+      <div class="student-row">
+        <div class="student-avatar">ML</div>
+        <div class="student-info">
+          <div class="name">MISEK LINGDEN</div>
+          <div class="meta">Roll No. <strong>10200209</strong> &nbsp;|&nbsp; <span class="badge-stream badge-plant">🌱 Plant Science</span> &nbsp;|&nbsp; 2082/83</div>
+        </div>
+        <div style="margin-right:8px"><span style="font-size:0.72rem;color:var(--slate-light)">No marks</span></div>
+        <button class="btn btn-danger btn-sm" onclick="deleteStudent(1779381813460)">🗑️</button>
+      </div>
+      <div class="student-row">
+        <div class="student-avatar">NA</div>
+        <div class="student-info">
+          <div class="name">NABIN ADHIKARI</div>
+          <div class="meta">Roll No. <strong>10200210</strong> &nbsp;|&nbsp; <span class="badge-stream badge-plant">🌱 Plant Science</span> &nbsp;|&nbsp; 2082/83</div>
+        </div>
+        <div style="margin-right:8px"><span style="font-size:0.72rem;color:var(--slate-light)">No marks</span></div>
+        <button class="btn btn-danger btn-sm" onclick="deleteStudent(1779381832423)">🗑️</button>
+      </div>
+      <div class="student-row">
+        <div class="student-avatar">NM</div>
+        <div class="student-info">
+          <div class="name">NILIMA MAGAR</div>
+          <div class="meta">Roll No. <strong>10200211</strong> &nbsp;|&nbsp; <span class="badge-stream badge-plant">🌱 Plant Science</span> &nbsp;|&nbsp; 2082/83</div>
+        </div>
+        <div style="margin-right:8px"><span style="font-size:0.72rem;color:var(--slate-light)">No marks</span></div>
+        <button class="btn btn-danger btn-sm" onclick="deleteStudent(1779381850089)">🗑️</button>
+      </div>
+      <div class="student-row">
+        <div class="student-avatar">NA</div>
+        <div class="student-info">
+          <div class="name">NISKARSHA ADHIKARI</div>
+          <div class="meta">Roll No. <strong>10200212</strong> &nbsp;|&nbsp; <span class="badge-stream badge-plant">🌱 Plant Science</span> &nbsp;|&nbsp; 2082/83</div>
+        </div>
+        <div style="margin-right:8px"><span style="font-size:0.72rem;color:var(--slate-light)">No marks</span></div>
+        <button class="btn btn-danger btn-sm" onclick="deleteStudent(1779381903750)">🗑️</button>
+      </div>
+      <div class="student-row">
+        <div class="student-avatar">PS</div>
+        <div class="student-info">
+          <div class="name">PRAJU SIWAKOTI</div>
+          <div class="meta">Roll No. <strong>10200213</strong> &nbsp;|&nbsp; <span class="badge-stream badge-plant">🌱 Plant Science</span> &nbsp;|&nbsp; 2082/83</div>
+        </div>
+        <div style="margin-right:8px"><span style="font-size:0.72rem;color:var(--slate-light)">No marks</span></div>
+        <button class="btn btn-danger btn-sm" onclick="deleteStudent(1779381928234)">🗑️</button>
+      </div>
+      <div class="student-row">
+        <div class="student-avatar">PK</div>
+        <div class="student-info">
+          <div class="name">PRERIT KAMBANG</div>
+          <div class="meta">Roll No. <strong>10200214</strong> &nbsp;|&nbsp; <span class="badge-stream badge-plant">🌱 Plant Science</span> &nbsp;|&nbsp; 2082/83</div>
+        </div>
+        <div style="margin-right:8px"><span style="font-size:0.72rem;color:var(--slate-light)">No marks</span></div>
+        <button class="btn btn-danger btn-sm" onclick="deleteStudent(1779381957929)">🗑️</button>
+      </div>
+      <div class="student-row">
+        <div class="student-avatar">PS</div>
+        <div class="student-info">
+          <div class="name">PUJA SUBEDI</div>
+          <div class="meta">Roll No. <strong>10200215</strong> &nbsp;|&nbsp; <span class="badge-stream badge-plant">🌱 Plant Science</span> &nbsp;|&nbsp; 2082/83</div>
+        </div>
+        <div style="margin-right:8px"><span style="font-size:0.72rem;color:var(--slate-light)">No marks</span></div>
+        <button class="btn btn-danger btn-sm" onclick="deleteStudent(1779381977231)">🗑️</button>
+      </div>
+      <div class="student-row">
+        <div class="student-avatar">RK</div>
+        <div class="student-info">
+          <div class="name">RAMESH KUMAR PAUDEL</div>
+          <div class="meta">Roll No. <strong>10200216</strong> &nbsp;|&nbsp; <span class="badge-stream badge-plant">🌱 Plant Science</span> &nbsp;|&nbsp; 2082/83</div>
+        </div>
+        <div style="margin-right:8px"><span style="font-size:0.72rem;color:var(--slate-light)">No marks</span></div>
+        <button class="btn btn-danger btn-sm" onclick="deleteStudent(1779382010478)">🗑️</button>
+      </div>
+      <div class="student-row">
+        <div class="student-avatar">RP</div>
+        <div class="student-info">
+          <div class="name">RITU PARA MABO</div>
+          <div class="meta">Roll No. <strong>10200217</strong> &nbsp;|&nbsp; <span class="badge-stream badge-plant">🌱 Plant Science</span> &nbsp;|&nbsp; 2082/83</div>
+        </div>
+        <div style="margin-right:8px"><span style="font-size:0.72rem;color:var(--slate-light)">No marks</span></div>
+        <button class="btn btn-danger btn-sm" onclick="deleteStudent(1779382030862)">🗑️</button>
+      </div>
+      <div class="student-row">
+        <div class="student-avatar">SY</div>
+        <div class="student-info">
+          <div class="name">SAGAR YONGHANG</div>
+          <div class="meta">Roll No. <strong>10200218</strong> &nbsp;|&nbsp; <span class="badge-stream badge-plant">🌱 Plant Science</span> &nbsp;|&nbsp; 2082/83</div>
+        </div>
+        <div style="margin-right:8px"><span style="font-size:0.72rem;color:var(--slate-light)">No marks</span></div>
+        <button class="btn btn-danger btn-sm" onclick="deleteStudent(1779382052761)">🗑️</button>
+      </div>
+      <div class="student-row">
+        <div class="student-avatar">SY</div>
+        <div class="student-info">
+          <div class="name">SOBHIYA YONGHANG</div>
+          <div class="meta">Roll No. <strong>10200219</strong> &nbsp;|&nbsp; <span class="badge-stream badge-plant">🌱 Plant Science</span> &nbsp;|&nbsp; 2082/83</div>
+        </div>
+        <div style="margin-right:8px"><span style="font-size:0.72rem;color:var(--slate-light)">No marks</span></div>
+        <button class="btn btn-danger btn-sm" onclick="deleteStudent(1779382075858)">🗑️</button>
+      </div>
+      <div class="student-row">
+        <div class="student-avatar">SK</div>
+        <div class="student-info">
+          <div class="name">SUDARSHAN KOIRALA</div>
+          <div class="meta">Roll No. <strong>10200220</strong> &nbsp;|&nbsp; <span class="badge-stream badge-plant">🌱 Plant Science</span> &nbsp;|&nbsp; 2082/83</div>
+        </div>
+        <div style="margin-right:8px"><span style="font-size:0.72rem;color:var(--slate-light)">No marks</span></div>
+        <button class="btn btn-danger btn-sm" onclick="deleteStudent(1779382101725)">🗑️</button>
+      </div>
+      <div class="student-row">
+        <div class="student-avatar">SK</div>
+        <div class="student-info">
+          <div class="name">SUJAN KATUWAL</div>
+          <div class="meta">Roll No. <strong>10200221</strong> &nbsp;|&nbsp; <span class="badge-stream badge-plant">🌱 Plant Science</span> &nbsp;|&nbsp; 2082/83</div>
+        </div>
+        <div style="margin-right:8px"><span style="font-size:0.72rem;color:var(--slate-light)">No marks</span></div>
+        <button class="btn btn-danger btn-sm" onclick="deleteStudent(1779382131005)">🗑️</button>
+      </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ▸ TAB: MARKS -->
+  <div id="tab-marks" class="panel">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-header-left"><span class="icon">✏️</span><h2>Subject Marks Entry</h2></div>
+      </div>
+      <div class="card-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Select Student</label>
+            <select id="marks-student" onchange="loadMarksForm()"><option value="">— Choose student —</option></select>
+          </div>
+          <div class="form-group" style="max-width:220px">
+            <label>Examination</label>
+            <select id="marks-examtype" onchange="loadMarksForm()">
+              <option value="First Terminal">First Terminal</option>
+              <option value="Second Terminal">Second Terminal</option>
+              <option value="Annual">Annual Examination</option>
+              <option value="Pre-board">Pre-board</option>
+            </select>
+          </div>
+        </div>
+        <div id="marks-form-area">
+          <div class="empty-state"><span class="icon">☝️</span><p>Select a student above to begin entering marks</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ▸ TAB: RESULTS -->
+  <div id="tab-results" class="panel">
+    <div class="card no-print">
+      <div class="card-header">
+        <div class="card-header-left"><span class="icon">📄</span><h2>Generate Result Sheet</h2></div>
+      </div>
+      <div class="card-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Select Student</label>
+            <select id="result-student" onchange="generateResult()"><option value="">— Choose student —</option></select>
+          </div>
+          <div class="form-group" style="max-width:220px">
+            <label>Examination</label>
+            <select id="result-examtype" onchange="generateResult()">
+              <option value="First Terminal">First Terminal</option>
+              <option value="Second Terminal">Second Terminal</option>
+              <option value="Annual">Annual Examination</option>
+              <option value="Pre-board">Pre-board</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="result-area"></div>
+
+    <div class="flex gap-12 mt-16 no-print flex-wrap" id="result-actions" style="display:none">
+      <button class="btn btn-primary" onclick="window.print()">🖨️ Print Result</button>
+      <button class="btn btn-green" onclick="downloadResultSheet()">⬇️ Save as HTML</button>
+      <button class="btn" onclick="exportGradeSheetToExcel()" style="background:linear-gradient(135deg,#217346,#2e8b57);color:#fff;box-shadow:0 2px 8px rgba(33,115,70,0.3)">📊 Export to Excel</button>
+    </div>
+  </div>
+
+  <!-- ▸ TAB: GRADING GUIDE -->
+  <div id="tab-grading" class="panel">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-header-left"><span class="icon">📊</span><h2>NEB Grading Scale — Class 11 &amp; 12</h2></div>
+      </div>
+      <div class="card-body">
+        <p class="hint" style="margin-bottom:14px">As per <strong>National Examination Board (NEB) Nepal</strong> — Revised Grading System (2078 BS onwards)</p>
+        <div class="grade-ref">
+          <div class="grade-ref-item"><div class="g-sym" style="color:#1a472a">A+</div><div class="g-range">90% and above</div><div class="g-gpa">GPA 4.0</div><div class="g-desc">Outstanding</div></div>
+          <div class="grade-ref-item"><div class="g-sym" style="color:#2d6a4f">A</div><div class="g-range">80% – 89%</div><div class="g-gpa">GPA 3.6</div><div class="g-desc">Excellent</div></div>
+          <div class="grade-ref-item"><div class="g-sym" style="color:#1e6091">B+</div><div class="g-range">70% – 79%</div><div class="g-gpa">GPA 3.2</div><div class="g-desc">Very Good</div></div>
+          <div class="grade-ref-item"><div class="g-sym" style="color:#0d4f8c">B</div><div class="g-range">60% – 69%</div><div class="g-gpa">GPA 2.8</div><div class="g-desc">Good</div></div>
+          <div class="grade-ref-item"><div class="g-sym" style="color:#7b5e00">C+</div><div class="g-range">50% – 59%</div><div class="g-gpa">GPA 2.4</div><div class="g-desc">Satisfactory</div></div>
+          <div class="grade-ref-item"><div class="g-sym" style="color:#946900">C</div><div class="g-range">40% – 49%</div><div class="g-gpa">GPA 2.0</div><div class="g-desc">Acceptable</div></div>
+          <div class="grade-ref-item"><div class="g-sym" style="color:#7a4100">D</div><div class="g-range">35% – 39%</div><div class="g-gpa">GPA 1.6</div><div class="g-desc">Basic (Pass)</div></div>
+          <div class="grade-ref-item"><div class="g-sym" style="color:#c1121f">NG</div><div class="g-range">Below 35%</div><div class="g-gpa">GPA 0.0</div><div class="g-desc">Not Graded</div></div>
+        </div>
+        <hr class="divider">
+        <h3 style="font-family:'DM Serif Display',serif;font-size:1.15rem;margin-bottom:14px">Subject List — Class 11</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div>
+            <div class="section-label">🌱 Plant Science Stream</div>
+            <table class="grade-table" style="margin-top:8px">
+              <thead><tr><th>Subject</th><th style="text-align:center">Theory</th><th style="text-align:center">Practical</th><th style="text-align:center">Total</th></tr></thead>
+              <tbody id="plant-subjects-ref"><tr><td><em>Compulsory English</em> <span style="font-size:0.65rem;color:var(--maroon)">(Compulsory)</span></td>
+     <td style="text-align:center">75</td><td style="text-align:center">25</td><td style="text-align:center">100</td></tr><tr><td><em>Compulsory Nepali</em> <span style="font-size:0.65rem;color:var(--maroon)">(Compulsory)</span></td>
+     <td style="text-align:center">75</td><td style="text-align:center">25</td><td style="text-align:center">100</td></tr><tr><td>Physics</td><td style="text-align:center">75</td><td style="text-align:center">25</td><td style="text-align:center">100</td></tr><tr><td>Chemistry</td><td style="text-align:center">75</td><td style="text-align:center">25</td><td style="text-align:center">100</td></tr><tr><td>Biology</td><td style="text-align:center">75</td><td style="text-align:center">25</td><td style="text-align:center">100</td></tr><tr><td>Farm Machinery &amp; Seeds Development</td><td style="text-align:center">50</td><td style="text-align:center">50</td><td style="text-align:center">100</td></tr><tr><td>Commercial Fruit Crop &amp; Post Harvest Technology</td><td style="text-align:center">50</td><td style="text-align:center">50</td><td style="text-align:center">100</td></tr><tr><td>Agricultural Entomology</td><td style="text-align:center">50</td><td style="text-align:center">50</td><td style="text-align:center">100</td></tr><tr><td>Soil Fertility and Nutrient Management</td><td style="text-align:center">50</td><td style="text-align:center">50</td><td style="text-align:center">100</td></tr></tbody>
+            </table>
+          </div>
+          <div>
+            <div class="section-label">📚 General Stream</div>
+            <table class="grade-table" style="margin-top:8px">
+              <thead><tr><th>Subject</th><th style="text-align:center">Theory</th><th style="text-align:center">Practical</th><th style="text-align:center">Total</th></tr></thead>
+              <tbody id="general-subjects-ref"><tr><td><em>Compulsory English</em> <span style="font-size:0.65rem;color:var(--maroon)">(Compulsory)</span></td>
+     <td style="text-align:center">75</td><td style="text-align:center">25</td><td style="text-align:center">100</td></tr><tr><td><em>Compulsory Nepali</em> <span style="font-size:0.65rem;color:var(--maroon)">(Compulsory)</span></td>
+     <td style="text-align:center">75</td><td style="text-align:center">25</td><td style="text-align:center">100</td></tr><tr><td>Mathematics</td><td style="text-align:center">100</td><td style="text-align:center">0</td><td style="text-align:center">100</td></tr><tr><td>Accountancy</td><td style="text-align:center">75</td><td style="text-align:center">25</td><td style="text-align:center">100</td></tr><tr><td>Economics</td><td style="text-align:center">100</td><td style="text-align:center">0</td><td style="text-align:center">100</td></tr><tr><td>Computer Science</td><td style="text-align:center">75</td><td style="text-align:center">25</td><td style="text-align:center">100</td></tr><tr><td>Social Studies &amp; Life Skills</td><td style="text-align:center">75</td><td style="text-align:center">25</td><td style="text-align:center">100</td></tr><tr><td>Health &amp; Physical Education</td><td style="text-align:center">50</td><td style="text-align:center">50</td><td style="text-align:center">100</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+        <hr class="divider">
+        <h3 style="font-family:'DM Serif Display',serif;font-size:1.1rem;margin-bottom:10px">CGPA Calculation — NEB Method</h3>
+        <ul style="font-size:0.87rem;line-height:2;padding-left:18px;color:var(--slate)">
+          <li>Each subject carries <strong>equal credit weight (1 credit each)</strong></li>
+          <li>For subjects <em>with practical</em>: Subject GPA = Theory GPA × 0.75 + Practical GPA × 0.25</li>
+          <li>For subjects <em>without practical</em> (e.g. Math, Economics): Subject GPA = Theory GPA only</li>
+          <li>CGPA = Sum of all Subject GPAs ÷ Total number of graded subjects</li>
+          <li>Minimum <strong>D grade (35%)</strong> required separately in both theory AND practical</li>
+          <li>Any component below 35% = <strong>NG</strong> (Not Graded) — student cannot pass that subject</li>
+          <li>Minimum CGPA of <strong>1.6 (Grade D)</strong> required to pass; CGPA ≥ 2.0 recommended for Grade 12 Science</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+'use strict';
+
+// ════════════════════════════════════════
+//  SUBJECT DEFINITIONS
+// ════════════════════════════════════════
+const COMPULSORY = [
+  { id:'english',  name:'Compulsory English',  theory:75, practical:25, total:100 },
+  { id:'nepali',   name:'Compulsory Nepali',   theory:75, practical:25, total:100 },
+];
+const STREAMS = {
+  plant:{
+    label:'Plant Science',
+    subjects:[
+      { id:'physics',    name:'Physics',                                           theory:75, practical:25, total:100 },
+      { id:'chemistry',  name:'Chemistry',                                         theory:75, practical:25, total:100 },
+      { id:'biology',    name:'Biology',                                           theory:75, practical:25, total:100 },
+      { id:'farmy',      name:'Farm Machinery & Seeds Development',                theory:50, practical:50, total:100 },
+      { id:'fruit',      name:'Commercial Fruit Crop & Post Harvest Technology',   theory:50, practical:50, total:100 },
+      { id:'entomology', name:'Agricultural Entomology',                           theory:50, practical:50, total:100 },
+      { id:'soilfert',   name:'Soil Fertility and Nutrient Management',            theory:50, practical:50, total:100 },
+    ]
+  },
+  general:{
+    label:'General',
+    subjects:[
+      { id:'math',       name:'Mathematics',                      theory:100, practical:0,  total:100 },
+      { id:'account',    name:'Accountancy',                      theory:75,  practical:25, total:100 },
+      { id:'economics',  name:'Economics',                        theory:100, practical:0,  total:100 },
+      { id:'computer',   name:'Computer Science',                 theory:75,  practical:25, total:100 },
+      { id:'civics',     name:'Social Studies & Life Skills',     theory:75,  practical:25, total:100 },
+      { id:'health',     name:'Health & Physical Education',      theory:50,  practical:50, total:100 },
+    ]
+  }
+};
+
+// ════════════════════════════════════════
+//  STATE — loaded from embedded-db first, then localStorage fallback
+// ════════════════════════════════════════
+let embeddedRaw = {};
+try { embeddedRaw = JSON.parse(document.getElementById('embedded-db').textContent); } catch(e){}
+
+let students = (embeddedRaw.students && embeddedRaw.students.length) ? embeddedRaw.students : [];
+let marksDB  = (embeddedRaw.marksDB  && Object.keys(embeddedRaw.marksDB).length)  ? embeddedRaw.marksDB  : {};
+
+// Fallback to localStorage only if embedded is empty (fresh file)
+if(!students.length){
+  try{ const ls=localStorage.getItem('tharpu_students'); if(ls) students=JSON.parse(ls); }catch(e){}
+}
+if(!Object.keys(marksDB).length){
+  try{ const lm=localStorage.getItem('tharpu_marks'); if(lm) marksDB=JSON.parse(lm); }catch(e){}
+}
+
+// Track whether there are unsaved (unexported) changes
+let _unsavedChanges = false;
+
+function persist(){
+  try{
+    localStorage.setItem('tharpu_students', JSON.stringify(students));
+    localStorage.setItem('tharpu_marks',    JSON.stringify(marksDB));
+  }catch(e){}
+  // Show the share banner and pulse the export button
+  _unsavedChanges = true;
+  document.getElementById('share-banner').classList.add('visible');
+  document.getElementById('export-btn').classList.add('pulse');
+}
+
+// ════════════════════════════════════════
+//  NEB GRADING — verified per NEB 2078 BS
+// ════════════════════════════════════════
+function getGrade(pct){
+  if(pct >= 90) return { letter:'A+', gp:4.0, cls:'Ap', desc:'Outstanding'  };
+  if(pct >= 80) return { letter:'A',  gp:3.6, cls:'A',  desc:'Excellent'    };
+  if(pct >= 70) return { letter:'B+', gp:3.2, cls:'Bp', desc:'Very Good'    };
+  if(pct >= 60) return { letter:'B',  gp:2.8, cls:'B',  desc:'Good'         };
+  if(pct >= 50) return { letter:'C+', gp:2.4, cls:'Cp', desc:'Satisfactory' };
+  if(pct >= 40) return { letter:'C',  gp:2.0, cls:'C',  desc:'Acceptable'   };
+  if(pct >= 35) return { letter:'D',  gp:1.6, cls:'D',  desc:'Basic'        };
+  return               { letter:'NG', gp:0.0, cls:'NG', desc:'Not Graded'   };
+}
+
+/**
+ * NEB Subject result calculation:
+ * - For subjects with practicals: both theory AND practical must separately be ≥35%
+ *   Subject GPA = ThGP×0.75 + PrGP×0.25
+ * - For subjects without practical (practical=0): only theory matters
+ *   Subject GPA = Theory GPA
+ * - If any component is NG, the whole subject is NG
+ */
+function calcSubjectResult(sub, tVal, pVal){
+  const tPct  = (tVal / sub.theory) * 100;
+  const tG    = getGrade(tPct);
+
+  if(sub.practical === 0){
+    // No practical — subject GPA = theory GPA directly
+    return { tG, pG:null, subGP: tG.gp, finalPct: tPct, finalGrade: tG, isNG: tG.letter==='NG' };
+  }
+
+  const pPct  = (pVal / sub.practical) * 100;
+  const pG    = getGrade(pPct);
+
+  // If either component is NG, the subject is NG
+  if(tG.letter === 'NG' || pG.letter === 'NG'){
+    const ngGrade = { letter:'NG', gp:0.0, cls:'NG', desc:'Not Graded' };
+    return { tG, pG, subGP: 0.0, finalPct: (tPct*0.75+pPct*0.25), finalGrade: ngGrade, isNG: true };
+  }
+
+  const subGP     = Math.round(((tG.gp * 0.75) + (pG.gp * 0.25)) * 100) / 100;
+  const finalPct  = (tPct * 0.75) + (pPct * 0.25);
+  const finalGrade = getGrade(finalPct);
+  return { tG, pG, subGP, finalPct, finalGrade, isNG: false };
+}
+
+function computeCGPA(st, examType){
+  const key     = st.id + '_' + examType;
+  const saved   = marksDB[key] || {};
+  const allSubs = [...COMPULSORY, ...STREAMS[st.stream].subjects];
+  let totalGP = 0, count = 0, hasNG = false, enteredCount = 0;
+
+  allSubs.forEach(sub => {
+    const tVal = saved[sub.id+'_t'];
+    if(tVal === undefined || tVal === '') return;
+    enteredCount++;
+    const pVal = saved[sub.id+'_p'] !== undefined ? saved[sub.id+'_p'] : 0;
+    const res  = calcSubjectResult(sub, parseFloat(tVal), parseFloat(pVal));
+    if(res.isNG) hasNG = true;
+    totalGP += res.subGP;
+    count++;
+  });
+
+  const cgpa = count > 0 ? Math.round((totalGP / count) * 100) / 100 : null;
+  return { cgpa, count, enteredCount, hasNG, totalSubs: allSubs.length };
+}
+
+// ════════════════════════════════════════
+//  TABS
+// ════════════════════════════════════════
+function switchTab(tab, btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  btn.classList.add('active');
+  if(tab==='marks')   refreshSelects();
+  if(tab==='results'){ refreshSelects(); generateResult(); }
+  if(tab==='grading') buildGradingRef();
+}
+
+// ════════════════════════════════════════
+//  STUDENTS
+// ════════════════════════════════════════
+function addStudent(){
+  const name   = document.getElementById('st-name').value.trim();
+  const roll   = document.getElementById('st-roll').value.trim();
+  const stream = document.getElementById('st-stream').value;
+  const year   = document.getElementById('st-year').value.trim() || '2081/82';
+  if(!name || !roll){ showToast('Please enter both name and roll number','⚠️','#c1121f'); return; }
+  if(students.find(s=>s.roll===roll)){ showToast('Roll number already exists!','⚠️','#c1121f'); return; }
+  students.push({ id: Date.now(), name, roll, stream, year });
+  persist();
+  document.getElementById('st-name').value = '';
+  document.getElementById('st-roll').value = '';
+  renderStudentList('all');
+  updateStats();
+  showToast('Student added: '+name);
+}
+
+function deleteStudent(id){
+  if(!confirm('Delete this student and all their marks?')) return;
+  students = students.filter(s=>s.id!==id);
+  Object.keys(marksDB).forEach(k=>{ if(k.startsWith(id+'_')) delete marksDB[k]; });
+  persist();
+  renderStudentList('all');
+  updateStats();
+  refreshSelects();
+}
+
+let currentFilter = 'all';
+function filterStudents(f){ currentFilter = f; renderStudentList(f); }
+
+function renderStudentList(filter){
+  const list     = document.getElementById('student-list');
+  const filtered = filter==='all' ? students : students.filter(s=>s.stream===filter);
+  if(!filtered.length){
+    list.innerHTML = `<div class="empty-state"><span class="icon">👤</span><p>No students ${filter!=='all'?'in this stream ':''} yet. Add one above.</p></div>`;
+    return;
+  }
+  const sorted = [...filtered].sort((a,b)=>a.roll.localeCompare(b.roll,undefined,{numeric:true}));
+  list.innerHTML = sorted.map(s=>{
+    const initials    = s.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+    const streamBadge = s.stream==='plant'
+      ? `<span class="badge-stream badge-plant">🌱 Plant Science</span>`
+      : `<span class="badge-stream badge-general">📚 General</span>`;
+    const { cgpa, hasNG } = computeCGPA(s,'Annual');
+    const cgpaHtml = cgpa !== null
+      ? `<span style="font-family:'DM Mono',monospace;font-size:0.92rem;color:${hasNG?'#c1121f':'#2d6a4f'};font-weight:700">CGPA ${cgpa.toFixed(2)}</span>`
+      : `<span style="font-size:0.72rem;color:var(--slate-light)">No marks</span>`;
+    return `
+      <div class="student-row">
+        <div class="student-avatar">${initials}</div>
+        <div class="student-info">
+          <div class="name">${s.name}</div>
+          <div class="meta">Roll No. <strong>${s.roll}</strong> &nbsp;|&nbsp; ${streamBadge} &nbsp;|&nbsp; ${s.year}</div>
+        </div>
+        <div style="margin-right:8px">${cgpaHtml}</div>
+        <button class="btn btn-danger btn-sm" onclick="deleteStudent(${s.id})">🗑️</button>
+      </div>`;
+  }).join('');
+}
+
+function updateStats(){
+  document.getElementById('stat-total').textContent   = students.length;
+  document.getElementById('stat-plant').textContent   = students.filter(s=>s.stream==='plant').length;
+  document.getElementById('stat-general').textContent = students.filter(s=>s.stream==='general').length;
+  document.getElementById('stat-marks').textContent   = students.filter(s=>Object.keys(marksDB).some(k=>k.startsWith(s.id+'_'))).length;
+}
+
+function refreshSelects(){
+  const opts = ['<option value="">— Choose student —</option>',
+    ...students
+      .slice().sort((a,b)=>a.roll.localeCompare(b.roll,undefined,{numeric:true}))
+      .map(s=>`<option value="${s.id}">${s.roll}. ${s.name} (${STREAMS[s.stream].label})</option>`)
+  ].join('');
+  document.getElementById('marks-student').innerHTML  = opts;
+  document.getElementById('result-student').innerHTML = opts;
+}
+
+// ════════════════════════════════════════
+//  MARKS ENTRY
+// ════════════════════════════════════════
+function loadMarksForm(){
+  const sid      = document.getElementById('marks-student').value;
+  const examType = document.getElementById('marks-examtype').value;
+  const area     = document.getElementById('marks-form-area');
+  if(!sid){ area.innerHTML=`<div class="empty-state"><span class="icon">☝️</span><p>Select a student above</p></div>`; return; }
+  const st      = students.find(s=>s.id==sid);
+  const allSubs = [...COMPULSORY, ...STREAMS[st.stream].subjects];
+  const key     = sid+'_'+examType;
+  const saved   = marksDB[key] || {};
+
+  const rows = allSubs.map(sub=>{
+    const tVal  = saved[sub.id+'_t'] !== undefined ? saved[sub.id+'_t'] : '';
+    const pVal  = saved[sub.id+'_p'] !== undefined ? saved[sub.id+'_p'] : '';
+    const hasPr = sub.practical > 0;
+    return `<tr>
+      <td><strong>${sub.name}</strong></td>
+      <td style="font-family:'DM Mono',monospace;color:var(--slate-light);font-size:0.82rem;white-space:nowrap">
+        ${sub.theory}${hasPr?' + '+sub.practical:''} = ${sub.total}
+      </td>
+      <td>
+        <input type="number" id="t_${sub.id}" min="0" max="${sub.theory}" step="0.5"
+          value="${tVal}" placeholder="/ ${sub.theory}"
+          oninput="onMarksInput('${sub.id}',${sub.theory},${sub.practical},'${sid}','${examType}')">
+      </td>
+      <td>
+        ${hasPr
+          ? `<input type="number" id="p_${sub.id}" min="0" max="${sub.practical}" step="0.5"
+              value="${pVal}" placeholder="/ ${sub.practical}"
+              oninput="onMarksInput('${sub.id}',${sub.theory},${sub.practical},'${sid}','${examType}')">`
+          : `<span style="color:var(--slate-light);font-size:0.8rem">N/A</span>`}
+      </td>
+      <td id="lg_${sub.id}" style="display:none"></td>
+    </tr>`;
+  }).join('');
+
+  area.innerHTML = `
+    <div id="live-cgpa-bar" class="live-cgpa-bar">
+      <div>
+        <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:0.12em;opacity:0.65;margin-bottom:4px">Live CGPA</div>
+        <div class="live-cgpa-num" id="live-cgpa-num">—</div>
+        <div class="live-cgpa-label">out of 4.0</div>
+        <div class="live-cgpa-grade" id="live-cgpa-grade"></div>
+      </div>
+      <div class="cgpa-progress">
+        <div style="font-size:0.72rem;opacity:0.7;margin-bottom:4px" id="live-cgpa-detail">Enter marks to see CGPA</div>
+        <div class="cgpa-bar-track"><div class="cgpa-bar-fill" id="live-cgpa-fill" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="section-label">${STREAMS[st.stream].label} Stream — ${st.name} — ${examType}</div>
+    <div style="overflow-x:auto;margin-top:10px">
+      <table class="grade-table" style="min-width:580px">
+        <thead>
+          <tr>
+            <th>Subject</th>
+            <th>Full Marks</th>
+            <th style="text-align:center">Theory Obtained</th>
+            <th style="text-align:center">Practical Obtained</th>
+            <th style="text-align:center">Grade</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    <div class="flex gap-12 mt-16 flex-wrap">
+      <button class="btn btn-primary" onclick="saveMarks('${sid}','${examType}')">💾 Save Marks</button>
+      <button class="btn btn-outline" onclick="clearMarks('${sid}','${examType}')">🗑️ Clear All</button>
+    </div>`;
+
+  allSubs.forEach(sub=>onMarksInput(sub.id, sub.theory, sub.practical, sid, examType));
+}
+
+function onMarksInput(id, thMax, prMax, sid, examType){
+  const tEl  = document.getElementById('t_'+id);
+  const pEl  = document.getElementById('p_'+id);
+  const lgEl = document.getElementById('lg_'+id);
+  if(!tEl) return;
+  const tVal = parseFloat(tEl.value);
+  if(isNaN(tVal)){ lgEl.innerHTML=''; updateLiveCGPA(sid,examType); return; }
+  lgEl.innerHTML = '';
+  updateLiveCGPA(sid, examType);
+}
+
+function updateLiveCGPA(sid, examType){
+  const st = students.find(s=>s.id==sid);
+  if(!st) return;
+  const allSubs = [...COMPULSORY,...STREAMS[st.stream].subjects];
+  let totalGP=0, count=0, hasNG=false;
+  allSubs.forEach(sub=>{
+    const tEl=document.getElementById('t_'+sub.id);
+    if(!tEl||tEl.value==='') return;
+    const tVal=parseFloat(tEl.value); if(isNaN(tVal)) return;
+    const pEl=document.getElementById('p_'+sub.id);
+    const pVal=(pEl&&pEl.value!=='') ? parseFloat(pEl.value) : 0;
+    const res=calcSubjectResult(sub,tVal,pVal);
+    if(res.isNG) hasNG=true;
+    totalGP+=res.subGP; count++;
+  });
+  const numEl   =document.getElementById('live-cgpa-num');
+  const gradeEl =document.getElementById('live-cgpa-grade');
+  const fillEl  =document.getElementById('live-cgpa-fill');
+  const detailEl=document.getElementById('live-cgpa-detail');
+  if(!numEl) return;
+  if(count===0){ numEl.textContent='—'; gradeEl.textContent=''; fillEl.style.width='0%'; detailEl.textContent='Enter marks to see CGPA'; return; }
+  const cgpa=Math.round((totalGP/count)*100)/100;
+  numEl.textContent=cgpa.toFixed(2);
+  const g=getGrade((cgpa/4)*100);
+  gradeEl.textContent=hasNG ? '⚠️ NG in one or more subjects' : g.desc;
+  fillEl.style.width=Math.min((cgpa/4)*100,100)+'%';
+  detailEl.textContent=`Based on ${count} of ${allSubs.length} subjects entered`;
+}
+
+function saveMarks(sid, examType){
+  const st=students.find(s=>s.id==sid);
+  const allSubs=[...COMPULSORY,...STREAMS[st.stream].subjects];
+  const key=sid+'_'+examType;
+  const data={}; let hasError=false;
+  allSubs.forEach(sub=>{
+    const tEl=document.getElementById('t_'+sub.id);
+    const pEl=document.getElementById('p_'+sub.id);
+    if(tEl){
+      const v=tEl.value.trim();
+      if(v!==''){
+        const n=parseFloat(v);
+        if(isNaN(n)||n<0||n>sub.theory){ tEl.classList.add('error'); hasError=true; }
+        else{ tEl.classList.remove('error'); data[sub.id+'_t']=n; }
+      }
+    }
+    if(pEl){
+      const v=pEl.value.trim();
+      if(v!==''){
+        const n=parseFloat(v);
+        if(isNaN(n)||n<0||n>sub.practical){ pEl.classList.add('error'); hasError=true; }
+        else{ pEl.classList.remove('error'); data[sub.id+'_p']=n; }
+      }
+    }
+  });
+  if(hasError){ showToast('Check highlighted fields — marks out of range','⚠️','#c1121f'); return; }
+  marksDB[key]=data;
+  persist();
+  renderStudentList(currentFilter);
+  updateStats();
+  showToast('Marks saved for '+st.name+' — '+examType);
+}
+
+function clearMarks(sid, examType){
+  if(!confirm('Clear all marks for this exam?')) return;
+  delete marksDB[sid+'_'+examType];
+  persist();
+  loadMarksForm();
+}
+
+// ════════════════════════════════════════
+//  RESULT GENERATION
+// ════════════════════════════════════════
+function generateResult(){
+  const sid      = document.getElementById('result-student').value;
+  const examType = document.getElementById('result-examtype').value;
+  const area     = document.getElementById('result-area');
+  const actions  = document.getElementById('result-actions');
+  if(!sid){ area.innerHTML=''; actions.style.display='none'; return; }
+
+  const st      = students.find(s=>s.id==sid);
+  const key     = sid+'_'+examType;
+  const saved   = marksDB[key]||{};
+  const allSubs = [...COMPULSORY,...STREAMS[st.stream].subjects];
+  const today   = new Date().toLocaleDateString('en-NP',{year:'numeric',month:'long',day:'numeric'});
+
+  let rows='', totalGP=0, gpCount=0, hasNG=false;
+
+  allSubs.forEach((sub,idx)=>{
+    const tVal = saved[sub.id+'_t'];
+    const pVal = saved[sub.id+'_p'];
+    const hasT = tVal!==undefined && tVal!=='';
+    const hasP = pVal!==undefined && pVal!=='';
+    const rowBg= idx%2===0 ? '' : 'background:var(--cream)';
+
+    if(!hasT){
+      rows+=`<tr style="${rowBg}">
+        <td>${sub.name}</td>
+        <td style="text-align:center;font-family:'DM Mono',monospace">${sub.theory}+${sub.practical}</td>
+        <td colspan="4" style="color:var(--slate-light);font-style:italic;font-size:0.8rem;text-align:center">— not entered —</td>
+      </tr>`;
+      return;
+    }
+
+    const res = calcSubjectResult(sub, parseFloat(tVal), hasP?parseFloat(pVal):0);
+    if(res.isNG) hasNG=true;
+    totalGP+=res.subGP; gpCount++;
+
+    const pCell = sub.practical>0 && hasP
+      ? `${parseFloat(pVal).toFixed(1)}`
+      : `<span style="color:var(--slate-light)">—</span>`;
+
+    rows+=`<tr style="${rowBg}">
+      <td><strong>${sub.name}</strong></td>
+      <td style="text-align:center;font-family:'DM Mono',monospace;font-size:0.82rem;color:var(--slate-light)">${sub.theory}+${sub.practical}</td>
+      <td style="text-align:center">${parseFloat(tVal).toFixed(1)}</td>
+      <td style="text-align:center">${pCell}</td>
+      <td style="text-align:center;font-family:'DM Mono',monospace;font-weight:600">${res.subGP.toFixed(2)}</td>
+    </tr>`;
+  });
+
+  const cgpa         = gpCount>0 ? (totalGP/gpCount).toFixed(2) : '—';
+  const cgpaNum      = parseFloat(cgpa)||0;
+  const overallG     = gpCount>0 ? getGrade((cgpaNum/4)*100) : null;
+  const remarks      = hasNG ? 'NOT GRADED' : (gpCount===0?'—':overallG.desc.toUpperCase());
+  const remarkSub    = hasNG ? 'NG in one or more subjects' : (overallG?`GPA ${cgpa}`:'');
+  const remarkColor  = hasNG ? '#FFE8E8' : '#D8F3DC';
+  const remarkTextColor = hasNG ? '#c1121f' : '#1b4332';
+  const cgpaBarW     = Math.min((cgpaNum/4)*100,100);
+
+  area.innerHTML=`
+    <div class="result-sheet print-target" id="generated-result">
+
+      <div class="result-header">
+        <div class="result-header-logo">🏫</div>
+        <h2>Tharpu Secondary School</h2>
+        <p class="school-sub">Yangwarak-4, Panchthar, Koshi Province, Nepal</p>
+        <div class="exam-badge">CLASS XI &nbsp;—&nbsp; ${examType.toUpperCase()} RESULT</div>
+      </div>
+
+      <div class="result-info-strip">
+        <div class="result-info-item"><div class="result-info-label">Student Name</div><div class="result-info-val">${st.name}</div></div>
+        <div class="result-info-item"><div class="result-info-label">Roll No.</div><div class="result-info-val">${st.roll}</div></div>
+        <div class="result-info-item"><div class="result-info-label">Class</div><div class="result-info-val">11</div></div>
+        <div class="result-info-item"><div class="result-info-label">Stream</div><div class="result-info-val">${STREAMS[st.stream].label}</div></div>
+        <div class="result-info-item"><div class="result-info-label">Academic Year</div><div class="result-info-val">${st.year}</div></div>
+        <div class="result-info-item"><div class="result-info-label">Examination</div><div class="result-info-val">${examType}</div></div>
+        <div class="result-info-item"><div class="result-info-label">Date Issued</div><div class="result-info-val">${today}</div></div>
+      </div>
+
+      <div class="result-body">
+        ${gpCount>0?`
+        <div class="cgpa-summary-bar" style="background:linear-gradient(135deg,var(--cream-dark),#fff);border:1.5px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;gap:18px;flex-wrap:wrap">
+          <div style="text-align:center;min-width:90px">
+            <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--maroon);font-weight:700;margin-bottom:3px">CGPA</div>
+            <div style="font-family:'DM Serif Display',serif;font-size:2rem;color:var(--maroon);line-height:1">${cgpa}</div>
+            <div style="font-size:0.68rem;color:var(--slate-light)">out of 4.0</div>
+          </div>
+          <div style="flex:1;min-width:160px">
+            <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--slate-light);margin-bottom:5px">
+              <span>0.0</span><span>${gpCount} subjects graded</span><span>4.0</span>
+            </div>
+            <div style="background:var(--border-light);border-radius:6px;height:10px;overflow:hidden">
+              <div style="width:${cgpaBarW}%;height:100%;border-radius:6px;background:linear-gradient(90deg,var(--maroon),var(--gold))"></div>
+            </div>
+          </div>
+          <div style="text-align:center;padding:9px 16px;border-radius:8px;background:${remarkColor};min-width:110px">
+            <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.1em;color:${remarkTextColor};font-weight:700;margin-bottom:3px">Remarks</div>
+            <div style="font-family:'DM Serif Display',serif;font-size:1rem;color:${remarkTextColor}">${remarks}</div>
+            <div style="font-size:0.65rem;color:${remarkTextColor};opacity:0.8;margin-top:2px">${remarkSub}</div>
+          </div>
+        </div>`:''}
+
+        <div style="overflow-x:auto">
+          <table class="grade-table" style="min-width:540px">
+            <thead>
+              <tr>
+                <th>Subject</th>
+                <th style="text-align:center">Full Marks</th>
+                <th style="text-align:center">Theory</th>
+                <th style="text-align:center">Practical</th>
+                <th style="text-align:center">Subject GPA</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+            ${gpCount>0?`
+            <tfoot>
+              <tr style="background:var(--cream-dark)">
+                <td colspan="4" style="text-align:right;font-weight:700;color:var(--maroon);font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase">
+                  Cumulative GPA (CGPA)
+                </td>
+                <td style="text-align:center;font-family:'DM Mono',monospace;font-weight:700;font-size:0.98rem;color:var(--maroon)">${cgpa}</td>
+              </tr>
+            </tfoot>`:''}
+          </table>
+        </div>
+      </div>
+
+      <div class="result-footer">
+        <div class="cgpa-showcase">
+          <div class="cgpa-tag">Final CGPA</div>
+          <div class="cgpa-big">${cgpa}</div>
+          <div class="cgpa-denom">/ 4.0 &nbsp;·&nbsp; NEB Scale</div>
+        </div>
+        <div class="remarks-block">
+          <div class="r-label">Overall Result</div>
+          <div class="r-val">${remarks}</div>
+          <div class="r-sub">${remarkSub}</div>
+        </div>
+        <div class="sig-row">
+          <div class="sig-block"><div class="sig-line">Class Teacher</div></div>
+          <div class="sig-block"><div class="sig-line">Principal</div></div>
+        </div>
+      </div>
+
+      <div class="result-watermark">
+        Tharpu Secondary School, Yangwarak-4, Panchthar &nbsp;·&nbsp;
+        Graded as per NEB Nepal &nbsp;·&nbsp; Minimum D (35%) required to pass each subject &nbsp;·&nbsp; Theory and Practical assessed separately
+      </div>
+    </div>`;
+  actions.style.display='flex';
+}
+
+// ════════════════════════════════════════
+//  GRADING REFERENCE
+// ════════════════════════════════════════
+function buildGradingRef(){
+  const compRows = COMPULSORY.map(s=>
+    `<tr><td><em>${s.name}</em> <span style="font-size:0.65rem;color:var(--maroon)">(Compulsory)</span></td>
+     <td style="text-align:center">${s.theory}</td><td style="text-align:center">${s.practical}</td><td style="text-align:center">${s.total}</td></tr>`
+  ).join('');
+  document.getElementById('plant-subjects-ref').innerHTML = compRows +
+    STREAMS.plant.subjects.map(s=>`<tr><td>${s.name}</td><td style="text-align:center">${s.theory}</td><td style="text-align:center">${s.practical}</td><td style="text-align:center">${s.total}</td></tr>`).join('');
+  document.getElementById('general-subjects-ref').innerHTML = compRows +
+    STREAMS.general.subjects.map(s=>`<tr><td>${s.name}</td><td style="text-align:center">${s.theory}</td><td style="text-align:center">${s.practical}</td><td style="text-align:center">${s.total}</td></tr>`).join('');
+}
+
+// ════════════════════════════════════════
+//  EXPORT SNAPSHOT — embeds ALL data into HTML
+// ════════════════════════════════════════
+function exportSnapshot(){
+  const snapshot = JSON.stringify({ students, marksDB });
+  const html     = document.documentElement.outerHTML;
+  const updated  = html.replace(
+    /(<script id="embedded-db" type="application\/json">)[\s\S]*?(<\/script>)/,
+    `$1\n${snapshot}\n$2`
+  );
+  const blob = new Blob([updated],{type:'text/html'});
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(blob);
+  const d    = new Date();
+  a.download = `Tharpu_Results_${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}.html`;
+  a.click();
+
+  // Reset unsaved-changes indicator
+  _unsavedChanges = false;
+  document.getElementById('share-banner').classList.remove('visible');
+  document.getElementById('export-btn').classList.remove('pulse');
+  showToast('✅ Exported! Share the downloaded .html file — data is embedded inside.');
+}
+
+// ════════════════════════════════════════
+//  DOWNLOAD INDIVIDUAL RESULT
+// ════════════════════════════════════════
+function downloadResultSheet(){
+  const el=document.getElementById('generated-result');
+  if(!el) return;
+  const sid=document.getElementById('result-student').value;
+  const st=students.find(s=>s.id==sid);
+  const examType=document.getElementById('result-examtype').value;
+  const styles=Array.from(document.styleSheets).flatMap(ss=>{
+    try{return Array.from(ss.cssRules).map(r=>r.cssText)}catch(e){return[]}
+  }).join('\n');
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8">
+<title>${st.name} — Result</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>body{margin:20px;font-family:'Source Sans 3',sans-serif;background:#fff}${styles}</style>
+</head><body>${el.outerHTML}</body></html>`;
+  const blob=new Blob([html],{type:'text/html'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`${st.name.replace(/\s+/g,'_')}_${examType.replace(/\s+/g,'_')}.html`;
+  a.click();
+}
+
+// ════════════════════════════════════════
+//  TOAST
+// ════════════════════════════════════════
+function showToast(msg,icon='✅',bg='#2D6A4F'){
+  const t=document.createElement('div');
+  t.className='toast'; t.style.background=bg;
+  t.innerHTML=`<span style="font-size:1.1rem">${icon}</span><span>${msg}</span>`;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),3800);
+}
+
+// ════════════════════════════════════════
+//  EXCEL EXPORT — All Students Marks
+// ════════════════════════════════════════
+function exportAllToExcel(){
+  if(!window.XLSX){ showToast('SheetJS not loaded yet, please wait','⚠️','#c1121f'); return; }
+  if(!students.length){ showToast('No students found','⚠️','#c1121f'); return; }
+
+  const wb = XLSX.utils.book_new();
+  const examTypes = ['first-terminal','second-terminal','send-up'];
+
+  examTypes.forEach(examType => {
+    const examLabel = examType==='first-terminal'?'First Terminal':examType==='second-terminal'?'Second Terminal':'Send-Up';
+    const sheetData = [];
+
+    // Header rows
+    sheetData.push(['Tharpu Secondary School — ' + examLabel + ' Examination']);
+    sheetData.push(['Yangwarak-4, Panchthar, Koshi Province, Nepal']);
+    sheetData.push([]);
+
+    // Build subject list header (all possible subjects)
+    const allSubjectIds = ['english','nepali','physics','chemistry','biology','farmy','fruit','entomology','soilfert','math','account','economics','computer','civics','health'];
+    const allSubjectMap = {};
+    [...COMPULSORY,...STREAMS.plant.subjects,...STREAMS.general.subjects].forEach(s=>{ allSubjectMap[s.id]=s; });
+
+    // Column headers
+    const headerRow1 = ['S.N.','Student Name','Roll No.','Stream'];
+    const headerRow2 = ['','','',''];
+    allSubjectIds.forEach(id=>{
+      const s = allSubjectMap[id];
+      if(!s) return;
+      if(s.practical>0){
+        headerRow1.push(s.name,'','');
+        headerRow2.push('Theory ('+s.theory+')','Practical ('+s.practical+')','GPA');
+      } else {
+        headerRow1.push(s.name,'');
+        headerRow2.push('Theory ('+s.theory+')','GPA');
+      }
+    });
+    headerRow1.push('CGPA','Result');
+    headerRow2.push('','');
+    sheetData.push(headerRow1);
+    sheetData.push(headerRow2);
+
+    // Student data rows
+    students.forEach((st,idx)=>{
+      const key = st.id+'_'+examType;
+      const saved = marksDB[key]||{};
+      const allSubs = [...COMPULSORY,...STREAMS[st.stream].subjects];
+      const subSet = new Set(allSubs.map(s=>s.id));
+
+      let totalGP=0, gpCount=0, hasNG=false;
+      const row = [idx+1, st.name, st.roll, STREAMS[st.stream]?STREAMS[st.stream].label:st.stream];
+
+      allSubjectIds.forEach(id=>{
+        const s = allSubjectMap[id];
+        if(!s) return;
+        if(!subSet.has(id)){
+          // Not applicable for this student's stream
+          if(s.practical>0){ row.push('N/A','N/A','N/A'); }
+          else { row.push('N/A','N/A'); }
+          return;
+        }
+        const tVal = saved[id+'_t'];
+        const pVal = saved[id+'_p'];
+        if(tVal===undefined||tVal===''){
+          if(s.practical>0){ row.push('','',''); }
+          else { row.push('',''); }
+          return;
+        }
+        const res = calcSubjectResult(s, parseFloat(tVal), pVal!==undefined&&pVal!==''?parseFloat(pVal):0);
+        if(res.isNG) hasNG=true;
+        totalGP+=res.subGP; gpCount++;
+        if(s.practical>0){
+          row.push(parseFloat(tVal), pVal!==undefined&&pVal!==''?parseFloat(pVal):'', res.subGP.toFixed(2));
+        } else {
+          row.push(parseFloat(tVal), res.subGP.toFixed(2));
+        }
+      });
+
+      const cgpa = gpCount>0?(totalGP/gpCount).toFixed(2):'';
+      const result = gpCount===0?'':hasNG?'NOT GRADED':getGrade((parseFloat(cgpa)/4)*100).desc.toUpperCase();
+      row.push(cgpa, result);
+      sheetData.push(row);
+    });
+
+    const ws = XLSX.utils.aoa_to_sheet(sheetData);
+
+    // Column widths
+    ws['!cols'] = [
+      {wch:5},{wch:22},{wch:12},{wch:16},
+      ...allSubjectIds.flatMap(id=>{ const s=allSubjectMap[id]; if(!s) return []; return s.practical>0?[{wch:10},{wch:10},{wch:8}]:[{wch:10},{wch:8}]; }),
+      {wch:8},{wch:14}
+    ];
+
+    // Merge subject header cells
+    const merges = [];
+    let col = 4; // 0-indexed, after S.N., Name, Roll, Stream
+    allSubjectIds.forEach(id=>{
+      const s = allSubjectMap[id];
+      if(!s) return;
+      const span = s.practical>0?3:2;
+      if(span>1) merges.push({s:{r:3,c:col},e:{r:3,c:col+span-1}});
+      col+=span;
+    });
+    ws['!merges'] = merges;
+
+    const sheetName = examLabel.replace(/\s/g,'').substring(0,31);
+    XLSX.utils.book_append_sheet(wb, ws, sheetName);
+  });
+
+  // Summary sheet — all students CGPA across exams
+  const summaryData = [];
+  summaryData.push(['Tharpu Secondary School — CGPA Summary']);
+  summaryData.push(['Yangwarak-4, Panchthar, Koshi Province, Nepal']);
+  summaryData.push([]);
+  summaryData.push(['S.N.','Student Name','Roll No.','Stream','First Terminal CGPA','First Terminal Result','Second Terminal CGPA','Second Terminal Result','Send-Up CGPA','Send-Up Result']);
+
+  students.forEach((st,idx)=>{
+    const row=[idx+1,st.name,st.roll,STREAMS[st.stream]?STREAMS[st.stream].label:st.stream];
+    ['first-terminal','second-terminal','send-up'].forEach(examType=>{
+      const res = computeCGPA(st,examType);
+      if(!res||res.count===0||res.cgpa===null){ row.push('',''); return; }
+      row.push(res.cgpa.toFixed(2), res.hasNG?'NOT GRADED':getGrade((res.cgpa/4)*100).desc.toUpperCase());
+    });
+    summaryData.push(row);
+  });
+
+  const wsSummary = XLSX.utils.aoa_to_sheet(summaryData);
+  wsSummary['!cols']=[{wch:5},{wch:22},{wch:12},{wch:16},{wch:18},{wch:16},{wch:18},{wch:16},{wch:14},{wch:14}];
+  XLSX.utils.book_append_sheet(wb, wsSummary, 'CGPA Summary');
+
+  const d=new Date();
+  XLSX.writeFile(wb, `Tharpu_Marks_${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}.xlsx`);
+  showToast('✅ Excel file downloaded with all marks!');
+}
+
+// ════════════════════════════════════════
+//  EXCEL EXPORT — Individual Grade Sheet
+// ════════════════════════════════════════
+function exportGradeSheetToExcel(){
+  if(!window.XLSX){ showToast('SheetJS not loaded yet, please wait','⚠️','#c1121f'); return; }
+  const sid      = document.getElementById('result-student').value;
+  const examType = document.getElementById('result-examtype').value;
+  const st       = students.find(s=>s.id==sid);
+  if(!st){ showToast('No student selected','⚠️','#c1121f'); return; }
+
+  const examLabel = examType==='first-terminal'?'First Terminal':examType==='second-terminal'?'Second Terminal':'Send-Up';
+  const key  = st.id+'_'+examType;
+  const saved= marksDB[key]||{};
+  const allSubs = [...COMPULSORY,...STREAMS[st.stream].subjects];
+
+  const today = new Date().toLocaleDateString('en-NP');
+  const wb  = XLSX.utils.book_new();
+  const data = [];
+
+  // School header
+  data.push(['THARPU SECONDARY SCHOOL']);
+  data.push(['Yangwarak-4, Panchthar, Koshi Province, Nepal']);
+  data.push(['Class XI — ' + examLabel.toUpperCase() + ' EXAMINATION RESULT']);
+  data.push([]);
+
+  // Student info
+  data.push(['Student Name:', st.name, '', 'Roll No.:', st.roll]);
+  data.push(['Class:', '11', '', 'Stream:', STREAMS[st.stream].label]);
+  data.push(['Academic Year:', st.year, '', 'Date Issued:', today]);
+  data.push([]);
+
+  // Marks table header
+  data.push(['S.N.','Subject','Full Marks (T+P)','Theory Obtained','Practical Obtained','Subject GPA']);
+
+  let totalGP=0, gpCount=0, hasNG=false;
+
+  allSubs.forEach((sub,idx)=>{
+    const tVal = saved[sub.id+'_t'];
+    const pVal = saved[sub.id+'_p'];
+    if(tVal===undefined||tVal===''){
+      data.push([idx+1, sub.name, sub.theory+(sub.practical>0?'+'+sub.practical:'+0')+'='+sub.total, '—', sub.practical>0?'—':'N/A', '—']);
+      return;
+    }
+    const res = calcSubjectResult(sub, parseFloat(tVal), pVal!==undefined&&pVal!==''?parseFloat(pVal):0);
+    if(res.isNG) hasNG=true;
+    totalGP+=res.subGP; gpCount++;
+    data.push([
+      idx+1,
+      sub.name,
+      sub.theory+(sub.practical>0?'+'+sub.practical:'')+' = '+sub.total,
+      parseFloat(tVal),
+      sub.practical>0&&pVal!==undefined&&pVal!==''?parseFloat(pVal):'N/A',
+      res.subGP.toFixed(2)
+    ]);
+  });
+
+  // Totals row
+  const cgpa = gpCount>0?(totalGP/gpCount).toFixed(2):'—';
+  data.push([]);
+  data.push(['','CGPA (Cumulative GPA)','','','',cgpa]);
+
+  data.push([]);
+
+  // Result remarks
+  const overallG   = gpCount>0&&!hasNG ? getGrade((parseFloat(cgpa)/4)*100) : null;
+  const resultText = hasNG ? 'NOT GRADED' : gpCount===0?'—':overallG.desc.toUpperCase();
+  data.push(['RESULT:', resultText]);
+  if(!hasNG && overallG) data.push(['Description:', overallG.desc]);
+  data.push(['','Note: Minimum D grade (35%) required separately in Theory and Practical']);
+
+  data.push([]);
+  data.push([]);
+  data.push(['Class Teacher: ___________________','','Principal: ___________________']);
+
+  const ws = XLSX.utils.aoa_to_sheet(data);
+  ws['!cols'] = [{wch:6},{wch:32},{wch:16},{wch:14},{wch:16},{wch:12}];
+
+  // Merge title rows
+  ws['!merges'] = [
+    {s:{r:0,c:0},e:{r:0,c:5}},
+    {s:{r:1,c:0},e:{r:1,c:5}},
+    {s:{r:2,c:0},e:{r:2,c:5}},
+  ];
+
+  XLSX.utils.book_append_sheet(wb, ws, st.name.substring(0,25)+'_'+examLabel.split(' ')[0]);
+
+  XLSX.writeFile(wb, `GradeSheet_${st.name.replace(/\s+/g,'_')}_${examType}_${st.roll}.xlsx`);
+  showToast('✅ Grade sheet exported to Excel!');
+}
+
+
+renderStudentList('all');
+updateStats();
+buildGradingRef();
+</script>
+
+
+
