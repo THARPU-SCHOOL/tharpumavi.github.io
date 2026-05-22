@@ -1,7 +1,7 @@
 {
   "name": "Tharpu Secondary School",
-  "short_name": "THARPU SCHOOL",
-  "description": "Result Management System for Class XI - Tharpu Secondary School, Yangwarak-4, Panchthar, Koshi Province, Nepal",
+  "short_name": "Tharpu SMS",
+  "description": "Result Management System for Class XI",
   "start_url": "/tharpu-school.github.io/tharpumavi.github.io",
   "display": "standalone",
   "background_color": "#FDF6EC",
@@ -14,7 +14,5 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
-  ],
-  "lang": "en",
-  "dir": "auto"
+  ]
 }
