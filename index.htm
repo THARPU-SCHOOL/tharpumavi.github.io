@@ -4,6 +4,9 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#7B1C1C">
+<meta name="mobile-web-app-capable" content="yes">
 <title>THARPU SECONDARY SCHOOL— Result Management System</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&amp;family=DM+Mono:wght@400;500&amp;family=Source+Sans+3:wght@300;400;600;700&amp;display=swap" rel="stylesheet">
 
@@ -1615,6 +1618,9 @@ function exportGradeSheetToExcel(){
 renderStudentList('all');
 updateStats();
 buildGradingRef();
+  if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
 </script>
 
 
