@@ -28,62 +28,62 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--cream);color:var(-
 .input-wrap{position:relative;margin-bottom:1rem;}
 .input-wrap input{width:100%;padding:0.72rem 2.6rem 0.72rem 0.9rem;border:1.5px solid var(--border);border-radius:9px;font-size:0.97rem;color:var(--text);background:var(--cream);outline:none;transition:border-color 0.2s;}
 .input-wrap input:focus{border-color:var(--maroon);background:#fff;}
-.toggle-pw{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-muted);padding:2px 4px;display:flex;align-items:center;}
+.toggle-pw{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-muted);padding:2px 4px;display:flex;align-items:;}
 .toggle-pw svg{width:20px;height:20px;}
 .btn-login{width:100%;padding:0.85rem;background:var(--maroon);color:var(--white);border:none;border-radius:9px;font-size:1rem;font-weight:700;cursor:pointer;letter-spacing:0.5px;transition:background 0.2s,transform 0.1s;margin-top:0.3rem;}
 .btn-login:hover{background:var(--maroon-dark);}
 .btn-login:active{transform:scale(0.98);}
-.login-hint{font-size:0.75rem;color:var(--text-muted);text-align:center;margin-top:1rem;opacity:0.8;}
+.login-hint{font-size:0.75rem;color:var(--text-muted);text-align:;margin-top:1rem;opacity:0.8;}
 .auth-tabs{display:flex;border-bottom:1.5px solid var(--cream-dark);margin-bottom:1.2rem;}
-.auth-tab{flex:1;text-align:center;padding:9px 0;font-size:0.88rem;font-weight:600;cursor:pointer;color:var(--text-muted);border-bottom:2.5px solid transparent;transition:color 0.2s,border-color 0.2s;margin-bottom:-1.5px;}
+.auth-tab{flex:1;text-align:;padding:9px 0;font-size:0.88rem;font-weight:600;cursor:pointer;color:var(--text-muted);border-bottom:2.5px solid transparent;transition:color 0.2s,border-color 0.2s;margin-bottom:-1.5px;}
 .auth-tab.active{color:var(--maroon);border-bottom-color:var(--maroon);}
 .strength-row{display:flex;gap:4px;margin-top:5px;margin-bottom:4px;}
 .strength-seg{flex:1;height:4px;border-radius:2px;background:var(--cream-dark);transition:background 0.3s;}
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:999;align-items:center;justify-content:center;padding:1.5rem;}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:999;align-items:;justify-content:;padding:1.5rem;}
 .modal-overlay.open{display:flex;}
 .modal-box{background:white;border-radius:16px;padding:1.5rem;width:100%;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,0.25);}
 .modal-box h3{font-size:1rem;color:var(--maroon);margin-bottom:1rem;font-weight:700;}
 .modal-box .form-group{margin-bottom:0.8rem;}
 .modal-actions{display:flex;gap:8px;margin-top:1rem;}
 #main-app{display:none;}
-.app-header{background:var(--maroon);color:white;padding:0.7rem 1rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.18);}
-.app-header-left{display:flex;align-items:center;gap:10px;}
-.header-emblem{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;color:var(--gold-light);overflow:hidden;}
+.app-header{background:var(--maroon);color:white;padding:0.7rem 1rem;display:flex;align-items:;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.18);}
+.app-header-left{display:flex;align-items:;gap:10px;}
+.header-emblem{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.4);display:flex;align-items:;justify-content:;font-weight:700;font-size:0.85rem;color:var(--gold-light);overflow:hidden;}
 .header-emblem img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
 .header-title{font-size:0.88rem;font-weight:700;line-height:1.25;}
 .header-sub{font-size:0.7rem;opacity:0.75;}
 .header-actions{display:flex;gap:6px;}
 .btn-sm{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;border-radius:7px;padding:5px 10px;font-size:0.75rem;cursor:pointer;font-weight:600;white-space:nowrap;}
 .summary-row{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:1rem 1rem 0;}
-.summary-card{background:var(--white);border-radius:12px;padding:0.85rem 1rem;border:1px solid var(--border);box-shadow:var(--shadow);text-align:center;}
+.summary-card{background:var(--white);border-radius:12px;padding:0.85rem 1rem;border:1px solid var(--border);box-shadow:var(--shadow);text-align:;}
 .summary-card .sc-num{font-size:1.7rem;font-weight:700;color:var(--maroon);line-height:1;}
 .summary-card .sc-lbl{font-size:0.72rem;color:var(--text-muted);margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:0.4px;}
 .nav-tabs{display:flex;padding:0.9rem 1rem 0;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
 .nav-tabs::-webkit-scrollbar{display:none;}
-.nav-tab{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 13px;border-radius:10px 10px 0 0;border:1px solid transparent;border-bottom:none;cursor:pointer;font-size:0.72rem;font-weight:600;color:var(--text-muted);background:transparent;white-space:nowrap;transition:all 0.18s;flex-shrink:0;}
+.nav-tab{display:flex;flex-direction:column;align-items:;gap:3px;padding:8px 13px;border-radius:10px 10px 0 0;border:1px solid transparent;border-bottom:none;cursor:pointer;font-size:0.72rem;font-weight:600;color:var(--text-muted);background:transparent;white-space:nowrap;transition:all 0.18s;flex-shrink:0;}
 .nav-tab .tab-icon{font-size:1.15rem;}
 .nav-tab.active{background:var(--white);color:var(--maroon);border-color:var(--border);}
 .tab-panel{display:none;padding:1rem;}
 .tab-panel.active{display:block;}
 .section-card{background:var(--white);border-radius:13px;border:1px solid var(--border);box-shadow:var(--shadow);margin-bottom:1rem;overflow:hidden;}
-.section-head{background:var(--maroon);color:white;padding:0.7rem 1rem;font-size:0.9rem;font-weight:700;display:flex;align-items:center;gap:8px;}
+.section-head{background:var(--maroon);color:white;padding:0.7rem 1rem;font-size:0.9rem;font-weight:700;display:flex;align-items:;gap:8px;}
 .section-body{padding:1rem;}
 .form-group{margin-bottom:0.85rem;}
 .form-group label{display:block;font-size:0.8rem;font-weight:600;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.4px;}
 .form-group select,.form-group input[type="text"],.form-group input[type="number"],.form-group input[type="password"]{width:100%;padding:0.62rem 0.85rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.93rem;color:var(--text);background:var(--cream);outline:none;transition:border-color 0.2s;-webkit-appearance:none;}
 .form-group select:focus,.form-group input:focus{border-color:var(--maroon);background:#fff;}
 .radio-group{display:flex;gap:10px;flex-wrap:wrap;}
-.radio-opt{display:flex;align-items:center;gap:5px;padding:7px 14px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;color:var(--text-muted);background:var(--cream);transition:all 0.15s;user-select:none;}
+.radio-opt{display:flex;align-items:;gap:5px;padding:7px 14px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;color:var(--text-muted);background:var(--cream);transition:all 0.15s;user-select:none;}
 .radio-opt input{display:none;}
 .radio-opt.selected{border-color:var(--maroon);background:#fdf0f0;color:var(--maroon);}
-.btn{display:inline-flex;align-items:center;gap:6px;padding:0.65rem 1.1rem;border-radius:9px;border:none;font-size:0.88rem;font-weight:700;cursor:pointer;transition:opacity 0.15s,transform 0.1s;}
+.btn{display:inline-flex;align-items:;gap:6px;padding:0.65rem 1.1rem;border-radius:9px;border:none;font-size:0.88rem;font-weight:700;cursor:pointer;transition:opacity 0.15s,transform 0.1s;}
 .btn:active{transform:scale(0.97);}
 .btn-primary{background:var(--maroon);color:white;}
 .btn-secondary{background:var(--cream-dark);color:var(--maroon);border:1.5px solid var(--border);}
 .btn-success{background:var(--success);color:white;}
 .btn-danger{background:var(--danger);color:white;}
 .btn-gold{background:var(--gold);color:white;}
-.btn-full{width:100%;justify-content:center;}
+.btn-full{width:100%;justify-content:;}
 .btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:0.8rem;}
 .student-item{display:flex;align-items:center;gap:10px;padding:0.75rem 1rem;border-bottom:1px solid var(--cream-dark);cursor:pointer;transition:background 0.13s;}
 .student-item:last-child{border-bottom:none;}
@@ -900,23 +900,48 @@ function showIndividualSheet(roll,exam) {
   // NEB: GPA = gradepoint (not weighted). CGPA = sum(GP)/count
   var totalGP=0,subCount=0,anyNG=false,allFilled=true;
 
-  var rows=subs.map(function(sub,i){
+// Correct NEB subject codes
+var subjectCodes = {
+  'Compulsory English': '003',
+  'Compulsory Nepali':  '002',
+  'Physics':            '212',
+  'Chemistry':          '175',
+  'Biology':            '149',
+  'Farm Machinery & Seeds Development':            '246',
+  'Soil Fertility & Nutrient Management':          '253',
+  'Commercial Fruit Crop & Post Harvest Tech':     '260',
+  'Agricultural Entomology':                       '268',
+  'Mathematics':        '006',
+  'Accountancy':        '221',
+  'Economics':          '219',
+  'Computer Science':   '320',
+  'Social Studies & Life Skills': '010',
+  'Health & Physical Education':  '014'
+};
+
+var rows=subs.map(function(sub,i){
     var d=saved[sub.name]||{},max=sub.thMax+sub.prMax;
     var credit=getCredit(sub.name);
-    // Subject codes: 101 onward
-    var code=101+i;
+    var code = subjectCodes[sub.name] || (101+i);
     if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
       var t=(d.th||0)+(d.pr||0);
       var pct=max>0?t/max*100:0;
       var gr=getGrade(pct);
       totalGP+=gr.gpa; subCount++;
       if(gr.g==='NG') anyNG=true;
+     // Internal = practical component; External = theory component
+      var inGP  = sub.prMax>0 ? gr.gpa.toFixed(1) : '—';
+      var inG   = sub.prMax>0 ? gr.g : '—';
+      var exGP  = gr.gpa.toFixed(1);
+      var exG   = gr.g;
       return '<tr>'
         +'<td style="text-align:center">'+code+'</td>'
         +'<td style="text-align:left;padding-left:8px">'+sub.name+'</td>'
         +'<td style="text-align:center">'+credit+'</td>'
-        +'<td style="text-align:center">'+gr.gpa.toFixed(1)+'</td>'
-        +'<td style="text-align:center">'+gr.g+'</td>'
+        +'<td style="text-align:center">'+inGP+'</td>'
+        +'<td style="text-align:center">'+inG+'</td>'
+        +'<td style="text-align:center">'+exGP+'</td>'
+        +'<td style="text-align:center">'+exG+'</td>'
         +'<td style="text-align:center">'+gr.g+'</td>'
         +'<td style="text-align:center">'+(gr.g==='NG'?'Not Graded':gr.g==='D'?'Basic':'Passed')+'</td>'
         +'</tr>';
@@ -930,14 +955,16 @@ function showIndividualSheet(roll,exam) {
         +'<td style="text-align:center">—</td>'
         +'<td style="text-align:center">—</td>'
         +'<td style="text-align:center">—</td>'
+        +'<td style="text-align:center">—</td>'
+        +'<td style="text-align:center">—</td>'
         +'</tr>';
     }
   }).join('');
 
   // Empty filler rows so table looks full like NEB format
   var fillerNeeded=Math.max(0,10-subs.length);
-  for(var f=0;f<fillerNeeded;f++){
-    rows+='<tr><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>';
+ for(var f=0;f<fillerNeeded;f++){
+    rows+='<tr><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>';
   }
 
   var cgpa=allFilled&&subCount>0?(totalGP/subCount).toFixed(2):'—';
@@ -977,14 +1004,16 @@ function showIndividualSheet(roll,exam) {
     '<div class="page">'+
 
   // Header: logo beside school name
-    '<div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:10px">'+
-    '<img src="THARPU SECONDARY SCHOOL.png" style="width:70px;height:70px;border-radius:50%;object-fit:cover;border:2px solid #000" onerror="this.style.display=\'none\'">'+
-    '<div style="text-align:left">'+
-    '<b style="font-size:14px;letter-spacing:1px;display:block">THARPU SECONDARY SCHOOL</b>'+
-    '<span style="font-size:11px;display:block">Yangwarak-4, Panchthar, Koshi Province, Nepal</span>'+
-    '<span style="font-size:10px;display:block">Affiliated to NATIONAL EXAMINATIONS BOARD (NEB)</span>'+
-    '</div>'+
-    '</div>'+
+   '<div style="display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:14px">'+
+'<div style="width:80px;height:80px;border-radius:50%;border:2.5px solid #000;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:#fff">'+
+'<img src="NEB.jpeg" style="width:100%;height:100%;object-fit:cover;object-position:center;border-radius:50%" onerror="this.style.display=\'none\'">'+
+'</div>'+
+'<div style="text-align:center">'+
+'<b style="font-size:15px;letter-spacing:1px;display:block;margin-bottom:6px">THARPU SECONDARY SCHOOL</b>'+
+'<span style="font-size:11.5px;display:block;margin-bottom:5px">Yangwarak-4, Panchthar, Koshi Province, Nepal</span>'+
+'<span style="font-size:10.5px;display:block">Affiliated to National Examinations Board (NEB)</span>'+
+'</div>'+
+'</div>'+
       
     // Title
     '<div class="grade-sheet-title">GRADE-SHEET</div>'+
@@ -999,17 +1028,23 @@ function showIndividualSheet(roll,exam) {
 
     // Main table
     '<table>'+
-      '<thead>'+
-        '<tr>'+
-          '<th style="width:60px">SUBJECT<br>CODE</th>'+
-          '<th>SUBJECTS</th>'+
-          '<th style="width:55px">CREDIT<br>HOUR</th>'+
-          '<th style="width:65px">GRADE<br>POINT</th>'+
-          '<th style="width:55px">GRADE</th>'+
-          '<th style="width:65px">FINAL<br>GRADE</th>'+
-          '<th style="width:80px">REMARKS</th>'+
-        '</tr>'+
-      '</thead>'+
+  '<thead>'+
+    '<tr>'+
+      '<th rowspan="3" style="width:60px">SUBJECT<br>CODE</th>'+
+      '<th rowspan="3">SUBJECTS</th>'+
+      '<th rowspan="3" style="width:50px">CREDIT<br>HOUR<br>(CH)</th>'+
+      '<th colspan="2">INTERNAL (IN)</th>'+
+      '<th colspan="2">EXTERNAL (TH)</th>'+
+      '<th rowspan="3" style="width:60px">FINAL<br>GRADE</th>'+
+      '<th rowspan="3" style="width:70px">REMARKS</th>'+
+    '</tr>'+
+    '<tr>'+
+      '<th style="width:55px">GRADE<br>POINT</th>'+
+      '<th style="width:45px">GRADE</th>'+
+      '<th style="width:55px">GRADE<br>POINT</th>'+
+      '<th style="width:45px">GRADE</th>'+
+    '</tr>'+
+  '</thead>'+
       '<tbody>'+rows+
         '<tr class="total-row">'+
           '<td colspan="2" style="text-align:right;padding-right:8px">TOTAL</td>'+
