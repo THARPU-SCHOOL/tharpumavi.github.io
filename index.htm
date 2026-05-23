@@ -1100,13 +1100,23 @@ function saveResultHTML() {
 }
 function exportShare() {
   var data=JSON.stringify({students:students,marks:marksData});
+  // Embed in HTML file
   var inject='<'+'script>var _savedData='+data+';<'+'/script>';
   var out=document.documentElement.outerHTML.replace('</head>',inject+'</head>');
   var a=document.createElement('a');
   a.href='data:text/html;charset=utf-8,'+encodeURIComponent(out);
   a.download='Tharpu_School_'+new Date().toISOString().slice(0,10)+'.html';
   a.click();
-  alert('Exported! Anyone who opens this file will see all marks data.');
+  // Also save to URL hash so anyone on same URL sees data
+  try {
+    var compressed=btoa(unescape(encodeURIComponent(data)));
+    history.replaceState(null,'','#'+compressed);
+    var shareURL=location.href;
+    setTimeout(function(){
+      prompt('Share this URL — anyone who opens it sees all data:', shareURL);
+    },500);
+  } catch(e){}
+  alert('Exported! Share the HTML file OR copy the URL above.');
 }
 
 // ============================================================
@@ -1116,6 +1126,15 @@ if (typeof _savedData !== 'undefined') {
   students  = _savedData.students || students;
   marksData = _savedData.marks    || marksData;
 } else {
+  // Try restoring from URL hash (shared link)
+  try {
+    var hash=location.hash.slice(1);
+    if(hash && hash.length>10){
+      var parsed=JSON.parse(decodeURIComponent(escape(atob(hash))));
+      if(parsed.students) students=parsed.students;
+      if(parsed.marks)    marksData=parsed.marks;
+    }
+  } catch(e){}
   loadMarksFromStorage();
 }
 // Auto-login if session exists
