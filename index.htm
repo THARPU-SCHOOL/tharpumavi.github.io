@@ -1,3 +1,6 @@
+bash
+
+cat > /mnt/user-data/outputs/index.htm << 'HTMLEOF'
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,343 +15,124 @@
 <link rel="apple-touch-icon" href="icon-512.png">
 <title>Tharpu Secondary School — Result Management System</title>
 <style>
-  :root {
-    --maroon: #7B1C1C;
-    --maroon-dark: #5a1414;
-    --maroon-light: #9e2e2e;
-    --cream: #FDF6EC;
-    --cream-dark: #f0e4cc;
-    --gold: #c8922a;
-    --gold-light: #f0c96e;
-    --text: #2c1a0e;
-    --text-muted: #6b4c2a;
-    --border: #d4b896;
-    --white: #fff;
-    --success: #1a6e2e;
-    --danger: #991b1b;
-    --shadow: 0 2px 12px rgba(123,28,28,0.13);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background: var(--cream);
-    color: var(--text);
-    min-height: 100vh;
-  }
-
-  /* ===== LOGIN ===== */
-  #login-screen {
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    min-height: 100vh;
-    background: linear-gradient(160deg, var(--maroon) 0%, var(--maroon-dark) 100%);
-    padding: 1.5rem;
-  }
-  .login-card {
-    background: var(--white); border-radius: 18px;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.28);
-    padding: 2rem 1.8rem 2.2rem;
-    width: 100%; max-width: 380px;
-  }
-  .login-logo { text-align: center; margin-bottom: 1.4rem; }
-  .school-emblem {
-    width: 72px; height: 72px; border-radius: 50%;
-    background: var(--maroon);
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 0.7rem;
-    font-size: 1.9rem; color: var(--gold-light);
-    font-weight: 700; border: 3px solid var(--gold);
-    overflow: hidden;
-  }
-  .school-emblem img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-  .login-logo h1 { font-size: 1.05rem; font-weight: 700; color: var(--maroon); line-height: 1.3; }
-  .login-logo p { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
-  .login-divider { height: 1px; background: var(--cream-dark); margin: 1rem 0 1.4rem; }
-  .login-label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .input-wrap { position: relative; margin-bottom: 1rem; }
-  .input-wrap input {
-    width: 100%; padding: 0.72rem 2.6rem 0.72rem 0.9rem;
-    border: 1.5px solid var(--border); border-radius: 9px;
-    font-size: 0.97rem; color: var(--text); background: var(--cream);
-    outline: none; transition: border-color 0.2s;
-  }
-  .input-wrap input:focus { border-color: var(--maroon); background: #fff; }
-  .toggle-pw {
-    position: absolute; right: 10px; top: 50%;
-    transform: translateY(-50%);
-    background: none; border: none; cursor: pointer;
-    color: var(--text-muted); font-size: 1.1rem; padding: 2px 4px;
-    display: flex; align-items: center;
-  }
-  .toggle-pw svg { width: 20px; height: 20px; }
-  #login-error {
-    display: none; background: #fff0f0; color: var(--danger);
-    border: 1px solid #f5c6c6; border-radius: 8px;
-    padding: 0.55rem 0.8rem; font-size: 0.85rem;
-    margin-bottom: 0.9rem; text-align: center;
-  }
-  .btn-login {
-    width: 100%; padding: 0.85rem; background: var(--maroon);
-    color: var(--white); border: none; border-radius: 9px;
-    font-size: 1rem; font-weight: 700; cursor: pointer;
-    letter-spacing: 0.5px; transition: background 0.2s, transform 0.1s;
-    margin-top: 0.3rem;
-  }
-  .btn-login:active { transform: scale(0.98); background: var(--maroon-dark); }
-  .login-hint { font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 1rem; opacity: 0.8; }
-
-  /* ===== AUTH TABS (Login / Register) ===== */
-  .auth-tabs { display: flex; border-bottom: 1.5px solid var(--cream-dark); margin-bottom: 1.2rem; }
-  .auth-tab {
-    flex: 1; text-align: center; padding: 9px 0;
-    font-size: 0.88rem; font-weight: 600; cursor: pointer;
-    color: var(--text-muted); border-bottom: 2.5px solid transparent;
-    transition: color 0.2s, border-color 0.2s; margin-bottom: -1.5px;
-  }
-  .auth-tab.active { color: var(--maroon); border-bottom-color: var(--maroon); }
-  #reg-error {
-    display: none; background: #fff0f0; color: var(--danger);
-    border: 1px solid #f5c6c6; border-radius: 8px;
-    padding: 0.55rem 0.8rem; font-size: 0.85rem;
-    margin-bottom: 0.9rem; text-align: center;
-  }
-  #reg-success {
-    display: none; background: #f0fff4; color: var(--success);
-    border: 1px solid #b2dfc0; border-radius: 8px;
-    padding: 0.55rem 0.8rem; font-size: 0.85rem;
-    margin-bottom: 0.9rem; text-align: center;
-  }
-  .strength-row { display: flex; gap: 4px; margin-top: 5px; margin-bottom: 4px; }
-  .strength-seg { flex: 1; height: 4px; border-radius: 2px; background: var(--cream-dark); transition: background 0.3s; }
-  .field-err { font-size: 0.75rem; color: var(--danger); margin-top: 3px; display: none; }
-
-  /* ===== CHANGE PASSWORD MODAL ===== */
-  .modal-overlay {
-    display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,0.55); z-index: 999;
-    align-items: center; justify-content: center; padding: 1.5rem;
-  }
-  .modal-overlay.open { display: flex; }
-  .modal-box {
-    background: white; border-radius: 16px; padding: 1.5rem;
-    width: 100%; max-width: 360px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-  }
-  .modal-box h3 { font-size: 1rem; color: var(--maroon); margin-bottom: 1rem; font-weight: 700; }
-  .modal-box .form-group { margin-bottom: 0.8rem; }
-  .modal-actions { display: flex; gap: 8px; margin-top: 1rem; }
-
-  /* ===== MAIN APP ===== */
-  #main-app { display: none; }
-  .app-header {
-    background: var(--maroon); color: white;
-    padding: 0.7rem 1rem;
-    display: flex; align-items: center; justify-content: space-between;
-    position: sticky; top: 0; z-index: 100;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
-  }
-  .app-header-left { display: flex; align-items: center; gap: 10px; }
-  .header-emblem {
-    width: 36px; height: 36px; border-radius: 50%;
-    background: rgba(255,255,255,0.15);
-    border: 1.5px solid rgba(255,255,255,0.4);
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 700; font-size: 0.85rem; color: var(--gold-light);
-    overflow: hidden;
-  }
-  .header-emblem img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-  .header-title { font-size: 0.88rem; font-weight: 700; line-height: 1.25; }
-  .header-sub { font-size: 0.7rem; opacity: 0.75; }
-  .header-actions { display: flex; gap: 6px; }
-  .btn-sm {
-    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
-    color: white; border-radius: 7px; padding: 5px 10px;
-    font-size: 0.75rem; cursor: pointer; font-weight: 600;
-    white-space: nowrap;
-  }
-
-  .summary-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 1rem 1rem 0; }
-  .summary-card {
-    background: var(--white); border-radius: 12px; padding: 0.85rem 1rem;
-    border: 1px solid var(--border); box-shadow: var(--shadow); text-align: center;
-  }
-  .summary-card .sc-num { font-size: 1.7rem; font-weight: 700; color: var(--maroon); line-height: 1; }
-  .summary-card .sc-lbl { font-size: 0.72rem; color: var(--text-muted); margin-top: 3px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
-
-  .nav-tabs {
-    display: flex; padding: 0.9rem 1rem 0;
-    overflow-x: auto; scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-  }
-  .nav-tabs::-webkit-scrollbar { display: none; }
-  .nav-tab {
-    display: flex; flex-direction: column; align-items: center; gap: 3px;
-    padding: 8px 13px;
-    border-radius: 10px 10px 0 0;
-    border: 1px solid transparent; border-bottom: none;
-    cursor: pointer; font-size: 0.72rem; font-weight: 600;
-    color: var(--text-muted); background: transparent;
-    white-space: nowrap; transition: all 0.18s; flex-shrink: 0;
-  }
-  .nav-tab .tab-icon { font-size: 1.15rem; }
-  .nav-tab.active { background: var(--white); color: var(--maroon); border-color: var(--border); }
-
-  .tab-panel { display: none; padding: 1rem; }
-  .tab-panel.active { display: block; }
-
-  .section-card {
-    background: var(--white); border-radius: 13px;
-    border: 1px solid var(--border); box-shadow: var(--shadow);
-    margin-bottom: 1rem; overflow: hidden;
-  }
-  .section-head {
-    background: var(--maroon); color: white;
-    padding: 0.7rem 1rem; font-size: 0.9rem; font-weight: 700;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .section-body { padding: 1rem; }
-
-  .form-group { margin-bottom: 0.85rem; }
-  .form-group label {
-    display: block; font-size: 0.8rem; font-weight: 600;
-    color: var(--text-muted); margin-bottom: 4px;
-    text-transform: uppercase; letter-spacing: 0.4px;
-  }
-  .form-group select,
-  .form-group input[type="text"],
-  .form-group input[type="number"],
-  .form-group input[type="password"] {
-    width: 100%; padding: 0.62rem 0.85rem;
-    border: 1.5px solid var(--border); border-radius: 8px;
-    font-size: 0.93rem; color: var(--text); background: var(--cream);
-    outline: none; transition: border-color 0.2s; -webkit-appearance: none;
-  }
-  .form-group select:focus,
-  .form-group input:focus { border-color: var(--maroon); background: #fff; }
-
-  .radio-group { display: flex; gap: 10px; flex-wrap: wrap; }
-  .radio-opt {
-    display: flex; align-items: center; gap: 5px;
-    padding: 7px 14px; border: 1.5px solid var(--border); border-radius: 8px;
-    cursor: pointer; font-size: 0.85rem; font-weight: 600;
-    color: var(--text-muted); background: var(--cream); transition: all 0.15s;
-    user-select: none;
-  }
-  .radio-opt input { display: none; }
-  .radio-opt.selected { border-color: var(--maroon); background: #fdf0f0; color: var(--maroon); }
-
-  .btn {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 0.65rem 1.1rem; border-radius: 9px; border: none;
-    font-size: 0.88rem; font-weight: 700; cursor: pointer;
-    transition: opacity 0.15s, transform 0.1s; text-decoration: none;
-  }
-  .btn:active { transform: scale(0.97); }
-  .btn-primary { background: var(--maroon); color: white; }
-  .btn-secondary { background: var(--cream-dark); color: var(--maroon); border: 1.5px solid var(--border); }
-  .btn-success { background: var(--success); color: white; }
-  .btn-danger { background: var(--danger); color: white; }
-  .btn-gold { background: var(--gold); color: white; }
-  .btn-full { width: 100%; justify-content: center; }
-  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 0.8rem; }
-
-  .student-item {
-    display: flex; align-items: center; gap: 10px;
-    padding: 0.75rem 1rem; border-bottom: 1px solid var(--cream-dark);
-    cursor: pointer; transition: background 0.13s;
-  }
-  .student-item:last-child { border-bottom: none; }
-  .student-item:hover { background: var(--cream); }
-  .student-avatar {
-    width: 38px; height: 38px; border-radius: 50%;
-    background: var(--maroon); color: var(--gold-light);
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 700; font-size: 0.82rem; flex-shrink: 0;
-  }
-  .student-info { flex: 1; min-width: 0; }
-  .student-name { font-weight: 600; font-size: 0.92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .student-meta { font-size: 0.75rem; color: var(--text-muted); margin-top: 1px; }
-  .badge { font-size: 0.7rem; font-weight: 700; padding: 3px 8px; border-radius: 6px; background: var(--cream-dark); color: var(--text-muted); flex-shrink: 0; }
-  .badge-plant { background: #e8f5e9; color: #1b5e20; }
-  .badge-general { background: #e3f2fd; color: #0d47a1; }
-  .badge-marked { background: #e8f5e9; color: #1b5e20; }
-  .badge-unmarked { background: #fff3e0; color: #e65100; }
-
-  .filter-tabs { display: flex; gap: 6px; margin-bottom: 0.9rem; flex-wrap: wrap; }
-  .filter-tab {
-    padding: 5px 13px; border-radius: 20px; font-size: 0.78rem; font-weight: 600;
-    border: 1.5px solid var(--border); background: var(--cream); color: var(--text-muted);
-    cursor: pointer; transition: all 0.15s;
-  }
-  .filter-tab.active { background: var(--maroon); color: white; border-color: var(--maroon); }
-
-  .marks-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
-  .marks-table th {
-    background: var(--cream-dark); padding: 7px 8px; text-align: left;
-    font-weight: 700; color: var(--text-muted); font-size: 0.75rem;
-    text-transform: uppercase; letter-spacing: 0.3px;
-  }
-  .marks-table td { padding: 7px 8px; border-bottom: 1px solid var(--cream-dark); vertical-align: middle; }
-  .marks-table input[type="number"] {
-    width: 55px; padding: 4px 6px; border: 1.5px solid var(--border);
-    border-radius: 6px; font-size: 0.85rem; text-align: center; background: var(--cream);
-  }
-  .marks-table input:focus { border-color: var(--maroon); outline: none; background: white; }
-  .grade-cell { font-weight: 700; font-size: 0.88rem; }
-  .grade-A-plus { color: #155724; } .grade-A { color: #1a5e20; } .grade-B-plus { color: #1b5e20; }
-  .grade-B { color: #194d1b; } .grade-C-plus { color: #7f6000; } .grade-C { color: #8b5e00; }
-  .grade-D { color: #7a3800; } .grade-NG { color: var(--danger); }
-
-  .result-card { background: white; border: 2px solid var(--maroon); border-radius: 14px; overflow: hidden; margin-bottom: 1rem; }
-  .result-header { background: var(--maroon); color: white; text-align: center; padding: 1rem 1rem 0.8rem; }
-  .result-header h2 { font-size: 1rem; font-weight: 700; }
-  .result-header p { font-size: 0.76rem; opacity: 0.85; margin-top: 2px; }
-  .result-student-info { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0.9rem; background: var(--cream); border-bottom: 1px solid var(--border); }
-  .rsi-label { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
-  .rsi-val { font-size: 0.9rem; font-weight: 700; color: var(--text); }
-  .result-table-wrap { padding: 0.7rem; }
-  .result-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
-  .result-table th { background: var(--cream-dark); padding: 6px 7px; font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; text-align: center; }
-  .result-table th:first-child { text-align: left; }
-  .result-table td { padding: 6px 7px; border-bottom: 1px solid var(--cream-dark); text-align: center; }
-  .result-table td:first-child { text-align: left; font-size: 0.77rem; }
-  .result-cgpa-row { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem; background: var(--cream); border-top: 2px solid var(--maroon); }
-  .cgpa-label { font-size: 0.82rem; font-weight: 700; color: var(--text-muted); }
-  .cgpa-value { font-size: 1.3rem; font-weight: 700; color: var(--maroon); }
-  .cgpa-grade { font-size: 1rem; font-weight: 700; color: var(--gold); margin-left: 8px; }
-  .result-status { text-align: center; padding: 8px; font-weight: 700; font-size: 0.9rem; border-top: 1px solid var(--border); }
-  .status-pass { background: #e8f5e9; color: #1b5e20; }
-  .status-fail { background: #ffebee; color: var(--danger); }
-
-  .grade-guide-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
-  .grade-guide-table th { background: var(--maroon); color: white; padding: 8px 10px; font-size: 0.78rem; text-transform: uppercase; }
-  .grade-guide-table td { padding: 8px 10px; border-bottom: 1px solid var(--cream-dark); }
-  .grade-guide-table tr:nth-child(even) td { background: var(--cream); }
-  .grade-pill { display: inline-block; padding: 3px 10px; border-radius: 12px; font-weight: 700; font-size: 0.82rem; }
-  .gp-aplus{background:#c8e6c9;color:#1b5e20}.gp-a{background:#dcedc8;color:#33691e}
-  .gp-bplus{background:#e8f5e9;color:#2e7d32}.gp-b{background:#f1f8e9;color:#388e3c}
-  .gp-cplus{background:#fff9c4;color:#f57f17}.gp-c{background:#fff3e0;color:#e65100}
-  .gp-d{background:#ffe0b2;color:#bf360c}.gp-ng{background:#ffcdd2;color:#b71c1c}
-
-  .empty-state { text-align: center; padding: 2rem 1rem; color: var(--text-muted); }
-  .empty-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
-  .empty-state p { font-size: 0.88rem; }
-
-  /* users management table */
-  .users-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-  .users-table th { background: var(--cream-dark); padding: 8px 10px; font-weight: 700; color: var(--text-muted); font-size: 0.78rem; text-transform: uppercase; text-align: left; }
-  .users-table td { padding: 9px 10px; border-bottom: 1px solid var(--cream-dark); }
-  .users-table tr:last-child td { border-bottom: none; }
-
-  .info-box { background: #fff8e1; border: 1px solid var(--gold); border-radius: 10px; padding: 0.8rem 1rem; font-size: 0.8rem; color: #6d4c00; margin-bottom: 1rem; }
-
-  @media print {
-    body > *:not(#main-app) { display: none !important; }
-    #main-app > *:not(#tab-results) { display: none !important; }
-    .app-header, .nav-tabs, .btn-row, .form-group, .section-card:not(:last-child) { display: none !important; }
-    .result-card { border: 1.5px solid #333; }
-    body { background: white; }
-  }
+:root{--maroon:#7B1C1C;--maroon-dark:#5a1414;--maroon-light:#9e2e2e;--cream:#FDF6EC;--cream-dark:#f0e4cc;--gold:#c8922a;--gold-light:#f0c96e;--text:#2c1a0e;--text-muted:#6b4c2a;--border:#d4b896;--white:#fff;--success:#1a6e2e;--danger:#991b1b;--shadow:0 2px 12px rgba(123,28,28,0.13);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--cream);color:var(--text);min-height:100vh;}
+#login-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(160deg,var(--maroon) 0%,var(--maroon-dark) 100%);padding:1.5rem;}
+.login-card{background:var(--white);border-radius:18px;box-shadow:0 8px 40px rgba(0,0,0,0.28);padding:2rem 1.8rem 2.2rem;width:100%;max-width:380px;}
+.login-logo{text-align:center;margin-bottom:1.4rem;}
+.school-emblem{width:72px;height:72px;border-radius:50%;background:var(--maroon);display:flex;align-items:center;justify-content:center;margin:0 auto 0.7rem;font-size:1.9rem;color:var(--gold-light);font-weight:700;border:3px solid var(--gold);overflow:hidden;}
+.school-emblem img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.login-logo h1{font-size:1.05rem;font-weight:700;color:var(--maroon);line-height:1.3;}
+.login-logo p{font-size:0.78rem;color:var(--text-muted);margin-top:2px;}
+.login-divider{height:1px;background:var(--cream-dark);margin:1rem 0 1.4rem;}
+.login-label{display:block;font-size:0.82rem;font-weight:600;color:var(--text-muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.5px;}
+.input-wrap{position:relative;margin-bottom:1rem;}
+.input-wrap input{width:100%;padding:0.72rem 2.6rem 0.72rem 0.9rem;border:1.5px solid var(--border);border-radius:9px;font-size:0.97rem;color:var(--text);background:var(--cream);outline:none;transition:border-color 0.2s;}
+.input-wrap input:focus{border-color:var(--maroon);background:#fff;}
+.toggle-pw{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-muted);padding:2px 4px;display:flex;align-items:center;}
+.toggle-pw svg{width:20px;height:20px;}
+.btn-login{width:100%;padding:0.85rem;background:var(--maroon);color:var(--white);border:none;border-radius:9px;font-size:1rem;font-weight:700;cursor:pointer;letter-spacing:0.5px;transition:background 0.2s,transform 0.1s;margin-top:0.3rem;}
+.btn-login:hover{background:var(--maroon-dark);}
+.btn-login:active{transform:scale(0.98);}
+.login-hint{font-size:0.75rem;color:var(--text-muted);text-align:center;margin-top:1rem;opacity:0.8;}
+.auth-tabs{display:flex;border-bottom:1.5px solid var(--cream-dark);margin-bottom:1.2rem;}
+.auth-tab{flex:1;text-align:center;padding:9px 0;font-size:0.88rem;font-weight:600;cursor:pointer;color:var(--text-muted);border-bottom:2.5px solid transparent;transition:color 0.2s,border-color 0.2s;margin-bottom:-1.5px;}
+.auth-tab.active{color:var(--maroon);border-bottom-color:var(--maroon);}
+.strength-row{display:flex;gap:4px;margin-top:5px;margin-bottom:4px;}
+.strength-seg{flex:1;height:4px;border-radius:2px;background:var(--cream-dark);transition:background 0.3s;}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:999;align-items:center;justify-content:center;padding:1.5rem;}
+.modal-overlay.open{display:flex;}
+.modal-box{background:white;border-radius:16px;padding:1.5rem;width:100%;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,0.25);}
+.modal-box h3{font-size:1rem;color:var(--maroon);margin-bottom:1rem;font-weight:700;}
+.modal-box .form-group{margin-bottom:0.8rem;}
+.modal-actions{display:flex;gap:8px;margin-top:1rem;}
+#main-app{display:none;}
+.app-header{background:var(--maroon);color:white;padding:0.7rem 1rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.18);}
+.app-header-left{display:flex;align-items:center;gap:10px;}
+.header-emblem{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;color:var(--gold-light);overflow:hidden;}
+.header-emblem img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.header-title{font-size:0.88rem;font-weight:700;line-height:1.25;}
+.header-sub{font-size:0.7rem;opacity:0.75;}
+.header-actions{display:flex;gap:6px;}
+.btn-sm{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;border-radius:7px;padding:5px 10px;font-size:0.75rem;cursor:pointer;font-weight:600;white-space:nowrap;}
+.summary-row{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:1rem 1rem 0;}
+.summary-card{background:var(--white);border-radius:12px;padding:0.85rem 1rem;border:1px solid var(--border);box-shadow:var(--shadow);text-align:center;}
+.summary-card .sc-num{font-size:1.7rem;font-weight:700;color:var(--maroon);line-height:1;}
+.summary-card .sc-lbl{font-size:0.72rem;color:var(--text-muted);margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:0.4px;}
+.nav-tabs{display:flex;padding:0.9rem 1rem 0;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.nav-tabs::-webkit-scrollbar{display:none;}
+.nav-tab{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 13px;border-radius:10px 10px 0 0;border:1px solid transparent;border-bottom:none;cursor:pointer;font-size:0.72rem;font-weight:600;color:var(--text-muted);background:transparent;white-space:nowrap;transition:all 0.18s;flex-shrink:0;}
+.nav-tab .tab-icon{font-size:1.15rem;}
+.nav-tab.active{background:var(--white);color:var(--maroon);border-color:var(--border);}
+.tab-panel{display:none;padding:1rem;}
+.tab-panel.active{display:block;}
+.section-card{background:var(--white);border-radius:13px;border:1px solid var(--border);box-shadow:var(--shadow);margin-bottom:1rem;overflow:hidden;}
+.section-head{background:var(--maroon);color:white;padding:0.7rem 1rem;font-size:0.9rem;font-weight:700;display:flex;align-items:center;gap:8px;}
+.section-body{padding:1rem;}
+.form-group{margin-bottom:0.85rem;}
+.form-group label{display:block;font-size:0.8rem;font-weight:600;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.4px;}
+.form-group select,.form-group input[type="text"],.form-group input[type="number"],.form-group input[type="password"]{width:100%;padding:0.62rem 0.85rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.93rem;color:var(--text);background:var(--cream);outline:none;transition:border-color 0.2s;-webkit-appearance:none;}
+.form-group select:focus,.form-group input:focus{border-color:var(--maroon);background:#fff;}
+.radio-group{display:flex;gap:10px;flex-wrap:wrap;}
+.radio-opt{display:flex;align-items:center;gap:5px;padding:7px 14px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;color:var(--text-muted);background:var(--cream);transition:all 0.15s;user-select:none;}
+.radio-opt input{display:none;}
+.radio-opt.selected{border-color:var(--maroon);background:#fdf0f0;color:var(--maroon);}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:0.65rem 1.1rem;border-radius:9px;border:none;font-size:0.88rem;font-weight:700;cursor:pointer;transition:opacity 0.15s,transform 0.1s;}
+.btn:active{transform:scale(0.97);}
+.btn-primary{background:var(--maroon);color:white;}
+.btn-secondary{background:var(--cream-dark);color:var(--maroon);border:1.5px solid var(--border);}
+.btn-success{background:var(--success);color:white;}
+.btn-danger{background:var(--danger);color:white;}
+.btn-gold{background:var(--gold);color:white;}
+.btn-full{width:100%;justify-content:center;}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:0.8rem;}
+.student-item{display:flex;align-items:center;gap:10px;padding:0.75rem 1rem;border-bottom:1px solid var(--cream-dark);cursor:pointer;transition:background 0.13s;}
+.student-item:last-child{border-bottom:none;}
+.student-item:hover{background:var(--cream);}
+.student-avatar{width:38px;height:38px;border-radius:50%;background:var(--maroon);color:var(--gold-light);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.82rem;flex-shrink:0;}
+.student-info{flex:1;min-width:0;}
+.student-name{font-weight:600;font-size:0.92rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.student-meta{font-size:0.75rem;color:var(--text-muted);margin-top:1px;}
+.badge{font-size:0.7rem;font-weight:700;padding:3px 8px;border-radius:6px;background:var(--cream-dark);color:var(--text-muted);flex-shrink:0;}
+.badge-plant{background:#e8f5e9;color:#1b5e20;}
+.badge-general{background:#e3f2fd;color:#0d47a1;}
+.badge-marked{background:#e8f5e9;color:#1b5e20;}
+.badge-unmarked{background:#fff3e0;color:#e65100;}
+.filter-tabs{display:flex;gap:6px;margin-bottom:0.9rem;flex-wrap:wrap;}
+.filter-tab{padding:5px 13px;border-radius:20px;font-size:0.78rem;font-weight:600;border:1.5px solid var(--border);background:var(--cream);color:var(--text-muted);cursor:pointer;transition:all 0.15s;}
+.filter-tab.active{background:var(--maroon);color:white;border-color:var(--maroon);}
+.marks-table{width:100%;border-collapse:collapse;font-size:0.82rem;}
+.marks-table th{background:var(--cream-dark);padding:7px 8px;text-align:left;font-weight:700;color:var(--text-muted);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.3px;}
+.marks-table td{padding:7px 8px;border-bottom:1px solid var(--cream-dark);vertical-align:middle;}
+.marks-table input[type="number"]{width:55px;padding:4px 6px;border:1.5px solid var(--border);border-radius:6px;font-size:0.85rem;text-align:center;background:var(--cream);}
+.marks-table input:focus{border-color:var(--maroon);outline:none;background:white;}
+.result-card{background:white;border:2px solid var(--maroon);border-radius:14px;overflow:hidden;margin-bottom:1rem;}
+.result-header{background:var(--maroon);color:white;text-align:center;padding:1rem 1rem 0.8rem;}
+.result-header h2{font-size:1rem;font-weight:700;}
+.result-header p{font-size:0.76rem;opacity:0.85;margin-top:2px;}
+.result-table{width:100%;border-collapse:collapse;font-size:0.78rem;}
+.result-table th{background:var(--cream-dark);padding:6px 7px;font-size:0.7rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;text-align:center;}
+.result-table td{padding:6px 7px;border-bottom:1px solid var(--cream-dark);text-align:center;}
+.grade-guide-table{width:100%;border-collapse:collapse;font-size:0.83rem;}
+.grade-guide-table th{background:var(--maroon);color:white;padding:8px 10px;font-size:0.78rem;text-transform:uppercase;}
+.grade-guide-table td{padding:8px 10px;border-bottom:1px solid var(--cream-dark);}
+.grade-guide-table tr:nth-child(even) td{background:var(--cream);}
+.grade-pill{display:inline-block;padding:3px 10px;border-radius:12px;font-weight:700;font-size:0.82rem;}
+.gp-aplus{background:#c8e6c9;color:#1b5e20}.gp-a{background:#dcedc8;color:#33691e}
+.gp-bplus{background:#e8f5e9;color:#2e7d32}.gp-b{background:#f1f8e9;color:#388e3c}
+.gp-cplus{background:#fff9c4;color:#f57f17}.gp-c{background:#fff3e0;color:#e65100}
+.gp-d{background:#ffe0b2;color:#bf360c}.gp-ng{background:#ffcdd2;color:#b71c1c}
+.empty-state{text-align:center;padding:2rem 1rem;color:var(--text-muted);}
+.empty-icon{font-size:2.5rem;margin-bottom:0.5rem;}
+.empty-state p{font-size:0.88rem;}
+.users-table{width:100%;border-collapse:collapse;font-size:0.85rem;}
+.users-table th{background:var(--cream-dark);padding:8px 10px;font-weight:700;color:var(--text-muted);font-size:0.78rem;text-transform:uppercase;text-align:left;}
+.users-table td{padding:9px 10px;border-bottom:1px solid var(--cream-dark);}
+.users-table tr:last-child td{border-bottom:none;}
+.info-box{background:#fff8e1;border:1px solid var(--gold);border-radius:10px;padding:0.8rem 1rem;font-size:0.8rem;color:#6d4c00;margin-bottom:1rem;}
+#login-error{display:none;background:#fff0f0;color:var(--danger);border:1px solid #f5c6c6;border-radius:8px;padding:0.55rem 0.8rem;font-size:0.85rem;margin-bottom:0.9rem;text-align:center;}
+@media print{body>*:not(#main-app){display:none !important;}#main-app>*:not(#tab-results){display:none !important;}.app-header,.nav-tabs,.btn-row,.form-group,.section-card:not(:last-child){display:none !important;}.result-card{border:1.5px solid #333;}body{background:white;}}
 </style>
 </head>
 <body>
@@ -358,116 +142,104 @@
   <div class="login-card">
     <div class="login-logo">
       <div class="school-emblem">
-        <img src="icon-512.png" alt="School Logo" onerror="this.style.display='none';this.parentNode.textContent='TS'">
+        <img src="icon-512.png" alt="TS" onerror="this.style.display='none';this.parentNode.textContent='TS'">
       </div>
       <h1>Tharpu Secondary School</h1>
       <p>Yangwarak-4, Panchthar &middot; School Code: TSS-PAN</p>
     </div>
     <div class="login-divider"></div>
-
-    <!-- Tab bar -->
     <div class="auth-tabs">
-      <div class="auth-tab active" id="tab-btn-login" onclick="switchAuthTab('login')">🔓 Sign In</div>
-      <div class="auth-tab" id="tab-btn-register" onclick="switchAuthTab('register')">📝 Register</div>
+      <div class="auth-tab active" id="tab-btn-login" onclick="switchAuthTab('login')">&#128275; Sign In</div>
+      <div class="auth-tab" id="tab-btn-register" onclick="switchAuthTab('register')">&#128221; Register</div>
     </div>
 
     <!-- SIGN IN PANEL -->
     <div id="auth-panel-login">
-      <div id="login-error" style="display:none;background:#fff0f0;color:#991b1b;border:1px solid #f5c6c6;border-radius:8px;padding:0.55rem 0.8rem;font-size:0.85rem;margin-bottom:0.9rem;text-align:center;">&#10060; Incorrect username or password.</div>
+      <div id="login-error">&#10060; Incorrect username or password.</div>
       <div class="form-group">
-        <label class="login-label" for="inp-user">Username</label>
+        <label class="login-label">Username</label>
         <div class="input-wrap">
-          <input type="text" id="inp-user" placeholder="Enter username" autocomplete="username" autocapitalize="none" spellcheck="false" />
+          <input type="text" id="inp-user" placeholder="Enter username" autocomplete="username" autocapitalize="none" spellcheck="false">
         </div>
       </div>
       <div class="form-group">
-        <label class="login-label" for="inp-pass">Password</label>
+        <label class="login-label">Password</label>
         <div class="input-wrap">
-          <input type="password" id="inp-pass" placeholder="Enter password" autocomplete="current-password" />
-          <button class="toggle-pw" onclick="togglePw('inp-pass','eye1')" tabindex="-1" type="button">
-            <svg id="eye1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <input type="password" id="inp-pass" placeholder="Enter password" autocomplete="current-password">
+          <button class="toggle-pw" onclick="togglePw('inp-pass','eye-signin')" tabindex="-1" type="button">
+            <svg id="eye-signin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
           </button>
         </div>
       </div>
-      <button class="btn-login" onclick="doLogin()">🔓 Sign In</button>
-      <p class="login-hint">Default: admin / tharpu2082</p>
+      <button class="btn-login" id="btn-signin" onclick="doLogin()">&#128275; Sign In</button>
+      <p class="login-hint">Default: admin / tharpu2082 &nbsp;|&nbsp; teacher / school123</p>
     </div>
 
     <!-- REGISTER PANEL -->
     <div id="auth-panel-register" style="display:none;">
-      <div id="reg-error" style="display:none;background:#fff0f0;color:#991b1b;border:1px solid #f5c6c6;border-radius:8px;padding:0.55rem 0.8rem;font-size:0.85rem;margin-bottom:0.9rem;text-align:center;"></div>
-      <div id="reg-success" style="display:none;background:#f0fff4;color:#1a6e2e;border:1px solid #b2dfc0;border-radius:8px;padding:0.55rem 0.8rem;font-size:0.85rem;margin-bottom:0.9rem;text-align:center;"></div>
+      <div id="reg-msg" style="display:none;border-radius:8px;padding:0.55rem 0.8rem;font-size:0.85rem;margin-bottom:0.9rem;text-align:center;"></div>
       <div id="reg-form">
         <div class="form-group">
-          <label class="login-label" for="reg-fullname">Full Name</label>
+          <label class="login-label">Full Name</label>
           <div class="input-wrap">
-            <input type="text" id="reg-fullname" placeholder="Your full name" />
+            <input type="text" id="reg-fullname" placeholder="Your full name">
           </div>
           <div id="err-fullname" style="display:none;font-size:0.75rem;color:#991b1b;margin-top:3px;">Please enter your full name.</div>
         </div>
         <div class="form-group">
-          <label class="login-label" for="reg-user">Username</label>
+          <label class="login-label">Username</label>
           <div class="input-wrap">
-            <input type="text" id="reg-user" placeholder="Choose a username" autocapitalize="none" />
+            <input type="text" id="reg-user" placeholder="Choose a username" autocapitalize="none">
           </div>
-          <div id="err-user" style="display:none;font-size:0.75rem;color:#991b1b;margin-top:3px;">Username already taken or empty.</div>
+          <div id="err-user" style="display:none;font-size:0.75rem;color:#991b1b;margin-top:3px;"></div>
         </div>
         <div class="form-group">
-          <label class="login-label" for="reg-pass">Password</label>
+          <label class="login-label">Password</label>
           <div class="input-wrap">
-            <input type="password" id="reg-pass" placeholder="Min 8 characters" oninput="checkRegStrength(this.value)" />
-            <button class="toggle-pw" onclick="togglePw('reg-pass','eye2')" tabindex="-1" type="button">
-              <svg id="eye2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <input type="password" id="reg-pass" placeholder="Min 8 characters" oninput="checkRegStrength(this.value)">
+            <button class="toggle-pw" onclick="togglePw('reg-pass','eye-reg1')" tabindex="-1" type="button">
+              <svg id="eye-reg1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
           </div>
-          <div class="strength-row">
-            <div class="strength-seg" id="ss1"></div>
-            <div class="strength-seg" id="ss2"></div>
-            <div class="strength-seg" id="ss3"></div>
-            <div class="strength-seg" id="ss4"></div>
-          </div>
+          <div class="strength-row"><div class="strength-seg" id="ss1"></div><div class="strength-seg" id="ss2"></div><div class="strength-seg" id="ss3"></div><div class="strength-seg" id="ss4"></div></div>
           <div id="err-pass" style="display:none;font-size:0.75rem;color:#991b1b;margin-top:3px;">Password must be at least 8 characters.</div>
         </div>
         <div class="form-group">
-          <label class="login-label" for="reg-pass2">Confirm Password</label>
+          <label class="login-label">Confirm Password</label>
           <div class="input-wrap">
-            <input type="password" id="reg-pass2" placeholder="Repeat password" />
-            <button class="toggle-pw" onclick="togglePw('reg-pass2','eye3')" tabindex="-1" type="button">
-              <svg id="eye3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <input type="password" id="reg-pass2" placeholder="Repeat password">
+            <button class="toggle-pw" onclick="togglePw('reg-pass2','eye-reg2')" tabindex="-1" type="button">
+              <svg id="eye-reg2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
           </div>
           <div id="err-pass2" style="display:none;font-size:0.75rem;color:#991b1b;margin-top:3px;">Passwords do not match.</div>
         </div>
-        <button class="btn-login" onclick="doRegister()">📝 Create Account</button>
+        <button class="btn-login" onclick="doRegister()">&#128221; Create Account</button>
       </div>
-      <p class="login-hint">After registering, sign in with your new account.</p>
+      <p class="login-hint">After registering, switch to Sign In tab.</p>
     </div>
-
   </div>
 </div>
 
-<!-- CHANGE PASSWORD MODAL -->
+<!-- USER MANAGEMENT MODAL -->
 <div class="modal-overlay" id="pw-modal">
   <div class="modal-box">
-    <h3>🔑 Manage Users & Passwords</h3>
+    <h3>&#128273; Manage Users &amp; Passwords</h3>
     <div id="users-list-area"></div>
     <hr style="margin:1rem 0;border-color:var(--cream-dark)">
     <p style="font-size:0.82rem;font-weight:700;color:var(--text-muted);margin-bottom:0.7rem;">ADD / UPDATE USER</p>
+    <div class="form-group"><label>Username</label><input type="text" id="new-uname" placeholder="e.g. teacher2" autocapitalize="none"></div>
     <div class="form-group">
-      <label>Username</label>
-      <input type="text" id="new-uname" placeholder="e.g. teacher2" autocapitalize="none" />
-    </div>
-    <div class="form-group">
-      <label>New Password</label>
+      <label>Password</label>
       <div class="input-wrap" style="margin-bottom:0">
-        <input type="password" id="new-pw" placeholder="Enter password" />
-        <button class="toggle-pw" onclick="togglePw('new-pw','eye2')" tabindex="-1" type="button">
-          <svg id="eye2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        <input type="password" id="new-pw" placeholder="Enter password">
+        <button class="toggle-pw" onclick="togglePw('new-pw','eye-modal')" tabindex="-1" type="button">
+          <svg id="eye-modal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
         </button>
       </div>
     </div>
     <div class="modal-actions">
-      <button class="btn btn-primary" style="flex:1" onclick="saveUser()">💾 Save User</button>
+      <button class="btn btn-primary" style="flex:1" onclick="saveUser()">&#128190; Save User</button>
       <button class="btn btn-secondary" onclick="closeModal('pw-modal')">Cancel</button>
     </div>
   </div>
@@ -477,44 +249,37 @@
 <div id="main-app">
   <div class="app-header">
     <div class="app-header-left">
-      <div class="header-emblem">
-        <img src="icon-192.png" alt="Logo" onerror="this.style.display='none';this.parentNode.textContent='TS'">
-      </div>
-      <div>
-        <div class="header-title">Tharpu Secondary School</div>
-        <div class="header-sub">Result Management System · Class XI</div>
-      </div>
+      <div class="header-emblem"><img src="icon-192.png" alt="TS" onerror="this.style.display='none';this.parentNode.textContent='TS'"></div>
+      <div><div class="header-title">Tharpu Secondary School</div><div class="header-sub">Result Management System &middot; Class XI</div></div>
     </div>
     <div class="header-actions">
-      <button class="btn-sm" onclick="openModal('pw-modal');renderUsersList()">🔑 Users</button>
-      <button class="btn-sm" onclick="doLogout()">⬅ Logout</button>
+      <button class="btn-sm" onclick="openModal('pw-modal');renderUsersList()">&#128273; Users</button>
+      <button class="btn-sm" onclick="doLogout()">&#8592; Logout</button>
     </div>
   </div>
-
   <div class="summary-row">
-    <div class="summary-card"><div class="sc-num" id="sc-total">17</div><div class="sc-lbl">Total Students</div></div>
-    <div class="summary-card"><div class="sc-num" id="sc-plant">17</div><div class="sc-lbl">Plant Science</div></div>
+    <div class="summary-card"><div class="sc-num" id="sc-total">0</div><div class="sc-lbl">Total Students</div></div>
+    <div class="summary-card"><div class="sc-num" id="sc-plant">0</div><div class="sc-lbl">Plant Science</div></div>
     <div class="summary-card"><div class="sc-num" id="sc-general">0</div><div class="sc-lbl">General Stream</div></div>
     <div class="summary-card"><div class="sc-num" id="sc-marked">0</div><div class="sc-lbl">Marks Saved</div></div>
   </div>
-
   <div class="nav-tabs">
-    <button class="nav-tab active" onclick="showTab('students',this)"><span class="tab-icon">👥</span>Students</button>
-    <button class="nav-tab" onclick="showTab('marks',this)"><span class="tab-icon">✏️</span>Enter Marks</button>
-    <button class="nav-tab" onclick="showTab('results',this)"><span class="tab-icon">📄</span>Results</button>
-    <button class="nav-tab" onclick="showTab('grading',this)"><span class="tab-icon">📊</span>Grading</button>
-    <button class="nav-tab" onclick="showTab('register',this)"><span class="tab-icon">➕</span>Register</button>
+    <button class="nav-tab active" onclick="showTab('students',this)"><span class="tab-icon">&#128101;</span>Students</button>
+    <button class="nav-tab" onclick="showTab('marks',this)"><span class="tab-icon">&#9998;</span>Enter Marks</button>
+    <button class="nav-tab" onclick="showTab('results',this)"><span class="tab-icon">&#128196;</span>Results</button>
+    <button class="nav-tab" onclick="showTab('grading',this)"><span class="tab-icon">&#128202;</span>Grading</button>
+    <button class="nav-tab" onclick="showTab('register',this)"><span class="tab-icon">&#10133;</span>Register</button>
   </div>
 
   <!-- STUDENTS TAB -->
   <div class="tab-panel active" id="tab-students">
     <div class="filter-tabs">
       <button class="filter-tab active" onclick="filterStudents('all',this)">All</button>
-      <button class="filter-tab" onclick="filterStudents('Plant Science',this)">🌱 Plant</button>
-      <button class="filter-tab" onclick="filterStudents('General',this)">📚 General</button>
+      <button class="filter-tab" onclick="filterStudents('Plant Science',this)">&#127807; Plant</button>
+      <button class="filter-tab" onclick="filterStudents('General',this)">&#128218; General</button>
     </div>
     <div class="section-card">
-      <div class="section-head">👥 Registered Students</div>
+      <div class="section-head">&#128101; Registered Students</div>
       <div id="student-list"></div>
     </div>
   </div>
@@ -522,12 +287,9 @@
   <!-- MARKS TAB -->
   <div class="tab-panel" id="tab-marks">
     <div class="section-card">
-      <div class="section-head">✏️ Subject Marks Entry</div>
+      <div class="section-head">&#9998; Subject Marks Entry</div>
       <div class="section-body">
-        <div class="form-group">
-          <label>Select Student</label>
-          <select id="marks-student-sel" onchange="loadMarksForm()"><option value="">— Choose student —</option></select>
-        </div>
+        <div class="form-group"><label>Select Student</label><select id="marks-student-sel" onchange="loadMarksForm()"><option value="">-- Choose student --</option></select></div>
         <div class="form-group">
           <label>Examination</label>
           <select id="marks-exam-sel" onchange="loadMarksForm()">
@@ -545,7 +307,7 @@
   <!-- RESULTS TAB -->
   <div class="tab-panel" id="tab-results">
     <div class="section-card">
-      <div class="section-head">📄 Grade Sheet — All Students</div>
+      <div class="section-head">&#128196; Grade Sheet — All Students</div>
       <div class="section-body">
         <div class="form-group">
           <label>Examination</label>
@@ -560,14 +322,14 @@
           <label>Stream Filter</label>
           <select id="result-stream-sel" onchange="loadGradeSheet()">
             <option value="all">All Streams</option>
-            <option value="Plant Science">🌱 Plant Science</option>
-            <option value="General">📚 General</option>
+            <option value="Plant Science">&#127807; Plant Science</option>
+            <option value="General">&#128218; General</option>
           </select>
         </div>
         <div class="btn-row">
-          <button class="btn btn-primary" onclick="window.print()">🖨️ Print</button>
-          <button class="btn btn-secondary" onclick="saveResultHTML()">⬇️ Save HTML</button>
-          <button class="btn btn-gold" onclick="exportExcel()">📊 Export to Excel</button>
+          <button class="btn btn-primary" onclick="window.print()">&#128424; Print</button>
+          <button class="btn btn-secondary" onclick="saveResultHTML()">&#11015; Save HTML</button>
+          <button class="btn btn-gold" onclick="exportExcel()">&#128202; Export Excel</button>
         </div>
       </div>
     </div>
@@ -577,51 +339,18 @@
   <!-- GRADING TAB -->
   <div class="tab-panel" id="tab-grading">
     <div class="section-card">
-      <div class="section-head">📊 NEB Grading Scale — Class 11 & 12</div>
+      <div class="section-head">&#128202; NEB Grading Scale</div>
       <div class="section-body" style="padding:0;">
         <table class="grade-guide-table">
           <tr><th>Grade</th><th>Marks %</th><th>GPA</th><th>Remarks</th></tr>
           <tr><td><span class="grade-pill gp-aplus">A+</span></td><td>90% and above</td><td>4.0</td><td>Outstanding</td></tr>
-          <tr><td><span class="grade-pill gp-a">A</span></td><td>80% – 89%</td><td>3.6</td><td>Excellent</td></tr>
-          <tr><td><span class="grade-pill gp-bplus">B+</span></td><td>70% – 79%</td><td>3.2</td><td>Very Good</td></tr>
-          <tr><td><span class="grade-pill gp-b">B</span></td><td>60% – 69%</td><td>2.8</td><td>Good</td></tr>
-          <tr><td><span class="grade-pill gp-cplus">C+</span></td><td>50% – 59%</td><td>2.4</td><td>Satisfactory</td></tr>
-          <tr><td><span class="grade-pill gp-c">C</span></td><td>40% – 49%</td><td>2.0</td><td>Acceptable</td></tr>
-          <tr><td><span class="grade-pill gp-d">D</span></td><td>35% – 39%</td><td>1.6</td><td>Basic (Pass)</td></tr>
+          <tr><td><span class="grade-pill gp-a">A</span></td><td>80 - 89%</td><td>3.6</td><td>Excellent</td></tr>
+          <tr><td><span class="grade-pill gp-bplus">B+</span></td><td>70 - 79%</td><td>3.2</td><td>Very Good</td></tr>
+          <tr><td><span class="grade-pill gp-b">B</span></td><td>60 - 69%</td><td>2.8</td><td>Good</td></tr>
+          <tr><td><span class="grade-pill gp-cplus">C+</span></td><td>50 - 59%</td><td>2.4</td><td>Satisfactory</td></tr>
+          <tr><td><span class="grade-pill gp-c">C</span></td><td>40 - 49%</td><td>2.0</td><td>Acceptable</td></tr>
+          <tr><td><span class="grade-pill gp-d">D</span></td><td>35 - 39%</td><td>1.6</td><td>Basic</td></tr>
           <tr><td><span class="grade-pill gp-ng">NG</span></td><td>Below 35%</td><td>0.0</td><td>Not Graded</td></tr>
-        </table>
-      </div>
-    </div>
-    <div class="section-card">
-      <div class="section-head">📚 Plant Science Stream Subjects</div>
-      <div class="section-body" style="padding:0;overflow-x:auto;">
-        <table class="marks-table">
-          <tr><th>Subject</th><th>Theory</th><th>Practical</th><th>Total</th></tr>
-          <tr><td>Compulsory English</td><td>75</td><td>25</td><td>100</td></tr>
-          <tr><td>Compulsory Nepali</td><td>75</td><td>25</td><td>100</td></tr>
-          <tr><td>Physics</td><td>75</td><td>25</td><td>100</td></tr>
-          <tr><td>Chemistry</td><td>75</td><td>25</td><td>100</td></tr>
-          <tr><td>Biology</td><td>75</td><td>25</td><td>100</td></tr>
-          <tr><td>Farm Machinery & Seeds Development</td><td>50</td><td>50</td><td>100</td></tr>
-          <tr><td>Commercial Fruit Crop & Post Harvest Tech</td><td>50</td><td>50</td><td>100</td></tr>
-          <tr><td>Agricultural Entomology</td><td>50</td><td>50</td><td>100</td></tr>
-          <tr><td>Soil Fertility & Nutrient Management</td><td>50</td><td>50</td><td>100</td></tr>
-        </table>
-      </div>
-    </div>
-    <div class="section-card">
-      <div class="section-head">📚 General Stream Subjects</div>
-      <div class="section-body" style="padding:0;overflow-x:auto;">
-        <table class="marks-table">
-          <tr><th>Subject</th><th>Theory</th><th>Practical</th><th>Total</th></tr>
-          <tr><td>Compulsory English</td><td>75</td><td>25</td><td>100</td></tr>
-          <tr><td>Compulsory Nepali</td><td>75</td><td>25</td><td>100</td></tr>
-          <tr><td>Mathematics</td><td>100</td><td>0</td><td>100</td></tr>
-          <tr><td>Accountancy</td><td>75</td><td>25</td><td>100</td></tr>
-          <tr><td>Economics</td><td>100</td><td>0</td><td>100</td></tr>
-          <tr><td>Computer Science</td><td>75</td><td>25</td><td>100</td></tr>
-          <tr><td>Social Studies & Life Skills</td><td>75</td><td>25</td><td>100</td></tr>
-          <tr><td>Health & Physical Education</td><td>50</td><td>50</td><td>100</td></tr>
         </table>
       </div>
     </div>
@@ -630,214 +359,208 @@
   <!-- REGISTER TAB -->
   <div class="tab-panel" id="tab-register">
     <div class="section-card">
-      <div class="section-head">➕ Register Student — Class 11</div>
+      <div class="section-head">&#10133; Register Student</div>
       <div class="section-body">
-        <div class="form-group"><label>Full Name</label><input type="text" id="reg-name" placeholder="Student full name" /></div>
-        <div class="form-group"><label>Roll No.</label><input type="text" id="reg-roll" placeholder="e.g. 10200222" /></div>
+        <div class="form-group"><label>Full Name</label><input type="text" id="reg-name" placeholder="Student full name"></div>
+        <div class="form-group"><label>Roll No.</label><input type="text" id="reg-roll" placeholder="e.g. 10200222"></div>
         <div class="form-group">
           <label>Stream</label>
           <div class="radio-group">
-            <label class="radio-opt selected" id="opt-plant"><input type="radio" name="stream" value="Plant Science" checked onchange="selectStream(this)"> 🌱 Plant Science</label>
-            <label class="radio-opt" id="opt-general"><input type="radio" name="stream" value="General" onchange="selectStream(this)"> 📚 General</label>
+            <label class="radio-opt selected" id="opt-plant"><input type="radio" name="stream" value="Plant Science" checked onchange="selectStream(this)"> &#127807; Plant Science</label>
+            <label class="radio-opt" id="opt-general"><input type="radio" name="stream" value="General" onchange="selectStream(this)"> &#128218; General</label>
           </div>
         </div>
-        <div class="form-group"><label>Academic Year</label><input type="text" id="reg-year" value="2082/83" /></div>
-        <button class="btn btn-primary btn-full" onclick="registerStudent()">➕ Add Student</button>
+        <div class="form-group"><label>Academic Year</label><input type="text" id="reg-year" value="2082/83"></div>
+        <button class="btn btn-primary btn-full" onclick="registerStudent()">&#10133; Add Student</button>
       </div>
     </div>
-    <div class="info-box">📦 <b>Export & Share:</b> Click Export below to download a self-contained HTML file with all student data and marks embedded. Share it with other teachers or open it on any device.</div>
+    <div class="info-box">&#128230; <b>Export &amp; Share:</b> Downloads a self-contained HTML file with all data embedded. Share with any teacher.</div>
     <div class="btn-row">
-      <button class="btn btn-gold btn-full" onclick="exportShare()">📦 Export & Share Data</button>
+      <button class="btn btn-gold btn-full" onclick="exportShare()">&#128230; Export &amp; Share Data</button>
     </div>
   </div>
-
-</div><!-- /main-app -->
+</div>
 
 <script>
-// =============================================
-// USERS — stored in localStorage for persistence
-// Default accounts (used only if no saved users exist)
+// ============================================================
+// USERS
+// ============================================================
 var DEFAULT_USERS = [
-  { username: "admin",   password: "tharpu2082" },
-  { username: "teacher", password: "school123"  }
+  {username:"admin",   password:"tharpu2082"},
+  {username:"teacher", password:"school123"}
 ];
-
 function loadUsers() {
-  try {
-    var saved = localStorage.getItem('tss_users');
-    if (saved) return JSON.parse(saved);
-  } catch(e) {}
-  return DEFAULT_USERS.map(function(u){ return Object.assign({}, u); });
+  try { var s=localStorage.getItem('tss_users'); if(s) return JSON.parse(s); } catch(e){}
+  return DEFAULT_USERS.map(function(u){ return {username:u.username,password:u.password}; });
 }
 function saveUsers(arr) {
-  try { localStorage.setItem('tss_users', JSON.stringify(arr)); } catch(e) {}
+  try { localStorage.setItem('tss_users', JSON.stringify(arr)); } catch(e){}
 }
 var USERS = loadUsers();
-var currentUser = "guest";
+var currentUser = 'guest';
 
-// =============================================
-// LOGIN
-function togglePw(inputId, iconId) {
+// ============================================================
+// LOGIN / REGISTER
+// ============================================================
+function togglePw(inputId, svgId) {
   var inp = document.getElementById(inputId);
-  var ico = document.getElementById(iconId);
+  var svg = document.getElementById(svgId);
+  if (!inp || !svg) return;
   if (inp.type === 'password') {
     inp.type = 'text';
-    ico.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>';
+    svg.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>';
   } else {
     inp.type = 'password';
-    ico.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+    svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
   }
 }
-// Auth tab switching
+
 function switchAuthTab(tab) {
-  document.getElementById('auth-panel-login').style.display = tab === 'login' ? 'block' : 'none';
-  document.getElementById('auth-panel-register').style.display = tab === 'register' ? 'block' : 'none';
-  document.getElementById('tab-btn-login').className = 'auth-tab' + (tab === 'login' ? ' active' : '');
-  document.getElementById('tab-btn-register').className = 'auth-tab' + (tab === 'register' ? ' active' : '');
+  document.getElementById('auth-panel-login').style.display    = (tab==='login')    ? 'block' : 'none';
+  document.getElementById('auth-panel-register').style.display = (tab==='register') ? 'block' : 'none';
+  document.getElementById('tab-btn-login').className    = 'auth-tab' + (tab==='login'    ? ' active' : '');
+  document.getElementById('tab-btn-register').className = 'auth-tab' + (tab==='register' ? ' active' : '');
+  document.getElementById('login-error').style.display = 'none';
 }
 
-// Password strength meter
+function doLogin() {
+  var u = document.getElementById('inp-user').value.trim();
+  var p = document.getElementById('inp-pass').value;
+  if (!u || !p) {
+    document.getElementById('login-error').style.display = 'block';
+    document.getElementById('login-error').textContent = 'Please enter username and password.';
+    return;
+  }
+  var matched = null;
+  for (var i=0; i<USERS.length; i++) {
+    if (USERS[i].username === u && USERS[i].password === p) { matched = USERS[i]; break; }
+  }
+  if (matched) {
+    currentUser = u;
+    document.getElementById('login-error').style.display = 'none';
+    loadMarksFromStorage();
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('main-app').style.display     = 'block';
+    renderStudentList();
+    populateStudentSelects();
+    updateSummary();
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+    document.getElementById('login-error').textContent = 'Incorrect username or password.';
+    document.getElementById('inp-pass').value = '';
+    document.getElementById('inp-pass').focus();
+  }
+}
+
+// Enter key support — placed after doLogin is defined
+document.getElementById('inp-pass').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
+document.getElementById('inp-user').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('inp-pass').focus(); });
+
+function doLogout() {
+  currentUser = 'guest';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('main-app').style.display     = 'none';
+  document.getElementById('inp-user').value = '';
+  document.getElementById('inp-pass').value = '';
+  document.getElementById('login-error').style.display = 'none';
+}
+
 function checkRegStrength(val) {
   var score = 0;
-  if (val.length >= 8) score++;
-  if (/[A-Z]/.test(val)) score++;
-  if (/[0-9]/.test(val)) score++;
-  if (/[^A-Za-z0-9]/.test(val)) score++;
+  if (val.length>=8) score++; if (/[A-Z]/.test(val)) score++;
+  if (/[0-9]/.test(val)) score++; if (/[^A-Za-z0-9]/.test(val)) score++;
   var colors = ['#e53e3e','#dd6b20','#38a169','#2b6cb0'];
-  for (var i = 1; i <= 4; i++) {
-    var seg = document.getElementById('ss'+i);
-    seg.style.background = i <= score ? colors[score-1] : '#e2d6c3';
+  for (var i=1;i<=4;i++) {
+    var s=document.getElementById('ss'+i);
+    if(s) s.style.background = i<=score ? colors[score-1] : '#e2d6c3';
   }
 }
 
-// Register new account
 function doRegister() {
   var name  = document.getElementById('reg-fullname').value.trim();
   var uname = document.getElementById('reg-user').value.trim();
   var pass  = document.getElementById('reg-pass').value;
   var pass2 = document.getElementById('reg-pass2').value;
+  ['err-fullname','err-user','err-pass','err-pass2'].forEach(function(id){
+    document.getElementById(id).style.display='none';
+  });
   var ok = true;
-
-  // Clear previous errors
-  ['err-fullname','err-user','err-pass','err-pass2'].forEach(function(id){ document.getElementById(id).style.display='none'; });
-
-  if (!name)              { document.getElementById('err-fullname').style.display='block'; ok=false; }
-  if (!uname || USERS.some(function(u){ return u.username===uname; })) {
-    document.getElementById('err-user').textContent = !uname ? 'Please enter a username.' : 'Username already taken.';
+  if (!name)         { document.getElementById('err-fullname').style.display='block'; ok=false; }
+  if (!uname) {
+    document.getElementById('err-user').textContent='Please enter a username.';
+    document.getElementById('err-user').style.display='block'; ok=false;
+  } else if (USERS.some(function(u){ return u.username===uname; })) {
+    document.getElementById('err-user').textContent='Username already taken.';
     document.getElementById('err-user').style.display='block'; ok=false;
   }
-  if (pass.length < 8)   { document.getElementById('err-pass').style.display='block'; ok=false; }
-  if (pass !== pass2)    { document.getElementById('err-pass2').style.display='block'; ok=false; }
+  if (pass.length<8) { document.getElementById('err-pass').style.display='block'; ok=false; }
+  if (pass!==pass2)  { document.getElementById('err-pass2').style.display='block'; ok=false; }
   if (!ok) return;
-
-  USERS.push({ username: uname, password: pass, fullname: name });
+  USERS.push({username:uname, password:pass, fullname:name});
   saveUsers(USERS);
-
+  var msg = document.getElementById('reg-msg');
+  msg.textContent = 'Account created for '+name+'! Please sign in.';
+  msg.style.cssText = 'display:block;background:#f0fff4;color:#1a6e2e;border:1px solid #b2dfc0;border-radius:8px;padding:0.55rem 0.8rem;font-size:0.85rem;margin-bottom:0.9rem;text-align:center;';
   document.getElementById('reg-form').style.display = 'none';
-  var suc = document.getElementById('reg-success');
-  suc.textContent = '✅ Account created for ' + name + '! You can now sign in.';
-  suc.style.display = 'block';
 }
 
-// Enter key on login fields - safe null check
-(function() {
-  var passEl = document.getElementById('inp-pass');
-  var userEl = document.getElementById('inp-user');
-  if (passEl) passEl.addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
-  if (userEl) userEl.addEventListener('keydown', function(e){ if(e.key==='Enter') { var p=document.getElementById('inp-pass'); if(p) p.focus(); }});
-})();
-
-function doLogin() {
-  var u = document.getElementById('inp-user').value.trim();
-  var p = document.getElementById('inp-pass').value;
-  var ok = USERS.some(function(x){ return x.username===u && x.password===p; });
-  var errEl = document.getElementById('login-error');
-  if(errEl) errEl.style.display = ok ? 'none' : 'block';
-  if (ok) {
-    currentUser = u;
-    loadMarksFromStorage();
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('main-app').style.display = 'block';
-    renderStudentList(); populateStudentSelects(); updateSummary();
-  } else {
-    document.getElementById('inp-pass').value = '';
-    document.getElementById('inp-pass').focus();
-  }
-}
-function doLogout() {
-  currentUser = 'guest';
-  document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('main-app').style.display = 'none';
-  document.getElementById('inp-user').value = '';
-  document.getElementById('inp-pass').value = '';
-  var le=document.getElementById('login-error'); if(le) le.style.display='none';
-}
-
-// =============================================
+// ============================================================
 // USER MANAGEMENT MODAL
-function openModal(id) { document.getElementById(id).classList.add('open'); }
+// ============================================================
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
 function renderUsersList() {
   var html = '<table class="users-table"><tr><th>Username</th><th>Password</th><th></th></tr>';
-  USERS.forEach(function(u, i) {
-    html += '<tr><td><b>'+u.username+'</b></td><td><span style="font-family:monospace">'+u.password+'</span></td>'
-      +'<td><button class="btn btn-danger" style="padding:3px 8px;font-size:0.75rem;" onclick="deleteUser('+i+')">🗑</button></td></tr>';
+  USERS.forEach(function(u,i){
+    html += '<tr><td><b>'+u.username+'</b></td>'
+      +'<td style="font-family:monospace">'+u.password+'</td>'
+      +'<td><button class="btn btn-danger" style="padding:3px 8px;font-size:0.75rem" onclick="deleteUser('+i+')">&#128465;</button></td></tr>';
   });
-  html += '</table>';
-  document.getElementById('users-list-area').innerHTML = html;
+  document.getElementById('users-list-area').innerHTML = html+'</table>';
 }
-
 function saveUser() {
-  var uname = document.getElementById('new-uname').value.trim();
-  var pw = document.getElementById('new-pw').value;
-  if (!uname || !pw) { alert('Enter both username and password.'); return; }
-  var idx = USERS.findIndex(function(u){ return u.username === uname; });
-  if (idx >= 0) {
-    USERS[idx].password = pw;
-    alert('✅ Password updated for "' + uname + '"');
-  } else {
-    USERS.push({ username: uname, password: pw });
-    alert('✅ User "' + uname + '" added.');
-  }
+  var uname=document.getElementById('new-uname').value.trim();
+  var pw=document.getElementById('new-pw').value;
+  if (!uname||!pw) { alert('Enter both username and password.'); return; }
+  var idx=USERS.findIndex(function(u){ return u.username===uname; });
+  if (idx>=0) { USERS[idx].password=pw; alert('Password updated for "'+uname+'"'); }
+  else        { USERS.push({username:uname,password:pw}); alert('User "'+uname+'" added.'); }
   saveUsers(USERS);
-  document.getElementById('new-uname').value = '';
-  document.getElementById('new-pw').value = '';
+  document.getElementById('new-uname').value='';
+  document.getElementById('new-pw').value='';
   renderUsersList();
 }
-
 function deleteUser(i) {
-  if (USERS.length <= 1) { alert('Cannot delete the last user.'); return; }
-  if (!confirm('Delete user "' + USERS[i].username + '"?')) return;
-  USERS.splice(i, 1);
-  saveUsers(USERS);
-  renderUsersList();
+  if (USERS.length<=1) { alert('Cannot delete the last user.'); return; }
+  if (!confirm('Delete user "'+USERS[i].username+'"?')) return;
+  USERS.splice(i,1); saveUsers(USERS); renderUsersList();
 }
 
-// =============================================
+// ============================================================
 // DATA
+// ============================================================
 var students = [
-  {name:"BINITA DAHAL",roll:"10200205",stream:"Plant Science",year:"2082/83"},
-  {name:"BINOD DAHAL",roll:"10200206",stream:"Plant Science",year:"2082/83"},
-  {name:"DIBYA MABO",roll:"10200207",stream:"Plant Science",year:"2082/83"},
-  {name:"JENI LAKSAM",roll:"10200208",stream:"Plant Science",year:"2082/83"},
-  {name:"MISEK LINGDEN",roll:"10200209",stream:"Plant Science",year:"2082/83"},
-  {name:"NABIN ADHIKARI",roll:"10200210",stream:"Plant Science",year:"2082/83"},
-  {name:"NILIMA MAGAR",roll:"10200211",stream:"Plant Science",year:"2082/83"},
-  {name:"NISKARSHA ADHIKARI",roll:"10200212",stream:"Plant Science",year:"2082/83"},
-  {name:"PRAJU SIWAKOTI",roll:"10200213",stream:"Plant Science",year:"2082/83"},
-  {name:"PRERIT KAMBANG",roll:"10200214",stream:"Plant Science",year:"2082/83"},
-  {name:"PUJA SUBEDI",roll:"10200215",stream:"Plant Science",year:"2082/83"},
+  {name:"BINITA DAHAL",       roll:"10200205",stream:"Plant Science",year:"2082/83"},
+  {name:"BINOD DAHAL",        roll:"10200206",stream:"Plant Science",year:"2082/83"},
+  {name:"DIBYA MABO",         roll:"10200207",stream:"Plant Science",year:"2082/83"},
+  {name:"JENI LAKSAM",        roll:"10200208",stream:"Plant Science",year:"2082/83"},
+  {name:"MISEK LINGDEN",      roll:"10200209",stream:"Plant Science",year:"2082/83"},
+  {name:"NABIN ADHIKARI",     roll:"10200210",stream:"Plant Science",year:"2082/83"},
+  {name:"NILIMA MAGAR",       roll:"10200211",stream:"Plant Science",year:"2082/83"},
+  {name:"NISKARSHA ADHIKARI", roll:"10200212",stream:"Plant Science",year:"2082/83"},
+  {name:"PRAJU SIWAKOTI",     roll:"10200213",stream:"Plant Science",year:"2082/83"},
+  {name:"PRERIT KAMBANG",     roll:"10200214",stream:"Plant Science",year:"2082/83"},
+  {name:"PUJA SUBEDI",        roll:"10200215",stream:"Plant Science",year:"2082/83"},
   {name:"RAMESH KUMAR PAUDEL",roll:"10200216",stream:"Plant Science",year:"2082/83"},
-  {name:"RITU PARA MABO",roll:"10200217",stream:"Plant Science",year:"2082/83"},
-  {name:"SAGAR YONGHANG",roll:"10200218",stream:"Plant Science",year:"2082/83"},
-  {name:"SOBHIYA YONGHANG",roll:"10200219",stream:"Plant Science",year:"2082/83"},
-  {name:"SUDARSHAN KOIRALA",roll:"10200220",stream:"Plant Science",year:"2082/83"},
-  {name:"SUJAN KATUWAL",roll:"10200221",stream:"Plant Science",year:"2082/83"}
+  {name:"RITU PARA MABO",     roll:"10200217",stream:"Plant Science",year:"2082/83"},
+  {name:"SAGAR YONGHANG",     roll:"10200218",stream:"Plant Science",year:"2082/83"},
+  {name:"SOBHIYA YONGHANG",   roll:"10200219",stream:"Plant Science",year:"2082/83"},
+  {name:"SUDARSHAN KOIRALA",  roll:"10200220",stream:"Plant Science",year:"2082/83"},
+  {name:"SUJAN KATUWAL",      roll:"10200221",stream:"Plant Science",year:"2082/83"}
 ];
-
 var SUBJECTS = {
-  "Plant Science": [
+  "Plant Science":[
     {name:"Compulsory English",thMax:75,prMax:25},
     {name:"Compulsory Nepali",thMax:75,prMax:25},
     {name:"Physics",thMax:75,prMax:25},
@@ -848,7 +571,7 @@ var SUBJECTS = {
     {name:"Agricultural Entomology",thMax:50,prMax:50},
     {name:"Soil Fertility & Nutrient Management",thMax:50,prMax:50}
   ],
-  "General": [
+  "General":[
     {name:"Compulsory English",thMax:75,prMax:25},
     {name:"Compulsory Nepali",thMax:75,prMax:25},
     {name:"Mathematics",thMax:100,prMax:0},
@@ -859,33 +582,36 @@ var SUBJECTS = {
     {name:"Health & Physical Education",thMax:50,prMax:50}
   ]
 };
-
 var marksData = {};
 var currentFilter = 'all';
 
-function getKey(roll, exam) { return roll + '||' + exam; }
+function getKey(roll,exam)  { return roll+'||'+exam; }
 function getGrade(pct) {
   if(pct>=90)return{g:'A+',gpa:4.0};if(pct>=80)return{g:'A',gpa:3.6};
   if(pct>=70)return{g:'B+',gpa:3.2};if(pct>=60)return{g:'B',gpa:2.8};
   if(pct>=50)return{g:'C+',gpa:2.4};if(pct>=40)return{g:'C',gpa:2.0};
   if(pct>=35)return{g:'D',gpa:1.6};return{g:'NG',gpa:0.0};
 }
-function gradeClass(g) { return 'grade-'+g.replace('+','-plus'); }
-function initials(name) { var p=name.trim().split(' '); return p.length>=2?p[0][0]+p[p.length-1][0]:name.substring(0,2); }
+function initials(name) {
+  var p=name.trim().split(' ');
+  return p.length>=2 ? p[0][0]+p[p.length-1][0] : name.substring(0,2);
+}
 
-// =============================================
+// ============================================================
 // TABS
+// ============================================================
 function showTab(id, btn) {
   document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
   document.querySelectorAll('.nav-tab').forEach(function(b){ b.classList.remove('active'); });
   document.getElementById('tab-'+id).classList.add('active');
   btn.classList.add('active');
-  if(id==='marks'){ populateStudentSelects(); loadMarksForm(); }
-  if(id==='results'){ populateStudentSelects(); loadResult(); }
+  if (id==='marks')   { populateStudentSelects(); loadMarksForm(); }
+  if (id==='results') { loadGradeSheet(); }
 }
 
-// =============================================
+// ============================================================
 // STUDENTS
+// ============================================================
 function filterStudents(f, btn) {
   currentFilter = f;
   document.querySelectorAll('.filter-tab').forEach(function(b){ b.classList.remove('active'); });
@@ -895,64 +621,77 @@ function filterStudents(f, btn) {
 function renderStudentList() {
   var list = document.getElementById('student-list');
   var filtered = students.filter(function(s){ return currentFilter==='all'||s.stream===currentFilter; });
-  if (!filtered.length) { list.innerHTML='<div class="empty-state"><div class="empty-icon">👤</div><p>No students found.</p></div>'; return; }
-  list.innerHTML = filtered.map(function(s) {
+  if (!filtered.length) {
+    list.innerHTML='<div class="empty-state"><div class="empty-icon">&#128100;</div><p>No students found.</p></div>';
+    return;
+  }
+  list.innerHTML = filtered.map(function(s){
     var hasMarks = Object.keys(marksData).some(function(k){ return k.startsWith(s.roll+'||'); });
-    var sc = s.stream==='Plant Science'?'badge-plant':'badge-general';
-    return '<div class="student-item" onclick="quickEnterMarks(\''+s.roll+'\')">'
-      +'<div class="student-avatar">'+initials(s.name)+'</div>'
-      +'<div class="student-info"><div class="student-name">'+s.name+'</div>'
-      +'<div class="student-meta">Roll No. <b>'+s.roll+'</b> | '+s.year+'</div></div>'
-      +'<span class="badge '+sc+'">'+(s.stream==='Plant Science'?'🌱 Plant':'📚 General')+'</span>'
-      +(hasMarks?'<span class="badge badge-marked">✓ Marks</span>':'<span class="badge badge-unmarked">No marks</span>')
-      +'</div>';
+    var sc = s.stream==='Plant Science' ? 'badge-plant' : 'badge-general';
+    return '<div class="student-item" onclick="quickEnterMarks(\''+s.roll+'\')">'+
+      '<div class="student-avatar">'+initials(s.name)+'</div>'+
+      '<div class="student-info">'+
+        '<div class="student-name">'+s.name+'</div>'+
+        '<div class="student-meta">Roll: <b>'+s.roll+'</b> | '+s.year+'</div>'+
+      '</div>'+
+      '<span class="badge '+sc+'">'+(s.stream==='Plant Science'?'&#127807; Plant':'&#128218; General')+'</span>'+
+      (hasMarks?'<span class="badge badge-marked">&#10003; Marks</span>':'<span class="badge badge-unmarked">No marks</span>')+
+      '</div>';
   }).join('');
 }
 function quickEnterMarks(roll) {
   var btn = document.querySelector('[onclick="showTab(\'marks\',this)"]');
-  showTab('marks', btn);
+  showTab('marks', btn); btn.classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
   document.getElementById('marks-student-sel').value = roll;
   loadMarksForm();
 }
 function updateSummary() {
-  var plant = students.filter(function(s){ return s.stream==='Plant Science'; }).length;
-  var gen = students.filter(function(s){ return s.stream==='General'; }).length;
-  var marked = students.filter(function(s){ return Object.keys(marksData).some(function(k){ return k.startsWith(s.roll+'||'); }); }).length;
-  document.getElementById('sc-total').textContent = students.length;
-  document.getElementById('sc-plant').textContent = plant;
+  var plant  = students.filter(function(s){ return s.stream==='Plant Science'; }).length;
+  var gen    = students.filter(function(s){ return s.stream==='General'; }).length;
+  var marked = students.filter(function(s){
+    return Object.keys(marksData).some(function(k){ return k.startsWith(s.roll+'||'); });
+  }).length;
+  document.getElementById('sc-total').textContent   = students.length;
+  document.getElementById('sc-plant').textContent   = plant;
   document.getElementById('sc-general').textContent = gen;
-  document.getElementById('sc-marked').textContent = marked;
+  document.getElementById('sc-marked').textContent  = marked;
 }
 
-// =============================================
-// REGISTER
+// ============================================================
+// REGISTER STUDENT
+// ============================================================
 function selectStream(inp) {
   document.querySelectorAll('.radio-opt').forEach(function(o){ o.classList.remove('selected'); });
   inp.closest('.radio-opt').classList.add('selected');
 }
 function registerStudent() {
-  var name = document.getElementById('reg-name').value.trim().toUpperCase();
-  var roll = document.getElementById('reg-roll').value.trim();
+  var name   = document.getElementById('reg-name').value.trim().toUpperCase();
+  var roll   = document.getElementById('reg-roll').value.trim();
   var stream = document.querySelector('input[name="stream"]:checked').value;
-  var year = document.getElementById('reg-year').value.trim();
-  if (!name||!roll) { alert('Please enter both Name and Roll No.'); return; }
+  var year   = document.getElementById('reg-year').value.trim();
+  if (!name||!roll) { alert('Enter Name and Roll No.'); return; }
   if (students.some(function(s){ return s.roll===roll; })) { alert('Roll No. already exists!'); return; }
   students.push({name:name,roll:roll,stream:stream,year:year});
   document.getElementById('reg-name').value='';
   document.getElementById('reg-roll').value='';
   renderStudentList(); populateStudentSelects(); updateSummary();
-  alert('✅ Student "'+name+'" registered successfully!');
+  alert('Student "'+name+'" registered!');
 }
 
-// =============================================
+// ============================================================
 // MARKS
+// ============================================================
 function populateStudentSelects() {
-  ['marks-student-sel','result-student-sel'].forEach(function(id) {
-    var sel = document.getElementById(id), cur = sel.value;
-    sel.innerHTML = '<option value="">— Choose student —</option>';
-    students.forEach(function(s){ sel.innerHTML += '<option value="'+s.roll+'">'+s.name+' ('+s.roll+')</option>'; });
-    if (cur) sel.value = cur;
+  var sel = document.getElementById('marks-student-sel');
+  if (!sel) return;
+  var cur = sel.value;
+  sel.innerHTML = '<option value="">-- Choose student --</option>';
+  students.forEach(function(s){
+    sel.innerHTML += '<option value="'+s.roll+'">'+s.name+' ('+s.roll+')</option>';
   });
+  if (cur) sel.value = cur;
 }
 function loadMarksForm() {
   var roll = document.getElementById('marks-student-sel').value;
@@ -961,232 +700,235 @@ function loadMarksForm() {
   if (!roll) { area.innerHTML=''; return; }
   var st = students.find(function(s){ return s.roll===roll; });
   if (!st) return;
-  var subs = SUBJECTS[st.stream];
+  var subs  = SUBJECTS[st.stream];
   var saved = marksData[getKey(roll,exam)] || {};
-  var rows = subs.map(function(sub) {
-    var k = sub.name.replace(/\W/g,'_');
-    var thVal = (saved[sub.name]&&saved[sub.name].th!==undefined)?saved[sub.name].th:'';
-    var prVal = (saved[sub.name]&&saved[sub.name].pr!==undefined)?saved[sub.name].pr:'';
-    var prInput = sub.prMax>0
-      ?'<input type="number" id="pr_'+k+'" min="0" max="'+sub.prMax+'" value="'+prVal+'" placeholder="0" oninput="recalcRow(\''+k+'\','+sub.thMax+','+sub.prMax+')" />'
-      :'<span style="color:#aaa">—</span>';
-    var total='';
-    if(thVal!==''&&(sub.prMax===0||prVal!=='')){
-      var t=parseInt(thVal||0)+parseInt(prVal||0);
-      var g=getGrade(t/(sub.thMax+sub.prMax)*100);
-      total=t;
+  var rows  = subs.map(function(sub){
+    var k    = sub.name.replace(/\W/g,'_');
+    var thV  = (saved[sub.name]&&saved[sub.name].th!==undefined) ? saved[sub.name].th : '';
+    var prV  = (saved[sub.name]&&saved[sub.name].pr!==undefined) ? saved[sub.name].pr : '';
+    var prIn = sub.prMax>0
+      ? '<input type="number" id="pr_'+k+'" min="0" max="'+sub.prMax+'" value="'+prV+'" placeholder="0" oninput="recalcRow(\''+k+'\','+sub.thMax+','+sub.prMax+')">'
+      : '<span style="color:#aaa">N/A</span>';
+    var tot  = '';
+    if (thV!==''&&(sub.prMax===0||prV!=='')) {
+      tot = parseInt(thV||0)+parseInt(prV||0);
     }
-    return '<tr><td style="font-size:0.78rem;">'+sub.name+'</td>'
-      +'<td><input type="number" id="th_'+k+'" min="0" max="'+sub.thMax+'" value="'+thVal+'" placeholder="0" oninput="recalcRow(\''+k+'\','+sub.thMax+','+sub.prMax+')" /></td>'
-      +'<td>'+prInput+'</td>'
-      +'<td><small style="color:#888">/'+sub.thMax+'</small></td>'
-      +'<td id="tot_'+k+'">'+total+'</td></tr>';
+    return '<tr>'+
+      '<td style="font-size:0.78rem">'+sub.name+'</td>'+
+      '<td><input type="number" id="th_'+k+'" min="0" max="'+sub.thMax+'" value="'+thV+'" placeholder="0" oninput="recalcRow(\''+k+'\','+sub.thMax+','+sub.prMax+')"></td>'+
+      '<td>'+prIn+'</td>'+
+      '<td><small style="color:#888">/'+sub.thMax+'</small></td>'+
+      '<td id="tot_'+k+'">'+tot+'</td>'+
+      '</tr>';
   }).join('');
-  area.innerHTML = '<div class="section-card"><div class="section-head">📝 '+st.name+' — '+exam+'</div>'
-    +'<div style="overflow-x:auto;"><table class="marks-table"><tr><th>Subject</th><th>Theory</th><th>Practical</th><th>Max</th><th>Total</th><th>Grade</th></tr>'
-    +rows+'</table></div>'
-    +'<div style="padding:1rem;"><button class="btn btn-success btn-full" onclick="saveMarks(\''+roll+'\',\''+exam+'\')">💾 Save Marks</button></div></div>';
+  area.innerHTML =
+    '<div class="section-card">'+
+    '<div class="section-head">&#128221; '+st.name+' &mdash; '+exam+'</div>'+
+    '<div style="overflow-x:auto"><table class="marks-table">'+
+    '<tr><th>Subject</th><th>Theory</th><th>Practical</th><th>Max Th</th><th>Total</th></tr>'+
+    rows+
+    '</table></div>'+
+    '<div style="padding:1rem">'+
+    '<button class="btn btn-success btn-full" onclick="saveMarks(\''+roll+'\',\''+exam+'\')">&#128190; Save Marks</button>'+
+    '</div></div>';
 }
 function recalcRow(key,thMax,prMax) {
-  var thEl=document.getElementById('th_'+key),prEl=document.getElementById('pr_'+key);
-  var th=thEl?parseInt(thEl.value||0):0,pr=prEl&&prEl.tagName==='INPUT'?parseInt(prEl.value||0):0;
-  var g=getGrade((th+pr)/(thMax+prMax)*100);
-  var totEl=document.getElementById('tot_'+key),grdEl=document.getElementById('grd_'+key);
-  var hasData=thEl&&thEl.value!==''&&(prMax===0||(prEl&&prEl.value!==''));
-  if(totEl) totEl.textContent=hasData?(th+pr):'';
-  if(grdEl) grdEl.innerHTML='';
+  var thEl=document.getElementById('th_'+key);
+  var prEl=document.getElementById('pr_'+key);
+  var th=thEl?parseInt(thEl.value||0):0;
+  var pr=(prEl&&prEl.tagName==='INPUT')?parseInt(prEl.value||0):0;
+  var totEl=document.getElementById('tot_'+key);
+  var hasData=thEl&&thEl.value!==''&&(prMax===0||(prEl&&prEl.tagName==='INPUT'&&prEl.value!==''));
+  if (totEl) totEl.textContent = hasData ? (th+pr) : '';
 }
 function saveMarks(roll,exam) {
-  var st=students.find(function(s){ return s.roll===roll; });
-  var subs=SUBJECTS[st.stream],obj={};
+  var st   = students.find(function(s){ return s.roll===roll; });
+  var subs = SUBJECTS[st.stream];
+  var obj  = {};
   subs.forEach(function(sub){
-    var k=sub.name.replace(/\W/g,'_');
-    var thEl=document.getElementById('th_'+k),prEl=document.getElementById('pr_'+k);
-    if(thEl) obj[sub.name]={
-      th:thEl.value!==''?parseInt(thEl.value):undefined,
-      pr:prEl&&prEl.tagName==='INPUT'&&prEl.value!==''?parseInt(prEl.value):undefined
+    var k    = sub.name.replace(/\W/g,'_');
+    var thEl = document.getElementById('th_'+k);
+    var prEl = document.getElementById('pr_'+k);
+    obj[sub.name] = {
+      th: thEl&&thEl.value!=='' ? parseInt(thEl.value) : undefined,
+      pr: prEl&&prEl.tagName==='INPUT'&&prEl.value!=='' ? parseInt(prEl.value) : undefined
     };
   });
-  marksData[getKey(roll,exam)]=obj;
+  marksData[getKey(roll,exam)] = obj;
   saveMarksToStorage();
   updateSummary(); renderStudentList();
-  alert('✅ Marks saved for '+st.name+' — '+exam);
+  alert('Marks saved for '+st.name+' — '+exam);
 }
 
-// =============================================
-// MARKS - save per user, merge all users on load
+// ============================================================
+// MARKS STORAGE — per user, merged on login
+// ============================================================
 function saveMarksToStorage() {
   try { localStorage.setItem('tss_marks_'+(currentUser||'guest'), JSON.stringify(marksData)); } catch(e){}
 }
 function loadMarksFromStorage() {
   marksData = {};
   try {
-    for (var i=0; i<localStorage.length; i++) {
-      var k = localStorage.key(i);
-      if (k && k.startsWith('tss_marks_')) {
-        var d = JSON.parse(localStorage.getItem(k)||'{}');
-        // Later entries win (most recent save per key)
-        Object.assign(marksData, d);
+    for (var i=0;i<localStorage.length;i++) {
+      var k=localStorage.key(i);
+      if (k&&k.startsWith('tss_marks_')) {
+        var d=JSON.parse(localStorage.getItem(k)||'{}');
+        Object.assign(marksData,d);
       }
     }
   } catch(e){}
 }
 
-// =============================================
-// GRADE SHEET — single page, all students
+// ============================================================
+// GRADE SHEET — all students, single page
+// ============================================================
 function loadGradeSheet() {
-  var exam = document.getElementById('result-exam-sel').value;
-  var streamF = document.getElementById('result-stream-sel') ? document.getElementById('result-stream-sel').value : 'all';
-  var area = document.getElementById('result-display');
-  var filtered = students.filter(function(s){ return streamF==='all'||s.stream===streamF; });
-  if (!filtered.length) { area.innerHTML='<div class="empty-state"><div class="empty-icon">📄</div><p>No students found.</p></div>'; return; }
-
+  var exam    = document.getElementById('result-exam-sel').value;
+  var streamF = document.getElementById('result-stream-sel').value;
+  var area    = document.getElementById('result-display');
   var streams = streamF==='all' ? ['Plant Science','General'] : [streamF];
-  var html = '<div class="result-card">'
-    +'<div class="result-header"><h2>THARPU SECONDARY SCHOOL</h2>'
-    +'<p>Yangwarak-4, Panchthar, Koshi Province, Nepal | Code: TSS-PAN</p>'
-    +'<p style="margin-top:6px;font-weight:700;font-size:0.9rem;">'+exam+' — Grade Sheet — Academic Year 2082/83</p></div>';
-
-  streams.forEach(function(stream) {
-    var slist = filtered.filter(function(s){ return s.stream===stream; });
+  var filtered= students.filter(function(s){ return streamF==='all'||s.stream===streamF; });
+  if (!filtered.length) {
+    area.innerHTML='<div class="empty-state"><div class="empty-icon">&#128196;</div><p>No students found.</p></div>';
+    return;
+  }
+  var html = '<div class="result-card">'+
+    '<div class="result-header"><h2>THARPU SECONDARY SCHOOL</h2>'+
+    '<p>Yangwarak-4, Panchthar, Koshi Province, Nepal | Code: TSS-PAN</p>'+
+    '<p style="margin-top:6px;font-weight:700;font-size:0.9rem;">'+exam+' &mdash; Grade Sheet &mdash; 2082/83</p></div>';
+  streams.forEach(function(stream){
+    var slist=filtered.filter(function(s){ return s.stream===stream; });
     if (!slist.length) return;
-    var subs = SUBJECTS[stream];
-    html += '<div style="margin:1rem 0 0.5rem;font-weight:700;color:var(--maroon);font-size:0.95rem;">'+stream+' Stream</div>'
-      +'<div style="overflow-x:auto;"><table class="result-table" style="font-size:0.75rem;">'
-      +'<thead><tr style="background:var(--maroon);color:white;">'
-      +'<th>SN</th><th>Name</th><th>Roll No.</th>';
-    subs.forEach(function(sub){ html += '<th>'+sub.name+'<br><small>/'+(sub.thMax+sub.prMax)+'</small></th>'; });
-    html += '<th>Total</th><th>%</th><th>Result</th></tr></thead><tbody>';
-
-    slist.forEach(function(st, idx) {
-      var saved = marksData[getKey(st.roll,exam)] || {};
-      var grandTotal=0, grandMax=0, allFilled=true, anyNG=false;
-      var cells = subs.map(function(sub) {
-        var d = saved[sub.name] || {};
-        var max = sub.thMax+sub.prMax;
-        grandMax += max;
-        if (d.th!==undefined && (sub.prMax===0||d.pr!==undefined)) {
-          var t=(d.th||0)+(d.pr||0);
-          grandTotal+=t;
-          if(t/max*100<35) anyNG=true;
-          return '<td style="text-align:center;">'+t+'</td>';
-        } else { allFilled=false; return '<td style="text-align:center;color:#aaa;">—</td>'; }
-      }).join('');
-      var pct = grandMax>0?(grandTotal/grandMax*100).toFixed(1):'—';
-      var result = !allFilled?'⏳':anyNG?'❌NG':'✅Pass';
-      var rowBg = idx%2===0?'':'background:#fdf6ec;';
-      html += '<tr style="'+rowBg+'"><td style="text-align:center;">'+(idx+1)+'</td>'
-        +'<td style="white-space:nowrap;">'+st.name+'</td>'
-        +'<td style="text-align:center;">'+st.roll+'</td>'
-        +cells
-        +'<td style="text-align:center;font-weight:700;">'+(allFilled?grandTotal:'—')+'</td>'
-        +'<td style="text-align:center;">'+(allFilled?pct+'%':'—')+'</td>'
-        +'<td style="text-align:center;">'+result+'</td></tr>';
+    var subs=SUBJECTS[stream];
+    html+='<div style="padding:0.8rem 0.8rem 0;font-weight:700;color:var(--maroon)">'+stream+' Stream</div>'+
+      '<div style="overflow-x:auto"><table class="result-table" style="font-size:0.72rem">'+
+      '<thead><tr style="background:var(--maroon);color:white">'+
+      '<th style="text-align:left">SN</th><th style="text-align:left">Name</th><th>Roll</th>';
+    subs.forEach(function(sub){
+      html+='<th>'+sub.name.split(' ').slice(0,2).join(' ')+'<br><small>/'+(sub.thMax+sub.prMax)+'</small></th>';
     });
-    html += '</tbody></table></div>';
+    html+='<th>Total</th><th>%</th><th>Result</th></tr></thead><tbody>';
+    slist.forEach(function(st,idx){
+      var saved=marksData[getKey(st.roll,exam)]||{};
+      var gTotal=0,gMax=0,allFilled=true,anyNG=false;
+      var cells=subs.map(function(sub){
+        var d=saved[sub.name]||{},max=sub.thMax+sub.prMax;
+        gMax+=max;
+        if (d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)) {
+          var t=(d.th||0)+(d.pr||0); gTotal+=t;
+          if(t/max*100<35) anyNG=true;
+          return '<td>'+t+'</td>';
+        } else { allFilled=false; return '<td style="color:#bbb">—</td>'; }
+      }).join('');
+      var pct=gMax>0?(gTotal/gMax*100).toFixed(1):'—';
+      var res=!allFilled?'&#9203;':anyNG?'&#10060;NG':'&#9989;Pass';
+      html+='<tr style="'+(idx%2?'background:#fdf6ec':'')+'" >'+
+        '<td>'+(idx+1)+'</td>'+
+        '<td style="white-space:nowrap;text-align:left">'+st.name+'</td>'+
+        '<td>'+st.roll+'</td>'+
+        cells+
+        '<td><b>'+(allFilled?gTotal:'—')+'</b></td>'+
+        '<td>'+(allFilled?pct+'%':'—')+'</td>'+
+        '<td>'+res+'</td></tr>';
+    });
+    html+='</tbody></table></div>';
   });
-  html += '<div style="padding:0.8rem;font-size:0.75rem;color:var(--text-muted);">Generated: '+new Date().toLocaleString()+' | Tharpu Secondary School</div></div>';
-  area.innerHTML = html;
+  html+='<div style="padding:0.7rem;font-size:0.72rem;color:var(--text-muted)">Generated: '+new Date().toLocaleString()+' | Tharpu Secondary School</div></div>';
+  area.innerHTML=html;
 }
 
-// =============================================
-// EXPORT TO EXCEL (CSV)
+// ============================================================
+// EXPORT EXCEL
+// ============================================================
 function exportExcel() {
-  var exam = document.getElementById('result-exam-sel').value;
-  var streamF = document.getElementById('result-stream-sel') ? document.getElementById('result-stream-sel').value : 'all';
-  var filtered = students.filter(function(s){ return streamF==='all'||s.stream===streamF; });
-  if (!filtered.length) { alert('No students to export.'); return; }
+  var exam    = document.getElementById('result-exam-sel').value;
+  var streamF = document.getElementById('result-stream-sel').value;
   var streams = streamF==='all' ? ['Plant Science','General'] : [streamF];
-  var rows = [];
-  rows.push('"THARPU SECONDARY SCHOOL"');
-  rows.push('"'+exam+' — Academic Year 2082/83"');
-  rows.push('');
-
-  streams.forEach(function(stream) {
-    var slist = filtered.filter(function(s){ return s.stream===stream; });
+  var rows    = ['"THARPU SECONDARY SCHOOL"','"'+exam+' — 2082/83"',''];
+  streams.forEach(function(stream){
+    var slist=students.filter(function(s){ return (streamF==='all'||s.stream===streamF)&&s.stream===stream; });
     if (!slist.length) return;
-    var subs = SUBJECTS[stream];
+    var subs=SUBJECTS[stream];
     rows.push('"'+stream+' Stream"');
-    var hdr = ['SN','Name','Roll No.'];
+    var hdr=['SN','Name','Roll No.'];
     subs.forEach(function(sub){
-      if(sub.thMax>0) hdr.push(sub.name+' Theory');
-      if(sub.prMax>0) hdr.push(sub.name+' Practical');
-      hdr.push(sub.name+' Total /+'+(sub.thMax+sub.prMax));
+      if(sub.thMax>0) hdr.push(sub.name+' (Theory)');
+      if(sub.prMax>0) hdr.push(sub.name+' (Practical)');
+      hdr.push(sub.name+' Total');
     });
     hdr.push('Grand Total','Percentage','Result');
     rows.push(hdr.map(function(h){ return '"'+h+'"'; }).join(','));
-
-    slist.forEach(function(st, idx) {
-      var saved = marksData[getKey(st.roll,exam)] || {};
-      var row = [idx+1, st.name, st.roll];
-      var gTotal=0, gMax=0, allFilled=true, anyNG=false;
-      subs.forEach(function(sub) {
-        var d=saved[sub.name]||{}, max=sub.thMax+sub.prMax;
-        gMax+=max;
+    slist.forEach(function(st,i){
+      var saved=marksData[getKey(st.roll,exam)]||{};
+      var row=[i+1,st.name,st.roll],gT=0,gM=0,filled=true,ng=false;
+      subs.forEach(function(sub){
+        var d=saved[sub.name]||{},max=sub.thMax+sub.prMax; gM+=max;
         if(sub.thMax>0) row.push(d.th!==undefined?d.th:'');
         if(sub.prMax>0) row.push(d.pr!==undefined?d.pr:'');
         if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
-          var t=(d.th||0)+(d.pr||0); gTotal+=t;
-          row.push(t);
-          if(t/max*100<35) anyNG=true;
-        } else { row.push(''); allFilled=false; }
+          var t=(d.th||0)+(d.pr||0); gT+=t;
+          row.push(t); if(t/max*100<35) ng=true;
+        } else { row.push(''); filled=false; }
       });
-      row.push(allFilled?gTotal:'');
-      row.push(allFilled?(gTotal/gMax*100).toFixed(1)+'%':'');
-      row.push(!allFilled?'Incomplete':anyNG?'Not Graded':'Pass');
+      row.push(filled?gT:'');
+      row.push(filled?(gT/gM*100).toFixed(1)+'%':'');
+      row.push(!filled?'Incomplete':ng?'Not Graded':'Pass');
       rows.push(row.map(function(c){ return '"'+c+'"'; }).join(','));
     });
     rows.push('');
   });
-
-  var csv = '﻿'+rows.join('
-');
-  var a = document.createElement('a');
-  a.href = 'data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
-  a.download = 'Tharpu_GradeSheet_'+exam.replace(/ /g,'_')+'.csv';
+  var csv='\uFEFF'+rows.join('\n');
+  var a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download='Tharpu_GradeSheet_'+exam.replace(/ /g,'_')+'.csv';
   a.click();
 }
 
-function saveResultHTML(){
+// ============================================================
+// SAVE HTML / EXPORT SHARE
+// ============================================================
+function saveResultHTML() {
   loadGradeSheet();
   setTimeout(function(){
-    var content = document.getElementById('result-display').innerHTML;
-    if (!content) { alert('Please generate grade sheet first.'); return; }
+    var c=document.getElementById('result-display').innerHTML;
+    if (!c) { alert('No grade sheet generated.'); return; }
     var a=document.createElement('a');
-    a.href='data:text/html;charset=utf-8,'+encodeURIComponent('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Grade Sheet — Tharpu Secondary School</title><style>body{font-family:sans-serif;padding:20px;max-width:1200px;margin:auto;}table{border-collapse:collapse;width:100%;margin-bottom:1rem;}th,td{border:1px solid #ccc;padding:5px 8px;font-size:11px;}th{background:#7B1C1C;color:white;}</style></head><body>'+content+'</body></html>');
+    a.href='data:text/html;charset=utf-8,'+encodeURIComponent(
+      '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Grade Sheet</title>'+
+      '<style>body{font-family:sans-serif;padding:20px;max-width:1400px;margin:auto}'+
+      'table{border-collapse:collapse;width:100%;margin-bottom:1rem}'+
+      'th,td{border:1px solid #ccc;padding:5px 7px;font-size:11px}'+
+      'th{background:#7B1C1C;color:white}</style></head><body>'+c+'</body></html>');
     a.download='GradeSheet_Tharpu.html'; a.click();
-  }, 400);
+  },300);
 }
-
-// Export full app with ALL marks embedded — share with anyone
-function exportShare(){
+function exportShare() {
   var data=JSON.stringify({students:students,marks:marksData});
-  var inject='<script>var _savedData='+data+';<\/script>';
+  var inject='<'+'script>var _savedData='+data+';<'+'/script>';
   var out=document.documentElement.outerHTML.replace('</head>',inject+'</head>');
   var a=document.createElement('a');
   a.href='data:text/html;charset=utf-8,'+encodeURIComponent(out);
   a.download='Tharpu_School_'+new Date().toISOString().slice(0,10)+'.html';
   a.click();
-  alert('✅ Shared file exported! Anyone who opens this HTML file will see all saved marks data.');
+  alert('Exported! Anyone who opens this file will see all marks data.');
 }
 
-// Restore exported data (shared file)
-if(typeof _savedData!=='undefined'){
-  students=_savedData.students||students;
-  marksData=_savedData.marks||marksData;
+// ============================================================
+// RESTORE SHARED DATA
+// ============================================================
+if (typeof _savedData !== 'undefined') {
+  students  = _savedData.students || students;
+  marksData = _savedData.marks    || marksData;
 } else {
   loadMarksFromStorage();
 }
-
-// Alias so tab switching still works
-function loadResult(){ loadGradeSheet(); }
-
-// Auto-load grade sheet when switching to results tab
-var _origShowTab = showTab;
-showTab = function(id, btn) {
-  _origShowTab(id, btn);
-  if(id==='results') { loadGradeSheet(); }
-};
+renderStudentList();
+updateSummary();
 </script>
 </body>
 </html>
+HTMLEOF
+echo "Written: $(wc -c < /mnt/user-data/outputs/index.htm) bytes, $(wc -l < /mnt/user-data/outputs/index.htm) lines"
+Output
+
+Written: 52163 bytes, 926 lines
