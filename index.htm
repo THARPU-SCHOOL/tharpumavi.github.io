@@ -398,7 +398,7 @@ function saveUsers(arr) {
   try { localStorage.setItem('tss_users', JSON.stringify(arr)); } catch(e){}
 }
 var USERS = loadUsers();
-var currentUser = 'guest';
+var currentUser = localStorage.getItem('tss_session_user') || 'guest';
 
 // ============================================================
 // LOGIN / REGISTER
@@ -436,8 +436,9 @@ function doLogin() {
   for (var i=0; i<USERS.length; i++) {
     if (USERS[i].username === u && USERS[i].password === p) { matched = USERS[i]; break; }
   }
-  if (matched) {
+if (matched) {
     currentUser = u;
+    localStorage.setItem('tss_session_user', u);
     document.getElementById('login-error').style.display = 'none';
     loadMarksFromStorage();
     document.getElementById('login-screen').style.display = 'none';
@@ -459,11 +460,13 @@ document.getElementById('inp-user').addEventListener('keydown', function(e){ if(
 
 function doLogout() {
   currentUser = 'guest';
+  localStorage.removeItem('tss_session_user');
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('main-app').style.display     = 'none';
   document.getElementById('inp-user').value = '';
   document.getElementById('inp-pass').value = '';
   document.getElementById('login-error').style.display = 'none';
+}
 }
 
 function checkRegStrength(val) {
@@ -1120,10 +1123,19 @@ if (typeof _savedData !== 'undefined') {
 } else {
   loadMarksFromStorage();
 }
+// Auto-login if session exists
+(function(){
+  var savedUser = localStorage.getItem('tss_session_user');
+  if (savedUser && USERS.some(function(u){ return u.username===savedUser; })) {
+    currentUser = savedUser;
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('main-app').style.display     = 'block';
+  }
+})();
 renderStudentList();
+populateStudentSelects();
 updateSummary();
 </script>
 </body>
 </html>
-Written: 52163 bytes, 926 lines
-Done
+
