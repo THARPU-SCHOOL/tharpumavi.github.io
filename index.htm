@@ -857,87 +857,175 @@ function showIndividualSheet(roll,exam) {
   if (!st) return;
   var subs=SUBJECTS[st.stream];
   var saved=marksData[getKey(roll,exam)]||{};
-  var totalGPA=0,subCount=0,anyNG=false,allFilled=true;
+
+  // Credit hours per subject
+  var creditMap={
+    'Physics':3,'Chemistry':3,'Biology':3,'Compulsory Nepali':3
+  };
+  function getCredit(name){ return creditMap[name]||4; }
+
+  // NEB: GPA = gradepoint (not weighted). CGPA = sum(GP)/count
+  var totalGP=0,subCount=0,anyNG=false,allFilled=true;
+
   var rows=subs.map(function(sub,i){
     var d=saved[sub.name]||{},max=sub.thMax+sub.prMax;
+    var credit=getCredit(sub.name);
+    // Subject codes: 101 onward
+    var code=101+i;
     if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
       var t=(d.th||0)+(d.pr||0);
       var pct=max>0?t/max*100:0;
       var gr=getGrade(pct);
-      totalGPA+=gr.gpa; subCount++;
+      totalGP+=gr.gpa; subCount++;
       if(gr.g==='NG') anyNG=true;
-      return '<tr><td>'+(i+1)+'</td><td>'+sub.name+'</td>'
-        +'<td>'+(sub.thMax>0?(d.th!==undefined?d.th:'—'):'N/A')+'/'+(sub.thMax||0)+'</td>'
-        +'<td>'+(sub.prMax>0?(d.pr!==undefined?d.pr:'—'):'N/A')+'/'+(sub.prMax||0)+'</td>'
-        +'<td>'+t+'/'+max+'</td>'
-        +'<td><b>'+gr.g+'</b></td>'
-        +'<td>'+gr.gpa.toFixed(1)+'</td></tr>';
+      return '<tr>'
+        +'<td style="text-align:center">'+code+'</td>'
+        +'<td style="text-align:left;padding-left:8px">'+sub.name+'</td>'
+        +'<td style="text-align:center">'+credit+'</td>'
+        +'<td style="text-align:center">'+gr.gpa.toFixed(1)+'</td>'
+        +'<td style="text-align:center">'+gr.g+'</td>'
+        +'<td style="text-align:center">'+gr.g+'</td>'
+        +'<td style="text-align:center">'+(gr.g==='NG'?'Not Graded':gr.g==='D'?'Basic':'Passed')+'</td>'
+        +'</tr>';
     } else {
       allFilled=false;
-      return '<tr><td>'+(i+1)+'</td><td>'+sub.name+'</td>'
-        +'<td colspan="6" style="color:#aaa;text-align:center">Not entered</td></tr>';
+      return '<tr>'
+        +'<td style="text-align:center">'+code+'</td>'
+        +'<td style="text-align:left;padding-left:8px">'+sub.name+'</td>'
+        +'<td style="text-align:center">'+credit+'</td>'
+        +'<td style="text-align:center">—</td>'
+        +'<td style="text-align:center">—</td>'
+        +'<td style="text-align:center">—</td>'
+        +'<td style="text-align:center">—</td>'
+        +'</tr>';
     }
   }).join('');
-  var cgpa=allFilled&&subCount>0?(totalGPA/subCount).toFixed(2):'—';
-  var result=!allFilled?'Incomplete':anyNG?'NOT GRADED (NG)':'PASS';
-  var resColor=anyNG?'#b71c1c':allFilled?'#1a6e2e':'#b45309';
+
+  // Empty filler rows so table looks full like NEB format
+  var fillerNeeded=Math.max(0,10-subs.length);
+  for(var f=0;f<fillerNeeded;f++){
+    rows+='<tr><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>';
+  }
+
+  var cgpa=allFilled&&subCount>0?(totalGP/subCount).toFixed(2):'—';
+  var today=new Date();
+  var dateStr=today.getFullYear()+'/'+(today.getMonth()+1)+'/'+(today.getDate());
+
   var w=window.open('','_blank');
   w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8">'+
     '<title>Grade Sheet — '+st.name+'</title>'+
     '<style>'+
-    'body{font-family:Arial,sans-serif;max-width:800px;margin:2rem auto;padding:1rem;color:#1a1a1a}'+
-    '.header{text-align:center;border-bottom:3px double #7B1C1C;padding-bottom:1rem;margin-bottom:1.2rem}'+
-    '.header h2{color:#7B1C1C;font-size:1.3rem;margin:0}'+
-    '.header p{font-size:0.82rem;color:#555;margin:3px 0}'+
-    '.info-row{display:flex;gap:2rem;background:#fff8f0;border:1px solid #e0c9a0;border-radius:8px;padding:0.8rem 1rem;margin-bottom:1rem;flex-wrap:wrap}'+
-    '.info-row div{font-size:0.88rem} .info-row b{color:#7B1C1C}'+
-    'table{width:100%;border-collapse:collapse;font-size:0.85rem;margin-bottom:1rem}'+
-    'th{background:#7B1C1C;color:white;padding:8px 10px;text-align:center}'+
-    'th:nth-child(2){text-align:left}'+
-    'td{padding:7px 10px;border:1px solid #ddd;text-align:center}'+
-    'td:nth-child(2){text-align:left}'+
-    'tr:nth-child(even){background:#fdf6ec}'+
-    '.cgpa-row{display:flex;justify-content:space-between;align-items:center;background:#7B1C1C;color:white;border-radius:8px;padding:0.9rem 1.2rem;margin-bottom:1rem}'+
-    '.cgpa-row .big{font-size:1.5rem;font-weight:700}'+
-    '.result-badge{font-size:1.1rem;font-weight:700;color:'+resColor+';border:2px solid '+resColor+';border-radius:8px;padding:5px 18px}'+
-    '.footer{font-size:0.72rem;color:#888;text-align:center;border-top:1px solid #ddd;padding-top:0.7rem;margin-top:1rem}'+
-    '@media print{body{margin:0.5rem} button{display:none}}'+
+    '*{box-sizing:border-box;margin:0;padding:0}'+
+    'body{font-family:Arial,sans-serif;font-size:12px;color:#000;background:#fff;padding:20px}'+
+    '.page{max-width:740px;margin:0 auto;border:2px solid #000;padding:18px 24px}'+
+    '.top-right{text-align:right;font-size:11px;font-weight:bold;margin-bottom:4px}'+
+    '.header-row{display:flex;align-items:flex-start;gap:16px;margin-bottom:10px}'+
+    '.logo-box{border:1px solid #000;border-radius:50%;width:70px;height:70px;display:flex;align-items:center;justify-content:center;font-size:9px;color:#555;flex-shrink:0;text-align:center;padding:5px}'+
+    '.school-name{flex:1;padding-top:6px}'+
+    '.school-name .line{border-bottom:1px dotted #000;min-width:400px;display:block;margin-bottom:6px;font-size:13px;font-weight:bold;letter-spacing:1px}'+
+    '.school-name .line2{border-bottom:1px dotted #000;min-width:300px;display:block;margin-bottom:0;font-size:11px}'+
+    '.grade-sheet-title{text-align:center;font-size:15px;font-weight:bold;margin:10px 0 14px;letter-spacing:2px;text-decoration:underline}'+
+    '.info-line{margin-bottom:7px;font-size:12px;display:flex;align-items:baseline;gap:4px}'+
+    '.info-line .dotline{border-bottom:1px dotted #000;flex:1;min-width:80px;display:inline-block}'+
+    '.info-line .label{white-space:nowrap;font-weight:normal}'+
+    '.info-block{margin-bottom:4px}'+
+    'table{width:100%;border-collapse:collapse;margin:14px 0 0}'+
+    'th,td{border:1px solid #000;padding:5px 4px;font-size:11px}'+
+    'th{font-weight:bold;text-align:center;background:#fff}'+
+    '.total-row td{font-weight:bold;border-top:2px solid #000}'+
+    '.footer-sigs{display:flex;justify-content:space-between;margin-top:28px;font-size:11px}'+
+    '.sig-block{text-align:center}'+
+    '.sig-line{border-top:1px solid #000;width:160px;margin:0 auto 4px}'+
+    '.date-line{margin-top:16px;font-size:12px}'+
+    '.note-box{border:1px solid #000;margin-top:16px;padding:7px 10px;font-size:10.5px}'+
+    '.note-box div{margin-bottom:2px}'+
+    '@media print{body{padding:0}.page{border:2px solid #000;padding:15px 20px}button{display:none!important}}'+
     '</style></head><body>'+
-    '<div class="header">'+
-    '<h2>THARPU SECONDARY SCHOOL</h2>'+
-    '<p>Yangwarak-4, Panchthar, Koshi Province, Nepal &nbsp;|&nbsp; School Code: TSS-PAN</p>'+
-    '<p style="font-size:0.75rem;color:#888">Affiliated to National Examinations Board (NEB)</p>'+
-    '<p style="font-weight:700;font-size:1rem;margin-top:8px;color:#7B1C1C">GRADE SHEET &mdash; '+exam.toUpperCase()+'</p>'+
+
+    '<div class="page">'+
+
+    // Header: logo + school name
+    '<div class="header-row">'+
+      '<div class="logo-box">School<br>Logo</div>'+
+      '<div class="school-name">'+
+        '<span class="line">THARPU SECONDARY SCHOOL</span>'+
+        '<span class="line2">Yangwarak-4, Panchthar, Koshi Province, Nepal</span>'+
+      '</div>'+
     '</div>'+
-    '<div class="info-row">'+
-    '<div><b>Student Name:</b><br>'+st.name+'</div>'+
-    '<div><b>Roll No.:</b><br>'+st.roll+'</div>'+
-    '<div><b>Stream:</b><br>'+st.stream+'</div>'+
-    '<div><b>Class:</b><br>XI (Grade 11)</div>'+
-    '<div><b>Academic Year:</b><br>'+(st.year||'2082/83')+'</div>'+
+
+    // Title
+    '<div class="grade-sheet-title">GRADE-SHEET</div>'+
+
+    // Info lines
+    '<div class="info-block">'+
+      '<div class="info-line"><span class="label">THE FOLLOWING ARE THE GRADE(S) OBTAINED BY :</span><span class="dotline">&nbsp;'+st.name+'&nbsp;</span></div>'+
+      '<div class="info-line"><span class="label">DATE OF BIRTH :</span><span class="dotline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="label">B.S. &nbsp;&nbsp;&nbsp;(&nbsp;</span><span class="dotline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="label">A.D.)</span></div>'+
+      '<div class="info-line"><span class="label">REGISTRATION NO</span><span class="dotline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="label">&nbsp;SYMBOL NO:</span><span class="dotline">&nbsp;'+st.roll+'&nbsp;</span><span class="label">&nbsp;&nbsp;GRADE : XI</span></div>'+
+      '<div class="info-line"><span class="label">IN THE <b>'+exam.toUpperCase()+'</b> CONDUCTED BY SCHOOL/CAMPUS IN</span><span class="dotline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="label">B.S.</span></div>'+
+      '<div class="info-line"><span class="label">(&nbsp;</span><span class="dotline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="label">&nbsp;A.D.) ARE GIVEN BELOW.</span></div>'+
     '</div>'+
+
+    // Main table
     '<table>'+
-    '<thead><tr><th>S.N.</th><th>Subject</th><th>Theory<br>Marks</th><th>Practical<br>Marks</th><th>Total<br>Marks</th><th>GPA</th></tr></thead>'+
-    '<tbody>'+rows+'</tbody></table>'+
-    '<div class="cgpa-row">'+
-    '<div><div style="font-size:0.8rem;opacity:0.85">Cumulative GPA (CGPA)</div><div class="big">'+cgpa+'</div></div>'+
-    '<div><div style="font-size:0.8rem;opacity:0.85;text-align:right">Division</div><div style="font-size:1.1rem;font-weight:700">'+(allFilled?cgpaDiv(parseFloat(cgpa)):'—')+'</div></div>'+
-    '<div class="result-badge">'+result+'</div>'+
+      '<thead>'+
+        '<tr>'+
+          '<th style="width:60px">SUBJECT<br>CODE</th>'+
+          '<th>SUBJECTS</th>'+
+          '<th style="width:55px">CREDIT<br>HOUR</th>'+
+          '<th style="width:65px">GRADE<br>POINT</th>'+
+          '<th style="width:55px">GRADE</th>'+
+          '<th style="width:65px">FINAL<br>GRADE</th>'+
+          '<th style="width:80px">REMARKS</th>'+
+        '</tr>'+
+      '</thead>'+
+      '<tbody>'+rows+
+        '<tr class="total-row">'+
+          '<td colspan="2" style="text-align:right;padding-right:8px">TOTAL</td>'+
+          '<td></td>'+
+          '<td colspan="2" style="text-align:left;padding-left:6px">GRADE POINT AVERAGE (GPA): <b>'+cgpa+'</b></td>'+
+          '<td></td>'+
+          '<td></td>'+
+        '</tr>'+
+      '</tbody>'+
+    '</table>'+
+
+    // Signatures
+    '<div class="footer-sigs">'+
+      '<div class="sig-block">'+
+        '<div style="margin-bottom:22px">PREPARED BY :</div>'+
+        '<div class="sig-line"></div>'+
+        '<div><b>CHECKED BY</b></div>'+
+        '<div><b>(CLASS TEACHER)</b></div>'+
+      '</div>'+
+      '<div class="sig-block" style="text-align:right">'+
+        '<div style="margin-bottom:22px">&nbsp;</div>'+
+        '<div class="sig-line" style="margin-left:auto;margin-right:0"></div>'+
+        '<div><b>HEAD MASTER/CAMPUS CHIEF</b></div>'+
+      '</div>'+
     '</div>'+
-    '<div style="display:flex;gap:1rem;margin-bottom:1rem;font-size:0.78rem;background:#f9f9f9;border:1px solid #ddd;border-radius:6px;padding:0.7rem 1rem">'+
-    '<b>NEB Grade Scale:</b> A+(4.0)&ge;90% | A(3.6)80-89 | B+(3.2)70-79 | B(2.8)60-69 | C+(2.4)50-59 | C(2.0)40-49 | D(1.6)35-39 | NG(0.0)&lt;35%'+
+
+    '<div class="date-line">DATE OF ISSUE : '+dateStr+'</div>'+
+
+    // Note box
+    '<div class="note-box">'+
+      '<div>NOTE: ONE CREDIT HOUR EQUALS 32 CLOCK HOURS.</div>'+
+      '<div style="display:flex;gap:60px;margin-top:4px">'+
+        '<div>TH= THEORY</div><div>PR= PRACTICAL</div>'+
+      '</div>'+
+      '<div style="display:flex;gap:60px;margin-top:2px">'+
+        '<div>ABS= ABSENT</div><div>W= WITHHELD</div>'+
+      '</div>'+
     '</div>'+
-    '<div style="display:flex;justify-content:space-between;margin-top:2rem;font-size:0.82rem">'+
-    '<div style="text-align:center"><div style="border-top:1px solid #333;width:140px;padding-top:4px">Class Teacher</div></div>'+
-    '<div style="text-align:center"><div style="border-top:1px solid #333;width:140px;padding-top:4px">Principal</div></div>'+
-    '<div style="text-align:center"><div style="border-top:1px solid #333;width:140px;padding-top:4px">School Stamp</div></div>'+
+
+    // Print button
+    '<div style="text-align:center;margin-top:14px">'+
+      '<button onclick="window.print()" style="background:#7B1C1C;color:white;border:none;padding:8px 24px;border-radius:6px;font-size:13px;cursor:pointer">&#128424; Print / Save PDF</button>'+
     '</div>'+
-    '<div class="footer">Generated: '+new Date().toLocaleString()+' &nbsp;|&nbsp; Tharpu Secondary School, Yangwarak-4, Panchthar</div>'+
-    '<div style="text-align:center;margin-top:1rem"><button onclick="window.print()" style="background:#7B1C1C;color:white;border:none;padding:8px 20px;border-radius:7px;cursor:pointer;font-size:0.9rem">&#128424; Print / Save PDF</button></div>'+
+
+    '</div>'+ // end .page
     '</body></html>');
   w.document.close();
 }
-
 // ============================================================
 // EXPORT EXCEL
 // ============================================================
