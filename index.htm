@@ -361,27 +361,88 @@
         <img src="icon-512.png" alt="School Logo" onerror="this.style.display='none';this.parentNode.textContent='TS'">
       </div>
       <h1>Tharpu Secondary School</h1>
-      <p>Yangwarak-4, Panchthar · School Code: TSS-PAN</p>
+      <p>Yangwarak-4, Panchthar &middot; School Code: TSS-PAN</p>
     </div>
     <div class="login-divider"></div>
-    <div id="login-error">❌ Incorrect username or password.</div>
-    <div class="form-group">
-      <label class="login-label" for="inp-user">Username</label>
-      <div class="input-wrap">
-        <input type="text" id="inp-user" placeholder="Enter username" autocomplete="username" autocapitalize="none" spellcheck="false" />
-      </div>
+
+    <!-- Tab bar -->
+    <div class="auth-tabs">
+      <div class="auth-tab active" id="tab-btn-login" onclick="switchAuthTab('login')">🔓 Sign In</div>
+      <div class="auth-tab" id="tab-btn-register" onclick="switchAuthTab('register')">📝 Register</div>
     </div>
-    <div class="form-group">
-      <label class="login-label" for="inp-pass">Password</label>
-      <div class="input-wrap">
-        <input type="password" id="inp-pass" placeholder="Enter password" autocomplete="current-password" />
-        <button class="toggle-pw" onclick="togglePw('inp-pass','eye1')" tabindex="-1" type="button">
-          <svg id="eye1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-        </button>
+
+    <!-- SIGN IN PANEL -->
+    <div id="auth-panel-login">
+      <div id="login-error" style="display:none;background:#fff0f0;color:#991b1b;border:1px solid #f5c6c6;border-radius:8px;padding:0.55rem 0.8rem;font-size:0.85rem;margin-bottom:0.9rem;text-align:center;">&#10060; Incorrect username or password.</div>
+      <div class="form-group">
+        <label class="login-label" for="inp-user">Username</label>
+        <div class="input-wrap">
+          <input type="text" id="inp-user" placeholder="Enter username" autocomplete="username" autocapitalize="none" spellcheck="false" />
+        </div>
       </div>
+      <div class="form-group">
+        <label class="login-label" for="inp-pass">Password</label>
+        <div class="input-wrap">
+          <input type="password" id="inp-pass" placeholder="Enter password" autocomplete="current-password" />
+          <button class="toggle-pw" onclick="togglePw('inp-pass','eye1')" tabindex="-1" type="button">
+            <svg id="eye1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <button class="btn-login" onclick="doLogin()">🔓 Sign In</button>
+      <p class="login-hint">Default: admin / tharpu2082</p>
     </div>
-    <button class="btn-login" onclick="doLogin()">🔓 Sign In</button>
-    <p class="login-hint">Result Management System — Class XI · 2082/83</p>
+
+    <!-- REGISTER PANEL -->
+    <div id="auth-panel-register" style="display:none;">
+      <div id="reg-error" style="display:none;background:#fff0f0;color:#991b1b;border:1px solid #f5c6c6;border-radius:8px;padding:0.55rem 0.8rem;font-size:0.85rem;margin-bottom:0.9rem;text-align:center;"></div>
+      <div id="reg-success" style="display:none;background:#f0fff4;color:#1a6e2e;border:1px solid #b2dfc0;border-radius:8px;padding:0.55rem 0.8rem;font-size:0.85rem;margin-bottom:0.9rem;text-align:center;"></div>
+      <div id="reg-form">
+        <div class="form-group">
+          <label class="login-label" for="reg-fullname">Full Name</label>
+          <div class="input-wrap">
+            <input type="text" id="reg-fullname" placeholder="Your full name" />
+          </div>
+          <div id="err-fullname" style="display:none;font-size:0.75rem;color:#991b1b;margin-top:3px;">Please enter your full name.</div>
+        </div>
+        <div class="form-group">
+          <label class="login-label" for="reg-user">Username</label>
+          <div class="input-wrap">
+            <input type="text" id="reg-user" placeholder="Choose a username" autocapitalize="none" />
+          </div>
+          <div id="err-user" style="display:none;font-size:0.75rem;color:#991b1b;margin-top:3px;">Username already taken or empty.</div>
+        </div>
+        <div class="form-group">
+          <label class="login-label" for="reg-pass">Password</label>
+          <div class="input-wrap">
+            <input type="password" id="reg-pass" placeholder="Min 8 characters" oninput="checkRegStrength(this.value)" />
+            <button class="toggle-pw" onclick="togglePw('reg-pass','eye2')" tabindex="-1" type="button">
+              <svg id="eye2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <div class="strength-row">
+            <div class="strength-seg" id="ss1"></div>
+            <div class="strength-seg" id="ss2"></div>
+            <div class="strength-seg" id="ss3"></div>
+            <div class="strength-seg" id="ss4"></div>
+          </div>
+          <div id="err-pass" style="display:none;font-size:0.75rem;color:#991b1b;margin-top:3px;">Password must be at least 8 characters.</div>
+        </div>
+        <div class="form-group">
+          <label class="login-label" for="reg-pass2">Confirm Password</label>
+          <div class="input-wrap">
+            <input type="password" id="reg-pass2" placeholder="Repeat password" />
+            <button class="toggle-pw" onclick="togglePw('reg-pass2','eye3')" tabindex="-1" type="button">
+              <svg id="eye3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <div id="err-pass2" style="display:none;font-size:0.75rem;color:#991b1b;margin-top:3px;">Passwords do not match.</div>
+        </div>
+        <button class="btn-login" onclick="doRegister()">📝 Create Account</button>
+      </div>
+      <p class="login-hint">After registering, sign in with your new account.</p>
+    </div>
+
   </div>
 </div>
 
@@ -678,18 +739,20 @@ function doRegister() {
   suc.style.display = 'block';
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+// Enter key on login fields - safe null check
+(function() {
   var passEl = document.getElementById('inp-pass');
   var userEl = document.getElementById('inp-user');
   if (passEl) passEl.addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
-  if (userEl) userEl.addEventListener('keydown', function(e){ if(e.key==='Enter') { document.getElementById('inp-pass').focus(); } });
-});
+  if (userEl) userEl.addEventListener('keydown', function(e){ if(e.key==='Enter') { var p=document.getElementById('inp-pass'); if(p) p.focus(); }});
+})();
 
 function doLogin() {
   var u = document.getElementById('inp-user').value.trim();
   var p = document.getElementById('inp-pass').value;
   var ok = USERS.some(function(x){ return x.username===u && x.password===p; });
-  document.getElementById('login-error').style.display = ok ? 'none' : 'block';
+  var errEl = document.getElementById('login-error');
+  if(errEl) errEl.style.display = ok ? 'none' : 'block';
   if (ok) {
     currentUser = u;
     loadMarksFromStorage();
@@ -707,7 +770,7 @@ function doLogout() {
   document.getElementById('main-app').style.display = 'none';
   document.getElementById('inp-user').value = '';
   document.getElementById('inp-pass').value = '';
-  document.getElementById('login-error').style.display = 'none';
+  var le=document.getElementById('login-error'); if(le) le.style.display='none';
 }
 
 // =============================================
