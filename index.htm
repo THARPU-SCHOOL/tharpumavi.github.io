@@ -805,7 +805,7 @@ function loadGradeSheet() {
     subs.forEach(function(sub){
       html+='<th>'+sub.name.split(' ').slice(0,2).join(' ')+'<br><small>GPA</small></th>';
     });
-    html+='<th>CGPA</th><th>Division</th><th>Result</th></tr></thead><tbody>';
+   ''+
     slist.forEach(function(st,idx){
       var saved=marksData[getKey(st.roll,exam)]||{};
       var totalGPA=0,subCount=0,allFilled=true,anyNG=false;
@@ -817,8 +817,7 @@ function loadGradeSheet() {
           var gr=getGrade(pct);
           totalGPA+=gr.gpa; subCount++;
           if(gr.g==='NG') anyNG=true;
-          var gpaCls=gpaPillClass(gr.g);
-          return '<td><span class="grade-pill '+gpaCls+'">'+gr.g+'</span><br><small>'+gr.gpa.toFixed(1)+'</small></td>';
+         return '<td>'+gr.gpa.toFixed(1)+'</td>';
         } else { allFilled=false; return '<td style="color:#bbb">—</td>'; }
       }).join('');
       var cgpa=allFilled&&subCount>0?(totalGPA/subCount).toFixed(2):'—';
@@ -871,7 +870,6 @@ function showIndividualSheet(roll,exam) {
         +'<td>'+(sub.thMax>0?(d.th!==undefined?d.th:'—'):'N/A')+'/'+(sub.thMax||0)+'</td>'
         +'<td>'+(sub.prMax>0?(d.pr!==undefined?d.pr:'—'):'N/A')+'/'+(sub.prMax||0)+'</td>'
         +'<td>'+t+'/'+max+'</td>'
-        +'<td>'+pct.toFixed(1)+'%</td>'
         +'<td><b>'+gr.g+'</b></td>'
         +'<td>'+gr.gpa.toFixed(1)+'</td></tr>';
     } else {
@@ -919,7 +917,7 @@ function showIndividualSheet(roll,exam) {
     '<div><b>Academic Year:</b><br>'+(st.year||'2082/83')+'</div>'+
     '</div>'+
     '<table>'+
-    '<thead><tr><th>S.N.</th><th>Subject</th><th>Theory<br>Marks</th><th>Practical<br>Marks</th><th>Total<br>Marks</th><th>Percentage</th><th>Grade</th><th>GPA</th></tr></thead>'+
+    '<thead><tr><th>S.N.</th><th>Subject</th><th>Theory<br>Marks</th><th>Practical<br>Marks</th><th>Total<br>Marks</th><th>GPA</th></tr></thead>'+
     '<tbody>'+rows+'</tbody></table>'+
     '<div class="cgpa-row">'+
     '<div><div style="font-size:0.8rem;opacity:0.85">Cumulative GPA (CGPA)</div><div class="big">'+cgpa+'</div></div>'+
