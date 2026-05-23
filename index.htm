@@ -328,6 +328,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--cream);color:var(-
           <button class="btn btn-primary" onclick="window.print()">&#128424; Print</button>
           <button class="btn btn-secondary" onclick="saveResultHTML()">&#11015; Save HTML</button>
           <button class="btn btn-gold" onclick="exportExcel()">&#128202; Export Excel</button>
+          <button class="btn btn-success btn-full" style="margin-top:6px" onclick="exportShare()">&#128230; Export &amp; Share File (All Data)</button>
         </div>
       </div>
     </div>
@@ -375,9 +376,19 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--cream);color:var(-
         <button class="btn btn-primary btn-full" onclick="registerStudent()">&#10133; Add Student</button>
       </div>
     </div>
-    <div class="info-box">&#128230; <b>Export &amp; Share:</b> Downloads a self-contained HTML file with all data embedded. Share with any teacher.</div>
+    <div class="info-box" style="background:#e8f5e9;border-color:#4caf50;">
+      <b>&#128230; How sharing works:</b><br>
+      1. Enter &amp; save all marks here.<br>
+      2. Click <b>"Export &amp; Share File"</b> — a <code>.html</code> file downloads.<br>
+      3. Send that file via <b>WhatsApp / Email / USB</b> to anyone.<br>
+      4. They open the file and see <b>all marks already loaded</b>.<br>
+      5. They can log in, add more marks, and share back the same way.
+    </div>
+    <div id="shared-file-banner" style="display:none;background:#fff3cd;border:1px solid #f0ad4e;border-radius:10px;padding:0.8rem 1rem;font-size:0.82rem;color:#7d4e00;margin-bottom:1rem;">
+      &#9888;&#65039; <b>You opened a shared file.</b> All marks from the sender are loaded. Log in to add more marks, then re-export to share back.
+    </div>
     <div class="btn-row">
-      <button class="btn btn-gold btn-full" onclick="exportShare()">&#128230; Export &amp; Share Data</button>
+      <button class="btn btn-gold btn-full" onclick="exportShare()">&#128230; Export &amp; Share File (Embed All Data)</button>
     </div>
   </div>
 </div>
@@ -679,12 +690,18 @@ function registerStudent() {
  var regno=document.getElementById('reg-regno').value.trim();
 var dobbs=document.getElementById('reg-dob-bs').value.trim();
 var dobad=document.getElementById('reg-dob-ad').value.trim();
-students.push({name:name,roll:roll,stream:stream,year:year,regno:regno,dobbs:dobbs,dobad:dobad});
- document.getElementById('reg-name').value='';
-document.getElementById('reg-roll').value='';
-document.getElementById('reg-regno').value='';
-document.getElementById('reg-dob-bs').value='';
-document.getElementById('reg-dob-ad').value='';
+  var newSt={name:name,roll:roll,stream:stream,year:year,regno:regno,dobbs:dobbs,dobad:dobad};
+  students.push(newSt);
+  try {
+    var extra=JSON.parse(localStorage.getItem('tss_extra_students')||'[]');
+    if (!extra.some(function(e){ return e.roll===roll; })) extra.push(newSt);
+    localStorage.setItem('tss_extra_students', JSON.stringify(extra));
+  } catch(e){}
+  document.getElementById('reg-name').value='';
+  document.getElementById('reg-roll').value='';
+  document.getElementById('reg-regno').value='';
+  document.getElementById('reg-dob-bs').value='';
+  document.getElementById('reg-dob-ad').value='';
   renderStudentList(); populateStudentSelects(); updateSummary();
   alert('Student "'+name+'" registered!');
 }
@@ -773,7 +790,12 @@ function saveMarks(roll,exam) {
 // MARKS STORAGE — per user, merged on login
 // ============================================================
 function saveMarksToStorage() {
-  try { localStorage.setItem('tss_marks_'+(currentUser||'guest'), JSON.stringify(marksData)); } catch(e){}
+  try {
+    // Save under current user's key
+    localStorage.setItem('tss_marks_'+(currentUser||'guest'), JSON.stringify(marksData));
+    // Also write a master merged copy so any export always contains everything
+    localStorage.setItem('tss_marks_master', JSON.stringify(marksData));
+  } catch(e){}
 }
 function loadMarksFromStorage() {
   marksData = {};
@@ -1081,8 +1103,18 @@ function exportExcel() {
   a.click();
 }
 // ============================================================
-// SAVE HTML / EXPORT SHARE
+// EXPORT & SHARE — data baked into the HTML file itself
 // ============================================================
+// How sharing works:
+//   1. Teacher enters marks → saved in localStorage on their device.
+//   2. Teacher clicks "Export & Share File" → downloads a .html file
+//      that has ALL marks + students embedded as a <script> block.
+//   3. Anyone who opens that .html file (WhatsApp, email, USB, etc.)
+//      sees ALL the saved data immediately — no login needed to VIEW,
+//      and can log in to ADD more marks which then stay on their device.
+//   4. They can re-export with their additions and share again.
+// ============================================================
+
 function saveResultHTML() {
   loadGradeSheet();
   setTimeout(function(){
@@ -1098,57 +1130,101 @@ function saveResultHTML() {
     a.download='GradeSheet_Tharpu.html'; a.click();
   },300);
 }
+
 function exportShare() {
-  var data=JSON.stringify({students:students,marks:marksData});
-  // Embed in HTML file
-  var inject='<'+'script>var _savedData='+data+';<'+'/script>';
-  var out=document.documentElement.outerHTML.replace('</head>',inject+'</head>');
-  var a=document.createElement('a');
-  a.href='data:text/html;charset=utf-8,'+encodeURIComponent(out);
-  a.download='Tharpu_School_'+new Date().toISOString().slice(0,10)+'.html';
-  a.click();
-  // Also save to URL hash so anyone on same URL sees data
+  // Collect ALL marks from localStorage across all users, merged with current session
+  var allMarks = {};
   try {
-    var compressed=btoa(unescape(encodeURIComponent(data)));
-    history.replaceState(null,'','#'+compressed);
-    var shareURL=location.href;
-    setTimeout(function(){
-      prompt('Share this URL — anyone who opens it sees all data:', shareURL);
-    },500);
+    for (var i=0; i<localStorage.length; i++) {
+      var k=localStorage.key(i);
+      if (k && k.startsWith('tss_marks_')) {
+        var d=JSON.parse(localStorage.getItem(k)||'{}');
+        Object.assign(allMarks, d);
+      }
+    }
   } catch(e){}
-  alert('Exported! Share the HTML file OR copy the URL above.');
+  // Also merge current in-memory marks (may be newer)
+  Object.assign(allMarks, marksData);
+
+  var payload = JSON.stringify({ students: students, marks: allMarks });
+
+  // Read the source HTML — use the original page source, not outerHTML
+  // (outerHTML misses doctype and can have stale injected scripts)
+  var sourceHTML = (typeof _originalHTML !== 'undefined') ? _originalHTML : document.documentElement.outerHTML;
+
+  // Remove any previously embedded _savedData script block so we don't double-inject
+  var cleaned = sourceHTML.replace(/<script[^>]*>[\s\S]*?var _savedData\s*=[\s\S]*?<\/script>/,'');
+
+  // Inject fresh data block right before </head>
+  var inject = '<'+'script id="_data_block">var _savedData='+payload+';<'+'/script>';
+  var out = cleaned.replace('</head>', inject + '</head>');
+
+  var fname = 'Tharpu_School_'+new Date().toISOString().slice(0,10)+'.html';
+  var blob = new Blob([out], {type:'text/html;charset=utf-8'});
+  var url  = URL.createObjectURL(blob);
+  var a    = document.createElement('a');
+  a.href   = url; a.download = fname; a.click();
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+
+  // Show share instructions
+  setTimeout(function(){
+    alert(
+      'File "'+fname+'" downloaded!\n\n'+
+      'Share this file via WhatsApp, Email, USB, or Google Drive.\n'+
+      'Anyone who opens it will see all '+Object.keys(allMarks).length+' marks records.\n\n'+
+      'They can also log in, add more marks, and re-export to share back.'
+    );
+  }, 400);
 }
 
 // ============================================================
-// RESTORE SHARED DATA
+// RESTORE — runs immediately when page loads
 // ============================================================
-if (typeof _savedData !== 'undefined') {
-  students  = _savedData.students || students;
-  marksData = _savedData.marks    || marksData;
-} else {
-  // Try restoring from URL hash (shared link)
-  try {
-    var hash=location.hash.slice(1);
-    if(hash && hash.length>10){
-      var parsed=JSON.parse(decodeURIComponent(escape(atob(hash))));
-      if(parsed.students) students=parsed.students;
-      if(parsed.marks)    marksData=parsed.marks;
+// Priority: 1) baked-in _savedData (shared file)  2) localStorage (own device)
+(function() {
+  if (typeof _savedData !== 'undefined' && _savedData) {
+    // This is a shared/exported file — load baked-in data
+    if (_savedData.students && Array.isArray(_savedData.students)) {
+      // Merge: keep built-in students, add any extra ones from shared file
+      _savedData.students.forEach(function(s){
+        if (!students.some(function(e){ return e.roll===s.roll; })) {
+          students.push(s);
+        }
+      });
     }
-  } catch(e){}
-  loadMarksFromStorage();
-}
-// Auto-login if session exists
-(function(){
+    if (_savedData.marks) {
+      // Merge shared marks on top of any localStorage marks
+      Object.assign(marksData, _savedData.marks);
+    }
+    // Also push these marks into localStorage so any edits here persist
+    try { localStorage.setItem('tss_marks_shared', JSON.stringify(_savedData.marks||{})); } catch(e){}
+    // Show the "you opened a shared file" banner
+    var banner = document.getElementById('shared-file-banner');
+    if (banner) banner.style.display = 'block';
+  } else {
+    // Own device — load from localStorage
+    loadMarksFromStorage();
+    // Also load any previously registered extra students
+    try {
+      var extra = JSON.parse(localStorage.getItem('tss_extra_students')||'[]');
+      extra.forEach(function(s){
+        if (!students.some(function(e){ return e.roll===s.roll; })) students.push(s);
+      });
+    } catch(e){}
+  }
+
+  // Auto-login if session exists
   var savedUser = localStorage.getItem('tss_session_user');
   if (savedUser && USERS.some(function(u){ return u.username===savedUser; })) {
     currentUser = savedUser;
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('main-app').style.display     = 'block';
   }
+
+  renderStudentList();
+  populateStudentSelects();
+  updateSummary();
 })();
-renderStudentList();
-populateStudentSelects();
-updateSummary();
 </script>
 </body>
 </html>
