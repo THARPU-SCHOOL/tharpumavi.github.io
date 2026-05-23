@@ -928,8 +928,7 @@ function showIndividualSheet(roll,exam) {
     'body{font-family:Arial,sans-serif;font-size:12px;color:#000;background:#fff;padding:20px}'+
     '.page{max-width:740px;margin:0 auto;border:2px solid #000;padding:18px 24px}'+
     '.top-right{text-align:right;font-size:11px;font-weight:bold;margin-bottom:4px}'+
-    '.header-row{display:flex;align-items:flex-start;gap:16px;margin-bottom:10px}'+
-    '.logo-box{border:1px solid #000;border-radius:50%;width:70px;height:70px;display:flex;align-items:center;justify-content:center;font-size:9px;color:#555;flex-shrink:0;text-align:center;padding:5px}'+
+    '.header-row{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;margin-bottom:10px}'+lay:flex;align-items:center;justify-content:center;font-size:9px;color:#555;flex-shrink:0;text-align:center;padding:5px}'+
     '.school-name{flex:1;padding-top:6px}'+
     '.school-name .line{border-bottom:1px dotted #000;min-width:400px;display:block;margin-bottom:6px;font-size:13px;font-weight:bold;letter-spacing:1px}'+
     '.school-name .line2{border-bottom:1px dotted #000;min-width:300px;display:block;margin-bottom:0;font-size:11px}'+
@@ -954,8 +953,13 @@ function showIndividualSheet(roll,exam) {
     '<div class="page">'+
 
     // Header: logo + school name
-    '<div class="header-row">'+
-      '<div class="logo-box" style="border:none;padding:0;background:transparent"><img src="THARPU SECONDARY SCHOOL.png" style="width:70px;height:70px;border-radius:50%;object-fit:cover" onerror="this.style.display=\'none\'"></div>'+
+   '<div class="header-row" style="flex-direction:column;align-items:center;text-align:center;gap:8px">'+
+  '<div class="logo-box" style="border:none;padding:0;background:transparent;margin:0 auto"><img src="data:image/jpeg;base64,/9j/4AAQ..." style="width:80px;height:80px;border-radius:50%;object-fit:cover"></div>'+
+  '<div class="school-name" style="text-align:center">'+
+    '<span class="line" style="display:block;border-bottom:none;font-size:14px;font-weight:bold;letter-spacing:1px">THARPU SECONDARY SCHOOL</span>'+
+    '<span class="line2" style="display:block;border-bottom:none;font-size:11px">Yangwarak-4, Panchthar, Koshi Province, Nepal</span>'+
+  '</div>'+
+'</div>'+
       '<div class="school-name">'+
         '<span class="line">THARPU SECONDARY SCHOOL</span>'+
         '<span class="line2">Yangwarak-4, Panchthar, Koshi Province, Nepal</span>'+
