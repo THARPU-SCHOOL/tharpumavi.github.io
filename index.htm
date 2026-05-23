@@ -1,4 +1,4 @@
-cat > /mnt/user-data/outputs/index.htm << 'HTMLEOF'
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -838,7 +838,7 @@ function loadGradeSheet() {
         '<td>'+st.roll+'</td>'+
         cells+
         '<td><b>'+(allFilled?cgpa:'—')+'</b></td>'+
-        '<td>'+division+'</td>'+
+    
         '<td>'+res+'</td>'+
         '<td><button class="btn btn-sm" style="background:var(--maroon);color:white;padding:3px 7px;font-size:0.7rem;border:none;border-radius:5px;cursor:pointer" onclick="showIndividualSheet(\''+st.roll+'\',\''+exam+'\')">&#128196;</button></td>'+
         '</tr>';
@@ -955,7 +955,7 @@ function showIndividualSheet(roll,exam) {
 
     // Header: logo + school name
     '<div class="header-row">'+
-      '<div class="logo-box" style="border:none;padding:0;background:transparent"><img src="THARPU_SECONDARY_SCHOOL.png" style="width:70px;height:70px;border-radius:50%;object-fit:cover" onerror="this.style.display=\'none\'"></div>'+
+      '<div class="logo-box" style="border:none;padding:0;background:transparent"><img src="THARPU SECONDARY SCHOOL.png" style="width:70px;height:70px;border-radius:50%;object-fit:cover" onerror="this.style.display=\'none\'"></div>'+
       '<div class="school-name">'+
         '<span class="line">THARPU SECONDARY SCHOOL</span>'+
         '<span class="line2">Yangwarak-4, Panchthar, Koshi Province, Nepal</span>'+
@@ -1008,7 +1008,7 @@ function showIndividualSheet(roll,exam) {
       '<div class="sig-block" style="text-align:right">'+
         '<div style="margin-bottom:22px">&nbsp;</div>'+
         '<div class="sig-line" style="margin-left:auto;margin-right:0"></div>'+
-        '<div><b>HEAD MASTER/CAMPUS CHIEF</b></div>'+
+        '<div><b>HEAD TEACHER</b></div>'+
       '</div>'+
     '</div>'+
 
@@ -1121,9 +1121,5 @@ updateSummary();
 </script>
 </body>
 </html>
-HTMLEOF
-echo "Written: $(wc -c < /mnt/user-data/outputs/index.htm) bytes, $(wc -l < /mnt/user-data/outputs/index.htm) lines"
-Output
-
 Written: 52163 bytes, 926 lines
 Done
