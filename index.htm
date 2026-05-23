@@ -484,24 +484,29 @@
   <!-- RESULTS TAB -->
   <div class="tab-panel" id="tab-results">
     <div class="section-card">
-      <div class="section-head">📄 Generate Result Sheet</div>
+      <div class="section-head">📄 Grade Sheet — All Students</div>
       <div class="section-body">
         <div class="form-group">
-          <label>Select Student</label>
-          <select id="result-student-sel" onchange="loadResult()"><option value="">— Choose student —</option></select>
-        </div>
-        <div class="form-group">
           <label>Examination</label>
-          <select id="result-exam-sel" onchange="loadResult()">
+          <select id="result-exam-sel" onchange="loadGradeSheet()">
             <option value="First Terminal">First Terminal</option>
             <option value="Second Terminal">Second Terminal</option>
             <option value="Annual Examination">Annual Examination</option>
             <option value="Pre-board">Pre-board</option>
           </select>
         </div>
+        <div class="form-group">
+          <label>Stream Filter</label>
+          <select id="result-stream-sel" onchange="loadGradeSheet()">
+            <option value="all">All Streams</option>
+            <option value="Plant Science">🌱 Plant Science</option>
+            <option value="General">📚 General</option>
+          </select>
+        </div>
         <div class="btn-row">
           <button class="btn btn-primary" onclick="window.print()">🖨️ Print</button>
           <button class="btn btn-secondary" onclick="saveResultHTML()">⬇️ Save HTML</button>
+          <button class="btn btn-gold" onclick="exportExcel()">📊 Export to Excel</button>
         </div>
       </div>
     </div>
@@ -894,18 +899,17 @@ function loadMarksForm() {
     var prInput = sub.prMax>0
       ?'<input type="number" id="pr_'+k+'" min="0" max="'+sub.prMax+'" value="'+prVal+'" placeholder="0" oninput="recalcRow(\''+k+'\','+sub.thMax+','+sub.prMax+')" />'
       :'<span style="color:#aaa">—</span>';
-    var total='',grade='';
+    var total='';
     if(thVal!==''&&(sub.prMax===0||prVal!=='')){
       var t=parseInt(thVal||0)+parseInt(prVal||0);
       var g=getGrade(t/(sub.thMax+sub.prMax)*100);
-      total=t; grade='<span class="'+gradeClass(g.g)+'">'+g.g+'</span>';
+      total=t;
     }
     return '<tr><td style="font-size:0.78rem;">'+sub.name+'</td>'
       +'<td><input type="number" id="th_'+k+'" min="0" max="'+sub.thMax+'" value="'+thVal+'" placeholder="0" oninput="recalcRow(\''+k+'\','+sub.thMax+','+sub.prMax+')" /></td>'
       +'<td>'+prInput+'</td>'
       +'<td><small style="color:#888">/'+sub.thMax+'</small></td>'
-      +'<td id="tot_'+k+'">'+total+'</td>'
-      +'<td id="grd_'+k+'" class="grade-cell">'+grade+'</td></tr>';
+      +'<td id="tot_'+k+'">'+total+'</td></tr>';
   }).join('');
   area.innerHTML = '<div class="section-card"><div class="section-head">📝 '+st.name+' — '+exam+'</div>'
     +'<div style="overflow-x:auto;"><table class="marks-table"><tr><th>Subject</th><th>Theory</th><th>Practical</th><th>Max</th><th>Total</th><th>Grade</th></tr>'
@@ -919,7 +923,7 @@ function recalcRow(key,thMax,prMax) {
   var totEl=document.getElementById('tot_'+key),grdEl=document.getElementById('grd_'+key);
   var hasData=thEl&&thEl.value!==''&&(prMax===0||(prEl&&prEl.value!==''));
   if(totEl) totEl.textContent=hasData?(th+pr):'';
-  if(grdEl) grdEl.innerHTML=hasData?'<span class="'+gradeClass(g.g)+'">'+g.g+'</span>':'';
+  if(grdEl) grdEl.innerHTML='';
 }
 function saveMarks(roll,exam) {
   var st=students.find(function(s){ return s.roll===roll; });
@@ -933,79 +937,185 @@ function saveMarks(roll,exam) {
     };
   });
   marksData[getKey(roll,exam)]=obj;
+  saveMarksToStorage();
   updateSummary(); renderStudentList();
   alert('✅ Marks saved for '+st.name+' — '+exam);
 }
 
 // =============================================
-// RESULTS
-function loadResult() {
-  var roll=document.getElementById('result-student-sel').value;
-  var exam=document.getElementById('result-exam-sel').value;
-  var area=document.getElementById('result-display');
-  if(!roll){area.innerHTML='';return;}
-  var st=students.find(function(s){return s.roll===roll;});
-  if(!st)return;
-  var subs=SUBJECTS[st.stream],saved=marksData[getKey(roll,exam)];
-  if(!saved){area.innerHTML='<div class="empty-state"><div class="empty-icon">📄</div><p>No marks saved yet.<br>Please enter marks first.</p></div>';return;}
-  var totalGPA=0,count=0,anyNG=false;
-  var rows=subs.map(function(sub){
-    var d=saved[sub.name]||{};
-    var th=d.th!==undefined?d.th:'—',pr=d.pr!==undefined?d.pr:(sub.prMax===0?'—':'—');
-    var total='—',g={g:'—',gpa:0};
-    if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
-      var t=(d.th||0)+(d.pr||0);
-      g=getGrade(t/(sub.thMax+sub.prMax)*100);
-      total=t;
-      if(g.g!=='NG'){totalGPA+=g.gpa;count++;}else{anyNG=true;}
+// MARKS - save per user, merge all users on load
+function saveMarksToStorage() {
+  try { localStorage.setItem('tss_marks_'+(currentUser||'guest'), JSON.stringify(marksData)); } catch(e){}
+}
+function loadMarksFromStorage() {
+  marksData = {};
+  try {
+    for (var i=0; i<localStorage.length; i++) {
+      var k = localStorage.key(i);
+      if (k && k.startsWith('tss_marks_')) {
+        var d = JSON.parse(localStorage.getItem(k)||'{}');
+        // Later entries win (most recent save per key)
+        Object.assign(marksData, d);
+      }
     }
-    return '<tr><td>'+sub.name+'</td><td>'+th+'</td><td>'+pr+'</td><td>'+total+'</td>'
-      +'<td class="grade-cell '+(g.g!=='—'?gradeClass(g.g):'')+'">'+g.g+'</td>'
-      +'<td>'+(g.gpa>0?g.gpa.toFixed(1):'—')+'</td></tr>';
-  }).join('');
-  var cgpa=count>0?(totalGPA/count).toFixed(2):'—';
-  var pass=!anyNG&&count===subs.length&&parseFloat(cgpa)>=1.6;
-  area.innerHTML='<div class="result-card">'
+  } catch(e){}
+}
+
+// =============================================
+// GRADE SHEET — single page, all students
+function loadGradeSheet() {
+  var exam = document.getElementById('result-exam-sel').value;
+  var streamF = document.getElementById('result-stream-sel') ? document.getElementById('result-stream-sel').value : 'all';
+  var area = document.getElementById('result-display');
+  var filtered = students.filter(function(s){ return streamF==='all'||s.stream===streamF; });
+  if (!filtered.length) { area.innerHTML='<div class="empty-state"><div class="empty-icon">📄</div><p>No students found.</p></div>'; return; }
+
+  var streams = streamF==='all' ? ['Plant Science','General'] : [streamF];
+  var html = '<div class="result-card">'
     +'<div class="result-header"><h2>THARPU SECONDARY SCHOOL</h2>'
     +'<p>Yangwarak-4, Panchthar, Koshi Province, Nepal | Code: TSS-PAN</p>'
-    +'<p style="margin-top:6px;font-weight:700;font-size:0.9rem;">'+exam+' — Academic Year '+st.year+'</p></div>'
-    +'<div class="result-student-info">'
-    +'<div class="rsi-item"><div class="rsi-label">Student Name</div><div class="rsi-val">'+st.name+'</div></div>'
-    +'<div class="rsi-item"><div class="rsi-label">Roll No.</div><div class="rsi-val">'+st.roll+'</div></div>'
-    +'<div class="rsi-item"><div class="rsi-label">Stream</div><div class="rsi-val">'+st.stream+'</div></div>'
-    +'<div class="rsi-item"><div class="rsi-label">Class</div><div class="rsi-val">XI · 2082/83</div></div></div>'
-    +'<div class="result-table-wrap" style="overflow-x:auto;">'
-    +'<table class="result-table"><tr><th>Subject</th><th>Theory</th><th>Practical</th><th>Total</th><th>Grade</th><th>GPA</th></tr>'
-    +rows+'</table></div>'
-    +'<div class="result-cgpa-row"><div><div class="cgpa-label">CGPA (NEB Method)</div>'
-    +'<div style="font-size:0.75rem;color:var(--text-muted);">'+count+'/'+subs.length+' subjects graded</div></div>'
-    +'<div style="display:flex;align-items:baseline;"><span class="cgpa-value">'+cgpa+'</span>'
-    +'<span class="cgpa-grade">'+getGrade(parseFloat(cgpa)/4*100).g+'</span></div></div>'
-    +'<div class="result-status '+(pass?'status-pass':'status-fail')+'">'
-    +(pass?'✅ PASSED':(anyNG?'❌ NOT GRADED — One or more subjects below 35%':count<subs.length?'⏳ Marks incomplete':'❌ FAILED'))
-    +'</div></div>';
+    +'<p style="margin-top:6px;font-weight:700;font-size:0.9rem;">'+exam+' — Grade Sheet — Academic Year 2082/83</p></div>';
+
+  streams.forEach(function(stream) {
+    var slist = filtered.filter(function(s){ return s.stream===stream; });
+    if (!slist.length) return;
+    var subs = SUBJECTS[stream];
+    html += '<div style="margin:1rem 0 0.5rem;font-weight:700;color:var(--maroon);font-size:0.95rem;">'+stream+' Stream</div>'
+      +'<div style="overflow-x:auto;"><table class="result-table" style="font-size:0.75rem;">'
+      +'<thead><tr style="background:var(--maroon);color:white;">'
+      +'<th>SN</th><th>Name</th><th>Roll No.</th>';
+    subs.forEach(function(sub){ html += '<th>'+sub.name+'<br><small>/'+(sub.thMax+sub.prMax)+'</small></th>'; });
+    html += '<th>Total</th><th>%</th><th>Result</th></tr></thead><tbody>';
+
+    slist.forEach(function(st, idx) {
+      var saved = marksData[getKey(st.roll,exam)] || {};
+      var grandTotal=0, grandMax=0, allFilled=true, anyNG=false;
+      var cells = subs.map(function(sub) {
+        var d = saved[sub.name] || {};
+        var max = sub.thMax+sub.prMax;
+        grandMax += max;
+        if (d.th!==undefined && (sub.prMax===0||d.pr!==undefined)) {
+          var t=(d.th||0)+(d.pr||0);
+          grandTotal+=t;
+          if(t/max*100<35) anyNG=true;
+          return '<td style="text-align:center;">'+t+'</td>';
+        } else { allFilled=false; return '<td style="text-align:center;color:#aaa;">—</td>'; }
+      }).join('');
+      var pct = grandMax>0?(grandTotal/grandMax*100).toFixed(1):'—';
+      var result = !allFilled?'⏳':anyNG?'❌NG':'✅Pass';
+      var rowBg = idx%2===0?'':'background:#fdf6ec;';
+      html += '<tr style="'+rowBg+'"><td style="text-align:center;">'+(idx+1)+'</td>'
+        +'<td style="white-space:nowrap;">'+st.name+'</td>'
+        +'<td style="text-align:center;">'+st.roll+'</td>'
+        +cells
+        +'<td style="text-align:center;font-weight:700;">'+(allFilled?grandTotal:'—')+'</td>'
+        +'<td style="text-align:center;">'+(allFilled?pct+'%':'—')+'</td>'
+        +'<td style="text-align:center;">'+result+'</td></tr>';
+    });
+    html += '</tbody></table></div>';
+  });
+  html += '<div style="padding:0.8rem;font-size:0.75rem;color:var(--text-muted);">Generated: '+new Date().toLocaleString()+' | Tharpu Secondary School</div></div>';
+  area.innerHTML = html;
 }
+
+// =============================================
+// EXPORT TO EXCEL (CSV)
+function exportExcel() {
+  var exam = document.getElementById('result-exam-sel').value;
+  var streamF = document.getElementById('result-stream-sel') ? document.getElementById('result-stream-sel').value : 'all';
+  var filtered = students.filter(function(s){ return streamF==='all'||s.stream===streamF; });
+  if (!filtered.length) { alert('No students to export.'); return; }
+  var streams = streamF==='all' ? ['Plant Science','General'] : [streamF];
+  var rows = [];
+  rows.push('"THARPU SECONDARY SCHOOL"');
+  rows.push('"'+exam+' — Academic Year 2082/83"');
+  rows.push('');
+
+  streams.forEach(function(stream) {
+    var slist = filtered.filter(function(s){ return s.stream===stream; });
+    if (!slist.length) return;
+    var subs = SUBJECTS[stream];
+    rows.push('"'+stream+' Stream"');
+    var hdr = ['SN','Name','Roll No.'];
+    subs.forEach(function(sub){
+      if(sub.thMax>0) hdr.push(sub.name+' Theory');
+      if(sub.prMax>0) hdr.push(sub.name+' Practical');
+      hdr.push(sub.name+' Total /+'+(sub.thMax+sub.prMax));
+    });
+    hdr.push('Grand Total','Percentage','Result');
+    rows.push(hdr.map(function(h){ return '"'+h+'"'; }).join(','));
+
+    slist.forEach(function(st, idx) {
+      var saved = marksData[getKey(st.roll,exam)] || {};
+      var row = [idx+1, st.name, st.roll];
+      var gTotal=0, gMax=0, allFilled=true, anyNG=false;
+      subs.forEach(function(sub) {
+        var d=saved[sub.name]||{}, max=sub.thMax+sub.prMax;
+        gMax+=max;
+        if(sub.thMax>0) row.push(d.th!==undefined?d.th:'');
+        if(sub.prMax>0) row.push(d.pr!==undefined?d.pr:'');
+        if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
+          var t=(d.th||0)+(d.pr||0); gTotal+=t;
+          row.push(t);
+          if(t/max*100<35) anyNG=true;
+        } else { row.push(''); allFilled=false; }
+      });
+      row.push(allFilled?gTotal:'');
+      row.push(allFilled?(gTotal/gMax*100).toFixed(1)+'%':'');
+      row.push(!allFilled?'Incomplete':anyNG?'Not Graded':'Pass');
+      rows.push(row.map(function(c){ return '"'+c+'"'; }).join(','));
+    });
+    rows.push('');
+  });
+
+  var csv = '﻿'+rows.join('
+');
+  var a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download = 'Tharpu_GradeSheet_'+exam.replace(/ /g,'_')+'.csv';
+  a.click();
+}
+
 function saveResultHTML(){
-  var content=document.getElementById('result-display').innerHTML;
-  if(!content){alert('Please select a student first.');return;}
-  var a=document.createElement('a');
-  a.href='data:text/html;charset=utf-8,'+encodeURIComponent('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Result</title></head><body style="font-family:sans-serif;padding:20px;">'+content+'</body></html>');
-  a.download='result.html'; a.click();
+  loadGradeSheet();
+  setTimeout(function(){
+    var content = document.getElementById('result-display').innerHTML;
+    if (!content) { alert('Please generate grade sheet first.'); return; }
+    var a=document.createElement('a');
+    a.href='data:text/html;charset=utf-8,'+encodeURIComponent('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Grade Sheet — Tharpu Secondary School</title><style>body{font-family:sans-serif;padding:20px;max-width:1200px;margin:auto;}table{border-collapse:collapse;width:100%;margin-bottom:1rem;}th,td{border:1px solid #ccc;padding:5px 8px;font-size:11px;}th{background:#7B1C1C;color:white;}</style></head><body>'+content+'</body></html>');
+    a.download='GradeSheet_Tharpu.html'; a.click();
+  }, 400);
 }
+
+// Export full app with ALL marks embedded — share with anyone
 function exportShare(){
   var data=JSON.stringify({students:students,marks:marksData});
   var inject='<script>var _savedData='+data+';<\/script>';
   var out=document.documentElement.outerHTML.replace('</head>',inject+'</head>');
   var a=document.createElement('a');
   a.href='data:text/html;charset=utf-8,'+encodeURIComponent(out);
-  a.download='tharpu-school-data.html'; a.click();
+  a.download='Tharpu_School_'+new Date().toISOString().slice(0,10)+'.html';
+  a.click();
+  alert('✅ Shared file exported! Anyone who opens this HTML file will see all saved marks data.');
 }
 
-// Restore exported data
+// Restore exported data (shared file)
 if(typeof _savedData!=='undefined'){
   students=_savedData.students||students;
   marksData=_savedData.marks||marksData;
+} else {
+  loadMarksFromStorage();
 }
+
+// Alias so tab switching still works
+function loadResult(){ loadGradeSheet(); }
+
+// Auto-load grade sheet when switching to results tab
+var _origShowTab = showTab;
+showTab = function(id, btn) {
+  _origShowTab(id, btn);
+  if(id==='results') { loadGradeSheet(); }
+};
 </script>
 </body>
 </html>
