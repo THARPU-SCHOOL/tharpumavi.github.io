@@ -612,6 +612,7 @@ function saveUsers(arr) {
   try { localStorage.setItem('tss_users', JSON.stringify(arr)); } catch(e) {}
 }
 var USERS = loadUsers();
+var currentUser = "guest";
 
 // =============================================
 // LOGIN
@@ -677,8 +678,12 @@ function doRegister() {
   suc.style.display = 'block';
 }
 
-document.getElementById('inp-pass').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
-document.getElementById('inp-user').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('inp-pass').focus(); });
+document.addEventListener('DOMContentLoaded', function() {
+  var passEl = document.getElementById('inp-pass');
+  var userEl = document.getElementById('inp-user');
+  if (passEl) passEl.addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
+  if (userEl) userEl.addEventListener('keydown', function(e){ if(e.key==='Enter') { document.getElementById('inp-pass').focus(); } });
+});
 
 function doLogin() {
   var u = document.getElementById('inp-user').value.trim();
@@ -686,6 +691,8 @@ function doLogin() {
   var ok = USERS.some(function(x){ return x.username===u && x.password===p; });
   document.getElementById('login-error').style.display = ok ? 'none' : 'block';
   if (ok) {
+    currentUser = u;
+    loadMarksFromStorage();
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('main-app').style.display = 'block';
     renderStudentList(); populateStudentSelects(); updateSummary();
@@ -695,6 +702,7 @@ function doLogin() {
   }
 }
 function doLogout() {
+  currentUser = 'guest';
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('main-app').style.display = 'none';
   document.getElementById('inp-user').value = '';
