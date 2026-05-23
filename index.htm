@@ -360,7 +360,10 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--cream);color:var(-
       <div class="section-head">&#10133; Register Student</div>
       <div class="section-body">
         <div class="form-group"><label>Full Name</label><input type="text" id="reg-name" placeholder="Student full name"></div>
-        <div class="form-group"><label>Roll No.</label><input type="text" id="reg-roll" placeholder="e.g. 10200222"></div>
+<div class="form-group"><label>Roll No. / Symbol No.</label><input type="text" id="reg-roll" placeholder="e.g. 10200222"></div>
+<div class="form-group"><label>Registration No.</label><input type="text" id="reg-regno" placeholder="e.g. 2023-12345"></div>
+<div class="form-group"><label>Date of Birth (B.S.)</label><input type="text" id="reg-dob-bs" placeholder="e.g. 2062/05/15"></div>
+<div class="form-group"><label>Date of Birth (A.D.)</label><input type="text" id="reg-dob-ad" placeholder="e.g. 2005/08/31"></div>
         <div class="form-group">
           <label>Stream</label>
           <div class="radio-group">
@@ -671,9 +674,15 @@ function registerStudent() {
   var year   = document.getElementById('reg-year').value.trim();
   if (!name||!roll) { alert('Enter Name and Roll No.'); return; }
   if (students.some(function(s){ return s.roll===roll; })) { alert('Roll No. already exists!'); return; }
-  students.push({name:name,roll:roll,stream:stream,year:year});
-  document.getElementById('reg-name').value='';
-  document.getElementById('reg-roll').value='';
+ var regno=document.getElementById('reg-regno').value.trim();
+var dobbs=document.getElementById('reg-dob-bs').value.trim();
+var dobad=document.getElementById('reg-dob-ad').value.trim();
+students.push({name:name,roll:roll,stream:stream,year:year,regno:regno,dobbs:dobbs,dobad:dobad});
+ document.getElementById('reg-name').value='';
+document.getElementById('reg-roll').value='';
+document.getElementById('reg-regno').value='';
+document.getElementById('reg-dob-bs').value='';
+document.getElementById('reg-dob-ad').value='';
   renderStudentList(); populateStudentSelects(); updateSummary();
   alert('Student "'+name+'" registered!');
 }
@@ -946,7 +955,7 @@ function showIndividualSheet(roll,exam) {
 
     // Header: logo + school name
     '<div class="header-row">'+
-      '<div class="logo-box">School<br>Logo</div>'+
+      '<div class="logo-box" style="border:none;padding:0;background:transparent"><img src="THARPU_SECONDARY_SCHOOL.png" style="width:70px;height:70px;border-radius:50%;object-fit:cover" onerror="this.style.display=\'none\'"></div>'+
       '<div class="school-name">'+
         '<span class="line">THARPU SECONDARY SCHOOL</span>'+
         '<span class="line2">Yangwarak-4, Panchthar, Koshi Province, Nepal</span>'+
@@ -958,10 +967,9 @@ function showIndividualSheet(roll,exam) {
 
     // Info lines
     '<div class="info-block">'+
-      '<div class="info-line"><span class="label">THE FOLLOWING ARE THE GRADE(S) OBTAINED BY :</span><span class="dotline">&nbsp;'+st.name+'&nbsp;</span></div>'+
-      '<div class="info-line"><span class="label">DATE OF BIRTH :</span><span class="dotline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="label">B.S. &nbsp;&nbsp;&nbsp;(&nbsp;</span><span class="dotline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="label">A.D.)</span></div>'+
-      '<div class="info-line"><span class="label">REGISTRATION NO</span><span class="dotline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="label">&nbsp;SYMBOL NO:</span><span class="dotline">&nbsp;'+st.roll+'&nbsp;</span><span class="label">&nbsp;&nbsp;GRADE : XI</span></div>'+
-      '<div class="info-line"><span class="label">IN THE <b>'+exam.toUpperCase()+'</b> CONDUCTED BY SCHOOL/CAMPUS IN</span><span class="dotline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="label">B.S.</span></div>'+
+     '<div class="info-line"><span class="label">DATE OF BIRTH :</span><span class="dotline">&nbsp;'+(st.dobbs||'')+'&nbsp;</span><span class="label">B.S. &nbsp;&nbsp;&nbsp;(&nbsp;</span><span class="dotline">&nbsp;'+(st.dobad||'')+'&nbsp;</span><span class="label">A.D.)</span></div>'+
+'<div class="info-line"><span class="label">REGISTRATION NO</span><span class="dotline">&nbsp;'+(st.regno||'')+'&nbsp;</span><span class="label">&nbsp;SYMBOL NO:</span><span class="dotline">&nbsp;'+st.roll+'&nbsp;</span><span class="label">&nbsp;&nbsp;GRADE : XI</span></div>'+ 
+      '<div class="info-line"><span class="label">IN THE <b>'+exam.toUpperCase()+'</b> CONDUCTED BY SCHOOL IN</span><span class="dotline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="label">B.S.</span></div>'+
       '<div class="info-line"><span class="label">(&nbsp;</span><span class="dotline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="label">&nbsp;A.D.) ARE GIVEN BELOW.</span></div>'+
     '</div>'+
 
