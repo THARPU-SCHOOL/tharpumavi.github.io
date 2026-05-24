@@ -3614,7 +3614,144 @@ function changePassword() {
   ['cp-old','cp-new','cp-new2'].forEach(function(id){document.getElementById(id).value='';});
   showToast('🔑 Password changed!');
 }
+// ═══════════════════════════════════════════════════════
+//  EDITABLE GRADESHEET — full row/column/subject/marks editor
+// ═══════════════════════════════════════════════════════
+function loadGradeSheetEditable() {
+  var container = document.getElementById('gradesheet-area');
+  if (!container) return;
 
+  // Load saved subjects or use defaults
+  var savedSubjects = JSON.parse(localStorage.getItem('gs_subjects') || 'null');
+  var subjects = savedSubjects || [
+    {name:'Nepali', th:75, pr:25},
+    {name:'English', th:75, pr:25},
+    {name:'Mathematics', th:75, pr:25},
+    {name:'Science', th:75, pr:25},
+    {name:'Social Studies', th:75, pr:25},
+    {name:'Optional', th:75, pr:25}
+  ];
+
+  function saveSubjects() {
+    localStorage.setItem('gs_subjects', JSON.stringify(subjects));
+  }
+
+  function renderEditor() {
+    var html = '<div style="overflow-x:auto">';
+    html += '<div style="display:flex;gap:8px;margin-bottom:0.8rem;flex-wrap:wrap">';
+    html += '<button class="btn btn-primary" onclick="gsAddSubject()">➕ Add Subject</button>';
+    html += '<button class="btn btn-success" onclick="gsSaveAll()">💾 Save Gradesheet</button>';
+    html += '<button class="btn btn-secondary" onclick="gsReset()">🔄 Reset to Default</button>';
+    html += '</div>';
+
+    html += '<table class="marks-table" id="gs-editor-table" style="min-width:600px">';
+    html += '<thead><tr>';
+    html += '<th style="min-width:110px">Subject</th>';
+    html += '<th style="min-width:70px">Theory<br>Full Marks</th>';
+    html += '<th style="min-width:70px">Practical<br>Full Marks</th>';
+    html += '<th style="min-width:70px">Pass<br>Marks</th>';
+    html += '<th>Actions</th>';
+    html += '</tr></thead><tbody id="gs-subject-rows">';
+
+    subjects.forEach(function(sub, i) {
+      var pass = sub.pass || Math.round((sub.th + sub.pr) * 0.4);
+      html += '<tr id="gs-row-'+i+'">';
+      html += '<td><input class="gs-input" style="width:130px" type="text" value="'+sub.name+'" onchange="gsUpdateField('+i+',\'name\',this.value)"></td>';
+      html += '<td><input class="gs-input" style="width:70px" type="number" min="0" value="'+sub.th+'" onchange="gsUpdateField('+i+',\'th\',+this.value)"></td>';
+      html += '<td><input class="gs-input" style="width:70px" type="number" min="0" value="'+sub.pr+'" onchange="gsUpdateField('+i+',\'pr\',+this.value)"></td>';
+      html += '<td><input class="gs-input" style="width:70px" type="number" min="0" value="'+pass+'" onchange="gsUpdateField('+i+',\'pass\',+this.value)"></td>';
+      html += '<td><button class="btn btn-danger" style="padding:4px 10px;font-size:0.78rem" onclick="gsDeleteRow('+i+')">🗑 Delete</button></td>';
+      html += '</tr>';
+    });
+
+    html += '</tbody></table>';
+
+    // Preview section
+    html += '<div style="margin-top:1.5rem">';
+    html += '<div class="section-head" style="border-radius:8px 8px 0 0;padding:0.6rem 1rem">📋 Gradesheet Preview</div>';
+    html += '<table class="marks-table" style="min-width:600px">';
+    html += '<thead><tr>';
+    html += '<th>#</th><th>Subject</th><th>Theory FM</th><th>Practical FM</th><th>Total FM</th><th>Pass Marks</th>';
+    html += '</tr></thead><tbody>';
+    subjects.forEach(function(sub, i) {
+      var pass = sub.pass || Math.round((sub.th + sub.pr) * 0.4);
+      html += '<tr>';
+      html += '<td>'+(i+1)+'</td>';
+      html += '<td><b>'+sub.name+'</b></td>';
+      html += '<td>'+sub.th+'</td>';
+      html += '<td>'+sub.pr+'</td>';
+      html += '<td><b>'+(sub.th+sub.pr)+'</b></td>';
+      html += '<td>'+pass+'</td>';
+      html += '</tr>';
+    });
+    var totalFM = subjects.reduce(function(s,x){return s+x.th+x.pr;},0);
+    html += '<tr style="font-weight:700;background:var(--cream-dark)">';
+    html += '<td colspan="4" style="text-align:right">Grand Total</td>';
+    html += '<td>'+totalFM+'</td><td>—</td>';
+    html += '</tr>';
+    html += '</tbody></table></div>';
+    html += '</div>';
+
+    container.innerHTML = html;
+
+    // Attach global helpers
+    window.gsSubjects = subjects;
+
+    window.gsUpdateField = function(i, field, val) {
+      subjects[i][field] = val;
+      saveSubjects();
+    };
+
+    window.gsAddSubject = function() {
+      subjects.push({name:'New Subject', th:75, pr:25, pass:40});
+      saveSubjects();
+      renderEditor();
+    };
+
+    window.gsDeleteRow = function(i) {
+      if (!confirm('Delete subject "'+subjects[i].name+'"?')) return;
+      subjects.splice(i, 1);
+      saveSubjects();
+      renderEditor();
+    };
+
+    window.gsSaveAll = function() {
+      saveSubjects();
+      showToast('✅ Gradesheet saved!');
+      renderEditor();
+    };
+
+    window.gsReset = function() {
+      if (!confirm('Reset to default subjects?')) return;
+      localStorage.removeItem('gs_subjects');
+      subjects = [
+        {name:'Nepali', th:75, pr:25},
+        {name:'English', th:75, pr:25},
+        {name:'Mathematics', th:75, pr:25},
+        {name:'Science', th:75, pr:25},
+        {name:'Social Studies', th:75, pr:25},
+        {name:'Optional', th:75, pr:25}
+      ];
+      saveSubjects();
+      renderEditor();
+    };
+  }
+
+  renderEditor();
+}
+
+// Add gradesheet tab area if missing
+(function() {
+  var panel = document.getElementById('tab-grading');
+  if (panel && !document.getElementById('gradesheet-area')) {
+    var div = document.createElement('div');
+    div.id = 'gradesheet-area';
+    div.className = 'section-card';
+    div.style = 'padding:1rem;margin-top:1rem';
+    panel.appendChild(div);
+    loadGradeSheetEditable();
+  }
+})();
 // ═══════════════════════════════════════════════════════
 //  PATCH: Override loadGradeSheet and showTab
 // ═══════════════════════════════════════════════════════
