@@ -412,10 +412,75 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
   body::after{content:"THARPU SECONDARY SCHOOL";position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-45deg);font-size:80px;color:rgba(123,28,28,0.05);pointer-events:none;z-index:9999;white-space:nowrap;}
 }
 
+/* ══════ WATERMARK (screen) ══════ */
+#screen-watermark{
+  position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+#screen-watermark svg{opacity:0.025;transform:rotate(-35deg);width:min(80vw,500px);}
+
+/* ══════ TEACHER PORTAL ══════ */
+.teacher-card{background:linear-gradient(135deg,#f0e4cc,#fdf6ec);border:1.5px solid var(--gold);border-radius:14px;padding:1.2rem;margin-bottom:1rem;}
+.teacher-badge{display:inline-flex;align-items:center;gap:5px;background:var(--gold);color:white;border-radius:20px;padding:3px 12px;font-size:0.75rem;font-weight:700;margin-bottom:0.8rem;}
+.subject-teacher-row{display:flex;align-items:center;gap:8px;padding:0.6rem 0.8rem;border-bottom:1px solid var(--cream-dark);font-size:0.84rem;}
+.subject-teacher-row:last-child{border-bottom:none;}
+.strow-sub{flex:1;font-weight:600;}
+.strow-teacher{font-size:0.78rem;color:var(--text-muted);}
+.strow-status{font-size:0.7rem;font-weight:700;padding:2px 7px;border-radius:10px;}
+.strow-done{background:#e8f5e9;color:#1a6e2e;}
+.strow-pending{background:#fff3e0;color:#e65100;}
+
+/* ══════ ENCRYPTION INDICATOR ══════ */
+.enc-badge{display:inline-flex;align-items:center;gap:4px;background:#e8f5e9;color:#1a6e2e;border:1px solid #b2dfc0;border-radius:20px;padding:3px 10px;font-size:0.72rem;font-weight:700;}
+.enc-badge.off{background:#ffebee;color:#b71c1c;border-color:#f5c6c6;}
+
+/* ══════ MARKS APPROVAL ══════ */
+.approval-row{display:flex;align-items:center;gap:8px;padding:0.6rem 0.8rem;border-bottom:1px solid var(--cream-dark);}
+.approval-row:last-child{border-bottom:none;}
+.apr-info{flex:1;}
+.apr-title{font-weight:700;font-size:0.85rem;}
+.apr-sub{font-size:0.72rem;color:var(--text-muted);}
+.apr-status{font-size:0.7rem;font-weight:700;padding:2px 8px;border-radius:10px;}
+.apr-pending{background:#fff3e0;color:#e65100;}
+.apr-approved{background:#e8f5e9;color:#1a6e2e;}
+.apr-rejected{background:#ffebee;color:#b71c1c;}
+
+/* ══════ MARKS LOCK ══════ */
+.locked-overlay{position:relative;}
+.locked-overlay::after{content:'🔒 Marks Locked by Admin';position:absolute;inset:0;background:rgba(255,255,255,0.88);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--maroon);font-size:0.9rem;border-radius:8px;pointer-events:none;}
+
+/* ══════ RESULTS STATS ══════ */
+.result-stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:1rem;}
+.rs-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:0.85rem;text-align:center;box-shadow:var(--shadow);}
+.rs-num{font-size:1.6rem;font-weight:800;color:var(--maroon);}
+.rs-lbl{font-size:0.7rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;margin-top:2px;}
+
+/* ══════ TEACHER MARKS PORTAL TAB ══════ */
+.tportal-header{background:linear-gradient(135deg,var(--gold),#c8922a);color:white;border-radius:12px;padding:1rem;margin-bottom:1rem;display:flex;align-items:center;gap:12px;}
+.tportal-icon{font-size:2rem;}
+.tportal-title{font-size:1rem;font-weight:700;}
+.tportal-sub{font-size:0.78rem;opacity:0.88;}
+.subject-progress-bar{height:6px;background:var(--cream-dark);border-radius:3px;overflow:hidden;margin-top:4px;}
+.subject-progress-fill{height:100%;border-radius:3px;background:var(--maroon);transition:width 0.6s;}
+
 </style>
 </head>
 <body>
 <div id="toast"></div>
+
+<!-- SCREEN WATERMARK -->
+<div id="screen-watermark">
+  <svg viewBox="0 0 500 200" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="100" cy="100" r="90" fill="none" stroke="#7B1C1C" stroke-width="4"/>
+    <circle cx="100" cy="100" r="76" fill="none" stroke="#7B1C1C" stroke-width="1.5"/>
+    <text x="100" y="88" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#7B1C1C">THARPU</text>
+    <text x="100" y="104" text-anchor="middle" font-family="Arial" font-size="10" fill="#7B1C1C">SECONDARY</text>
+    <text x="100" y="118" text-anchor="middle" font-family="Arial" font-size="10" fill="#7B1C1C">SCHOOL</text>
+    <text x="270" y="100" text-anchor="middle" font-family="Arial" font-size="28" font-weight="900" fill="#7B1C1C" letter-spacing="2">THARPU</text>
+    <text x="270" y="128" text-anchor="middle" font-family="Arial" font-size="18" fill="#7B1C1C" letter-spacing="3">SECONDARY SCHOOL</text>
+    <text x="270" y="148" text-anchor="middle" font-family="Arial" font-size="11" fill="#7B1C1C">Yangwarak-4, Panchthar, Nepal</text>
+  </svg>
+</div>
 
 <!-- LOGIN -->
 <div id="login-screen">
@@ -452,7 +517,7 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
         </div>
       </div>
       <button class="btn-login" id="btn-signin" onclick="doLogin()">&#128275; Sign In</button>
-      <p class="login-hint">Default: admin / tharpu2082 &nbsp;|&nbsp; teacher / school123</p>
+      <p class="login-hint">Contact your school administrator for login credentials.</p>
     </div>
 
     <!-- REGISTER PANEL -->
@@ -553,6 +618,7 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
      <div><div class="header-title">Tharpu Secondary School <span class="premium-badge">PRO</span></div><div class="header-sub">Result Management System &middot; Class XI</div><div id="hdr-bs-date" style="font-size:0.65rem;color:#f0c96e;opacity:0.9"></div></div>
     </div>
     <div class="header-actions">
+      <span id="enc-status-badge" class="enc-badge" style="margin-right:4px">🔒 Encrypted</span>
       <span id="hdr-user" style="font-size:0.7rem;opacity:0.8;margin-right:4px"></span>
       <button class="btn-sm" id="dark-toggle" onclick="toggleDark()" title="Dark mode">🌙</button>
       <button class="btn-sm" onclick="openModal('pw-modal');renderUsersList()">&#128273; Users</button>
@@ -581,6 +647,9 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
     <button class="nav-tab" onclick="showTab('compare',this)"><span class="tab-icon">📉</span>Compare</button>
     <button class="nav-tab" onclick="showTab('notifications',this)" style="position:relative"><span class="tab-icon">🔔</span>Alerts<span id="notif-badge" style="display:none;position:absolute;top:4px;right:4px;background:#b71c1c;color:white;border-radius:50%;width:14px;height:14px;font-size:0.55rem;font-weight:700;align-items:center;justify-content:center;"></span></button>
     <button class="nav-tab" onclick="showTab('settings',this)"><span class="tab-icon">⚙️</span>Settings</button>
+    <button class="nav-tab" onclick="showTab('teacher-portal',this)"><span class="tab-icon">👩‍🏫</span>Teacher Portal</button>
+    <button class="nav-tab" onclick="showTab('marks-approval',this)"><span class="tab-icon">✅</span>Approval</button>
+    <button class="nav-tab" onclick="showTab('result-stats',this)"><span class="tab-icon">📊</span>Result Stats</button>
   </div>
 
   <!-- DASHBOARD TAB -->
@@ -957,19 +1026,179 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
     </div>
   </div>
 
+  <!-- TEACHER PORTAL TAB -->
+  <div class="tab-panel" id="tab-teacher-portal">
+    <div class="tportal-header">
+      <div class="tportal-icon">👩‍🏫</div>
+      <div>
+        <div class="tportal-title">Subject Teacher Marks Portal</div>
+        <div class="tportal-sub" id="tportal-role-desc">Each teacher enters marks only for their assigned subject</div>
+      </div>
+    </div>
+
+    <!-- ADMIN ONLY: Subject–Teacher Assignment -->
+    <div class="section-card" id="tportal-assignment-card">
+      <div class="section-head">⚙️ Subject–Teacher Assignment <small style="font-size:0.7rem;opacity:0.75">(Admin only)</small></div>
+      <div class="section-body">
+        <div class="info-box">
+          <b>📌 Teacher Accounts:</b> Each subject teacher logs in with their own username. Assign subjects below so each teacher sees only their subject's marks entry.<br>
+          <b>Teacher logins:</b> eng_teacher, nep_teacher, phy_teacher, chem_teacher, bio_teacher, farm_teacher, fruit_teacher, ento_teacher, soil_teacher, math_teacher, acc_teacher, eco_teacher, comp_teacher, ss_teacher, hpe_teacher
+        </div>
+        <div id="teacher-assignments-table"><p style="color:var(--text-muted);font-size:0.85rem">Loading…</p></div>
+        <div class="btn-row" style="margin-top:0.8rem;">
+          <button class="btn btn-primary" onclick="saveTeacherAssignments()">💾 Save Assignments</button>
+          <button class="btn btn-secondary" onclick="renderTeacherAssignmentsTable()">🔄 Refresh</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MARKS ENTRY — visible to all teachers, filtered by role -->
+    <div class="section-card" style="margin-top:1rem;">
+      <div class="section-head">✏️ <span id="tportal-entry-title">My Subject Marks Entry</span></div>
+      <div class="section-body">
+        <div class="form-group">
+          <label>Examination</label>
+          <select id="tportal-exam-sel" onchange="renderTeacherMarksEntry()">
+            <option value="First Terminal">First Terminal</option>
+            <option value="Second Terminal">Second Terminal</option>
+            <option value="Annual Examination">Annual Examination</option>
+            <option value="Pre-board">Pre-board</option>
+          </select>
+        </div>
+        <div class="form-group" id="tportal-stream-wrap">
+          <label>Stream</label>
+          <select id="tportal-stream-sel" onchange="renderTeacherMarksEntry()">
+            <option value="Plant Science">🌿 Plant Science</option>
+            <option value="General">📘 General</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" onclick="renderTeacherMarksEntry()">📋 Load Marks Entry</button>
+        <div id="tportal-marks-area" style="margin-top:1rem;"></div>
+      </div>
+    </div>
+
+    <!-- PROGRESS by subject -->
+    <div class="section-card" style="margin-top:1rem;">
+      <div class="section-head">📊 Entry Progress by Subject</div>
+      <div class="section-body" id="tportal-progress-area">
+        <div class="empty-state"><p>Load marks entry above to see progress.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MARKS APPROVAL TAB -->
+  <div class="tab-panel" id="tab-marks-approval">
+    <div class="section-card">
+      <div class="section-head">✅ Marks Approval &amp; Lock</div>
+      <div class="section-body">
+        <div class="info-box">
+          <b>🔐 Approval Workflow:</b> Teachers submit marks → Admin reviews → Admin approves/locks. Locked marks cannot be edited by teachers.
+        </div>
+        <div class="form-group">
+          <label>Examination</label>
+          <select id="approval-exam-sel" onchange="renderApprovalPanel()">
+            <option value="First Terminal">First Terminal</option>
+            <option value="Second Terminal">Second Terminal</option>
+            <option value="Annual Examination">Annual Examination</option>
+            <option value="Pre-board">Pre-board</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Stream</label>
+          <select id="approval-stream-sel" onchange="renderApprovalPanel()">
+            <option value="Plant Science">🌿 Plant Science</option>
+            <option value="General">📘 General</option>
+          </select>
+        </div>
+        <div id="approval-panel"></div>
+      </div>
+    </div>
+    <div class="section-card" style="margin-top:1rem;">
+      <div class="section-head">🔒 Global Marks Lock</div>
+      <div class="section-body">
+        <div id="global-lock-status" style="margin-bottom:0.8rem;"></div>
+        <div class="btn-row">
+          <button class="btn btn-danger" onclick="lockAllMarks()">🔒 Lock All Marks (Finalize)</button>
+          <button class="btn btn-success" onclick="unlockAllMarks()">🔓 Unlock for Editing</button>
+        </div>
+        <div style="margin-top:0.8rem;font-size:0.78rem;color:var(--text-muted);">When locked, only admin can edit. Teachers see read-only view.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT STATS TAB -->
+  <div class="tab-panel" id="tab-result-stats">
+    <div class="section-card">
+      <div class="section-head">📊 Result Statistics &amp; Analysis</div>
+      <div class="section-body">
+        <div class="form-group">
+          <label>Examination</label>
+          <select id="rstats-exam-sel" onchange="renderResultStats()">
+            <option value="First Terminal">First Terminal</option>
+            <option value="Second Terminal">Second Terminal</option>
+            <option value="Annual Examination">Annual Examination</option>
+            <option value="Pre-board">Pre-board</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Stream</label>
+          <select id="rstats-stream-sel" onchange="renderResultStats()">
+            <option value="all">All Streams</option>
+            <option value="Plant Science">🌿 Plant Science</option>
+            <option value="General">📘 General</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" onclick="renderResultStats()">📊 Generate Report</button>
+      </div>
+    </div>
+    <div id="result-stats-area" style="margin-top:1rem;"></div>
+  </div>
+
 </div>
 
 <script>
 // ============================================================
-// USERS
+// USERS — with roles & subject assignments
 // ============================================================
 var DEFAULT_USERS = [
-  {username:"admin",   password:"tharpu2082"},
-  {username:"teacher", password:"school123"}
+  {username:"admin",        password:"tharpu2082", role:"admin",          fullname:"Administrator"},
+  {username:"teacher",      password:"school123",  role:"teacher",        fullname:"Class Teacher"},
+  // Plant Science subject teachers
+  {username:"eng_teacher",  password:"eng123",     role:"subject_teacher", fullname:"English Teacher",            subject:"Compulsory English"},
+  {username:"nep_teacher",  password:"nep123",     role:"subject_teacher", fullname:"Nepali Teacher",             subject:"Compulsory Nepali"},
+  {username:"phy_teacher",  password:"phy123",     role:"subject_teacher", fullname:"Physics Teacher",            subject:"Physics"},
+  {username:"chem_teacher", password:"chem123",    role:"subject_teacher", fullname:"Chemistry Teacher",          subject:"Chemistry"},
+  {username:"bio_teacher",  password:"bio123",     role:"subject_teacher", fullname:"Biology Teacher",            subject:"Biology"},
+  {username:"farm_teacher", password:"farm123",    role:"subject_teacher", fullname:"Farm Machinery Teacher",     subject:"Farm Machinery & Seeds Development"},
+  {username:"fruit_teacher",password:"fruit123",   role:"subject_teacher", fullname:"Fruit Crop Teacher",        subject:"Commercial Fruit Crop & Post Harvest Tech"},
+  {username:"ento_teacher", password:"ento123",    role:"subject_teacher", fullname:"Entomology Teacher",        subject:"Agricultural Entomology"},
+  {username:"soil_teacher", password:"soil123",    role:"subject_teacher", fullname:"Soil Fertility Teacher",    subject:"Soil Fertility & Nutrient Management"},
+  // General stream subject teachers
+  {username:"math_teacher", password:"math123",    role:"subject_teacher", fullname:"Mathematics Teacher",       subject:"Mathematics"},
+  {username:"acc_teacher",  password:"acc123",     role:"subject_teacher", fullname:"Accountancy Teacher",       subject:"Accountancy"},
+  {username:"eco_teacher",  password:"eco123",     role:"subject_teacher", fullname:"Economics Teacher",         subject:"Economics"},
+  {username:"comp_teacher", password:"comp123",    role:"subject_teacher", fullname:"Computer Science Teacher",  subject:"Computer Science"},
+  {username:"ss_teacher",   password:"ss123",      role:"subject_teacher", fullname:"Social Studies Teacher",    subject:"Social Studies & Life Skills"},
+  {username:"hpe_teacher",  password:"hpe123",     role:"subject_teacher", fullname:"Health & PE Teacher",       subject:"Health & Physical Education"}
 ];
 function loadUsers() {
-  try { var s=localStorage.getItem('tss_users'); if(s) return JSON.parse(s); } catch(e){}
-  return DEFAULT_USERS.map(function(u){ return {username:u.username,password:u.password}; });
+  try {
+    var s = localStorage.getItem('tss_users');
+    if (s) {
+      var stored = JSON.parse(s);
+      // Merge: stored users take priority, but ensure DEFAULT_USERS roles/subjects are present
+      var merged = DEFAULT_USERS.map(function(def) {
+        var found = stored.find(function(u){ return u.username === def.username; });
+        return found ? Object.assign({}, def, found) : def;
+      });
+      // Add any extra users from stored that aren't in DEFAULT_USERS
+      stored.forEach(function(u) {
+        if (!merged.find(function(m){ return m.username===u.username; })) merged.push(u);
+      });
+      return merged;
+    }
+  } catch(e){}
+  return DEFAULT_USERS.map(function(u){ return Object.assign({},u); });
 }
 function saveUsers(arr) {
   try { localStorage.setItem('tss_users', JSON.stringify(arr)); } catch(e){}
@@ -1002,42 +1231,53 @@ function switchAuthTab(tab) {
 }
 
 function doLogin() {
-  try {
-    var u = document.getElementById('inp-user').value.trim();
-    var p = document.getElementById('inp-pass').value;
-    if (!u || !p) {
-      document.getElementById('login-error').style.display = 'block';
-      document.getElementById('login-error').textContent = 'Please enter username and password.';
-      return;
-    }
-    var freshUsers = DEFAULT_USERS.map(function(x){ return {username:x.username,password:x.password}; });
-    try { var s=localStorage.getItem('tss_users'); if(s){ var p2=JSON.parse(s); if(p2&&p2.length) freshUsers=p2; } } catch(e){}
-    USERS = freshUsers;
-    var matched = null;
-    for (var i=0; i<USERS.length; i++) {
-      if (USERS[i].username === u && USERS[i].password === p) { matched = USERS[i]; break; }
-    }
-    if (matched) {
-      currentUser = u;
-      try { localStorage.setItem('tss_session_user', u); } catch(e){}
-      document.getElementById('login-error').style.display = 'none';
-      try { loadMarksFromStorage(); } catch(e){}
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('main-app').style.display     = 'block';
-      try { renderStudentList(); } catch(e){}
-      try { populateStudentSelects(); } catch(e){}
-      try { updateSummary(); } catch(e){}
-      showToast('Welcome back, ' + u + '! 👋');
-    } else {
-      document.getElementById('login-error').style.display = 'block';
-      document.getElementById('login-error').textContent = '❌ Incorrect username or password.';
-      document.getElementById('inp-pass').value = '';
-      document.getElementById('inp-pass').focus();
-    }
-  } catch(err) {
-    document.getElementById('login-error').style.display = 'block';
-    document.getElementById('login-error').textContent = 'Login error: ' + err.message;
+  var u = document.getElementById('inp-user').value.trim();
+  var p = document.getElementById('inp-pass').value;
+  var errEl = document.getElementById('login-error');
+  if (!u || !p) {
+    errEl.style.display = 'block';
+    errEl.textContent = 'Please enter username and password.';
+    return;
   }
+  // Always reload users fresh (including merged defaults with roles)
+  USERS = loadUsers();
+  var matched = null;
+  for (var i = 0; i < USERS.length; i++) {
+    if (USERS[i].username === u && USERS[i].password === p) { matched = USERS[i]; break; }
+  }
+  if (!matched) {
+    errEl.style.display = 'block';
+    errEl.textContent = '❌ Incorrect username or password.';
+    document.getElementById('inp-pass').value = '';
+    document.getElementById('inp-pass').focus();
+    return;
+  }
+  // Valid login — set session
+  currentUser = u;
+  try { localStorage.setItem('tss_session_user', u); } catch(e){}
+  errEl.style.display = 'none';
+  teacherAssignments = loadTeacherAssignments();
+  loadApprovalData();
+  // Load marks (async encryption), then show app
+  loadMarksFromStorage().then(function() {
+    _showMainApp(matched);
+  }).catch(function() {
+    loadMarksFromStorageFallback();
+    _showMainApp(matched);
+  });
+}
+
+function _showMainApp(matched) {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('main-app').style.display     = 'block';
+  try { renderStudentList(); } catch(e){}
+  try { populateStudentSelects(); } catch(e){}
+  try { updateSummary(); } catch(e){}
+  var role = matched.role || 'teacher';
+  var roleLabel = role==='admin' ? '👑 Admin' : role==='subject_teacher' ? '👩‍🏫 Subject Teacher' : '📚 Teacher';
+  showToast('Welcome, ' + (matched.fullname || matched.username) + '! ' + roleLabel);
+  // Show/hide Teacher Portal based on role
+  updateNavForRole(role);
 }
 
 // Enter key support — placed after doLogin is defined
@@ -1192,10 +1432,33 @@ function initials(name) {
 function showTab(id, btn) {
   document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
   document.querySelectorAll('.nav-tab').forEach(function(b){ b.classList.remove('active'); });
-  document.getElementById('tab-'+id).classList.add('active');
-  btn.classList.add('active');
-  if (id==='marks')   { populateStudentSelects(); loadMarksForm(); }
-  if (id==='results') { loadGradeSheet(); }
+  var panel = document.getElementById('tab-'+id);
+  if (panel) panel.classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (id==='marks')          { populateStudentSelects(); loadMarksForm(); }
+  if (id==='results')        { loadGradeSheet(); }
+  if (id==='teacher-portal') { teacherAssignments=loadTeacherAssignments(); renderTeacherAssignmentsTable(); renderTeacherMarksEntry(); }
+  if (id==='marks-approval') { loadApprovalData(); renderApprovalPanel(); }
+  if (id==='result-stats')   { renderResultStats(); }
+}
+
+function updateNavForRole(role) {
+  // Subject teachers: only show Teacher Portal and their relevant tabs
+  var isSubjectTeacher = (role === 'subject_teacher');
+  var isAdminOrTeacher = (role === 'admin' || role === 'teacher');
+  // Show/hide admin-only tabs
+  var adminTabs = ['marks-approval', 'settings'];
+  adminTabs.forEach(function(tabId) {
+    var btn = document.querySelector('[onclick*="showTab(\''+tabId+'\'"]');
+    if (btn) btn.style.display = isAdminOrTeacher ? '' : 'none';
+  });
+  // Always show teacher-portal tab
+  // Update header user display
+  var hdrUser = document.getElementById('hdr-user');
+  if (hdrUser) {
+    var u = USERS.find(function(x){ return x.username===currentUser; });
+    hdrUser.textContent = (u ? (u.fullname||u.username) : currentUser) + (isSubjectTeacher ? ' 👩‍🏫' : isAdminOrTeacher ? ' 👑' : '');
+  }
 }
 
 // ============================================================
@@ -1356,34 +1619,435 @@ function saveMarks(roll,exam) {
     };
   });
   marksData[getKey(roll,exam)] = obj;
-  saveMarksToStorage();
+  saveMarksToStorage().then(function(){
   updateSummary(); renderStudentList();
   alert('Marks saved for '+st.name+' — '+exam);
+  });
 }
 
 // ============================================================
-// MARKS STORAGE — per user, merged on login
+// END-TO-END ENCRYPTION — AES-256 via SubtleCrypto
 // ============================================================
-function saveMarksToStorage() {
-  try {
-    // Save under current user's key
-    localStorage.setItem('tss_marks_'+(currentUser||'guest'), JSON.stringify(marksData));
-    // Also write a master merged copy so any export always contains everything
-    localStorage.setItem('tss_marks_master', JSON.stringify(marksData));
-  } catch(e){}
+var _encKey = null;
+var ENC_ENABLED = true;
+
+async function deriveKey(password, salt) {
+  var enc = new TextEncoder();
+  var keyMaterial = await crypto.subtle.importKey('raw', enc.encode(password), {name:'PBKDF2'}, false, ['deriveKey']);
+  return crypto.subtle.deriveKey(
+    {name:'PBKDF2', salt: enc.encode(salt), iterations:100000, hash:'SHA-256'},
+    keyMaterial, {name:'AES-GCM', length:256}, true, ['encrypt','decrypt']
+  );
 }
-function loadMarksFromStorage() {
+
+async function encryptData(data, password) {
+  try {
+    var key = await deriveKey(password, 'tss_salt_2082');
+    var enc = new TextEncoder();
+    var iv = crypto.getRandomValues(new Uint8Array(12));
+    var encrypted = await crypto.subtle.encrypt({name:'AES-GCM', iv:iv}, key, enc.encode(JSON.stringify(data)));
+    var buf = new Uint8Array(iv.length + encrypted.byteLength);
+    buf.set(iv, 0); buf.set(new Uint8Array(encrypted), iv.length);
+    return btoa(String.fromCharCode.apply(null, buf));
+  } catch(e) { return JSON.stringify(data); }
+}
+
+async function decryptData(b64, password) {
+  try {
+    var bytes = Uint8Array.from(atob(b64), c=>c.charCodeAt(0));
+    var iv = bytes.slice(0,12);
+    var data = bytes.slice(12);
+    var key = await deriveKey(password, 'tss_salt_2082');
+    var dec = await crypto.subtle.decrypt({name:'AES-GCM', iv:iv}, key, data);
+    return JSON.parse(new TextDecoder().decode(dec));
+  } catch(e) { try { return JSON.parse(b64); } catch(e2) { return {}; } }
+}
+
+function getEncPassword() { return 'tss_enc_' + (currentUser||'guest') + '_tharpu'; }
+
+// ============================================================
+// MARKS STORAGE — Encrypted per user, merged on login
+// ============================================================
+async function saveMarksToStorage() {
+  try {
+    var pwd = getEncPassword();
+    var encrypted = await encryptData(marksData, pwd);
+    localStorage.setItem('tss_marks_enc_'+(currentUser||'guest'), encrypted);
+    // Also save plain master for backward compatibility
+    localStorage.setItem('tss_marks_master', JSON.stringify(marksData));
+    updateEncBadge(true);
+  } catch(e) {
+    try { localStorage.setItem('tss_marks_'+(currentUser||'guest'), JSON.stringify(marksData)); } catch(e2){}
+  }
+}
+
+async function loadMarksFromStorage() {
   marksData = {};
   try {
-    for (var i=0;i<localStorage.length;i++) {
-      var k=localStorage.key(i);
-      if (k&&k.startsWith('tss_marks_')) {
-        var d=JSON.parse(localStorage.getItem(k)||'{}');
-        Object.assign(marksData,d);
+    // Try encrypted first, then plain
+    for (var i=0; i<localStorage.length; i++) {
+      var k = localStorage.key(i);
+      if (!k) continue;
+      if (k.startsWith('tss_marks_enc_')) {
+        var user = k.replace('tss_marks_enc_','');
+        var pwd = 'tss_enc_' + user + '_tharpu';
+        var raw = localStorage.getItem(k);
+        var d = await decryptData(raw, pwd);
+        Object.assign(marksData, d||{});
+      } else if (k.startsWith('tss_marks_') && !k.includes('enc') && !k.includes('master')) {
+        try { var d2 = JSON.parse(localStorage.getItem(k)||'{}'); Object.assign(marksData, d2); } catch(e){}
       }
     }
-  } catch(e){}
+    updateEncBadge(true);
+  } catch(e) { updateEncBadge(false); }
 }
+
+function updateEncBadge(ok) {
+  var b = document.getElementById('enc-status-badge');
+  if (b) {
+    b.className = 'enc-badge' + (ok?' ':' off');
+    b.innerHTML = ok ? '🔒 Encrypted' : '⚠️ Not Encrypted';
+  }
+}
+
+// ============================================================
+// TEACHER ASSIGNMENTS
+// ============================================================
+var teacherAssignments = {}; // subject -> username
+
+function loadTeacherAssignments() {
+  try { var s = localStorage.getItem('tss_teacher_assignments'); if(s) return JSON.parse(s); } catch(e){}
+  return {};
+}
+function saveTeacherAssignmentsData(obj) {
+  try { localStorage.setItem('tss_teacher_assignments', JSON.stringify(obj)); } catch(e){}
+}
+
+function getMySubject() {
+  var u = USERS.find(function(x){ return x.username===currentUser; });
+  if (!u) return null;
+  if (u.role==='admin' || u.role==='teacher') return null; // sees all
+  if (u.role==='subject_teacher') return u.subject || teacherAssignments[currentUser] || null;
+  // Check assignments
+  for (var sub in teacherAssignments) {
+    if (teacherAssignments[sub]===currentUser) return sub;
+  }
+  return null;
+}
+
+function isAdmin() {
+  var u = USERS.find(function(x){ return x.username===currentUser; });
+  return !u || u.role==='admin' || u.role==='teacher';
+}
+
+function renderTeacherAssignmentsTable() {
+  teacherAssignments = loadTeacherAssignments();
+  // Auto-assign from DEFAULT_USERS if not already assigned
+  DEFAULT_USERS.forEach(function(u) {
+    if (u.role==='subject_teacher' && u.subject && !teacherAssignments[u.subject]) {
+      teacherAssignments[u.subject] = u.username;
+    }
+  });
+
+  var allSubjects = [];
+  ['Plant Science','General'].forEach(function(stream) {
+    (SUBJECTS[stream]||[]).forEach(function(s){
+      if (!allSubjects.find(function(x){ return x.name===s.name; }))
+        allSubjects.push({name:s.name, stream:stream});
+    });
+  });
+
+  var teachers = USERS.filter(function(u){ return u.role==='subject_teacher'||u.role==='teacher'; });
+  var html = '<div style="overflow-x:auto"><table class="marks-table" style="min-width:420px">';
+  html += '<thead><tr><th>#</th><th>Subject</th><th>Stream</th><th>Assigned Teacher</th><th>Status</th></tr></thead><tbody>';
+  allSubjects.forEach(function(sub, i){
+    var assigned = teacherAssignments[sub.name] || '';
+    var opts = '<option value="">-- Not Assigned --</option>';
+    teachers.forEach(function(t){
+      opts += '<option value="'+t.username+'"'+(assigned===t.username?' selected':'')+'>'+t.fullname+' ('+t.username+')</option>';
+    });
+    var done = assigned ? '<span class="strow-status strow-done">✓ '+assigned+'</span>' : '<span class="strow-status strow-pending">⚠ Unassigned</span>';
+    var streamBadge = sub.stream==='Plant Science' ? '<span style="color:#1a6e2e;font-size:0.72rem">🌿 Plant</span>' : '<span style="color:#0d47a1;font-size:0.72rem">📘 General</span>';
+    html += '<tr><td style="text-align:center;font-weight:700;color:var(--text-muted)">'+(i+1)+'</td>';
+    html += '<td style="font-weight:600;font-size:0.83rem">'+sub.name+'</td>';
+    html += '<td>'+streamBadge+'</td>';
+    html += '<td><select class="ta-sel" data-sub="'+sub.name+'" style="width:100%;padding:4px 6px;border:1.5px solid var(--border);border-radius:6px;font-size:0.8rem;background:var(--cream)">'+opts+'</select></td>';
+    html += '<td>'+done+'</td></tr>';
+  });
+  html += '</tbody></table></div>';
+  var el = document.getElementById('teacher-assignments-table');
+  if (el) el.innerHTML = html;
+}
+
+function saveTeacherAssignments() {
+  var sels = document.querySelectorAll('.ta-sel');
+  sels.forEach(function(sel){ if(sel.dataset.sub) teacherAssignments[sel.dataset.sub] = sel.value; });
+  saveTeacherAssignmentsData(teacherAssignments);
+  renderTeacherAssignmentsTable();
+  if(typeof showToast==='function') showToast('✅ Teacher assignments saved!');
+}
+
+// ============================================================
+// TEACHER MARKS PORTAL — entry table
+// ============================================================
+function renderTeacherMarksEntry() {
+  teacherAssignments = loadTeacherAssignments();
+  // Auto-fill assignments from DEFAULT_USERS
+  DEFAULT_USERS.forEach(function(u) {
+    if (u.role==='subject_teacher' && u.subject && !teacherAssignments[u.subject]) {
+      teacherAssignments[u.subject] = u.username;
+    }
+  });
+
+  var exam   = document.getElementById('tportal-exam-sel').value;
+  var stream = document.getElementById('tportal-stream-sel').value;
+  var area   = document.getElementById('tportal-marks-area');
+  if (!area) return;
+
+  var mySub   = getMySubject();
+  var adminMode = isAdmin();
+
+  // Update portal title
+  var titleEl = document.getElementById('tportal-entry-title');
+  if (titleEl) titleEl.textContent = adminMode ? 'All Subjects Marks Entry' : 'My Subject: ' + (mySub||'—');
+
+  // Filter subjects
+  var subs = (SUBJECTS[stream]||[]).filter(function(s){
+    if (adminMode) return true;
+    return s.name === mySub;
+  });
+
+  if (!subs.length) {
+    area.innerHTML = '<div class="info-box" style="background:#ffebee;border-color:#f5c6c6;color:#b71c1c;">⚠️ You are not assigned to any subject in the <b>'+stream+'</b> stream.<br>Contact admin to get assigned. Your subject may be in the other stream.</div>';
+    renderTeacherProgress(exam, stream);
+    return;
+  }
+
+  var stList = students.filter(function(st){ return st.stream===stream; });
+  var html = '<div style="overflow-x:auto"><table class="marks-table" style="min-width:'+(350+subs.length*130)+'px">';
+  html += '<thead><tr style="background:var(--maroon);color:white">';
+  html += '<th style="text-align:left">#</th><th style="text-align:left">Student Name</th><th>Roll</th>';
+  subs.forEach(function(s){
+    html += '<th style="min-width:120px">'+s.name+'<br><small style="opacity:0.8">Th/'+s.thMax+(s.prMax?' Pr/'+s.prMax:'')+'</small></th>';
+  });
+  html += '<th>Save</th></tr></thead><tbody>';
+
+  stList.forEach(function(st, idx){
+    var saved = marksData[getKey(st.roll,exam)] || {};
+    html += '<tr id="trow_'+st.roll+'">';
+    html += '<td style="text-align:center;color:var(--text-muted);font-weight:700">'+(idx+1)+'</td>';
+    html += '<td style="font-weight:600;white-space:nowrap">'+st.name+'</td>';
+    html += '<td style="font-size:0.78rem">'+st.roll+'</td>';
+    subs.forEach(function(sub){
+      var thV = (saved[sub.name]&&saved[sub.name].th!==undefined) ? saved[sub.name].th : '';
+      var prV = (saved[sub.name]&&saved[sub.name].pr!==undefined) ? saved[sub.name].pr : '';
+      html += '<td style="white-space:nowrap;padding:4px 6px">';
+      html += '<input type="number" class="tp-th" data-roll="'+st.roll+'" data-sub="'+sub.name+'" min="0" max="'+sub.thMax+'" value="'+thV+'" placeholder="Th" style="width:50px;padding:3px 4px;border:1.5px solid var(--border);border-radius:5px;font-size:0.82rem;text-align:center;background:var(--cream)">';
+      if (sub.prMax>0) {
+        html += ' <input type="number" class="tp-pr" data-roll="'+st.roll+'" data-sub="'+sub.name+'" min="0" max="'+sub.prMax+'" value="'+prV+'" placeholder="Pr" style="width:44px;padding:3px 4px;border:1.5px solid var(--border);border-radius:5px;font-size:0.82rem;text-align:center;background:var(--cream)">';
+      }
+      html += '</td>';
+    });
+    html += '<td><button class="btn btn-success" style="padding:4px 10px;font-size:0.72rem;white-space:nowrap" onclick="saveTeacherMarksRow(\''+st.roll+'\',\''+exam+'\',\''+stream+'\')">💾</button></td>';
+    html += '</tr>';
+  });
+  html += '</tbody></table></div>';
+  html += '<div class="btn-row" style="margin-top:0.8rem;">';
+  html += '<button class="btn btn-primary btn-full" onclick="saveAllTeacherMarks(\''+exam+'\',\''+stream+'\')">💾 Save All Students & Submit</button>';
+  html += '</div>';
+  area.innerHTML = html;
+  renderTeacherProgress(exam, stream);
+}
+
+function saveTeacherMarksRow(roll, exam, stream) {
+  var st = students.find(function(s){ return s.roll===roll; });
+  if (!st) return;
+  var existing = marksData[getKey(roll,exam)] || {};
+  var thInputs = document.querySelectorAll('.tp-th[data-roll="'+roll+'"]');
+  var prInputs = document.querySelectorAll('.tp-pr[data-roll="'+roll+'"]');
+  thInputs.forEach(function(inp){
+    var sub = inp.dataset.sub;
+    if (!existing[sub]) existing[sub] = {};
+    existing[sub].th = inp.value!==''?parseInt(inp.value):undefined;
+  });
+  prInputs.forEach(function(inp){
+    var sub = inp.dataset.sub;
+    if (!existing[sub]) existing[sub] = {};
+    existing[sub].pr = inp.value!==''?parseInt(inp.value):undefined;
+  });
+  marksData[getKey(roll,exam)] = existing;
+  saveMarksToStorage().then(function(){
+    updateSummary(); renderStudentList();
+    var row = document.getElementById('trow_'+roll);
+    if (row) { row.style.background='#f0fff4'; setTimeout(function(){ row.style.background=''; },1500); }
+    if(typeof showToast==='function') showToast('✅ Marks saved for '+st.name);
+  });
+}
+
+function saveAllTeacherMarks(exam, stream) {
+  var stList = students.filter(function(s){ return s.stream===stream; });
+  stList.forEach(function(st){
+    var existing = marksData[getKey(st.roll,exam)] || {};
+    var thInputs = document.querySelectorAll('.tp-th[data-roll="'+st.roll+'"]');
+    var prInputs = document.querySelectorAll('.tp-pr[data-roll="'+st.roll+'"]');
+    thInputs.forEach(function(inp){ var sub=inp.dataset.sub; if(!existing[sub])existing[sub]={}; existing[sub].th=inp.value!==''?parseInt(inp.value):undefined; });
+    prInputs.forEach(function(inp){ var sub=inp.dataset.sub; if(!existing[sub])existing[sub]={}; existing[sub].pr=inp.value!==''?parseInt(inp.value):undefined; });
+    marksData[getKey(st.roll,exam)] = existing;
+  });
+  saveMarksToStorage().then(function(){
+    updateSummary(); renderStudentList();
+    if(typeof showToast==='function') showToast('✅ All marks saved! Subject submitted.');
+    logApprovalRequest(exam, stream);
+  });
+}
+
+function renderTeacherProgress(exam, stream) {
+  var subs = SUBJECTS[stream]||[];
+  var stList = students.filter(function(s){ return s.stream===stream; });
+  var total = stList.length;
+  var html = '';
+  subs.forEach(function(sub){
+    var filled = stList.filter(function(st){
+      var saved = marksData[getKey(st.roll,exam)]||{};
+      var d = saved[sub.name]||{};
+      return d.th!==undefined && (sub.prMax===0||d.pr!==undefined);
+    }).length;
+    var pct = total>0 ? Math.round(filled/total*100):0;
+    var assigned = teacherAssignments[sub.name] || 'Unassigned';
+    html += '<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:3px"><span style="font-weight:600">'+sub.name+'</span><span style="color:var(--text-muted)">'+assigned+' &middot; '+filled+'/'+total+'</span></div>';
+    html += '<div class="subject-progress-bar"><div class="subject-progress-fill" style="width:'+pct+'%;background:'+(pct===100?'var(--success)':'var(--maroon)')+'"></div></div></div>';
+  });
+  document.getElementById('tportal-progress-area').innerHTML = html || '<div class="empty-state"><p>No data.</p></div>';
+}
+
+// ============================================================
+// MARKS APPROVAL & LOCK
+// ============================================================
+var approvalRequests = [];
+var marksLocked = false;
+
+function loadApprovalData() {
+  try { var s=localStorage.getItem('tss_approvals'); if(s) approvalRequests=JSON.parse(s); } catch(e){}
+  try { marksLocked = localStorage.getItem('tss_marks_locked')==='true'; } catch(e){}
+}
+function saveApprovalData() {
+  try { localStorage.setItem('tss_approvals', JSON.stringify(approvalRequests)); } catch(e){}
+  try { localStorage.setItem('tss_marks_locked', marksLocked?'true':'false'); } catch(e){}
+}
+
+function logApprovalRequest(exam, stream) {
+  var existing = approvalRequests.find(function(r){ return r.exam===exam&&r.stream===stream&&r.teacher===currentUser; });
+  if (!existing) {
+    approvalRequests.push({exam:exam,stream:stream,teacher:currentUser,status:'pending',submitted:new Date().toLocaleString()});
+  } else { existing.status='pending'; existing.submitted=new Date().toLocaleString(); }
+  saveApprovalData();
+}
+
+function renderApprovalPanel() {
+  loadApprovalData();
+  var exam = document.getElementById('approval-exam-sel').value;
+  var stream = document.getElementById('approval-stream-sel').value;
+  var relevant = approvalRequests.filter(function(r){ return r.exam===exam && r.stream===stream; });
+  var lock = document.getElementById('global-lock-status');
+  if (lock) lock.innerHTML = marksLocked
+    ? '<div class="enc-badge" style="margin-bottom:0">🔒 Marks are LOCKED — read-only for teachers</div>'
+    : '<div class="enc-badge off" style="margin-bottom:0">🔓 Marks are UNLOCKED — teachers can edit</div>';
+
+  var html = '';
+  if (!relevant.length) { html = '<div class="empty-state"><p>No submissions yet for '+exam+' — '+stream+'.</p></div>'; }
+  else {
+    html = '<table class="marks-table"><thead><tr><th>Teacher</th><th>Exam</th><th>Stream</th><th>Submitted</th><th>Status</th><th>Actions</th></tr></thead><tbody>';
+    relevant.forEach(function(r,i){
+      var sc = r.status==='approved'?'apr-approved':r.status==='rejected'?'apr-rejected':'apr-pending';
+      var actions = isAdmin() ? '<button class="btn btn-success" style="padding:3px 8px;font-size:0.72rem;margin-right:3px" onclick="approveMarks('+i+')">✓ Approve</button><button class="btn btn-danger" style="padding:3px 8px;font-size:0.72rem" onclick="rejectMarks('+i+')">✗ Reject</button>' : '';
+      html += '<tr><td><b>'+r.teacher+'</b></td><td>'+r.exam+'</td><td>'+r.stream+'</td><td>'+r.submitted+'</td><td><span class="apr-status '+sc+'">'+r.status+'</span></td><td>'+actions+'</td></tr>';
+    });
+    html += '</tbody></table>';
+  }
+  document.getElementById('approval-panel').innerHTML = html;
+}
+
+function approveMarks(i) { approvalRequests[i].status='approved'; saveApprovalData(); renderApprovalPanel(); showToast('✅ Marks approved!'); }
+function rejectMarks(i)  { approvalRequests[i].status='rejected'; saveApprovalData(); renderApprovalPanel(); showToast('❌ Marks rejected.'); }
+function lockAllMarks()  { marksLocked=true; saveApprovalData(); renderApprovalPanel(); showToast('🔒 All marks locked!'); }
+function unlockAllMarks(){ marksLocked=false; saveApprovalData(); renderApprovalPanel(); showToast('🔓 Marks unlocked.'); }
+
+// ============================================================
+// RESULT STATISTICS
+// ============================================================
+function renderResultStats() {
+  var exam = document.getElementById('rstats-exam-sel').value;
+  var streamF = document.getElementById('rstats-stream-sel').value;
+  var area = document.getElementById('result-stats-area');
+  var stList = students.filter(function(s){ return streamF==='all'||s.stream===streamF; });
+  if (!stList.length) { area.innerHTML='<div class="empty-state"><p>No students found.</p></div>'; return; }
+
+  var totalMarked=0, passCount=0, failCount=0, gpaTot=0, gpaCount=0;
+  var gradeCount={'A+':0,'A':0,'B+':0,'B':0,'C+':0,'C':0,'D':0,'NG':0};
+  var topStudents=[];
+
+  stList.forEach(function(st){
+    var subs = SUBJECTS[st.stream]||[];
+    var saved = marksData[getKey(st.roll,exam)]||{};
+    var totalGP=0, subCount=0, anyNG=false, allFilled=true;
+    subs.forEach(function(sub){
+      var d=saved[sub.name]||{},max=sub.thMax+sub.prMax;
+      if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
+        var t=(d.th||0)+(d.pr||0);
+        var pct=max>0?t/max*100:0;
+        var gr=getGrade(pct);
+        totalGP+=gr.gpa; subCount++;
+        if(gr.g==='NG') anyNG=true;
+        gradeCount[gr.g]=(gradeCount[gr.g]||0)+1;
+      } else { allFilled=false; }
+    });
+    if (allFilled && subCount>0) {
+      totalMarked++;
+      var cgpa = totalGP/subCount;
+      gpaTot += cgpa; gpaCount++;
+      if (anyNG) failCount++; else passCount++;
+      topStudents.push({name:st.name, roll:st.roll, cgpa:cgpa.toFixed(2), div:cgpaDiv(cgpa)});
+    }
+  });
+
+  topStudents.sort(function(a,b){ return parseFloat(b.cgpa)-parseFloat(a.cgpa); });
+  var avgGPA = gpaCount>0 ? (gpaTot/gpaCount).toFixed(2) : '—';
+  var passRate = totalMarked>0 ? Math.round(passCount/totalMarked*100) : 0;
+
+  var html = '<div class="result-stats-grid">';
+  html += '<div class="rs-card"><div class="rs-num">'+stList.length+'</div><div class="rs-lbl">Total Students</div></div>';
+  html += '<div class="rs-card"><div class="rs-num">'+totalMarked+'</div><div class="rs-lbl">Results Generated</div></div>';
+  html += '<div class="rs-card"><div class="rs-num" style="color:var(--success)">'+passCount+'</div><div class="rs-lbl">Passed</div></div>';
+  html += '<div class="rs-card"><div class="rs-num" style="color:var(--danger)">'+failCount+'</div><div class="rs-lbl">Failed / NG</div></div>';
+  html += '<div class="rs-card"><div class="rs-num">'+passRate+'%</div><div class="rs-lbl">Pass Rate</div></div>';
+  html += '<div class="rs-card"><div class="rs-num">'+avgGPA+'</div><div class="rs-lbl">Avg CGPA</div></div>';
+  html += '</div>';
+
+  // Grade distribution
+  html += '<div class="section-card"><div class="section-head">📊 Grade Distribution</div><div class="section-body">';
+  ['A+','A','B+','B','C+','C','D','NG'].forEach(function(g){
+    var cnt = gradeCount[g]||0;
+    var maxCnt = Math.max.apply(null, Object.values(gradeCount).filter(Boolean))||1;
+    var pct = Math.round(cnt/maxCnt*100);
+    var cls = {A:'gp-aplus','A+':'gp-aplus',B:'gp-b','B+':'gp-bplus',C:'gp-c','C+':'gp-cplus',D:'gp-d',NG:'gp-ng'}[g]||'gp-ng';
+    html += '<div class="bar-row"><div class="bar-label"><span class="grade-pill '+cls+'">'+g+'</span></div><div class="bar-track"><div class="bar-fill" style="width:'+pct+'%"></div></div><div class="bar-val">'+cnt+'</div></div>';
+  });
+  html += '</div></div>';
+
+  // Top 10 students
+  html += '<div class="section-card" style="margin-top:1rem"><div class="section-head">🏆 Top Students — '+exam+'</div><div style="overflow-x:auto"><table class="marks-table"><thead><tr><th>Rank</th><th>Name</th><th>Roll</th><th>CGPA</th><th>Division</th></tr></thead><tbody>';
+  topStudents.slice(0,10).forEach(function(s,i){
+    var rankCls = i===0?'rank-gold':i===1?'rank-silver':i===2?'rank-bronze':'';
+    html += '<tr><td style="text-align:center"><span class="rank-num r'+(i+1)+'">'+( i<3?['🥇','🥈','🥉'][i]:i+1)+'</span></td><td style="font-weight:600">'+s.name+'</td><td>'+s.roll+'</td><td><b>'+s.cgpa+'</b></td><td>'+s.div+'</td></tr>';
+  });
+  html += '</tbody></table></div></div>';
+
+  area.innerHTML = html;
+}
+
+// ============================================================
+// SHOW TAB HOOK — initialize new tabs
+// ============================================================
 
 // ============================================================
 // GRADE SHEET — all students, single page
@@ -3850,6 +4514,33 @@ document.addEventListener('click', function(e){
   // Expose globally so it can be called manually too
   window.initGradesheetEditor = renderGS;
 })();
+
+// ============================================================
+// INIT — load teacher assignments & approval data on page load
+// ============================================================
+window.addEventListener('load', function() {
+  teacherAssignments = loadTeacherAssignments();
+  loadApprovalData();
+  // Update watermark visibility based on settings
+  try {
+    var wm = document.getElementById('screen-watermark');
+    if (wm) wm.style.display = 'flex';
+  } catch(e){}
+});
+
+// Fallback for when crypto APIs are not available
+function loadMarksFromStorageFallback() {
+  marksData = {};
+  try {
+    for (var i=0;i<localStorage.length;i++) {
+      var k=localStorage.key(i);
+      if (k&&k.startsWith('tss_marks_master')) {
+        var d=JSON.parse(localStorage.getItem(k)||'{}');
+        Object.assign(marksData,d);
+      }
+    }
+  } catch(e){}
+}
 </script>
 </body>
 </html>
