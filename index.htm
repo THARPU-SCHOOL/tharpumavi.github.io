@@ -2168,7 +2168,6 @@ var rows=subs.map(function(sub,i){
       var gr=getGrade(pct);
       totalGP+=gr.gpa; subCount++;
       if(gr.g==='NG') anyNG=true;
-     // Internal = practical component; External = theory component
       var inGP  = sub.prMax>0 ? gr.gpa.toFixed(1) : '—';
       var inG   = sub.prMax>0 ? gr.g : '—';
       var exGP  = gr.gpa.toFixed(1);
@@ -2272,8 +2271,8 @@ var rows=subs.map(function(sub,i){
       '<th rowspan="3" style="width:60px">SUBJECT<br>CODE</th>'+
       '<th rowspan="3">SUBJECTS</th>'+
       '<th rowspan="3" style="width:50px">CREDIT<br>HOUR<br>(CH)</th>'+
-      '<th colspan="2">INTERNAL (IN)</th>'+
-      '<th colspan="2">EXTERNAL (TH)</th>'+
+      '<th colspan="2">tHEORY (TH)</th>'+
+      '<th colspan="2">PRACTICAL (PR)</th>'+
       '<th rowspan="3" style="width:60px">FINAL<br>GRADE</th>'+
       '<th rowspan="3" style="width:70px">REMARKS</th>'+
     '</tr>'+
