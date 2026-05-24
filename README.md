@@ -21,16 +21,7 @@ A Progressive Web App (PWA) for managing and viewing student results for Class X
 | `index.htm` | Main app — login, register, and result management |
 | `manifest.json` | PWA metadata (name, icons, theme color) |
 | `sw.js` | Service worker for offline support and caching |
-| `icon.png` | App icon |
-
-## Default Login
-
-| Username | Password |
-|---|---|
-| admin | tharpu2082 |
-| teacher | school123 |
-
-> New accounts can be created using the **Register** tab on the login screen.
+| `icon.png` | App icon
 
 ## School Info
 
