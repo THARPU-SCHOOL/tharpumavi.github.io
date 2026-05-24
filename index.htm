@@ -721,7 +721,7 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
     <div id="result-display"></div>
   </div>
 
-  <!-- GRADING TAB -->
+ <!-- GRADING TAB -->
   <div class="tab-panel" id="tab-grading">
     <div class="section-card">
       <div class="section-head">&#128202; NEB Grading Scale</div>
@@ -3843,7 +3843,95 @@ document.addEventListener('click', function(e){
   }
 })();
 </script>
+<script>
+// ═══════════════════════════════════════════════════════
+//  EDITABLE GRADESHEET SUBJECTS MANAGER
+// ═══════════════════════════════════════════════════════
+function initGradesheetEditor() {
+  var container = document.getElementById('gradesheet-area');
+  if (!container) return;
 
+  var defaultSubjects = [
+    {name:'Nepali', th:75, pr:25, pass:40},
+    {name:'English', th:75, pr:25, pass:40},
+    {name:'Mathematics', th:75, pr:25, pass:40},
+    {name:'Science', th:75, pr:25, pass:40},
+    {name:'Social Studies', th:75, pr:25, pass:40},
+    {name:'Optional', th:75, pr:25, pass:40}
+  ];
+
+  var subjects = JSON.parse(localStorage.getItem('gs_subjects') || 'null') || defaultSubjects.map(function(s){return Object.assign({},s);});
+
+  function save() { localStorage.setItem('gs_subjects', JSON.stringify(subjects)); }
+
+  function render() {
+    var html = '<div style="display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap">';
+    html += '<button class="btn btn-primary" id="gs-add-btn">➕ Add Subject</button>';
+    html += '<button class="btn btn-success" id="gs-save-btn">💾 Save All</button>';
+    html += '<button class="btn btn-secondary" id="gs-reset-btn">🔄 Reset Default</button>';
+    html += '</div>';
+    html += '<div style="overflow-x:auto"><table class="marks-table" style="min-width:550px">';
+    html += '<thead><tr><th>#</th><th>Subject Name</th><th>Theory FM</th><th>Practical FM</th><th>Pass Marks</th><th>Remove</th></tr></thead><tbody>';
+    subjects.forEach(function(s, i) {
+      html += '<tr>';
+      html += '<td style="color:var(--text-muted);font-weight:700">'+(i+1)+'</td>';
+      html += '<td><input type="text" class="gs-inp" data-i="'+i+'" data-f="name" value="'+s.name+'" style="width:140px;padding:4px 7px;border:1.5px solid var(--border);border-radius:6px;font-size:0.9rem;background:var(--cream)"></td>';
+      html += '<td><input type="number" class="gs-inp" data-i="'+i+'" data-f="th" value="'+s.th+'" min="0" style="width:65px;padding:4px 7px;border:1.5px solid var(--border);border-radius:6px;font-size:0.9rem;text-align:center;background:var(--cream)"></td>';
+      html += '<td><input type="number" class="gs-inp" data-i="'+i+'" data-f="pr" value="'+s.pr+'" min="0" style="width:65px;padding:4px 7px;border:1.5px solid var(--border);border-radius:6px;font-size:0.9rem;text-align:center;background:var(--cream)"></td>';
+      html += '<td><input type="number" class="gs-inp" data-i="'+i+'" data-f="pass" value="'+s.pass+'" min="0" style="width:65px;padding:4px 7px;border:1.5px solid var(--border);border-radius:6px;font-size:0.9rem;text-align:center;background:var(--cream)"></td>';
+      html += '<td><button class="btn btn-danger gs-del-btn" data-i="'+i+'" style="padding:3px 10px;font-size:0.78rem">🗑</button></td>';
+      html += '</tr>';
+    });
+    html += '</tbody></table></div>';
+
+    // Preview
+    html += '<div style="margin-top:1.2rem"><div class="section-head" style="border-radius:8px 8px 0 0">📊 Preview</div>';
+    html += '<div style="overflow-x:auto"><table class="marks-table" style="min-width:500px">';
+    html += '<thead><tr><th>#</th><th>Subject</th><th>Theory FM</th><th>Practical FM</th><th>Total FM</th><th>Pass Marks</th></tr></thead><tbody>';
+    var grand = 0;
+    subjects.forEach(function(s,i){
+      var tot = s.th + s.pr; grand += tot;
+      html += '<tr><td>'+(i+1)+'</td><td><b>'+s.name+'</b></td><td>'+s.th+'</td><td>'+s.pr+'</td><td><b>'+tot+'</b></td><td>'+s.pass+'</td></tr>';
+    });
+    html += '<tr style="background:var(--cream-dark);font-weight:700"><td colspan="4" style="text-align:right">Grand Total</td><td>'+grand+'</td><td>—</td></tr>';
+    html += '</tbody></table></div></div>';
+
+    container.innerHTML = html;
+
+    // Events
+    container.querySelectorAll('.gs-inp').forEach(function(inp){
+      inp.addEventListener('change', function(){
+        var i = +this.dataset.i, f = this.dataset.f;
+        subjects[i][f] = f==='name' ? this.value : +this.value;
+      });
+    });
+    container.querySelectorAll('.gs-del-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var i = +this.dataset.i;
+        if (confirm('Delete "'+subjects[i].name+'"?')) { subjects.splice(i,1); save(); render(); }
+      });
+    });
+    document.getElementById('gs-add-btn').onclick = function(){ subjects.push({name:'New Subject',th:75,pr:25,pass:40}); save(); render(); };
+    document.getElementById('gs-save-btn').onclick = function(){ save(); if(typeof showToast==='function') showToast('✅ Subjects saved!'); render(); };
+    document.getElementById('gs-reset-btn').onclick = function(){
+      if(confirm('Reset to default subjects?')){ localStorage.removeItem('gs_subjects'); subjects=defaultSubjects.map(function(s){return Object.assign({},s);}); save(); render(); }
+    };
+  }
+  render();
+}
+
+// Run when Grading tab is opened
+var __gsOrigShowTab = typeof showTab === 'function' ? showTab : null;
+if (__gsOrigShowTab) {
+  var __gsWrapped = showTab;
+  showTab = function(id, btn) {
+    __gsWrapped(id, btn);
+    if (id === 'grading') setTimeout(initGradesheetEditor, 50);
+  };
+}
+// Also init on page load if grading tab somehow visible
+setTimeout(function(){ if(document.getElementById('gradesheet-area')) initGradesheetEditor(); }, 800);
+</script>
 </body>
 </html>
 
