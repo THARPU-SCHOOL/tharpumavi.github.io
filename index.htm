@@ -315,6 +315,103 @@ body.dark-mode #login-error{background:#3a0e0e;color:#ffb3b3;}
 .sub-perf-bar{flex:1;background:var(--cream-dark);border-radius:10px;height:10px;overflow:hidden;}
 .sub-perf-fill{height:100%;border-radius:10px;}
 .sub-perf-val{width:34px;text-align:right;font-weight:700;font-size:0.72rem;}
+
+/* ═══════ ENHANCED GRADESHEET & NEW FEATURES ═══════ */
+/* Editable gradesheet */
+.gs-editable-table{width:100%;border-collapse:collapse;font-size:0.76rem;}
+.gs-editable-table th{background:var(--maroon);color:white;padding:7px 6px;font-size:0.7rem;text-align:center;white-space:nowrap;}
+.gs-editable-table td{padding:5px 6px;border-bottom:1px solid var(--cream-dark);text-align:center;vertical-align:middle;}
+.gs-editable-table td:nth-child(2){text-align:left;font-weight:600;white-space:nowrap;}
+.gs-edit-input{width:52px;padding:3px 4px;border:1.5px solid var(--border);border-radius:5px;font-size:0.82rem;text-align:center;background:var(--cream);color:var(--text);}
+.gs-edit-input:focus{border-color:var(--maroon);outline:none;background:#fff;}
+.gs-edit-input.invalid{border-color:#b71c1c;background:#fff5f5;}
+.gs-row-saved{background:#f0fff4 !important;}
+.gs-row-unsaved{background:#fffdf0 !important;}
+.gs-grade-pill{display:inline-block;padding:2px 7px;border-radius:10px;font-weight:700;font-size:0.73rem;min-width:32px;text-align:center;}
+.gs-pass{color:#1a6e2e}.gs-fail{color:#b71c1c}.gs-pending{color:#b8860b}
+/* Lock badge */
+.lock-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:10px;font-size:0.7rem;font-weight:700;}
+.lock-badge.locked{background:#ffebee;color:#b71c1c;}
+.lock-badge.unlocked{background:#e8f5e9;color:#1a6e2e;}
+/* Progress comparison chart */
+.prog-compare-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;font-size:0.77rem;}
+.prog-compare-row .pcr-name{width:90px;font-weight:600;font-size:0.73rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.prog-compare-bar{flex:1;height:12px;background:var(--cream-dark);border-radius:6px;overflow:hidden;}
+.prog-compare-fill{height:100%;border-radius:6px;transition:width 0.6s ease;}
+.pcr-val{width:38px;font-weight:700;font-size:0.73rem;text-align:right;}
+/* Student profile modal */
+.profile-modal{max-width:440px;}
+.profile-header-modal{display:flex;align-items:center;gap:14px;margin-bottom:1rem;padding-bottom:0.8rem;border-bottom:1px solid var(--cream-dark);}
+.profile-avatar-lg{width:64px;height:64px;border-radius:50%;background:var(--maroon);color:var(--gold-light);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.3rem;flex-shrink:0;overflow:hidden;border:3px solid var(--gold);}
+.profile-avatar-lg img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.profile-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0.8rem 0;}
+.profile-stat{background:var(--cream);border-radius:8px;padding:0.5rem 0.7rem;font-size:0.8rem;}
+.profile-stat .ps-val{font-weight:700;color:var(--maroon);font-size:1rem;}
+.profile-stat .ps-lbl{font-size:0.7rem;color:var(--text-muted);}
+.tab-group{display:flex;gap:0;border:1.5px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:1rem;}
+.tab-group-btn{flex:1;padding:6px 8px;font-size:0.78rem;font-weight:600;border:none;cursor:pointer;background:var(--cream);color:var(--text-muted);transition:all 0.15s;}
+.tab-group-btn.active{background:var(--maroon);color:white;}
+/* Audit trail */
+.audit-item{padding:0.5rem 0.8rem;border-bottom:1px solid var(--cream-dark);font-size:0.8rem;}
+.audit-item:last-child{border-bottom:none;}
+.audit-user{font-weight:700;color:var(--maroon);}
+.audit-time{font-size:0.7rem;color:var(--text-muted);float:right;}
+/* Batch import */
+.import-textarea{width:100%;padding:0.6rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.8rem;font-family:monospace;resize:vertical;background:var(--cream);color:var(--text);outline:none;}
+.import-textarea:focus{border-color:var(--maroon);}
+/* Settings panel */
+.settings-row{display:flex;align-items:center;gap:10px;padding:0.7rem 0;border-bottom:1px solid var(--cream-dark);}
+.settings-row:last-child{border-bottom:none;}
+.settings-label{flex:1;font-size:0.85rem;font-weight:600;}
+.settings-sub{font-size:0.72rem;color:var(--text-muted);margin-top:1px;}
+.toggle-switch{position:relative;width:42px;height:24px;flex-shrink:0;}
+.toggle-switch input{opacity:0;width:0;height:0;}
+.toggle-slider{position:absolute;cursor:pointer;inset:0;background:var(--border);border-radius:24px;transition:0.3s;}
+.toggle-slider:before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:white;border-radius:50%;transition:0.3s;}
+input:checked+.toggle-slider{background:var(--maroon);}
+input:checked+.toggle-slider:before{transform:translateX(18px);}
+/* Notification panel */
+.notif-item{display:flex;align-items:flex-start;gap:10px;padding:0.65rem 1rem;border-bottom:1px solid var(--cream-dark);}
+.notif-item.unread{background:#fff8e8;}
+.notif-icon{font-size:1.2rem;flex-shrink:0;margin-top:1px;}
+.notif-body{flex:1;font-size:0.82rem;}
+.notif-title{font-weight:700;margin-bottom:1px;}
+.notif-time{font-size:0.7rem;color:var(--text-muted);}
+.notif-badge{position:absolute;top:-4px;right:-4px;background:#b71c1c;color:white;border-radius:50%;width:16px;height:16px;font-size:0.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;}
+/* Photo upload */
+.photo-upload-wrap{position:relative;cursor:pointer;display:inline-block;}
+.photo-upload-wrap input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.photo-upload-btn{background:var(--cream-dark);border:1.5px dashed var(--border);border-radius:8px;padding:8px 14px;font-size:0.8rem;color:var(--text-muted);font-weight:600;}
+/* Comparison tab */
+.compare-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:0.8rem;}
+.compare-card h4{font-size:0.85rem;color:var(--maroon);font-weight:700;margin-bottom:0.6rem;}
+/* Highlight cells */
+.hl-excellent{background:#e8f5e9!important;color:#1b5e20;}
+.hl-good{background:#e3f2fd!important;color:#0d47a1;}
+.hl-warning{background:#fff3e0!important;color:#e65100;}
+.hl-danger{background:#ffebee!important;color:#b71c1c;}
+/* Rank number */
+.rank-num{display:inline-flex;width:22px;height:22px;align-items:center;justify-content:center;border-radius:50%;font-size:0.68rem;font-weight:700;background:var(--cream-dark);color:var(--text-muted);}
+.rank-num.r1{background:#ffd700;color:#7a5800;}
+.rank-num.r2{background:#c0c0c0;color:#555;}
+.rank-num.r3{background:#cd7f32;color:#fff;}
+/* Export dropdown */
+.export-dropdown{position:relative;display:inline-block;}
+.export-menu{display:none;position:absolute;right:0;top:100%;background:white;border:1.5px solid var(--border);border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.15);z-index:200;min-width:200px;overflow:hidden;}
+.export-menu.open{display:block;}
+.export-menu button{display:flex;align-items:center;gap:8px;width:100%;padding:10px 14px;background:none;border:none;font-size:0.85rem;cursor:pointer;text-align:left;color:var(--text);}
+.export-menu button:hover{background:var(--cream);}
+/* Grade table row striping */
+.gs-editable-table tbody tr:nth-child(even){background:var(--cream);}
+/* Sticky table header */
+.gs-table-wrap{overflow-x:auto;max-height:70vh;overflow-y:auto;}
+.gs-editable-table thead th{position:sticky;top:0;z-index:5;}
+/* Watermark on print */
+@media print{
+  .no-print{display:none!important;}
+  body::after{content:"THARPU SECONDARY SCHOOL";position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-45deg);font-size:80px;color:rgba(123,28,28,0.05);pointer-events:none;z-index:9999;white-space:nowrap;}
+}
+
 </style>
 </head>
 <body>
@@ -481,6 +578,9 @@ body.dark-mode #login-error{background:#3a0e0e;color:#ffb3b3;}
     <button class="nav-tab" onclick="showTab('fees',this)"><span class="tab-icon">💰</span>Fees</button>
     <button class="nav-tab" onclick="showTab('timetable',this)"><span class="tab-icon">🕐</span>Timetable</button>
     <button class="nav-tab" onclick="showTab('exams',this)"><span class="tab-icon">📝</span>Exam Schedule</button>
+    <button class="nav-tab" onclick="showTab('compare',this)"><span class="tab-icon">📉</span>Compare</button>
+    <button class="nav-tab" onclick="showTab('notifications',this)" style="position:relative"><span class="tab-icon">🔔</span>Alerts<span id="notif-badge" style="display:none;position:absolute;top:4px;right:4px;background:#b71c1c;color:white;border-radius:50%;width:14px;height:14px;font-size:0.55rem;font-weight:700;align-items:center;justify-content:center;"></span></button>
+    <button class="nav-tab" onclick="showTab('settings',this)"><span class="tab-icon">⚙️</span>Settings</button>
   </div>
 
   <!-- DASHBOARD TAB -->
@@ -2564,6 +2664,1049 @@ function exportFeesCSV(){
 })();
 
 </script>
+
+  <!-- ══ COMPARE TAB ══ -->
+  <div class="tab-panel" id="tab-compare">
+    <div class="section-card">
+      <div class="section-head">📉 Multi-Exam Performance Comparison</div>
+      <div class="section-body">
+        <div class="form-group">
+          <label>Select Student</label>
+          <select id="cmp-student-sel" onchange="renderCompare()">
+            <option value="">-- Choose student --</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div id="compare-body"></div>
+  </div>
+
+  <!-- ══ NOTIFICATIONS TAB ══ -->
+  <div class="tab-panel" id="tab-notifications">
+    <div class="section-card">
+      <div class="section-head">🔔 Alerts &amp; Notifications
+        <button class="btn-sm" style="margin-left:auto" onclick="clearAllNotifs()">Clear All</button>
+      </div>
+      <div id="notif-list"><div class="empty-state"><div class="empty-icon">🔔</div><p>No notifications.</p></div></div>
+    </div>
+    <div class="section-card">
+      <div class="section-head">📱 Simulate Parent Alert (WhatsApp / SMS)</div>
+      <div class="section-body">
+        <div class="form-group"><label>Student</label>
+          <select id="wa-student-sel">
+            <option value="">-- Choose student --</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Message Template</label>
+          <select id="wa-template">
+            <option value="result">Result Ready</option>
+            <option value="absent">Absent Today</option>
+            <option value="fee">Fee Reminder</option>
+            <option value="exam">Upcoming Exam</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Parent Mobile</label>
+          <input type="text" id="wa-mobile" placeholder="e.g. 98XXXXXXXX">
+        </div>
+        <div class="form-group"><label>Preview</label>
+          <textarea id="wa-preview" class="import-textarea" rows="3" readonly></textarea>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-success" onclick="sendWAAlert()">📱 Simulate Send</button>
+          <button class="btn btn-secondary" onclick="previewWAMsg()">👁 Preview</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SETTINGS TAB ══ -->
+  <div class="tab-panel" id="tab-settings">
+    <div class="section-card">
+      <div class="section-head">🏫 School Information</div>
+      <div class="section-body">
+        <div class="form-group"><label>School Name</label>
+          <input type="text" id="set-school-name" value="THARPU SECONDARY SCHOOL">
+        </div>
+        <div class="form-group"><label>Address</label>
+          <input type="text" id="set-address" value="Yangwarak-4, Panchthar, Koshi Province, Nepal">
+        </div>
+        <div class="form-group"><label>School Code</label>
+          <input type="text" id="set-school-code" value="TSS-PAN-2082">
+        </div>
+        <div class="form-group"><label>Academic Year</label>
+          <input type="text" id="set-acad-year" value="2082/83">
+        </div>
+        <div class="form-group"><label>Principal Name</label>
+          <input type="text" id="set-principal" value="">
+        </div>
+        <div class="form-group"><label>Class Teacher</label>
+          <input type="text" id="set-teacher" value="">
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="saveSchoolSettings()">💾 Save Settings</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head">🎨 Display Preferences</div>
+      <div class="section-body">
+        <div class="settings-row">
+          <div><div class="settings-label">Dark Mode</div></div>
+          <label class="toggle-switch"><input type="checkbox" id="toggle-dark" onchange="toggleDarkMode(this.checked)"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-label">Color-code grade cells</div><div class="settings-sub">Highlight pass/fail in green/red</div></div>
+          <label class="toggle-switch"><input type="checkbox" id="toggle-hl" checked onchange="saveDisplayPrefs()"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-label">Show rank column</div></div>
+          <label class="toggle-switch"><input type="checkbox" id="toggle-rank" checked onchange="saveDisplayPrefs()"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-label">Inline editable gradesheet</div><div class="settings-sub">Edit marks directly in Results tab</div></div>
+          <label class="toggle-switch"><input type="checkbox" id="toggle-inline-edit" checked onchange="saveDisplayPrefs()"><span class="toggle-slider"></span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head">📦 Backup &amp; Restore</div>
+      <div class="section-body">
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="backupAllData()">📥 Download Full Backup</button>
+          <button class="btn btn-secondary" onclick="document.getElementById('restore-file').click()">📤 Restore from Backup</button>
+          <input type="file" id="restore-file" accept=".json" style="display:none" onchange="restoreFromBackup(this)">
+        </div>
+        <div class="info-box" style="margin-top:0.8rem">
+          <b>⚠ Restore overwrites all current data.</b> Download a backup first!
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head">📋 Audit Trail</div>
+      <div class="section-body" style="padding:0" id="audit-list">
+        <div class="empty-state"><p>No audit records yet.</p></div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head">📥 Batch Marks Import (CSV Paste)</div>
+      <div class="section-body">
+        <div class="info-box">
+          Paste CSV: <b>Roll,SubjectName,Theory,Practical,Exam</b><br>
+          Example: <code>10200205,Compulsory English,65,20,First Terminal</code>
+        </div>
+        <div class="form-group">
+          <label>CSV Data</label>
+          <textarea class="import-textarea" id="batch-csv" rows="6" placeholder="10200205,Compulsory English,65,20,First Terminal&#10;10200206,Physics,70,22,First Terminal"></textarea>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="importBatchCSV()">📥 Import Marks</button>
+          <button class="btn btn-secondary" onclick="document.getElementById('batch-csv').value=''">🗑 Clear</button>
+        </div>
+        <div id="import-result" style="margin-top:0.5rem;font-size:0.82rem;color:var(--text-muted)"></div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head">🔑 Change Password</div>
+      <div class="section-body">
+        <div class="form-group"><label>Current Password</label>
+          <input type="password" id="cp-old" placeholder="Current password">
+        </div>
+        <div class="form-group"><label>New Password</label>
+          <input type="password" id="cp-new" placeholder="Min 8 characters">
+        </div>
+        <div class="form-group"><label>Confirm New Password</label>
+          <input type="password" id="cp-new2" placeholder="Repeat new password">
+        </div>
+        <div id="cp-msg" style="display:none;font-size:0.83rem;margin-bottom:0.5rem;border-radius:8px;padding:0.5rem 0.8rem;"></div>
+        <button class="btn btn-primary" onclick="changePassword()">🔑 Change Password</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ STUDENT PROFILE MODAL ══ -->
+  <div class="modal-overlay" id="student-profile-modal">
+    <div class="modal-box profile-modal">
+      <div class="profile-header-modal">
+        <div class="profile-avatar-lg" id="pm-avatar">?</div>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:1rem;margin-bottom:2px" id="pm-name">—</div>
+          <div style="font-size:0.78rem;color:var(--text-muted)" id="pm-meta">—</div>
+          <div id="pm-lock" style="margin-top:4px"></div>
+        </div>
+        <button onclick="closeModal('student-profile-modal')" style="background:none;border:none;cursor:pointer;font-size:1.2rem;color:var(--text-muted)">✕</button>
+      </div>
+      <div class="tab-group">
+        <button class="tab-group-btn active" onclick="switchProfileTab('info',this)">Info</button>
+        <button class="tab-group-btn" onclick="switchProfileTab('marks',this)">Marks</button>
+        <button class="tab-group-btn" onclick="switchProfileTab('contact',this)">Contact</button>
+        <button class="tab-group-btn" onclick="switchProfileTab('notes',this)">Notes</button>
+      </div>
+      <div id="pm-tab-info">
+        <div class="profile-stat-grid" id="pm-stats"></div>
+      </div>
+      <div id="pm-tab-marks" style="display:none">
+        <div id="pm-marks-body"></div>
+      </div>
+      <div id="pm-tab-contact" style="display:none">
+        <div class="form-group"><label>Father's Name</label><input type="text" id="pm-father" placeholder="Father's full name"></div>
+        <div class="form-group"><label>Mother's Name</label><input type="text" id="pm-mother" placeholder="Mother's full name"></div>
+        <div class="form-group"><label>Guardian Mobile</label><input type="text" id="pm-mobile" placeholder="98XXXXXXXX"></div>
+        <div class="form-group"><label>Address</label><input type="text" id="pm-address" placeholder="Village / Ward"></div>
+        <button class="btn btn-primary btn-full" onclick="saveContactInfo()">💾 Save Contact</button>
+      </div>
+      <div id="pm-tab-notes" style="display:none">
+        <div class="form-group"><label>Teacher Notes</label>
+          <textarea id="pm-notes" class="import-textarea" rows="4" placeholder="Enter notes about this student..."></textarea>
+        </div>
+        <button class="btn btn-primary btn-full" onclick="saveStudentNotes()">💾 Save Notes</button>
+        <div id="pm-saved-notes" style="margin-top:0.7rem;font-size:0.82rem;color:var(--text-muted)"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-gold" style="flex:1" onclick="showIndividualSheetFromProfile()">📄 Grade Sheet</button>
+        <button class="btn btn-secondary" onclick="toggleLockFromProfile()">🔒 Lock/Unlock</button>
+      </div>
+    </div>
+  </div>
+
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  SECURITY: Input sanitization helper
+// ═══════════════════════════════════════════════════════
+function sanitize(str) {
+  if (typeof str !== 'string') return '';
+  return str.replace(/[<>&"'`]/g, function(c) {
+    return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;','`':'&#96;'}[c];
+  });
+}
+function safeNum(val, max) {
+  var n = parseFloat(val);
+  if (isNaN(n) || n < 0) return 0;
+  if (max !== undefined && n > max) return max;
+  return Math.floor(n);
+}
+
+// ═══════════════════════════════════════════════════════
+//  SCHOOL SETTINGS
+// ═══════════════════════════════════════════════════════
+var schoolSettings = {};
+try { schoolSettings = JSON.parse(localStorage.getItem('tss_settings')||'{}'); } catch(e){}
+
+function loadSchoolSettings() {
+  var def = {name:'THARPU SECONDARY SCHOOL',address:'Yangwarak-4, Panchthar, Koshi Province, Nepal',
+    code:'TSS-PAN-2082',year:'2082/83',principal:'',teacher:''};
+  Object.assign(def, schoolSettings);
+  var f = function(id, v) { var el = document.getElementById(id); if(el) el.value = v; };
+  f('set-school-name', def.name);
+  f('set-address', def.address);
+  f('set-school-code', def.code);
+  f('set-acad-year', def.year);
+  f('set-principal', def.principal);
+  f('set-teacher', def.teacher);
+}
+function saveSchoolSettings() {
+  schoolSettings = {
+    name: sanitize(document.getElementById('set-school-name').value.trim()),
+    address: sanitize(document.getElementById('set-address').value.trim()),
+    code: sanitize(document.getElementById('set-school-code').value.trim()),
+    year: sanitize(document.getElementById('set-acad-year').value.trim()),
+    principal: sanitize(document.getElementById('set-principal').value.trim()),
+    teacher: sanitize(document.getElementById('set-teacher').value.trim())
+  };
+  try { localStorage.setItem('tss_settings', JSON.stringify(schoolSettings)); } catch(e) {}
+  showToast('🏫 School settings saved!');
+  addAudit('Settings', 'School info updated by '+currentUser);
+}
+function getSchoolName() { return schoolSettings.name || 'THARPU SECONDARY SCHOOL'; }
+function getSchoolAddress() { return schoolSettings.address || 'Yangwarak-4, Panchthar, Koshi Province, Nepal'; }
+function getAcadYear() { return schoolSettings.year || '2082/83'; }
+
+// ═══════════════════════════════════════════════════════
+//  DISPLAY PREFERENCES
+// ═══════════════════════════════════════════════════════
+var displayPrefs = {};
+try { displayPrefs = JSON.parse(localStorage.getItem('tss_display_prefs')||'{}'); } catch(e) {}
+
+function loadDisplayPrefs() {
+  var el;
+  el = document.getElementById('toggle-dark'); if(el) el.checked = !!displayPrefs.darkMode;
+  el = document.getElementById('toggle-hl'); if(el) el.checked = displayPrefs.highlight !== false;
+  el = document.getElementById('toggle-rank'); if(el) el.checked = displayPrefs.showRank !== false;
+  el = document.getElementById('toggle-inline-edit'); if(el) el.checked = displayPrefs.inlineEdit !== false;
+  if (displayPrefs.darkMode) document.body.classList.add('dark-mode');
+}
+function saveDisplayPrefs() {
+  displayPrefs.darkMode = document.getElementById('toggle-dark').checked;
+  displayPrefs.highlight = document.getElementById('toggle-hl').checked;
+  displayPrefs.showRank = document.getElementById('toggle-rank').checked;
+  displayPrefs.inlineEdit = document.getElementById('toggle-inline-edit').checked;
+  try { localStorage.setItem('tss_display_prefs', JSON.stringify(displayPrefs)); } catch(e) {}
+}
+function toggleDarkMode(on) {
+  document.body.classList.toggle('dark-mode', on);
+  saveDisplayPrefs();
+}
+
+// ═══════════════════════════════════════════════════════
+//  GRADE LOCK SYSTEM
+// ═══════════════════════════════════════════════════════
+var lockedGrades = {};
+try { lockedGrades = JSON.parse(localStorage.getItem('tss_locked_grades')||'{}'); } catch(e) {}
+
+function isLocked(roll, exam) {
+  return !!(lockedGrades[roll+'||'+exam]);
+}
+function toggleLock(roll, exam) {
+  var key = roll+'||'+exam;
+  var wasLocked = !!lockedGrades[key];
+  lockedGrades[key] = !wasLocked;
+  try { localStorage.setItem('tss_locked_grades', JSON.stringify(lockedGrades)); } catch(e) {}
+  addAudit('Lock', (wasLocked?'Unlocked':'Locked')+' grades for '+roll+' — '+exam+' by '+currentUser);
+  showToast(wasLocked ? '🔓 Grades unlocked' : '🔒 Grades locked');
+  loadGradeSheet();
+}
+function toggleLockFromProfile() {
+  if (!_profileRoll) return;
+  var exam = document.getElementById('result-exam-sel') ? document.getElementById('result-exam-sel').value : 'First Terminal';
+  toggleLock(_profileRoll, exam);
+  closeModal('student-profile-modal');
+}
+
+// ═══════════════════════════════════════════════════════
+//  AUDIT TRAIL
+// ═══════════════════════════════════════════════════════
+var auditLog = [];
+try { auditLog = JSON.parse(localStorage.getItem('tss_audit')||'[]'); } catch(e) {}
+
+function addAudit(action, detail) {
+  var entry = {action:action, detail:sanitize(detail), user:currentUser||'guest', time:new Date().toLocaleString()};
+  auditLog.unshift(entry);
+  if (auditLog.length > 200) auditLog = auditLog.slice(0, 200);
+  try { localStorage.setItem('tss_audit', JSON.stringify(auditLog)); } catch(e) {}
+  renderAuditList();
+}
+function renderAuditList() {
+  var el = document.getElementById('audit-list');
+  if (!el) return;
+  if (!auditLog.length) { el.innerHTML='<div class="empty-state"><p>No audit records.</p></div>'; return; }
+  el.innerHTML = auditLog.slice(0,30).map(function(a){
+    return '<div class="audit-item"><span class="audit-user">'+sanitize(a.user)+'</span> <span class="audit-time">'+sanitize(a.time)+'</span><br>'+
+      '<b>'+sanitize(a.action)+':</b> '+sanitize(a.detail)+'</div>';
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════
+//  NOTIFICATIONS
+// ═══════════════════════════════════════════════════════
+var notifications = [];
+try { notifications = JSON.parse(localStorage.getItem('tss_notifs')||'[]'); } catch(e) {}
+
+function addNotif(icon, title, body) {
+  notifications.unshift({icon:icon,title:sanitize(title),body:sanitize(body),time:new Date().toLocaleString(),read:false});
+  if (notifications.length > 50) notifications = notifications.slice(0,50);
+  try { localStorage.setItem('tss_notifs', JSON.stringify(notifications)); } catch(e) {}
+  updateNotifBadge();
+}
+function updateNotifBadge() {
+  var unread = notifications.filter(function(n){return !n.read;}).length;
+  var badge = document.getElementById('notif-badge');
+  if (badge) {
+    badge.textContent = unread || '';
+    badge.style.display = unread ? 'flex' : 'none';
+  }
+}
+function renderNotifs() {
+  var el = document.getElementById('notif-list');
+  if (!el) return;
+  if (!notifications.length) { el.innerHTML='<div class="empty-state"><div class="empty-icon">🔔</div><p>No notifications.</p></div>'; return; }
+  notifications.forEach(function(n){n.read=true;});
+  try { localStorage.setItem('tss_notifs', JSON.stringify(notifications)); } catch(e) {}
+  updateNotifBadge();
+  el.innerHTML = notifications.map(function(n){
+    return '<div class="notif-item '+(n.read?'':'unread')+'">'+
+      '<div class="notif-icon">'+n.icon+'</div>'+
+      '<div class="notif-body"><div class="notif-title">'+n.title+'</div><div>'+n.body+'</div>'+
+      '<div class="notif-time">'+n.time+'</div></div></div>';
+  }).join('');
+}
+function clearAllNotifs() {
+  notifications=[];
+  try { localStorage.setItem('tss_notifs','[]'); } catch(e) {}
+  renderNotifs(); updateNotifBadge();
+  showToast('🔔 All notifications cleared');
+}
+
+// ═══════════════════════════════════════════════════════
+//  WHATSAPP / SMS SIMULATION
+// ═══════════════════════════════════════════════════════
+function previewWAMsg() {
+  var roll = document.getElementById('wa-student-sel').value;
+  var tmpl = document.getElementById('wa-template').value;
+  if (!roll) { showToast('Select a student first'); return; }
+  var st = students.find(function(s){return s.roll===roll;});
+  if (!st) return;
+  var msgs = {
+    result: 'Dear Parent/Guardian,\nThis is to inform you that the result for '+st.name+' (Roll: '+st.roll+') for '+
+      'the recent examination has been published. Please visit school to collect the grade sheet.\n— '+getSchoolName(),
+    absent: 'Dear Parent/Guardian,\nYour ward '+st.name+' (Roll: '+st.roll+') was absent today ('+
+      new Date().toLocaleDateString()+'). Please ensure regular attendance.\n— '+getSchoolName(),
+    fee: 'Dear Parent/Guardian,\nThis is a reminder that fee payment for '+st.name+' (Roll: '+st.roll+') is due.'+
+      ' Please clear the dues at the earliest.\n— '+getSchoolName(),
+    exam: 'Dear Parent/Guardian,\nUpcoming examination schedule has been posted for '+st.name+' (Roll: '+st.roll+').'+
+      ' Please ensure your ward is well-prepared.\n— '+getSchoolName()
+  };
+  document.getElementById('wa-preview').value = msgs[tmpl] || '';
+}
+function sendWAAlert() {
+  previewWAMsg();
+  var roll = document.getElementById('wa-student-sel').value;
+  var mobile = sanitize(document.getElementById('wa-mobile').value.trim());
+  var st = students.find(function(s){return s.roll===roll;});
+  if (!st || !roll) { showToast('Select a student first'); return; }
+  var msg = document.getElementById('wa-preview').value;
+  if (!msg) { previewWAMsg(); return; }
+  // Log the simulated send
+  addNotif('📱','Alert Sent','Simulated alert sent to '+st.name+(mobile?' ('+sanitize(mobile)+')':''));
+  addAudit('Alert', 'Alert simulated for '+st.name+' to '+sanitize(mobile));
+  showToast('📱 Alert simulated & logged!');
+  // Actually open WhatsApp if mobile provided
+  if (mobile) {
+    var encoded = encodeURIComponent(msg);
+    var clean = mobile.replace(/[^0-9+]/g,'');
+    if (clean.length >= 10) window.open('https://wa.me/'+clean+'?text='+encoded,'_blank');
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  CONTACT INFO & NOTES PER STUDENT
+// ═══════════════════════════════════════════════════════
+var contactData = {};
+try { contactData = JSON.parse(localStorage.getItem('tss_contact')||'{}'); } catch(e) {}
+var studentNotes = {};
+try { studentNotes = JSON.parse(localStorage.getItem('tss_notes')||'{}'); } catch(e) {}
+
+function saveContactInfo() {
+  if (!_profileRoll) return;
+  contactData[_profileRoll] = {
+    father: sanitize(document.getElementById('pm-father').value.trim()),
+    mother: sanitize(document.getElementById('pm-mother').value.trim()),
+    mobile: sanitize(document.getElementById('pm-mobile').value.trim()),
+    address: sanitize(document.getElementById('pm-address').value.trim())
+  };
+  try { localStorage.setItem('tss_contact', JSON.stringify(contactData)); } catch(e) {}
+  showToast('👨‍👩‍👧 Contact saved!');
+  addAudit('Contact', 'Contact info updated for '+_profileRoll);
+}
+function saveStudentNotes() {
+  if (!_profileRoll) return;
+  var note = sanitize(document.getElementById('pm-notes').value.trim());
+  studentNotes[_profileRoll] = {text:note, time:new Date().toLocaleString(), user:currentUser};
+  try { localStorage.setItem('tss_notes', JSON.stringify(studentNotes)); } catch(e) {}
+  var el = document.getElementById('pm-saved-notes');
+  if (el) el.textContent = 'Last saved: '+new Date().toLocaleString();
+  showToast('📝 Note saved!');
+}
+
+// ═══════════════════════════════════════════════════════
+//  STUDENT PROFILE MODAL
+// ═══════════════════════════════════════════════════════
+var _profileRoll = null;
+function openStudentProfile(roll) {
+  _profileRoll = roll;
+  var st = students.find(function(s){return s.roll===roll;});
+  if (!st) return;
+  // Avatar
+  var av = document.getElementById('pm-avatar');
+  var photo = studentPhotos[roll];
+  if (photo) {
+    av.innerHTML = '<img src="'+photo+'" alt="'+sanitize(st.name)+'">';
+  } else {
+    av.innerHTML = sanitize(initials(st.name));
+    av.style.background = '';
+  }
+  document.getElementById('pm-name').textContent = st.name;
+  document.getElementById('pm-meta').textContent = 'Roll: '+st.roll+' | '+st.stream+' | '+st.year;
+  // Lock status
+  var exam = document.getElementById('result-exam-sel') ? document.getElementById('result-exam-sel').value : 'First Terminal';
+  var locked = isLocked(roll, exam);
+  document.getElementById('pm-lock').innerHTML = '<span class="lock-badge '+(locked?'locked':'unlocked')+'">'+(locked?'🔒 Locked':'🔓 Unlocked')+'</span>';
+  // Stats
+  var exams = ['First Terminal','Second Terminal','Annual Examination','Pre-board'];
+  var statsHTML = '';
+  var cgpaArr = [];
+  exams.forEach(function(ex){
+    var saved = marksData[getKey(roll,ex)] || {};
+    var subs = SUBJECTS[st.stream], total=0, cnt=0, allFilled=true, anyNG=false;
+    subs.forEach(function(sub){
+      var d=saved[sub.name]||{}, max=sub.thMax+sub.prMax;
+      if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
+        var t=(d.th||0)+(d.pr||0), gr=getGrade(max?t/max*100:0);
+        total+=gr.gpa; cnt++; if(gr.g==='NG') anyNG=true;
+      } else allFilled=false;
+    });
+    if(allFilled&&cnt) cgpaArr.push({ex:ex,cgpa:(total/cnt)});
+  });
+  if (cgpaArr.length) {
+    var best = cgpaArr.reduce(function(a,b){return a.cgpa>b.cgpa?a:b;});
+    var latest = cgpaArr[cgpaArr.length-1];
+    statsHTML += '<div class="profile-stat"><div class="ps-val">'+best.cgpa.toFixed(2)+'</div><div class="ps-lbl">Best CGPA ('+best.ex.split(' ')[0]+')</div></div>';
+    statsHTML += '<div class="profile-stat"><div class="ps-val">'+latest.cgpa.toFixed(2)+'</div><div class="ps-lbl">Latest CGPA</div></div>';
+  }
+  statsHTML += '<div class="profile-stat"><div class="ps-val">'+(st.stream==='Plant Science'?'🌿 Plant':'📘 General')+'</div><div class="ps-lbl">Stream</div></div>';
+  var att = getStudentAttPct(roll);
+  statsHTML += '<div class="profile-stat"><div class="ps-val" style="color:'+(att<75?'#b71c1c':'#1a6e2e')+'">'+att+'%</div><div class="ps-lbl">Attendance</div></div>';
+  document.getElementById('pm-stats').innerHTML = statsHTML;
+  // Contact
+  var cd = contactData[roll] || {};
+  var fld = function(id,v){var el=document.getElementById(id);if(el)el.value=v||'';};
+  fld('pm-father',cd.father); fld('pm-mother',cd.mother); fld('pm-mobile',cd.mobile); fld('pm-address',cd.address);
+  // Notes
+  var nd = studentNotes[roll] || {};
+  var nel = document.getElementById('pm-notes'); if(nel) nel.value = nd.text||'';
+  var snel = document.getElementById('pm-saved-notes'); if(snel) snel.textContent = nd.time ? 'Last saved: '+nd.time : '';
+  // Marks
+  var mb = document.getElementById('pm-marks-body');
+  if (mb) {
+    var html = '';
+    ['First Terminal','Second Terminal','Annual Examination','Pre-board'].forEach(function(ex){
+      var saved = marksData[getKey(roll,ex)] || {};
+      var subs = SUBJECTS[st.stream], total=0, cnt=0, allFilled=true, anyNG=false;
+      subs.forEach(function(sub){
+        var d=saved[sub.name]||{}, max=sub.thMax+sub.prMax;
+        if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
+          var t=(d.th||0)+(d.pr||0), gr=getGrade(max?t/max*100:0);
+          total+=gr.gpa; cnt++; if(gr.g==='NG') anyNG=true;
+        } else allFilled=false;
+      });
+      if (!cnt) return;
+      var cgpa = allFilled&&cnt?(total/cnt).toFixed(2):'Inc.';
+      html += '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--cream-dark);font-size:0.83rem">'+
+        '<span>'+ex+'</span><span style="font-weight:700;color:'+(anyNG?'#b71c1c':'#1a6e2e')+'">'+cgpa+'</span></div>';
+    });
+    mb.innerHTML = html || '<div class="empty-state"><p>No marks yet.</p></div>';
+  }
+  // Reset to info tab
+  switchProfileTab('info', document.querySelector('.tab-group-btn'));
+  openModal('student-profile-modal');
+}
+function getStudentAttPct(roll) {
+  var total=0, present=0;
+  ['Ashwin','Kartik','Mangsir','Poush','Magh','Falgun','Chaitra'].forEach(function(month){
+    var key = roll+'||'+month;
+    var days = attData[key] || {};
+    for(var d in days){if(days[d]==='P')present++;if(days[d]==='P'||days[d]==='A')total++;}
+  });
+  return total>0 ? Math.round(present/total*100) : 0;
+}
+function switchProfileTab(tab, btn) {
+  ['info','marks','contact','notes'].forEach(function(t){
+    var el = document.getElementById('pm-tab-'+t);
+    if(el) el.style.display = t===tab ? '' : 'none';
+  });
+  document.querySelectorAll('.tab-group-btn').forEach(function(b){b.classList.remove('active');});
+  if(btn) btn.classList.add('active');
+}
+function showIndividualSheetFromProfile() {
+  if (!_profileRoll) return;
+  var exam = document.getElementById('result-exam-sel') ? document.getElementById('result-exam-sel').value : 'First Terminal';
+  closeModal('student-profile-modal');
+  showIndividualSheet(_profileRoll, exam);
+}
+
+// ═══════════════════════════════════════════════════════
+//  STUDENT PHOTOS
+// ═══════════════════════════════════════════════════════
+var studentPhotos = {};
+try { studentPhotos = JSON.parse(localStorage.getItem('tss_photos')||'{}'); } catch(e) {}
+function uploadStudentPhoto(roll, input) {
+  if (!input.files || !input.files[0]) return;
+  var file = input.files[0];
+  if (file.size > 500000) { showToast('⚠ Photo too large (max 500KB)'); return; }
+  if (!file.type.startsWith('image/')) { showToast('⚠ Only images allowed'); return; }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    studentPhotos[roll] = e.target.result;
+    try { localStorage.setItem('tss_photos', JSON.stringify(studentPhotos)); } catch(ex) {}
+    renderStudentList();
+    showToast('📸 Photo saved!');
+  };
+  reader.readAsDataURL(file);
+}
+
+// ═══════════════════════════════════════════════════════
+//  ENHANCED GRADE SHEET — INLINE EDITABLE
+// ═══════════════════════════════════════════════════════
+var _editExam = '';
+var _unsavedEdits = {};
+
+function loadGradeSheetEditable() {
+  var exam    = document.getElementById('result-exam-sel').value;
+  var streamF = document.getElementById('result-stream-sel').value;
+  var area    = document.getElementById('result-display');
+  var inlineEdit = displayPrefs.inlineEdit !== false;
+  var showRank   = displayPrefs.showRank !== false;
+  var highlight  = displayPrefs.highlight !== false;
+  _editExam = exam;
+  _unsavedEdits = {};
+  var filtered = students.filter(function(s){ return streamF==='all'||s.stream===streamF; });
+  if (!filtered.length) {
+    area.innerHTML='<div class="empty-state"><div class="empty-icon">📄</div><p>No students found.</p></div>'; return;
+  }
+  // Compute ranks
+  var rankMap = {};
+  if (showRank) {
+    var cgpaList = filtered.map(function(st){
+      var saved=marksData[getKey(st.roll,exam)]||{}, subs=SUBJECTS[st.stream], total=0,cnt=0,allFilled=true;
+      subs.forEach(function(sub){
+        var d=saved[sub.name]||{},max=sub.thMax+sub.prMax;
+        if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){var t=(d.th||0)+(d.pr||0);total+=getGrade(max?t/max*100:0).gpa;cnt++;}
+        else allFilled=false;
+      });
+      return {roll:st.roll, cgpa:allFilled&&cnt?(total/cnt):null};
+    }).filter(function(r){return r.cgpa!==null;});
+    cgpaList.sort(function(a,b){return b.cgpa-a.cgpa;});
+    cgpaList.forEach(function(r,i){rankMap[r.roll]=i+1;});
+  }
+
+  var streams = streamF==='all' ? ['Plant Science','General'] : [streamF];
+  var html = '<div class="result-card no-print" style="margin-bottom:0">' +
+    '<div class="result-header"><h2>'+sanitize(getSchoolName())+'</h2>'+
+    '<p>'+sanitize(getSchoolAddress())+'</p>'+
+    '<p style="margin-top:6px;font-weight:700;font-size:0.9rem;">'+sanitize(exam)+' — Grade Sheet — '+sanitize(getAcadYear())+'</p></div>';
+  
+  streams.forEach(function(stream) {
+    var slist = filtered.filter(function(s){return s.stream===stream;});
+    if (!slist.length) return;
+    var subs = SUBJECTS[stream];
+    html += '<div style="padding:0.7rem 0.8rem 0.3rem;font-weight:700;color:var(--maroon);font-size:0.9rem">'+stream+' Stream</div>';
+    html += '<div class="gs-table-wrap"><table class="gs-editable-table"><thead><tr>';
+    if(showRank) html += '<th>Rank</th>';
+    html += '<th style="text-align:left">SN</th><th style="text-align:left;min-width:130px">Name</th><th>Roll</th>';
+    subs.forEach(function(sub){
+      html += '<th title="'+sanitize(sub.name)+'">'+sanitize(sub.name.split(' ').slice(0,2).join(' '))+'<br>';
+      if(inlineEdit) html += '<small style="font-weight:400;opacity:0.8">Th/'+sub.thMax+(sub.prMax?'|Pr/'+sub.prMax:'')+'</small>';
+      html += '</th>';
+    });
+    html += '<th>CGPA</th><th>Division</th><th>Result</th><th class="no-print">Actions</th></tr></thead><tbody>';
+
+    slist.forEach(function(st, idx) {
+      var saved = marksData[getKey(st.roll, exam)] || {};
+      var locked = isLocked(st.roll, exam);
+      var totalGPA=0, subCount=0, allFilled=true, anyNG=false;
+      var cells = subs.map(function(sub) {
+        var d = saved[sub.name]||{}, max=sub.thMax+sub.prMax;
+        var thV = d.th !== undefined ? d.th : '';
+        var prV = d.pr !== undefined ? d.pr : '';
+        var hasData = thV !== '' && (sub.prMax===0 || prV !== '');
+        var gr = null;
+        if (hasData) {
+          var t = (parseInt(thV)||0) + (parseInt(prV)||0);
+          var pct = max>0 ? t/max*100 : 0;
+          gr = getGrade(pct);
+          totalGPA += gr.gpa; subCount++;
+          if(gr.g==='NG') anyNG=true;
+        } else allFilled=false;
+        var k = sub.name.replace(/\W/g,'_');
+        var hlCls = '';
+        if(highlight&&gr) {
+          if(gr.gpa>=3.6) hlCls='hl-excellent';
+          else if(gr.gpa>=2.8) hlCls='hl-good';
+          else if(gr.gpa>=2.0) hlCls='hl-warning';
+          else hlCls='hl-danger';
+        }
+        var cell = '<td class="'+hlCls+'">';
+        if(inlineEdit && !locked) {
+          cell += '<div style="display:flex;gap:3px;align-items:center;justify-content:center">';
+          cell += '<input class="gs-edit-input" type="number" id="gs_th_'+sanitize(st.roll)+'_'+k+'" value="'+thV+'" min="0" max="'+sub.thMax+'" placeholder="Th" title="Theory /'+sub.thMax+'" oninput="gsRecalc(''+sanitize(st.roll)+'',''+sanitize(exam)+'')" onblur="gsValidate(this,'+sub.thMax+')" style="width:44px">';
+          if(sub.prMax>0) {
+            cell += '<input class="gs-edit-input" type="number" id="gs_pr_'+sanitize(st.roll)+'_'+k+'" value="'+prV+'" min="0" max="'+sub.prMax+'" placeholder="Pr" title="Practical /'+sub.prMax+'" oninput="gsRecalc(''+sanitize(st.roll)+'',''+sanitize(exam)+'')" onblur="gsValidate(this,'+sub.prMax+')" style="width:38px">';
+          }
+          cell += '</div>';
+        } else {
+          cell += gr ? '<span class="gs-grade-pill">'+(gr.g)+'</span>' : '<span style="color:#ccc">—</span>';
+        }
+        cell += '</td>';
+        return cell;
+      }).join('');
+      var cgpa = allFilled&&subCount>0 ? (totalGPA/subCount).toFixed(2) : '—';
+      var div  = !allFilled ? '—' : anyNG ? '<span class="gs-fail">Fail</span>' : cgpaDiv(parseFloat(cgpa));
+      var res  = !allFilled ? '<span class="gs-pending">⏳</span>' : anyNG ? '<span class="gs-fail">❌ NG</span>' : '<span class="gs-pass">✅ Pass</span>';
+      var rankNum = rankMap[st.roll];
+      var rankHtml = rankNum ? '<span class="rank-num '+(rankNum<=3?'r'+rankNum:'')+'">'+rankNum+'</span>' : '—';
+      html += '<tr id="gs-row-'+sanitize(st.roll)+'">';
+      if(showRank) html += '<td>'+rankHtml+'</td>';
+      html += '<td>'+(idx+1)+'</td>';
+      html += '<td style="text-align:left;cursor:pointer" onclick="openStudentProfile(''+sanitize(st.roll)+'')"><span style="color:var(--maroon);text-decoration:underline dotted">'+sanitize(st.name)+'</span>'+
+        (locked ? ' <span style="font-size:0.65rem">🔒</span>' : '')+'</td>';
+      html += '<td>'+sanitize(st.roll)+'</td>';
+      html += cells;
+      html += '<td id="gs-cgpa-'+sanitize(st.roll)+'"><b>'+cgpa+'</b></td>';
+      html += '<td>'+div+'</td>';
+      html += '<td>'+res+'</td>';
+      html += '<td class="no-print" style="white-space:nowrap">';
+      if(inlineEdit&&!locked) html += '<button class="btn btn-success" style="padding:3px 7px;font-size:0.68rem" onclick="gsSaveRow(''+sanitize(st.roll)+'',''+sanitize(exam)+'')">💾</button> ';
+      html += '<button class="btn btn-primary" style="padding:3px 7px;font-size:0.68rem" onclick="showIndividualSheet(''+sanitize(st.roll)+'',''+sanitize(exam)+'')">📄</button> ';
+      html += '<button class="btn '+(locked?'btn-secondary':'btn-danger')+'" style="padding:3px 7px;font-size:0.68rem" onclick="toggleLock(''+sanitize(st.roll)+'',''+sanitize(exam)+'')">'+(locked?'🔓':'🔒')+'</button>';
+      html += '</td></tr>';
+    });
+    html += '</tbody></table></div>';
+  });
+  
+  html += '<div style="padding:0.7rem;font-size:0.72rem;color:var(--text-muted);display:flex;justify-content:space-between;align-items:center">'+
+    '<span>Generated: '+new Date().toLocaleString()+' | '+sanitize(getSchoolName())+'</span>'+
+    (inlineEdit ? '<span style="color:#b8860b;font-weight:600">⚠ Inline edit ON — use 💾 to save each row</span>' : '')+'</div></div>';
+  area.innerHTML = html;
+}
+
+function gsValidate(input, max) {
+  var v = parseFloat(input.value);
+  if (input.value !== '' && (isNaN(v) || v < 0 || v > max)) {
+    input.classList.add('invalid');
+  } else {
+    input.classList.remove('invalid');
+  }
+}
+function gsRecalc(roll, exam) {
+  // Mark row as having unsaved changes
+  var row = document.getElementById('gs-row-'+roll);
+  if (row) row.classList.add('gs-row-unsaved');
+  _unsavedEdits[roll] = true;
+}
+function gsSaveRow(roll, exam) {
+  if (isLocked(roll, exam)) { showToast('🔒 Grades are locked. Unlock first.'); return; }
+  var st = students.find(function(s){return s.roll===roll;});
+  if (!st) return;
+  var subs = SUBJECTS[st.stream];
+  var obj = marksData[getKey(roll, exam)] || {};
+  var anyInvalid = false;
+  subs.forEach(function(sub) {
+    var k = sub.name.replace(/\W/g,'_');
+    var thEl = document.getElementById('gs_th_'+roll+'_'+k);
+    var prEl = document.getElementById('gs_pr_'+roll+'_'+k);
+    if (thEl) {
+      if (thEl.classList.contains('invalid')) { anyInvalid=true; return; }
+      if (thEl.value !== '') {
+        var thV = safeNum(thEl.value, sub.thMax);
+        if (!obj[sub.name]) obj[sub.name] = {};
+        obj[sub.name].th = thV;
+        thEl.value = thV;
+      }
+    }
+    if (prEl && prEl.type === 'number') {
+      if (prEl.classList.contains('invalid')) { anyInvalid=true; return; }
+      if (prEl.value !== '') {
+        var prV = safeNum(prEl.value, sub.prMax);
+        if (!obj[sub.name]) obj[sub.name] = {};
+        obj[sub.name].pr = prV;
+        prEl.value = prV;
+      }
+    }
+  });
+  if (anyInvalid) { showToast('⚠ Fix invalid entries (red borders) first'); return; }
+  marksData[getKey(roll, exam)] = obj;
+  saveMarksToStorage();
+  addAudit('Marks', 'Inline save: '+st.name+' ('+roll+') — '+exam);
+  addNotif('✏️','Marks Updated',st.name+' marks saved for '+exam);
+  delete _unsavedEdits[roll];
+  var row = document.getElementById('gs-row-'+roll);
+  if (row) { row.classList.remove('gs-row-unsaved'); row.classList.add('gs-row-saved'); }
+  updateSummary();
+  showToast('✅ Saved: '+st.name);
+  // Refresh CGPA display
+  var saved2 = marksData[getKey(roll, exam)] || {};
+  var subs2 = SUBJECTS[st.stream], total2=0, cnt2=0, allFilled2=true, anyNG2=false;
+  subs2.forEach(function(sub){
+    var d=saved2[sub.name]||{}, max=sub.thMax+sub.prMax;
+    if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
+      var t=(d.th||0)+(d.pr||0), gr=getGrade(max?t/max*100:0);
+      total2+=gr.gpa; cnt2++; if(gr.g==='NG') anyNG2=true;
+    } else allFilled2=false;
+  });
+  var cgpaEl = document.getElementById('gs-cgpa-'+roll);
+  if(cgpaEl) cgpaEl.innerHTML = '<b>'+(allFilled2&&cnt2?(total2/cnt2).toFixed(2):'—')+'</b>';
+}
+
+// ═══════════════════════════════════════════════════════
+//  MULTI-EXAM COMPARISON
+// ═══════════════════════════════════════════════════════
+function populateCompareSelects() {
+  var sel = document.getElementById('cmp-student-sel');
+  if (!sel) return;
+  var cur = sel.value;
+  sel.innerHTML = '<option value="">-- Choose student --</option>';
+  students.forEach(function(s){ sel.innerHTML += '<option value="'+s.roll+'">'+sanitize(s.name)+'</option>'; });
+  if(cur) sel.value=cur;
+}
+function renderCompare() {
+  var roll = document.getElementById('cmp-student-sel').value;
+  var body = document.getElementById('compare-body');
+  if (!body) return;
+  if (!roll) { body.innerHTML=''; return; }
+  var st = students.find(function(s){return s.roll===roll;});
+  if (!st) return;
+  var exams = ['First Terminal','Second Terminal','Annual Examination','Pre-board'];
+  var subs = SUBJECTS[st.stream];
+  var html = '';
+  // CGPA progression chart
+  html += '<div class="compare-card"><h4>📈 CGPA Progression — '+sanitize(st.name)+'</h4>';
+  var cgpaData = exams.map(function(ex){
+    var saved=marksData[getKey(roll,ex)]||{}, total=0,cnt=0,allFilled=true,anyNG=false;
+    subs.forEach(function(sub){
+      var d=saved[sub.name]||{},max=sub.thMax+sub.prMax;
+      if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){var t=(d.th||0)+(d.pr||0),gr=getGrade(max?t/max*100:0);total+=gr.gpa;cnt++;if(gr.g==='NG')anyNG=true;}
+      else allFilled=false;
+    });
+    return {ex:ex,cgpa:allFilled&&cnt?(total/cnt):null,anyNG:anyNG};
+  });
+  var maxCGPA = 4.0;
+  cgpaData.forEach(function(r){
+    var pct = r.cgpa!==null ? Math.round(r.cgpa/maxCGPA*100) : 0;
+    var color = r.cgpa===null ? 'var(--border)' : r.anyNG ? '#b71c1c' : r.cgpa>=3.6 ? '#1a6e2e' : r.cgpa>=2.8 ? '#1565c0' : r.cgpa>=2.0 ? '#f9a825' : '#b71c1c';
+    html += '<div class="prog-compare-row">'+
+      '<div class="pcr-name" title="'+sanitize(r.ex)+'">'+sanitize(r.ex.replace(' Examination','').replace(' Terminal','T'))+'</div>'+
+      '<div class="prog-compare-bar"><div class="prog-compare-fill" style="width:'+pct+'%;background:'+color+'"></div></div>'+
+      '<div class="pcr-val">'+(r.cgpa!==null?r.cgpa.toFixed(2):'—')+'</div></div>';
+  });
+  html += '</div>';
+  // Per-subject comparison table
+  html += '<div class="compare-card"><h4>📊 Subject-wise Comparison</h4>'+
+    '<div style="overflow-x:auto"><table class="marks-table"><thead><tr>'+
+    '<th style="text-align:left">Subject</th>';
+  exams.forEach(function(ex){html+='<th>'+sanitize(ex.split(' ')[0])+'</th>';});
+  html += '</tr></thead><tbody>';
+  subs.forEach(function(sub){
+    html += '<tr><td style="font-size:0.77rem">'+sanitize(sub.name)+'</td>';
+    exams.forEach(function(ex){
+      var saved=marksData[getKey(roll,ex)]||{}, d=saved[sub.name]||{}, max=sub.thMax+sub.prMax;
+      if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
+        var t=(d.th||0)+(d.pr||0),gr=getGrade(max?t/max*100:0);
+        var hlCls=gr.gpa>=3.6?'hl-excellent':gr.gpa>=2.8?'hl-good':gr.gpa>=2.0?'hl-warning':'hl-danger';
+        html+='<td class="'+hlCls+'" style="font-weight:700">'+gr.g+'</td>';
+      } else html+='<td style="color:#ccc">—</td>';
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table></div></div>';
+  body.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════
+//  BACKUP & RESTORE
+// ═══════════════════════════════════════════════════════
+function backupAllData() {
+  var backup = {
+    version: '2.0',
+    date: new Date().toISOString(),
+    school: schoolSettings,
+    students: students,
+    marks: marksData,
+    attendance: attData,
+    fees: (function(){try{return JSON.parse(localStorage.getItem('tss_fees')||'{}');}catch(e){return {};}}()),
+    notices: (function(){try{return JSON.parse(localStorage.getItem('tss_notices')||'[]');}catch(e){return[];}}()),
+    contact: contactData,
+    notes: studentNotes,
+    audit: auditLog,
+    notifications: notifications,
+    photos: studentPhotos
+  };
+  var blob = new Blob([JSON.stringify(backup,null,2)], {type:'application/json;charset=utf-8'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'Tharpu_Backup_'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href);},2000);
+  addAudit('Backup', 'Full backup downloaded by '+currentUser);
+  showToast('📥 Backup downloaded!');
+}
+function restoreFromBackup(input) {
+  if (!input.files || !input.files[0]) return;
+  if (!confirm('Restore will OVERWRITE all current data. Continue?')) { input.value=''; return; }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      var data = JSON.parse(e.target.result);
+      if (!data.version || !data.students) { showToast('❌ Invalid backup file'); return; }
+      // Restore each piece
+      if(data.students) { students.length=0; data.students.forEach(function(s){students.push(s);}); }
+      if(data.marks)  { marksData=data.marks; saveMarksToStorage(); }
+      if(data.school) { schoolSettings=data.school; localStorage.setItem('tss_settings',JSON.stringify(data.school)); }
+      if(data.attendance)  { attData=data.attendance; localStorage.setItem('tss_attendance',JSON.stringify(data.attendance)); }
+      if(data.contact)     { contactData=data.contact; localStorage.setItem('tss_contact',JSON.stringify(data.contact)); }
+      if(data.notes)       { studentNotes=data.notes; localStorage.setItem('tss_notes',JSON.stringify(data.notes)); }
+      if(data.photos)      { studentPhotos=data.photos; localStorage.setItem('tss_photos',JSON.stringify(data.photos)); }
+      if(data.fees)        { localStorage.setItem('tss_fees',JSON.stringify(data.fees)); }
+      if(data.notices)     { localStorage.setItem('tss_notices',JSON.stringify(data.notices)); }
+      updateSummary(); renderStudentList(); loadSchoolSettings();
+      addAudit('Restore', 'Data restored from backup by '+currentUser);
+      showToast('✅ Data restored successfully!');
+    } catch(ex) { showToast('❌ Failed to restore: '+ex.message); }
+    input.value='';
+  };
+  reader.readAsText(input.files[0]);
+}
+
+// ═══════════════════════════════════════════════════════
+//  BATCH CSV IMPORT
+// ═══════════════════════════════════════════════════════
+function importBatchCSV() {
+  var csv = document.getElementById('batch-csv').value.trim();
+  if (!csv) { showToast('Paste CSV data first'); return; }
+  var lines = csv.split('\n');
+  var ok=0, err=0, errors=[];
+  lines.forEach(function(line,i){
+    line = line.trim();
+    if (!line) return;
+    var parts = line.split(',').map(function(p){return p.trim().replace(/^"|"$/g,'');});
+    if (parts.length < 4) { err++; errors.push('Line '+(i+1)+': too few columns'); return; }
+    var roll=parts[0], subName=parts[1], th=parseFloat(parts[2]), pr=parseFloat(parts[3]);
+    var exam=parts[4]||'First Terminal';
+    var st = students.find(function(s){return s.roll===roll;});
+    if (!st) { err++; errors.push('Line '+(i+1)+': Roll "'+sanitize(roll)+'" not found'); return; }
+    if (isLocked(roll, exam)) { err++; errors.push('Line '+(i+1)+': Grades locked for '+sanitize(roll)); return; }
+    var subs = SUBJECTS[st.stream];
+    var sub = subs.find(function(s){return s.name.toLowerCase()===subName.toLowerCase();});
+    if (!sub) { err++; errors.push('Line '+(i+1)+': Subject "'+sanitize(subName)+'" not found'); return; }
+    if (isNaN(th)||th<0||th>sub.thMax) { err++; errors.push('Line '+(i+1)+': Invalid theory mark'); return; }
+    if (sub.prMax>0&&(isNaN(pr)||pr<0||pr>sub.prMax)) { err++; errors.push('Line '+(i+1)+': Invalid practical mark'); return; }
+    var key = getKey(roll, exam);
+    if (!marksData[key]) marksData[key]={};
+    if (!marksData[key][sub.name]) marksData[key][sub.name]={};
+    marksData[key][sub.name].th = th;
+    if (sub.prMax>0) marksData[key][sub.name].pr = pr;
+    ok++;
+  });
+  if (ok>0) { saveMarksToStorage(); updateSummary(); renderStudentList(); }
+  addAudit('Import', 'Batch CSV: '+ok+' rows imported, '+err+' errors by '+currentUser);
+  var resultEl = document.getElementById('import-result');
+  if (resultEl) {
+    resultEl.innerHTML = '<span style="color:'+(ok?'#1a6e2e':'var(--text-muted)')+'">✅ '+ok+' rows imported</span>' +
+      (err?' <span style="color:#b71c1c">| ❌ '+err+' errors</span>':'')+
+      (errors.length?'<div style="margin-top:4px;font-size:0.75rem">'+errors.slice(0,5).map(sanitize).join('<br>')+'</div>':'');
+  }
+  if(ok>0) showToast('📥 '+ok+' marks imported!');
+}
+
+// ═══════════════════════════════════════════════════════
+//  CHANGE PASSWORD
+// ═══════════════════════════════════════════════════════
+function changePassword() {
+  var old = document.getElementById('cp-old').value;
+  var nw  = document.getElementById('cp-new').value;
+  var nw2 = document.getElementById('cp-new2').value;
+  var msg = document.getElementById('cp-msg');
+  var showMsg = function(text, ok) {
+    msg.textContent=text;
+    msg.style.cssText='display:block;background:'+(ok?'#f0fff4':'#fff0f0')+';color:'+(ok?'#1a6e2e':'#b71c1c')+';border:1px solid '+(ok?'#b2dfc0':'#f5c6c6')+';border-radius:8px;padding:0.55rem 0.8rem;font-size:0.85rem;';
+  };
+  if (!old||!nw||!nw2) { showMsg('All fields required',''); return; }
+  var user = USERS.find(function(u){return u.username===currentUser;});
+  if (!user||user.password!==old) { showMsg('Current password incorrect',''); return; }
+  if (nw.length<8) { showMsg('New password must be at least 8 characters',''); return; }
+  if (nw!==nw2) { showMsg('Passwords do not match',''); return; }
+  user.password=nw; saveUsers(USERS);
+  addAudit('Security', 'Password changed by '+currentUser);
+  showMsg('✅ Password changed successfully!',true);
+  ['cp-old','cp-new','cp-new2'].forEach(function(id){document.getElementById(id).value='';});
+  showToast('🔑 Password changed!');
+}
+
+// ═══════════════════════════════════════════════════════
+//  PATCH: Override loadGradeSheet and showTab
+// ═══════════════════════════════════════════════════════
+var _origLoadGS = loadGradeSheet;
+loadGradeSheet = function() {
+  if (displayPrefs.inlineEdit !== false) {
+    loadGradeSheetEditable();
+  } else {
+    _origLoadGS();
+  }
+};
+
+var __orig_showTab3 = showTab;
+showTab = function(id, btn) {
+  __orig_showTab3(id, btn);
+  if(id==='compare')       { populateCompareSelects(); renderCompare(); }
+  if(id==='notifications') { renderNotifs(); }
+  if(id==='settings')      { loadSchoolSettings(); loadDisplayPrefs(); renderAuditList(); }
+};
+
+// Also populate WA selector when needed
+var __origShowTab4 = showTab;
+showTab = function(id, btn) {
+  __origShowTab4(id, btn);
+  if(id==='notifications') {
+    var sel=document.getElementById('wa-student-sel');
+    if(sel){sel.innerHTML='<option value="">-- Choose student --</option>';students.forEach(function(s){sel.innerHTML+='<option value="'+s.roll+'">'+sanitize(s.name)+'</option>';});}
+  }
+};
+
+// ═══════════════════════════════════════════════════════
+//  PATCH: Enhance student list to show photo & profile btn
+// ═══════════════════════════════════════════════════════
+var _origRenderStudentList2 = renderStudentList;
+renderStudentList = function() {
+  var list = document.getElementById('student-list');
+  var q = document.getElementById('search-student') ? document.getElementById('search-student').value.toLowerCase() : '';
+  var filtered = students.filter(function(s){
+    return (currentFilter==='all'||s.stream===currentFilter) &&
+      (!q || s.name.toLowerCase().includes(q) || s.roll.toLowerCase().includes(q));
+  });
+  if (!filtered.length) {
+    list.innerHTML='<div class="empty-state"><div class="empty-icon">👤</div><p>No students found.</p></div>'; return;
+  }
+  document.getElementById('student-count').textContent = filtered.length;
+  list.innerHTML = filtered.map(function(s){
+    var hasMarks = Object.keys(marksData).some(function(k){return k.startsWith(s.roll+'||');});
+    var sc = s.stream==='Plant Science' ? 'badge-plant' : 'badge-general';
+    var photo = studentPhotos[s.roll];
+    var avatarHtml = photo ? '<img src="'+photo+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">' : initials(s.name);
+    return '<div class="student-item">'+
+      '<div class="student-avatar" onclick="openStudentProfile(''+s.roll+'')" style="cursor:pointer" title="View profile">'+avatarHtml+'</div>'+
+      '<div class="student-info" onclick="quickEnterMarks(''+s.roll+'')" style="cursor:pointer">'+
+        '<div class="student-name">'+sanitize(s.name)+'</div>'+
+        '<div class="student-meta">Roll: <b>'+sanitize(s.roll)+'</b> | '+sanitize(s.year)+'</div>'+
+      '</div>'+
+      '<span class="badge '+sc+'">'+(s.stream==='Plant Science'?'🌿 Plant':'📘 Gen')+'</span>'+
+      (hasMarks?'<span class="badge badge-marked">✓</span>':'<span class="badge badge-unmarked">—</span>')+
+      '<label class="photo-upload-wrap" title="Upload photo">'+
+        '<input type="file" accept="image/*" onchange="uploadStudentPhoto(''+s.roll+'',this)">'+
+        '<span class="photo-upload-btn" style="padding:4px 8px;font-size:0.7rem">📷</span>'+
+      '</label>'+
+      '</div>';
+  }).join('');
+};
+
+// ═══════════════════════════════════════════════════════
+//  EXPORT DROPDOWN (replaces individual buttons)
+// ═══════════════════════════════════════════════════════
+function toggleExportMenu() {
+  document.getElementById('export-dropdown-menu').classList.toggle('open');
+}
+document.addEventListener('click', function(e){
+  var menu=document.getElementById('export-dropdown-menu');
+  if(menu&&!e.target.closest('.export-dropdown')) menu.classList.remove('open');
+});
+
+// ═══════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════
+(function() {
+  loadSchoolSettings();
+  loadDisplayPrefs();
+  updateNotifBadge();
+  renderAuditList();
+  // Add initial notifications
+  if (notifications.length === 0) {
+    addNotif('🎓','System Ready','Tharpu School Management System v2.0 loaded.');
+  }
+})();
+</script>
+
 </body>
 </html>
 
