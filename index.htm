@@ -196,6 +196,7 @@ body.dark-mode #login-error{background:#3a0e0e;color:#ffb3b3;}
 /* Marks saved indicator */
 .save-pulse{animation:pulse 0.4s ease;}
 @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.06)}100%{transform:scale(1)}}
+@keyframes syncPulse{0%,100%{box-shadow:0 0 0 0 rgba(76,175,80,0.5)}50%{box-shadow:0 0 0 6px rgba(76,175,80,0)}}
 /* Student count chip */
 .count-chip{display:inline-block;background:var(--maroon);color:white;border-radius:20px;font-size:0.7rem;font-weight:700;padding:1px 8px;margin-left:6px;}
 /* Premium badge on header */
@@ -650,6 +651,7 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
     <button class="nav-tab" onclick="showTab('teacher-portal',this)"><span class="tab-icon">👩‍🏫</span>Teacher Portal</button>
     <button class="nav-tab" onclick="showTab('marks-approval',this)"><span class="tab-icon">✅</span>Approval</button>
     <button class="nav-tab" onclick="showTab('result-stats',this)"><span class="tab-icon">📊</span>Result Stats</button>
+    <button class="nav-tab" id="sync-tab-btn" onclick="showTab('sync',this)" style="background:linear-gradient(135deg,#1a6e2e,#2e7d32);color:white;border-radius:10px 10px 0 0;border:2px solid #4caf50;animation:syncPulse 2s infinite;"><span class="tab-icon">📲</span>Sync Devices</button>
   </div>
 
   <!-- DASHBOARD TAB -->
@@ -1089,6 +1091,91 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
       <div class="section-head">📊 Entry Progress by Subject</div>
       <div class="section-body" id="tportal-progress-area">
         <div class="empty-state"><p>Load marks entry above to see progress.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SYNC DEVICES TAB -->
+  <div class="tab-panel" id="tab-sync">
+    <div class="section-card" style="border:2px solid #4caf50;">
+      <div class="section-head" style="background:linear-gradient(135deg,#1a6e2e,#2e7d32);">📲 Cross-Device Sync — Share Marks Across Phone &amp; Laptop</div>
+      <div class="section-body">
+        <div class="info-box" style="background:#e8f5e9;border-color:#4caf50;color:#1b5e20;font-size:0.85rem;">
+          <b>⚠️ Why marks are missing on laptop:</b> Marks are saved in your browser's local storage — each device/browser has its own separate storage. Use any method below to sync data between devices.
+        </div>
+      </div>
+    </div>
+
+    <!-- METHOD 1: Export & Share File -->
+    <div class="section-card" style="margin-top:1rem;">
+      <div class="section-head">📁 Method 1: Export File (WhatsApp / Email / USB)</div>
+      <div class="section-body">
+        <p style="font-size:0.84rem;color:var(--text-muted);margin-bottom:0.8rem;">Downloads an HTML file with ALL marks embedded. Open it on any device — no server needed.</p>
+        <div class="btn-row">
+          <button class="btn btn-gold btn-full" onclick="exportShare()">📥 Export &amp; Download File Now</button>
+        </div>
+        <div style="margin-top:0.8rem;font-size:0.8rem;color:var(--text-muted);">
+          <b>Steps:</b> Click Export → Send file via WhatsApp/Email/USB → Open file on other device → Log in → All marks appear ✅
+        </div>
+      </div>
+    </div>
+
+    <!-- METHOD 2: QR Code Sync -->
+    <div class="section-card" style="margin-top:1rem;">
+      <div class="section-head">📷 Method 2: QR Code — Scan from Phone</div>
+      <div class="section-body">
+        <p style="font-size:0.84rem;color:var(--text-muted);margin-bottom:0.8rem;">Generate a QR code from laptop → scan with phone camera → marks load instantly on phone.</p>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="generateSyncQR()">📷 Generate QR Code</button>
+          <button class="btn btn-secondary" onclick="document.getElementById('qr-area').innerHTML=''">Clear</button>
+        </div>
+        <div id="qr-area" style="margin-top:1rem;text-align:center;"></div>
+        <div id="qr-instructions" style="display:none;margin-top:0.8rem;font-size:0.8rem;color:var(--text-muted);">
+          📱 <b>On your phone:</b> Open camera app → Point at QR code → Tap the link → Marks will load automatically.
+        </div>
+      </div>
+    </div>
+
+    <!-- METHOD 3: Copy/Paste Data Code -->
+    <div class="section-card" style="margin-top:1rem;">
+      <div class="section-head">📋 Method 3: Copy-Paste Data Code</div>
+      <div class="section-body">
+        <p style="font-size:0.84rem;color:var(--text-muted);margin-bottom:0.8rem;">Copy the data code below → paste it on the other device in the "Import" box below → marks load instantly.</p>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="copyDataCode()">📋 Copy Data Code</button>
+        </div>
+        <textarea id="data-code-export" rows="3" readonly style="width:100%;margin-top:0.7rem;padding:0.5rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.7rem;font-family:monospace;background:var(--cream);color:var(--text);resize:vertical;" placeholder="Click 'Copy Data Code' to generate..."></textarea>
+        <hr style="margin:1rem 0;border-color:var(--cream-dark);">
+        <p style="font-size:0.84rem;font-weight:700;color:var(--maroon);margin-bottom:0.5rem;">📥 Import Data Code (on the other device)</p>
+        <textarea id="data-code-import" rows="3" style="width:100%;padding:0.5rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.7rem;font-family:monospace;background:var(--cream);color:var(--text);resize:vertical;" placeholder="Paste the data code here from the other device..."></textarea>
+        <div class="btn-row">
+          <button class="btn btn-success btn-full" onclick="importDataCode()">✅ Import &amp; Load Marks</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- METHOD 4: Shareable URL -->
+    <div class="section-card" style="margin-top:1rem;">
+      <div class="section-head">🔗 Method 4: Shareable Link (if hosted on a server)</div>
+      <div class="section-body">
+        <p style="font-size:0.84rem;color:var(--text-muted);margin-bottom:0.8rem;">If this app is served from a web URL, generate a link with all data embedded. Share via WhatsApp or SMS — tap to open and marks auto-load.</p>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="generateShareLink()">🔗 Generate Share Link</button>
+          <button class="btn btn-secondary" onclick="copyShareLink()">📋 Copy Link</button>
+        </div>
+        <div id="share-link-area" style="margin-top:0.7rem;"></div>
+      </div>
+    </div>
+
+    <!-- METHOD 5: Auto-sync reminder after saving -->
+    <div class="section-card" style="margin-top:1rem;">
+      <div class="section-head">⚙️ Settings: Auto-Remind to Sync After Saving</div>
+      <div class="section-body">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <label style="font-size:0.88rem;font-weight:600;">Remind me to export after saving marks</label>
+          <input type="checkbox" id="auto-remind-toggle" style="width:20px;height:20px;cursor:pointer;" onchange="toggleAutoRemind(this.checked)">
+        </div>
+        <p style="font-size:0.78rem;color:var(--text-muted);margin-top:0.4rem;">When ON, you'll get a prompt to export the file every time you save marks — so you never forget to sync.</p>
       </div>
     </div>
   </div>
@@ -1615,6 +1702,8 @@ function recalcRow(key,thMax,prMax) {
   if (totEl) totEl.textContent = hasData ? (th+pr) : '';
 }
 function saveMarks(roll,exam) {
+  // NOTE: This is wrapped by the Sync Devices module below.
+  // The wrapper handles the save + reminder. This base version is kept for reference only.
   var st   = students.find(function(s){ return s.roll===roll; });
   var subs = SUBJECTS[st.stream];
   var obj  = {};
@@ -4609,6 +4698,238 @@ function loadMarksFromStorageFallback() {
     }
   } catch(e){}
 }
+
+// ============================================================
+// SYNC DEVICES — ALL METHODS
+// ============================================================
+
+// ── Auto-remind toggle ──
+(function(){
+  try { var v=localStorage.getItem('tss_auto_remind'); if(v==='1') document.getElementById('auto-remind-toggle').checked=true; } catch(e){}
+})();
+function toggleAutoRemind(on) {
+  try { localStorage.setItem('tss_auto_remind', on?'1':'0'); } catch(e){}
+  showToast(on ? '✅ Auto-remind enabled' : 'Auto-remind disabled');
+}
+
+// ── Inject auto-remind after saveMarks ──
+(function(){
+  var _origSaveMarks = window.saveMarks;
+  window.saveMarks = function(roll, exam) {
+    var st = students.find(function(s){ return s.roll===roll; });
+    var subs = SUBJECTS[st.stream];
+    var obj = {};
+    subs.forEach(function(sub){
+      var k = sub.name.replace(/\W/g,'_');
+      var thEl = document.getElementById('th_'+k);
+      var prEl = document.getElementById('pr_'+k);
+      obj[sub.name] = {
+        th: thEl&&thEl.value!=='' ? parseInt(thEl.value) : undefined,
+        pr: prEl&&prEl.tagName==='INPUT'&&prEl.value!=='' ? parseInt(prEl.value) : undefined
+      };
+    });
+    marksData[getKey(roll,exam)] = obj;
+    saveMarksToStorage().then(function(){
+      updateSummary(); renderStudentList();
+      logApprovalRequest(exam, st.stream);
+      updateNotifBadge();
+      var remind = false;
+      try { remind = localStorage.getItem('tss_auto_remind')==='1'; } catch(e){}
+      if (remind) {
+        setTimeout(function(){
+          var ok = confirm('✅ Marks saved for '+st.name+'!\n\n📲 Do you want to export & sync now?\nThis lets you see these marks on any other device.\n\nClick OK to export, Cancel to skip.');
+          if (ok) exportShare();
+        }, 300);
+      } else {
+        alert('Marks saved for '+st.name+' — '+exam+'\n\n💡 Tip: Go to "📲 Sync Devices" tab to share with your laptop/phone.');
+      }
+    });
+  };
+})();
+
+// ── Method 2: QR Code Sync ──
+function generateSyncQR() {
+  var allMarks = {};
+  try {
+    for (var i=0; i<localStorage.length; i++) {
+      var k=localStorage.key(i);
+      if (k && k.startsWith('tss_marks_')) {
+        try { var d=JSON.parse(localStorage.getItem(k)||'{}'); Object.assign(allMarks, d); } catch(e){}
+      }
+    }
+  } catch(e){}
+  Object.assign(allMarks, marksData);
+
+  var payload = { students: students.filter(function(s){
+    var extra = [];
+    try { extra = JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){}
+    return extra.some(function(e){ return e.roll===s.roll; });
+  }), marks: allMarks };
+
+  var encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+  var count = Object.keys(allMarks).length;
+
+  if (encoded.length > 2900) {
+    // Too large for QR — show chunked copy-paste instead
+    var area = document.getElementById('qr-area');
+    area.innerHTML = '<div class="info-box" style="background:#fff3cd;border-color:#f0ad4e;color:#7d4e00;text-align:left">⚠️ Data is too large for a QR code ('+count+' records). Please use <b>Method 1 (Export File)</b> or <b>Method 3 (Copy-Paste Code)</b> instead.</div>';
+    return;
+  }
+
+  var currentURL = window.location.href.split('?')[0].split('#')[0];
+  var qrURL = currentURL + '?syncdata=' + encodeURIComponent(encoded);
+
+  // Use Google Chart API to generate QR
+  var qrImgURL = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(qrURL);
+
+  var area = document.getElementById('qr-area');
+  area.innerHTML =
+    '<div style="background:white;display:inline-block;padding:12px;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,0.15)">' +
+    '<img src="'+qrImgURL+'" alt="Sync QR Code" width="220" height="220" style="display:block;" onerror="document.getElementById(\'qr-area\').innerHTML=\'<div class=\\\"info-box\\\" style=\\\"background:#fff3cd;border-color:#f0ad4e;color:#7d4e00\\\">⚠️ Could not generate QR image. Please use Method 3 (Copy-Paste Code) instead.</div>\'">' +
+    '</div>' +
+    '<div style="margin-top:0.7rem;font-size:0.78rem;color:var(--text-muted)">Contains <b>'+count+'</b> mark records + '+payload.students.length+' extra students</div>';
+
+  document.getElementById('qr-instructions').style.display = 'block';
+  showToast('📷 QR code ready — scan with phone!');
+}
+
+// ── Method 3: Copy-Paste Data Code ──
+function getDataCode() {
+  var allMarks = {};
+  try {
+    for (var i=0; i<localStorage.length; i++) {
+      var k=localStorage.key(i);
+      if (k && k.startsWith('tss_marks_')) {
+        try { var d=JSON.parse(localStorage.getItem(k)||'{}'); Object.assign(allMarks, d); } catch(e){}
+      }
+    }
+  } catch(e){}
+  Object.assign(allMarks, marksData);
+  var extraStudents = [];
+  try { extraStudents = JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){}
+  var payload = { students: extraStudents, marks: allMarks, ts: Date.now() };
+  return 'TSSYNC:' + btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+}
+
+function copyDataCode() {
+  var code = getDataCode();
+  var textarea = document.getElementById('data-code-export');
+  textarea.value = code;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(code).then(function(){
+      showToast('📋 Data code copied! Paste on other device.');
+    }).catch(function(){
+      textarea.select(); document.execCommand('copy');
+      showToast('📋 Data code copied!');
+    });
+  } else {
+    textarea.select(); document.execCommand('copy');
+    showToast('📋 Data code copied!');
+  }
+}
+
+function importDataCode() {
+  var raw = document.getElementById('data-code-import').value.trim();
+  if (!raw) { alert('Please paste a data code first.'); return; }
+  if (!raw.startsWith('TSSYNC:')) { alert('Invalid data code. It should start with "TSSYNC:"'); return; }
+  try {
+    var json = decodeURIComponent(escape(atob(raw.replace('TSSYNC:',''))));
+    var payload = JSON.parse(json);
+    var markCount = Object.keys(payload.marks||{}).length;
+    var stCount = (payload.students||[]).length;
+    if (!confirm('Import '+markCount+' mark records and '+stCount+' students?\nExisting marks on this device will be MERGED (not deleted).')) return;
+    // Merge marks
+    Object.assign(marksData, payload.marks||{});
+    // Merge extra students
+    var extra = [];
+    try { extra = JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){}
+    (payload.students||[]).forEach(function(s){
+      if (!extra.some(function(e){ return e.roll===s.roll; })) extra.push(s);
+      if (!students.some(function(e){ return e.roll===s.roll; })) students.push(s);
+    });
+    try { localStorage.setItem('tss_extra_students', JSON.stringify(extra)); } catch(e){}
+    saveMarksToStorage().then(function(){
+      renderStudentList(); populateStudentSelects(); updateSummary();
+      showToast('✅ '+markCount+' marks imported successfully!');
+      alert('✅ Import complete!\n'+markCount+' mark records loaded.\n'+stCount+' students added.\n\nAll data is now available on this device.');
+    });
+  } catch(e) {
+    alert('❌ Failed to import. The data code may be corrupted or incomplete.\n\nError: '+e.message);
+  }
+}
+
+// ── Method 4: Shareable URL ──
+function generateShareLink() {
+  var code = getDataCode();
+  var encoded = encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify({
+    students: (function(){ try { return JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){ return []; } })(),
+    marks: marksData
+  })))));
+  var baseURL = window.location.href.split('?')[0].split('#')[0];
+  var link = baseURL + '?syncdata=' + encoded;
+  var area = document.getElementById('share-link-area');
+  if (link.length > 8000) {
+    area.innerHTML = '<div class="info-box" style="background:#fff3cd;border-color:#f0ad4e;color:#7d4e00;">⚠️ Data too large for a URL ('+(Object.keys(marksData).length)+' records). Use Method 1 (Export File) or Method 3 (Copy-Paste) instead.</div>';
+    return;
+  }
+  area.innerHTML = '<div style="word-break:break-all;background:var(--cream-dark);padding:0.7rem;border-radius:8px;font-size:0.72rem;font-family:monospace;margin-bottom:0.5rem;">'+link.substring(0,120)+'...</div><div style="font-size:0.78rem;color:var(--text-muted)">Contains '+Object.keys(marksData).length+' mark records. Send this link via WhatsApp — tap to open and marks auto-load.</div>';
+  window._syncShareLink = link;
+  showToast('🔗 Share link ready!');
+}
+
+function copyShareLink() {
+  if (!window._syncShareLink) { generateShareLink(); return; }
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(window._syncShareLink).then(function(){ showToast('🔗 Link copied!'); });
+  } else {
+    var tmp = document.createElement('textarea');
+    tmp.value = window._syncShareLink;
+    document.body.appendChild(tmp); tmp.select(); document.execCommand('copy'); document.body.removeChild(tmp);
+    showToast('🔗 Link copied!');
+  }
+}
+
+// ── URL syncdata auto-import on load ──
+(function(){
+  try {
+    var params = new URLSearchParams(window.location.search);
+    var syncdata = params.get('syncdata');
+    if (syncdata) {
+      var json = decodeURIComponent(escape(atob(decodeURIComponent(syncdata))));
+      var payload = JSON.parse(json);
+      Object.assign(marksData, payload.marks||{});
+      var extra = [];
+      try { extra = JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){}
+      (payload.students||[]).forEach(function(s){
+        if (!extra.some(function(e){ return e.roll===s.roll; })) extra.push(s);
+        if (!students.some(function(e){ return e.roll===s.roll; })) students.push(s);
+      });
+      try { localStorage.setItem('tss_extra_students', JSON.stringify(extra)); } catch(e){}
+      saveMarksToStorage();
+      // Clean URL
+      try { history.replaceState({}, '', window.location.pathname); } catch(e){}
+      setTimeout(function(){
+        showToast('✅ Marks synced from link! '+Object.keys(payload.marks||{}).length+' records loaded.');
+        var banner = document.getElementById('shared-file-banner');
+        if (banner) { banner.style.display='block'; banner.innerHTML='📲 <b>Marks synced from link!</b> '+Object.keys(payload.marks||{}).length+' records loaded. Log in to view them.'; }
+      }, 800);
+    }
+  } catch(e){}
+})();
+
+// ── Render sync tab when selected ──
+(function(){
+  var _origShowTab = window.showTab;
+  window.showTab = function(id, btn) {
+    if (typeof _origShowTab === 'function') _origShowTab(id, btn);
+    if (id === 'sync') {
+      // Pre-fill the data code textarea
+      try { document.getElementById('data-code-export').value = getDataCode(); } catch(e){}
+      // Restore auto-remind checkbox state
+      try { document.getElementById('auto-remind-toggle').checked = localStorage.getItem('tss_auto_remind')==='1'; } catch(e){}
+    }
+  };
+})();
 </script>
 </body>
 </html>
