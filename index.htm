@@ -838,6 +838,13 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
         <button class="btn btn-primary btn-full" onclick="registerStudent()">&#10133; Add Student</button>
       </div>
     </div>
+    <div class="info-box" style="background:#fff3cd;border-color:#f0ad4e;color:#7d4e00;">
+      <b>⚠️ Saving on Mobile vs Laptop?</b><br>
+      Marks are saved <b>in your browser's local storage</b> — not on a server. This means:<br>
+      • Marks saved on your <b>phone</b> will <b>NOT</b> automatically appear on your <b>laptop</b> (different browser = different storage).<br>
+      • Marks saved by <b>teacher login</b> ARE visible when <b>admin</b> logs in on the <b>same device/browser</b>.<br><br>
+      <b>✅ To share marks across devices:</b> Click <b>"Export &amp; Share File"</b> below → send the file via WhatsApp/Email → open on the other device.
+    </div>
     <div class="info-box" style="background:#e8f5e9;border-color:#4caf50;">
       <b>&#128230; How sharing works:</b><br>
       1. Enter &amp; save all marks here.<br>
@@ -1278,6 +1285,8 @@ function _showMainApp(matched) {
   showToast('Welcome, ' + (matched.fullname || matched.username) + '! ' + roleLabel);
   // Show/hide Teacher Portal based on role
   updateNavForRole(role);
+  // Update notification badge for pending approvals
+  setTimeout(updateNotifBadge, 300);
 }
 
 // Enter key support — placed after doLogin is defined
@@ -1620,8 +1629,10 @@ function saveMarks(roll,exam) {
   });
   marksData[getKey(roll,exam)] = obj;
   saveMarksToStorage().then(function(){
-  updateSummary(); renderStudentList();
-  alert('Marks saved for '+st.name+' — '+exam);
+    updateSummary(); renderStudentList();
+    logApprovalRequest(exam, st.stream);
+    updateNotifBadge();
+    alert('Marks saved for '+st.name+' — '+exam);
   });
 }
 
@@ -1670,11 +1681,12 @@ function getEncPassword() { return 'tss_enc_' + (currentUser||'guest') + '_tharp
 // ============================================================
 async function saveMarksToStorage() {
   try {
+    // Always write the shared plain master first — this ensures any user logging in on the same device sees all marks
+    localStorage.setItem('tss_marks_master', JSON.stringify(marksData));
+    // Also write encrypted per-user copy
     var pwd = getEncPassword();
     var encrypted = await encryptData(marksData, pwd);
     localStorage.setItem('tss_marks_enc_'+(currentUser||'guest'), encrypted);
-    // Also save plain master for backward compatibility
-    localStorage.setItem('tss_marks_master', JSON.stringify(marksData));
     updateEncBadge(true);
   } catch(e) {
     try { localStorage.setItem('tss_marks_'+(currentUser||'guest'), JSON.stringify(marksData)); } catch(e2){}
@@ -1684,7 +1696,12 @@ async function saveMarksToStorage() {
 async function loadMarksFromStorage() {
   marksData = {};
   try {
-    // Try encrypted first, then plain
+    // Always load the shared plain master first (covers all users, all logins on this device)
+    try {
+      var master = localStorage.getItem('tss_marks_master');
+      if (master) Object.assign(marksData, JSON.parse(master));
+    } catch(e){}
+    // Then overlay with encrypted per-user data (more recent/authoritative)
     for (var i=0; i<localStorage.length; i++) {
       var k = localStorage.key(i);
       if (!k) continue;
@@ -1698,6 +1715,8 @@ async function loadMarksFromStorage() {
         try { var d2 = JSON.parse(localStorage.getItem(k)||'{}'); Object.assign(marksData, d2); } catch(e){}
       }
     }
+    // Always re-sync master with merged result so next login picks it all up
+    try { localStorage.setItem('tss_marks_master', JSON.stringify(marksData)); } catch(e){}
     updateEncBadge(true);
   } catch(e) { updateEncBadge(false); }
 }
@@ -1878,6 +1897,8 @@ function saveTeacherMarksRow(roll, exam, stream) {
   marksData[getKey(roll,exam)] = existing;
   saveMarksToStorage().then(function(){
     updateSummary(); renderStudentList();
+    logApprovalRequest(exam, stream);
+    updateNotifBadge();
     var row = document.getElementById('trow_'+roll);
     if (row) { row.style.background='#f0fff4'; setTimeout(function(){ row.style.background=''; },1500); }
     if(typeof showToast==='function') showToast('✅ Marks saved for '+st.name);
@@ -1898,6 +1919,7 @@ function saveAllTeacherMarks(exam, stream) {
     updateSummary(); renderStudentList();
     if(typeof showToast==='function') showToast('✅ All marks saved! Subject submitted.');
     logApprovalRequest(exam, stream);
+    updateNotifBadge();
   });
 }
 
@@ -1967,10 +1989,25 @@ function renderApprovalPanel() {
   document.getElementById('approval-panel').innerHTML = html;
 }
 
-function approveMarks(i) { approvalRequests[i].status='approved'; saveApprovalData(); renderApprovalPanel(); showToast('✅ Marks approved!'); }
-function rejectMarks(i)  { approvalRequests[i].status='rejected'; saveApprovalData(); renderApprovalPanel(); showToast('❌ Marks rejected.'); }
+function approveMarks(i) { approvalRequests[i].status='approved'; saveApprovalData(); renderApprovalPanel(); updateNotifBadge(); showToast('✅ Marks approved!'); }
+function rejectMarks(i)  { approvalRequests[i].status='rejected'; saveApprovalData(); renderApprovalPanel(); updateNotifBadge(); showToast('❌ Marks rejected.'); }
 function lockAllMarks()  { marksLocked=true; saveApprovalData(); renderApprovalPanel(); showToast('🔒 All marks locked!'); }
 function unlockAllMarks(){ marksLocked=false; saveApprovalData(); renderApprovalPanel(); showToast('🔓 Marks unlocked.'); }
+
+function updateNotifBadge() {
+  try {
+    loadApprovalData();
+    var pending = approvalRequests.filter(function(r){ return r.status==='pending'; }).length;
+    var badge = document.getElementById('notif-badge');
+    if (!badge) return;
+    if (pending > 0 && isAdmin()) {
+      badge.textContent = pending > 9 ? '9+' : pending;
+      badge.style.display = 'flex';
+    } else {
+      badge.style.display = 'none';
+    }
+  } catch(e){}
+}
 
 // ============================================================
 // RESULT STATISTICS
