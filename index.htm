@@ -1,4 +1,7 @@
-<html lang="en"><head>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#7B1C1C">
@@ -6,7 +9,6 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="manifest.json">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <link rel="icon" href="icon-192.png" sizes="192x192">
 <link rel="apple-touch-icon" href="icon-512.png">
 <title>Tharpu Secondary School — Result Management System</title>
@@ -463,15 +465,15 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
 .subject-progress-fill{height:100%;border-radius:3px;background:var(--maroon);transition:width 0.6s;}
 
 </style>
-<script id="_data_block">var _savedData={"students":[{"name":"BINITA DAHAL","roll":"10200205","stream":"Plant Science","year":"2082/83"},{"name":"BINOD DAHAL","roll":"10200206","stream":"Plant Science","year":"2082/83"},{"name":"DIBYA MABO","roll":"10200207","stream":"Plant Science","year":"2082/83"},{"name":"JENI LAKSAM","roll":"10200208","stream":"Plant Science","year":"2082/83"},{"name":"MISEK LINGDEN","roll":"10200209","stream":"Plant Science","year":"2082/83"},{"name":"NABIN ADHIKARI","roll":"10200210","stream":"Plant Science","year":"2082/83"},{"name":"NILIMA MAGAR","roll":"10200211","stream":"Plant Science","year":"2082/83"},{"name":"NISKARSHA ADHIKARI","roll":"10200212","stream":"Plant Science","year":"2082/83"},{"name":"PRAJU SIWAKOTI","roll":"10200213","stream":"Plant Science","year":"2082/83"},{"name":"PRERIT KAMBANG","roll":"10200214","stream":"Plant Science","year":"2082/83"},{"name":"PUJA SUBEDI","roll":"10200215","stream":"Plant Science","year":"2082/83"},{"name":"RAMESH KUMAR PAUDEL","roll":"10200216","stream":"Plant Science","year":"2082/83"},{"name":"RITU PARA MABO","roll":"10200217","stream":"Plant Science","year":"2082/83"},{"name":"SAGAR YONGHANG","roll":"10200218","stream":"Plant Science","year":"2082/83"},{"name":"SOBHIYA YONGHANG","roll":"10200219","stream":"Plant Science","year":"2082/83"},{"name":"SUDARSHAN KOIRALA","roll":"10200220","stream":"Plant Science","year":"2082/83"},{"name":"SUJAN KATUWAL","roll":"10200221","stream":"Plant Science","year":"2082/83"}],"marks":{"10200205||Annual Examination":{"Compulsory English":{},"Compulsory Nepali":{},"Physics":{},"Chemistry":{},"Biology":{},"Farm Machinery & Seeds Development":{},"Commercial Fruit Crop & Post Harvest Tech":{},"Agricultural Entomology":{},"Soil Fertility & Nutrient Management":{}},"10200205||First Terminal":{"Physics":{"th":50,"pr":20}},"10200206||First Terminal":{"Physics":{"th":20,"pr":20}},"10200207||First Terminal":{"Physics":{"th":10,"pr":20}},"10200210||First Terminal":{"Physics":{"th":63,"pr":25}},"10200214||First Terminal":{"Physics":{"th":43,"pr":25}},"10200215||First Terminal":{"Physics":{"th":52,"pr":25}},"10200217||First Terminal":{"Physics":{"th":9,"pr":20}},"10200208||First Terminal":{"Physics":{}},"10200209||First Terminal":{"Physics":{"th":40,"pr":40}},"10200211||First Terminal":{"Physics":{}},"10200212||First Terminal":{"Physics":{}},"10200213||First Terminal":{"Physics":{}},"10200216||First Terminal":{"Physics":{}},"10200218||First Terminal":{"Physics":{}},"10200219||First Terminal":{"Physics":{}},"10200220||First Terminal":{"Physics":{}},"10200221||First Terminal":{"Physics":{}}}};</script></head>
+</head>
 <body>
 <div id="toast"></div>
 
 <!-- SCREEN WATERMARK -->
-<div id="screen-watermark" style="display: flex;">
+<div id="screen-watermark">
   <svg viewBox="0 0 500 200" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="100" cy="100" r="90" fill="none" stroke="#7B1C1C" stroke-width="4"></circle>
-    <circle cx="100" cy="100" r="76" fill="none" stroke="#7B1C1C" stroke-width="1.5"></circle>
+    <circle cx="100" cy="100" r="90" fill="none" stroke="#7B1C1C" stroke-width="4"/>
+    <circle cx="100" cy="100" r="76" fill="none" stroke="#7B1C1C" stroke-width="1.5"/>
     <text x="100" y="88" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#7B1C1C">THARPU</text>
     <text x="100" y="104" text-anchor="middle" font-family="Arial" font-size="10" fill="#7B1C1C">SECONDARY</text>
     <text x="100" y="118" text-anchor="middle" font-family="Arial" font-size="10" fill="#7B1C1C">SCHOOL</text>
@@ -482,24 +484,24 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
 </div>
 
 <!-- LOGIN -->
-<div id="login-screen" style="display: none;">
+<div id="login-screen">
   <div class="login-card">
     <div class="login-logo">
       <div class="school-emblem">
         <img src="THARPU SECONDARY SCHOOL.png" alt="TS" onerror="this.style.display='none';this.parentNode.textContent='TS'">
       </div>
       <h1>Tharpu Secondary School</h1>
-      <p>Yangwarak-4, Panchthar · School Code: TSS-PAN</p>
+      <p>Yangwarak-4, Panchthar &middot; School Code: TSS-PAN</p>
     </div>
     <div class="login-divider"></div>
     <div class="auth-tabs">
-      <div class="auth-tab active" id="tab-btn-login" onclick="switchAuthTab('login')">🔓 Sign In</div>
-      <div class="auth-tab" id="tab-btn-register" onclick="switchAuthTab('register')">📝 Register</div>
+      <div class="auth-tab active" id="tab-btn-login" onclick="switchAuthTab('login')">&#128275; Sign In</div>
+      <div class="auth-tab" id="tab-btn-register" onclick="switchAuthTab('register')">&#128221; Register</div>
     </div>
 
     <!-- SIGN IN PANEL -->
     <div id="auth-panel-login">
-      <div id="login-error">❌ Incorrect username or password.</div>
+      <div id="login-error">&#10060; Incorrect username or password.</div>
       <div class="form-group">
         <label class="login-label">Username</label>
         <div class="input-wrap">
@@ -511,11 +513,11 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
         <div class="input-wrap">
           <input type="password" id="inp-pass" placeholder="Enter password" autocomplete="current-password">
           <button class="toggle-pw" onclick="togglePw('inp-pass','eye-signin')" tabindex="-1" type="button">
-            <svg id="eye-signin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            <svg id="eye-signin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
           </button>
         </div>
       </div>
-      <button class="btn-login" id="btn-signin" onclick="doLogin()">🔓 Sign In</button>
+      <button class="btn-login" id="btn-signin" onclick="doLogin()">&#128275; Sign In</button>
       <p class="login-hint">Contact your school administrator for login credentials.</p>
     </div>
 
@@ -542,7 +544,7 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
           <div class="input-wrap">
             <input type="password" id="reg-pass" placeholder="Min 8 characters" oninput="checkRegStrength(this.value)">
             <button class="toggle-pw" onclick="togglePw('reg-pass','eye-reg1')" tabindex="-1" type="button">
-              <svg id="eye-reg1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              <svg id="eye-reg1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
           </div>
           <div class="strength-row"><div class="strength-seg" id="ss1"></div><div class="strength-seg" id="ss2"></div><div class="strength-seg" id="ss3"></div><div class="strength-seg" id="ss4"></div></div>
@@ -553,12 +555,12 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
           <div class="input-wrap">
             <input type="password" id="reg-pass2" placeholder="Repeat password">
             <button class="toggle-pw" onclick="togglePw('reg-pass2','eye-reg2')" tabindex="-1" type="button">
-              <svg id="eye-reg2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              <svg id="eye-reg2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
           </div>
           <div id="err-pass2" style="display:none;font-size:0.75rem;color:#991b1b;margin-top:3px;">Passwords do not match.</div>
         </div>
-        <button class="btn-login" onclick="doRegister()">📝 Create Account</button>
+        <button class="btn-login" onclick="doRegister()">&#128221; Create Account</button>
       </div>
       <p class="login-hint">After registering, switch to Sign In tab.</p>
     </div>
@@ -568,7 +570,7 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
 <!-- USER MANAGEMENT MODAL -->
 <div class="modal-overlay" id="pw-modal">
   <div class="modal-box">
-    <h3>🔑 Manage Users &amp; Passwords</h3>
+    <h3>&#128273; Manage Users &amp; Passwords</h3>
     <div id="users-list-area"></div>
     <hr style="margin:1rem 0;border-color:var(--cream-dark)">
     <p style="font-size:0.82rem;font-weight:700;color:var(--text-muted);margin-bottom:0.7rem;">ADD / UPDATE USER</p>
@@ -578,12 +580,12 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
       <div class="input-wrap" style="margin-bottom:0">
         <input type="password" id="new-pw" placeholder="Enter password">
         <button class="toggle-pw" onclick="togglePw('new-pw','eye-modal')" tabindex="-1" type="button">
-          <svg id="eye-modal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+          <svg id="eye-modal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
         </button>
       </div>
     </div>
     <div class="modal-actions">
-      <button class="btn btn-primary" style="flex:1" onclick="saveUser()">💾 Save User</button>
+      <button class="btn btn-primary" style="flex:1" onclick="saveUser()">&#128190; Save User</button>
       <button class="btn btn-secondary" onclick="closeModal('pw-modal')">Cancel</button>
     </div>
   </div>
@@ -610,33 +612,33 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
 </div>
 
 <!-- MAIN APP -->
-<div id="main-app" style="display: block;">
+<div id="main-app">
   <div class="app-header">
     <div class="app-header-left">
-      <div class="header-emblem">TS</div>
-     <div><div class="header-title">Tharpu Secondary School <span class="premium-badge">PRO</span></div><div class="header-sub">Result Management System · Class XI</div><div id="hdr-bs-date" style="font-size:0.65rem;color:#f0c96e;opacity:0.9">12 Jestha 2083 B.S.</div></div>
+      <div class="header-emblem"><img src="icon-192.png" alt="TS" onerror="this.style.display='none';this.parentNode.textContent='TS'"></div>
+     <div><div class="header-title">Tharpu Secondary School <span class="premium-badge">PRO</span></div><div class="header-sub">Result Management System &middot; Class XI</div><div id="hdr-bs-date" style="font-size:0.65rem;color:#f0c96e;opacity:0.9"></div></div>
     </div>
     <div class="header-actions">
-      <span id="enc-status-badge" class="enc-badge " style="margin-right:4px">🔒 Encrypted</span>
-      <span id="hdr-user" style="font-size:0.7rem;opacity:0.8;margin-right:4px">👤 admin</span>
+      <span id="enc-status-badge" class="enc-badge" style="margin-right:4px">🔒 Encrypted</span>
+      <span id="hdr-user" style="font-size:0.7rem;opacity:0.8;margin-right:4px"></span>
       <button class="btn-sm" id="dark-toggle" onclick="toggleDark()" title="Dark mode">🌙</button>
-      <button class="btn-sm" onclick="openModal('pw-modal');renderUsersList()">🔑 Users</button>
-      <button class="btn-sm" onclick="doLogout()">← Logout</button>
+      <button class="btn-sm" onclick="openModal('pw-modal');renderUsersList()">&#128273; Users</button>
+      <button class="btn-sm" onclick="doLogout()">&#8592; Logout</button>
     </div>
   </div>
   <div class="summary-row">
-    <div class="summary-card"><div class="sc-num" id="sc-total">17</div><div class="sc-lbl">Total Students</div></div>
-    <div class="summary-card"><div class="sc-num" id="sc-plant">17</div><div class="sc-lbl">Plant Science</div></div>
+    <div class="summary-card"><div class="sc-num" id="sc-total">0</div><div class="sc-lbl">Total Students</div></div>
+    <div class="summary-card"><div class="sc-num" id="sc-plant">0</div><div class="sc-lbl">Plant Science</div></div>
     <div class="summary-card"><div class="sc-num" id="sc-general">0</div><div class="sc-lbl">General Stream</div></div>
-    <div class="summary-card"><div class="sc-num" id="sc-marked">17</div><div class="sc-lbl">Marks Saved</div></div>
+    <div class="summary-card"><div class="sc-num" id="sc-marked">0</div><div class="sc-lbl">Marks Saved</div></div>
   </div>
   <div class="nav-tabs">
-    <button class="nav-tab" onclick="showTab('dashboard',this)"><span class="tab-icon">🏠</span>Dashboard</button>
-    <button class="nav-tab" onclick="showTab('students',this)"><span class="tab-icon">👥</span>Students</button>
-    <button class="nav-tab" onclick="showTab('marks',this)"><span class="tab-icon">✎</span>Enter Marks</button>
-    <button class="nav-tab active" onclick="showTab('results',this)"><span class="tab-icon">📄</span>Results</button>
-    <button class="nav-tab" onclick="showTab('grading',this)"><span class="tab-icon">📊</span>Grading</button>
-    <button class="nav-tab" onclick="showTab('register',this)"><span class="tab-icon">➕</span>Register</button>
+    <button class="nav-tab active" onclick="showTab('dashboard',this)"><span class="tab-icon">🏠</span>Dashboard</button>
+    <button class="nav-tab" onclick="showTab('students',this)"><span class="tab-icon">&#128101;</span>Students</button>
+    <button class="nav-tab" onclick="showTab('marks',this)"><span class="tab-icon">&#9998;</span>Enter Marks</button>
+    <button class="nav-tab" onclick="showTab('results',this)"><span class="tab-icon">&#128196;</span>Results</button>
+    <button class="nav-tab" onclick="showTab('grading',this)"><span class="tab-icon">&#128202;</span>Grading</button>
+    <button class="nav-tab" onclick="showTab('register',this)"><span class="tab-icon">&#10133;</span>Register</button>
     <button class="nav-tab" onclick="showTab('analytics',this)"><span class="tab-icon">📈</span>Analytics</button>
     <button class="nav-tab" onclick="showTab('attendance',this)"><span class="tab-icon">📅</span>Attendance</button>
     <button class="nav-tab" onclick="showTab('notices',this)"><span class="tab-icon">📢</span>Notices</button>
@@ -653,17 +655,17 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
   </div>
 
   <!-- DASHBOARD TAB -->
-  <div class="tab-panel" id="tab-dashboard">
+  <div class="tab-panel active" id="tab-dashboard">
     <div class="mot-banner" id="mot-banner">
-      <div class="mot-quote" id="mot-quote">“Education is the most powerful weapon which you can use to change the world.”</div>
+      <div class="mot-quote" id="mot-quote">"Education is the most powerful weapon which you can use to change the world."</div>
       <div class="mot-attr" id="mot-attr">— Nelson Mandela</div>
     </div>
 
     <!-- Nepali date strip -->
     <div class="section-card" style="margin-bottom:1rem;">
-      <div class="section-head">📅 Today — <span id="dash-bs-date">12 Jestha 2083 B.S.</span></div>
+      <div class="section-head">📅 Today — <span id="dash-bs-date">—</span></div>
       <div class="section-body" style="padding:0.7rem 1rem;">
-        <div class="bs-strip" id="bs-strip"><div class="bs-day"><div class="bs-day-num">9</div><div class="bs-day-name">Sat</div></div><div class="bs-day"><div class="bs-day-num">10</div><div class="bs-day-name">Sun</div></div><div class="bs-day"><div class="bs-day-num">11</div><div class="bs-day-name">Mon</div></div><div class="bs-day today"><div class="bs-day-num">12</div><div class="bs-day-name">Tue</div></div><div class="bs-day"><div class="bs-day-num">13</div><div class="bs-day-name">Wed</div></div><div class="bs-day"><div class="bs-day-num">14</div><div class="bs-day-name">Thu</div></div><div class="bs-day has-event"><div class="bs-day-num">15</div><div class="bs-day-name">Fri</div></div><div class="bs-day"><div class="bs-day-num">16</div><div class="bs-day-name">Sat</div></div><div class="bs-day"><div class="bs-day-num">17</div><div class="bs-day-name">Sun</div></div><div class="bs-day"><div class="bs-day-num">18</div><div class="bs-day-name">Mon</div></div><div class="bs-day"><div class="bs-day-num">19</div><div class="bs-day-name">Tue</div></div><div class="bs-day"><div class="bs-day-num">20</div><div class="bs-day-name">Wed</div></div><div class="bs-day"><div class="bs-day-num">21</div><div class="bs-day-name">Thu</div></div><div class="bs-day has-event"><div class="bs-day-num">22</div><div class="bs-day-name">Fri</div></div></div>
+        <div class="bs-strip" id="bs-strip"></div>
       </div>
     </div>
 
@@ -681,9 +683,9 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
         <div class="dw-head">🎓 Enrolled</div>
         <div class="circ-wrap">
           <svg class="circ-svg" width="90" height="90" viewBox="0 0 90 90">
-            <circle class="circ-bg" cx="45" cy="45" r="36"></circle>
-            <circle class="circ-fg" id="dash-circ-total" cx="45" cy="45" r="36" stroke-dasharray="226" stroke-dashoffset="0" style="stroke-dashoffset: 0;"></circle>
-            <text class="circ-label" x="45" y="43" id="dash-circ-num">17</text>
+            <circle class="circ-bg" cx="45" cy="45" r="36"/>
+            <circle class="circ-fg" id="dash-circ-total" cx="45" cy="45" r="36" stroke-dasharray="226" stroke-dashoffset="0"/>
+            <text class="circ-label" x="45" y="43" id="dash-circ-num">0</text>
             <text class="circ-sub" x="45" y="54">students</text>
           </svg>
         </div>
@@ -692,16 +694,16 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
         <div class="dw-head">✅ Marks Entered</div>
         <div class="circ-wrap">
           <svg class="circ-svg" width="90" height="90" viewBox="0 0 90 90">
-            <circle class="circ-bg" cx="45" cy="45" r="36"></circle>
-            <circle class="circ-fg" id="dash-circ-marks" cx="45" cy="45" r="36" stroke-dasharray="226" stroke-dashoffset="226" style="stroke: var(--success); stroke-dashoffset: 0;"></circle>
-            <text class="circ-label" x="45" y="43" id="dash-circ-marks-num">100%</text>
+            <circle class="circ-bg" cx="45" cy="45" r="36"/>
+            <circle class="circ-fg" id="dash-circ-marks" cx="45" cy="45" r="36" stroke-dasharray="226" stroke-dashoffset="226" style="stroke:var(--success)"/>
+            <text class="circ-label" x="45" y="43" id="dash-circ-marks-num">0%</text>
             <text class="circ-sub" x="45" y="54">complete</text>
           </svg>
         </div>
       </div>
       <div class="dash-widget full">
         <div class="dw-head">📊 Stream Breakdown</div>
-        <div id="dash-stream-bars"><div class="sub-perf-row"><div class="sub-perf-name">🌿 Plant Science</div><div class="sub-perf-bar"><div class="sub-perf-fill" style="width:100%;background:#2e7d32"></div></div><div class="sub-perf-val">17</div></div><div class="sub-perf-row"><div class="sub-perf-name">📘 General</div><div class="sub-perf-bar"><div class="sub-perf-fill" style="width:0%;background:#1565c0"></div></div><div class="sub-perf-val">0</div></div></div>
+        <div id="dash-stream-bars"></div>
       </div>
       <div class="dash-widget full">
         <div class="dw-head">🏆 Recent Top Performers</div>
@@ -713,7 +715,7 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
     <div class="section-card">
       <div class="section-head">📋 Activity Log</div>
       <div class="section-body" style="padding:0.5rem 1rem;" id="activity-log">
-        <div class="act-item"><div class="act-icon" style="background:#e8f5e9">🚀</div><div class="act-info"><div>System started</div><div class="act-time" id="act-start-time">07:39 PM</div></div></div>
+        <div class="act-item"><div class="act-icon" style="background:#e8f5e9">🚀</div><div class="act-info"><div>System started</div><div class="act-time" id="act-start-time"></div></div></div>
       </div>
     </div>
   </div>
@@ -727,21 +729,21 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
     </div>
     <div class="filter-tabs">
       <button class="filter-tab active" onclick="filterStudents('all',this)">All</button>
-      <button class="filter-tab" onclick="filterStudents('Plant Science',this)">🌿 Plant</button>
-      <button class="filter-tab" onclick="filterStudents('General',this)">📚 General</button>
+      <button class="filter-tab" onclick="filterStudents('Plant Science',this)">&#127807; Plant</button>
+      <button class="filter-tab" onclick="filterStudents('General',this)">&#128218; General</button>
     </div>
     <div class="section-card">
-      <div class="section-head">👥 Registered Students <span class="count-chip" id="student-count">0</span></div>
-      <div id="student-list"><div class="student-item" onclick="quickEnterMarks('10200205')"><div class="student-avatar">BD</div><div class="student-info"><div class="student-name">BINITA DAHAL</div><div class="student-meta">Roll: <b>10200205</b> | 2082/83</div></div><span class="badge badge-plant">🌿 Plant</span><span class="badge badge-marked">✓ Marks</span></div><div class="student-item" onclick="quickEnterMarks('10200206')"><div class="student-avatar">BD</div><div class="student-info"><div class="student-name">BINOD DAHAL</div><div class="student-meta">Roll: <b>10200206</b> | 2082/83</div></div><span class="badge badge-plant">🌿 Plant</span><span class="badge badge-marked">✓ Marks</span></div><div class="student-item" onclick="quickEnterMarks('10200207')"><div class="student-avatar">DM</div><div class="student-info"><div class="student-name">DIBYA MABO</div><div class="student-meta">Roll: <b>10200207</b> | 2082/83</div></div><span class="badge badge-plant">🌿 Plant</span><span class="badge badge-marked">✓ Marks</span></div><div class="student-item" onclick="quickEnterMarks('10200208')"><div class="student-avatar">JL</div><div class="student-info"><div class="student-name">JENI LAKSAM</div><div class="student-meta">Roll: <b>10200208</b> | 2082/83</div></div><span class="badge badge-plant">🌿 Plant</span><span class="badge badge-marked">✓ Marks</span></div><div class="student-item" onclick="quickEnterMarks('10200209')"><div class="student-avatar">ML</div><div class="student-info"><div class="student-name">MISEK LINGDEN</div><div class="student-meta">Roll: <b>10200209</b> | 2082/83</div></div><span class="badge badge-plant">🌿 Plant</span><span class="badge badge-marked">✓ Marks</span></div><div class="student-item" onclick="quickEnterMarks('10200210')"><div class="student-avatar">NA</div><div class="student-info"><div class="student-name">NABIN ADHIKARI</div><div class="student-meta">Roll: <b>10200210</b> | 2082/83</div></div><span class="badge badge-plant">🌿 Plant</span><span class="badge badge-marked">✓ Marks</span></div><div class="student-item" onclick="quickEnterMarks('10200211')"><div class="student-avatar">NM</div><div class="student-info"><div class="student-name">NILIMA MAGAR</div><div class="student-meta">Roll: <b>10200211</b> | 2082/83</div></div><span class="badge badge-plant">🌿 Plant</span><span class="badge badge-marked">✓ Marks</span></div><div class="student-item" onclick="quickEnterMarks('10200212')"><div class="student-avatar">NA</div><div class="student-info"><div class="student-name">NISKARSHA ADHIKARI</div><div class="student-meta">Roll: <b>10200212</b> | 2082/83</div></div><span class="badge badge-plant">🌿 Plant</span><span class="badge badge-marked">✓ Marks</span></div><div class="student-item" onclick="quickEnterMarks('10200213')"><div class="student-avatar">PS</div><div class="student-info"><div class="student-name">PRAJU SIWAKOTI</div><div class="student-meta">Roll: <b>10200213</b> | 2082/83</div></div><span class="badge badge-plant">🌿 Plant</span><span class="badge badge-marked">✓ Marks</span></div><div class="student-item" onclick="quickEnterMarks('10200214')"><div class="student-avatar">PK</div><div class="student-info"><div class="student-name">PRERIT KAMBANG</div><div class="student-meta">Roll: <b>10200214</b> | 2082/83</div></div><span class="badge badge-plant">🌿 Plant</span><span class="badge badge-marked">✓ Marks</span></div><div class="student-item" onclick="quickEnterMarks('10200215')"><div class="student-avatar">PS</div><div class="student-info"><div class="student-name">PUJA SUBEDI</div><div class="student-meta">Roll: <b>10200215</b> | 2082/83</div></div><span class="badge badge-plant">🌿 Plant</span><span class="badge badge-marked">✓ Marks</span></div><div class="student-item" onclick="quickEnterMarks('10200216')"><div class="student-avatar">RP</div><div class="student-info"><div class="student-name">RAMESH KUMAR PAUDEL</div><div class="student-meta">Roll: <b>10200216</b> | 2082/83</div></div><span class="badge badge-plant">🌿 Plant</span><span class="badge badge-marked">✓ Marks</span></div><div class="student-item" onclick="quickEnterMarks('10200217')"><div class="student-avatar">RM</div><div class="student-info"><div class="student-name">RITU PARA MABO</div><div class="student-meta">Roll: <b>10200217</b> | 2082/83</div></div><span class="badge badge-plant">🌿 Plant</span><span class="badge badge-marked">✓ Marks</span></div><div class="student-item" onclick="quickEnterMarks('10200218')"><div class="student-avatar">SY</div><div class="student-info"><div class="student-name">SAGAR YONGHANG</div><div class="student-meta">Roll: <b>10200218</b> | 2082/83</div></div><span class="badge badge-plant">🌿 Plant</span><span class="badge badge-marked">✓ Marks</span></div><div class="student-item" onclick="quickEnterMarks('10200219')"><div class="student-avatar">SY</div><div class="student-info"><div class="student-name">SOBHIYA YONGHANG</div><div class="student-meta">Roll: <b>10200219</b> | 2082/83</div></div><span class="badge badge-plant">🌿 Plant</span><span class="badge badge-marked">✓ Marks</span></div><div class="student-item" onclick="quickEnterMarks('10200220')"><div class="student-avatar">SK</div><div class="student-info"><div class="student-name">SUDARSHAN KOIRALA</div><div class="student-meta">Roll: <b>10200220</b> | 2082/83</div></div><span class="badge badge-plant">🌿 Plant</span><span class="badge badge-marked">✓ Marks</span></div><div class="student-item" onclick="quickEnterMarks('10200221')"><div class="student-avatar">SK</div><div class="student-info"><div class="student-name">SUJAN KATUWAL</div><div class="student-meta">Roll: <b>10200221</b> | 2082/83</div></div><span class="badge badge-plant">🌿 Plant</span><span class="badge badge-marked">✓ Marks</span></div></div>
+      <div class="section-head">&#128101; Registered Students <span class="count-chip" id="student-count">0</span></div>
+      <div id="student-list"></div>
     </div>
   </div>
 
   <!-- MARKS TAB -->
   <div class="tab-panel" id="tab-marks">
     <div class="section-card">
-      <div class="section-head">✎ Subject Marks Entry</div>
+      <div class="section-head">&#9998; Subject Marks Entry</div>
       <div class="section-body">
-        <div class="form-group"><label>Select Student</label><select id="marks-student-sel" onchange="loadMarksForm()"><option value="">-- Choose student --</option><option value="10200205">BINITA DAHAL (10200205)</option><option value="10200206">BINOD DAHAL (10200206)</option><option value="10200207">DIBYA MABO (10200207)</option><option value="10200208">JENI LAKSAM (10200208)</option><option value="10200209">MISEK LINGDEN (10200209)</option><option value="10200210">NABIN ADHIKARI (10200210)</option><option value="10200211">NILIMA MAGAR (10200211)</option><option value="10200212">NISKARSHA ADHIKARI (10200212)</option><option value="10200213">PRAJU SIWAKOTI (10200213)</option><option value="10200214">PRERIT KAMBANG (10200214)</option><option value="10200215">PUJA SUBEDI (10200215)</option><option value="10200216">RAMESH KUMAR PAUDEL (10200216)</option><option value="10200217">RITU PARA MABO (10200217)</option><option value="10200218">SAGAR YONGHANG (10200218)</option><option value="10200219">SOBHIYA YONGHANG (10200219)</option><option value="10200220">SUDARSHAN KOIRALA (10200220)</option><option value="10200221">SUJAN KATUWAL (10200221)</option></select></div>
+        <div class="form-group"><label>Select Student</label><select id="marks-student-sel" onchange="loadMarksForm()"><option value="">-- Choose student --</option></select></div>
         <div class="form-group">
           <label>Examination</label>
           <select id="marks-exam-sel" onchange="loadMarksForm()">
@@ -757,9 +759,9 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
   </div>
 
   <!-- RESULTS TAB -->
-  <div class="tab-panel active" id="tab-results">
+  <div class="tab-panel" id="tab-results">
     <div class="section-card">
-      <div class="section-head">📄 Grade Sheet — All Students</div>
+      <div class="section-head">&#128196; Grade Sheet — All Students</div>
       <div class="section-body">
         <div class="form-group">
           <label>Examination</label>
@@ -774,29 +776,29 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
           <label>Stream Filter</label>
           <select id="result-stream-sel" onchange="loadGradeSheet()">
             <option value="all">All Streams</option>
-            <option value="Plant Science">🌿 Plant Science</option>
-            <option value="General">📚 General</option>
+            <option value="Plant Science">&#127807; Plant Science</option>
+            <option value="General">&#128218; General</option>
           </select>
         </div>
        <div class="btn-row">
-  <button class="btn btn-primary" onclick="window.print()">🖨 Print</button>
-  <button class="btn btn-secondary" onclick="saveResultHTML()">⬇ Save HTML</button>
-  <button class="btn btn-gold" onclick="exportExcel()">📊 Export Excel</button>
-  <button class="btn btn-success btn-full" style="margin-top:6px" onclick="exportShare()">📦 Export &amp; Share File (All Data)</button>
-  <button class="btn btn-primary btn-full" style="margin-top:6px;background:#5a1414" onclick="printAllSheets()">🖶 Bulk Print All Grade Sheets</button>
+  <button class="btn btn-primary" onclick="window.print()">&#128424; Print</button>
+  <button class="btn btn-secondary" onclick="saveResultHTML()">&#11015; Save HTML</button>
+  <button class="btn btn-gold" onclick="exportExcel()">&#128202; Export Excel</button>
+  <button class="btn btn-success btn-full" style="margin-top:6px" onclick="exportShare()">&#128230; Export &amp; Share File (All Data)</button>
+  <button class="btn btn-primary btn-full" style="margin-top:6px;background:#5a1414" onclick="printAllSheets()">&#128438; Bulk Print All Grade Sheets</button>
 </div>
       </div>
     </div>
-    <div id="result-display"><div class="empty-state"><div class="empty-icon">📄</div><p>No students found.</p></div></div>
+    <div id="result-display"></div>
   </div>
 
  <!-- GRADING TAB -->
   <div class="tab-panel" id="tab-grading">
     <div class="section-card">
-      <div class="section-head">📊 NEB Grading Scale</div>
+      <div class="section-head">&#128202; NEB Grading Scale</div>
       <div class="section-body" style="padding:0;">
         <table class="grade-guide-table">
-          <tbody><tr><th>Grade</th><th>Marks %</th><th>GPA</th><th>Remarks</th></tr>
+          <tr><th>Grade</th><th>Marks %</th><th>GPA</th><th>Remarks</th></tr>
           <tr><td><span class="grade-pill gp-aplus">A+</span></td><td>90% and above</td><td>4.0</td><td>Outstanding</td></tr>
           <tr><td><span class="grade-pill gp-a">A</span></td><td>80 - 89%</td><td>3.6</td><td>Excellent</td></tr>
           <tr><td><span class="grade-pill gp-bplus">B+</span></td><td>70 - 79%</td><td>3.2</td><td>Very Good</td></tr>
@@ -805,12 +807,12 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
           <tr><td><span class="grade-pill gp-c">C</span></td><td>40 - 49%</td><td>2.0</td><td>Acceptable</td></tr>
           <tr><td><span class="grade-pill gp-d">D</span></td><td>35 - 39%</td><td>1.6</td><td>Basic</td></tr>
           <tr><td><span class="grade-pill gp-ng">NG</span></td><td>Below 35%</td><td>0.0</td><td>Not Graded</td></tr>
-        </tbody></table>
+        </table>
       </div>
     </div>
     <!-- EDITABLE SUBJECTS GRADESHEET -->
     <div class="section-card" style="margin-top:1rem;">
-      <div class="section-head">✎ Edit Gradesheet Subjects</div>
+      <div class="section-head">&#9998; Edit Gradesheet Subjects</div>
       <div class="section-body" id="gradesheet-area" style="padding:0.8rem;">
         <p style="color:var(--text-muted);font-size:0.85rem;">Loading editor...</p>
       </div>
@@ -820,7 +822,7 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
   <!-- REGISTER TAB -->
   <div class="tab-panel" id="tab-register">
     <div class="section-card">
-      <div class="section-head">➕ Register Student</div>
+      <div class="section-head">&#10133; Register Student</div>
       <div class="section-body">
         <div class="form-group"><label>Full Name</label><input type="text" id="reg-name" placeholder="Student full name"></div>
 <div class="form-group"><label>Roll No. / Symbol No.</label><input type="text" id="reg-roll" placeholder="e.g. 10200222"></div>
@@ -830,12 +832,12 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
         <div class="form-group">
           <label>Stream</label>
           <div class="radio-group">
-            <label class="radio-opt selected" id="opt-plant"><input type="radio" name="stream" value="Plant Science" checked="" onchange="selectStream(this)"> 🌿 Plant Science</label>
-            <label class="radio-opt" id="opt-general"><input type="radio" name="stream" value="General" onchange="selectStream(this)"> 📚 General</label>
+            <label class="radio-opt selected" id="opt-plant"><input type="radio" name="stream" value="Plant Science" checked onchange="selectStream(this)"> &#127807; Plant Science</label>
+            <label class="radio-opt" id="opt-general"><input type="radio" name="stream" value="General" onchange="selectStream(this)"> &#128218; General</label>
           </div>
         </div>
         <div class="form-group"><label>Academic Year</label><input type="text" id="reg-year" value="2082/83"></div>
-        <button class="btn btn-primary btn-full" onclick="registerStudent()">➕ Add Student</button>
+        <button class="btn btn-primary btn-full" onclick="registerStudent()">&#10133; Add Student</button>
       </div>
     </div>
     <div class="info-box" style="background:#fff3cd;border-color:#f0ad4e;color:#7d4e00;">
@@ -846,7 +848,7 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
       <b>✅ To share marks across devices:</b> Click <b>"Export &amp; Share File"</b> below → send the file via WhatsApp/Email → open on the other device.
     </div>
     <div class="info-box" style="background:#e8f5e9;border-color:#4caf50;">
-      <b>📦 How sharing works:</b><br>
+      <b>&#128230; How sharing works:</b><br>
       1. Enter &amp; save all marks here.<br>
       2. Click <b>"Export &amp; Share File"</b> — a <code>.html</code> file downloads.<br>
       3. Send that file via <b>WhatsApp / Email / USB</b> to anyone.<br>
@@ -854,10 +856,10 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
       5. They can log in, add more marks, and share back the same way.
     </div>
     <div id="shared-file-banner" style="display:none;background:#fff3cd;border:1px solid #f0ad4e;border-radius:10px;padding:0.8rem 1rem;font-size:0.82rem;color:#7d4e00;margin-bottom:1rem;">
-      ⚠️ <b>You opened a shared file.</b> All marks from the sender are loaded. Log in to add more marks, then re-export to share back.
+      &#9888;&#65039; <b>You opened a shared file.</b> All marks from the sender are loaded. Log in to add more marks, then re-export to share back.
     </div>
     <div class="btn-row">
-      <button class="btn btn-gold btn-full" onclick="exportShare()">📦 Export &amp; Share File (Embed All Data)</button>
+      <button class="btn btn-gold btn-full" onclick="exportShare()">&#128230; Export &amp; Share File (Embed All Data)</button>
     </div>
   </div>
 
@@ -986,7 +988,7 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
   <!-- ANALYTICS TAB -->
   <div class="tab-panel" id="tab-analytics">
     <div class="section-card">
-      <div class="section-head">📈 Class Analytics Dashboard</div>
+      <div class="section-head">&#128200; Class Analytics Dashboard</div>
       <div class="section-body">
         <div class="form-group">
           <label>Examination</label>
@@ -997,7 +999,7 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
             <option value="Pre-board">Pre-board</option>
           </select>
         </div>
-        <div id="analytics-body"><div class="empty-state"><div class="empty-icon">📈</div><p>Select an exam to view analytics.</p></div></div>
+        <div id="analytics-body"><div class="empty-state"><div class="empty-icon">&#128200;</div><p>Select an exam to view analytics.</p></div></div>
       </div>
     </div>
   </div>
@@ -1005,14 +1007,14 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
   <!-- ATTENDANCE TAB -->
   <div class="tab-panel" id="tab-attendance">
     <div class="section-card">
-      <div class="section-head">📅 Attendance Tracker</div>
+      <div class="section-head">&#128197; Attendance Tracker</div>
       <div class="section-body">
-        <div class="form-group"><label>Student</label><select id="att-student-sel" onchange="renderAttendance()"><option value="">-- Choose student --</option><option value="10200205">BINITA DAHAL</option><option value="10200206">BINOD DAHAL</option><option value="10200207">DIBYA MABO</option><option value="10200208">JENI LAKSAM</option><option value="10200209">MISEK LINGDEN</option><option value="10200210">NABIN ADHIKARI</option><option value="10200211">NILIMA MAGAR</option><option value="10200212">NISKARSHA ADHIKARI</option><option value="10200213">PRAJU SIWAKOTI</option><option value="10200214">PRERIT KAMBANG</option><option value="10200215">PUJA SUBEDI</option><option value="10200216">RAMESH KUMAR PAUDEL</option><option value="10200217">RITU PARA MABO</option><option value="10200218">SAGAR YONGHANG</option><option value="10200219">SOBHIYA YONGHANG</option><option value="10200220">SUDARSHAN KOIRALA</option><option value="10200221">SUJAN KATUWAL</option></select></div>
+        <div class="form-group"><label>Student</label><select id="att-student-sel" onchange="renderAttendance()"><option value="">-- Choose student --</option></select></div>
         <div class="form-group"><label>Month (B.S.)</label>
           <select id="att-month-sel" onchange="renderAttendance()">
             <option value="Baisakh">Baisakh</option><option value="Jestha">Jestha</option>
             <option value="Ashadh">Ashadh</option><option value="Shrawan">Shrawan</option>
-            <option value="Bhadra">Bhadra</option><option value="Ashwin" selected="">Ashwin</option>
+            <option value="Bhadra">Bhadra</option><option value="Ashwin" selected>Ashwin</option>
             <option value="Kartik">Kartik</option><option value="Mangsir">Mangsir</option>
             <option value="Poush">Poush</option><option value="Magh">Magh</option>
             <option value="Falgun">Falgun</option><option value="Chaitra">Chaitra</option>
@@ -1026,8 +1028,8 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
         <div id="att-calendar"></div>
         <div id="att-summary" style="margin-top:0.7rem;font-size:0.85rem;color:var(--text-muted);"></div>
         <div class="btn-row" style="margin-top:0.8rem;">
-          <button class="btn btn-success" onclick="saveAttendance()">💾 Save Attendance</button>
-          <button class="btn btn-secondary" onclick="exportAttCSV()">📊 Export CSV</button>
+          <button class="btn btn-success" onclick="saveAttendance()">&#128190; Save Attendance</button>
+          <button class="btn btn-secondary" onclick="exportAttCSV()">&#128202; Export CSV</button>
         </div>
       </div>
     </div>
@@ -1129,7 +1131,7 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
         </div>
         <div id="qr-area" style="margin-top:1rem;text-align:center;"></div>
         <div id="qr-instructions" style="display:none;margin-top:0.8rem;font-size:0.8rem;color:var(--text-muted);">
-          📱 <b>On your phone:</b> Open a QR scanner app (or Google Lens) → Scan the code → Copy the full text that appears → Open this app on the phone → Go to <b>Sync Devices → Method 3 Import</b> → Paste the text → Tap <b>Import &amp; Load Marks</b> ✅
+          📱 <b>On your phone:</b> Open camera app → Point at QR code → Tap the link → Marks will load automatically.
         </div>
       </div>
     </div>
@@ -1142,7 +1144,7 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
         <div class="btn-row">
           <button class="btn btn-primary" onclick="copyDataCode()">📋 Copy Data Code</button>
         </div>
-        <textarea id="data-code-export" rows="3" readonly="" style="width:100%;margin-top:0.7rem;padding:0.5rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.7rem;font-family:monospace;background:var(--cream);color:var(--text);resize:vertical;" placeholder="Click 'Copy Data Code' to generate..."></textarea>
+        <textarea id="data-code-export" rows="3" readonly style="width:100%;margin-top:0.7rem;padding:0.5rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.7rem;font-family:monospace;background:var(--cream);color:var(--text);resize:vertical;" placeholder="Click 'Copy Data Code' to generate..."></textarea>
         <hr style="margin:1rem 0;border-color:var(--cream-dark);">
         <p style="font-size:0.84rem;font-weight:700;color:var(--maroon);margin-bottom:0.5rem;">📥 Import Data Code (on the other device)</p>
         <textarea id="data-code-import" rows="3" style="width:100%;padding:0.5rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.7rem;font-family:monospace;background:var(--cream);color:var(--text);resize:vertical;" placeholder="Paste the data code here from the other device..."></textarea>
@@ -1202,13 +1204,13 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
             <option value="General">📘 General</option>
           </select>
         </div>
-        <div id="approval-panel"><div class="empty-state"><p>No submissions yet for First Terminal — Plant Science.</p></div></div>
+        <div id="approval-panel"></div>
       </div>
     </div>
     <div class="section-card" style="margin-top:1rem;">
       <div class="section-head">🔒 Global Marks Lock</div>
       <div class="section-body">
-        <div id="global-lock-status" style="margin-bottom:0.8rem;"><div class="enc-badge off" style="margin-bottom:0">🔓 Marks are UNLOCKED — teachers can edit</div></div>
+        <div id="global-lock-status" style="margin-bottom:0.8rem;"></div>
         <div class="btn-row">
           <button class="btn btn-danger" onclick="lockAllMarks()">🔒 Lock All Marks (Finalize)</button>
           <button class="btn btn-success" onclick="unlockAllMarks()">🔓 Unlock for Editing</button>
@@ -1248,7 +1250,2216 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
 
 </div>
 
+<script>
+// ============================================================
+// USERS — with roles & subject assignments
+// ============================================================
+var DEFAULT_USERS = [
+  {username:"admin",        password:"tharpu2082", role:"admin",          fullname:"Administrator"},
+  {username:"teacher",      password:"school123",  role:"teacher",        fullname:"Class Teacher"},
+  // Plant Science subject teachers
+  {username:"eng_teacher",  password:"eng123",     role:"subject_teacher", fullname:"English Teacher",            subject:"Compulsory English"},
+  {username:"nep_teacher",  password:"nep123",     role:"subject_teacher", fullname:"Nepali Teacher",             subject:"Compulsory Nepali"},
+  {username:"phy_teacher",  password:"phy123",     role:"subject_teacher", fullname:"Physics Teacher",            subject:"Physics"},
+  {username:"chem_teacher", password:"chem123",    role:"subject_teacher", fullname:"Chemistry Teacher",          subject:"Chemistry"},
+  {username:"bio_teacher",  password:"bio123",     role:"subject_teacher", fullname:"Biology Teacher",            subject:"Biology"},
+  {username:"farm_teacher", password:"farm123",    role:"subject_teacher", fullname:"Farm Machinery Teacher",     subject:"Farm Machinery & Seeds Development"},
+  {username:"fruit_teacher",password:"fruit123",   role:"subject_teacher", fullname:"Fruit Crop Teacher",        subject:"Commercial Fruit Crop & Post Harvest Tech"},
+  {username:"ento_teacher", password:"ento123",    role:"subject_teacher", fullname:"Entomology Teacher",        subject:"Agricultural Entomology"},
+  {username:"soil_teacher", password:"soil123",    role:"subject_teacher", fullname:"Soil Fertility Teacher",    subject:"Soil Fertility & Nutrient Management"},
+  // General stream subject teachers
+  {username:"math_teacher", password:"math123",    role:"subject_teacher", fullname:"Mathematics Teacher",       subject:"Mathematics"},
+  {username:"acc_teacher",  password:"acc123",     role:"subject_teacher", fullname:"Accountancy Teacher",       subject:"Accountancy"},
+  {username:"eco_teacher",  password:"eco123",     role:"subject_teacher", fullname:"Economics Teacher",         subject:"Economics"},
+  {username:"comp_teacher", password:"comp123",    role:"subject_teacher", fullname:"Computer Science Teacher",  subject:"Computer Science"},
+  {username:"ss_teacher",   password:"ss123",      role:"subject_teacher", fullname:"Social Studies Teacher",    subject:"Social Studies & Life Skills"},
+  {username:"hpe_teacher",  password:"hpe123",     role:"subject_teacher", fullname:"Health & PE Teacher",       subject:"Health & Physical Education"}
+];
+function loadUsers() {
+  try {
+    var s = localStorage.getItem('tss_users');
+    if (s) {
+      var stored = JSON.parse(s);
+      // Merge: stored users take priority, but ensure DEFAULT_USERS roles/subjects are present
+      var merged = DEFAULT_USERS.map(function(def) {
+        var found = stored.find(function(u){ return u.username === def.username; });
+        return found ? Object.assign({}, def, found) : def;
+      });
+      // Add any extra users from stored that aren't in DEFAULT_USERS
+      stored.forEach(function(u) {
+        if (!merged.find(function(m){ return m.username===u.username; })) merged.push(u);
+      });
+      return merged;
+    }
+  } catch(e){}
+  return DEFAULT_USERS.map(function(u){ return Object.assign({},u); });
+}
+function saveUsers(arr) {
+  try { localStorage.setItem('tss_users', JSON.stringify(arr)); } catch(e){}
+}
+var USERS = loadUsers();
+var currentUser = localStorage.getItem('tss_session_user') || 'guest';
 
+// ============================================================
+// LOGIN / REGISTER
+// ============================================================
+function togglePw(inputId, svgId) {
+  var inp = document.getElementById(inputId);
+  var svg = document.getElementById(svgId);
+  if (!inp || !svg) return;
+  if (inp.type === 'password') {
+    inp.type = 'text';
+    svg.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>';
+  } else {
+    inp.type = 'password';
+    svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+  }
+}
+
+function switchAuthTab(tab) {
+  document.getElementById('auth-panel-login').style.display    = (tab==='login')    ? 'block' : 'none';
+  document.getElementById('auth-panel-register').style.display = (tab==='register') ? 'block' : 'none';
+  document.getElementById('tab-btn-login').className    = 'auth-tab' + (tab==='login'    ? ' active' : '');
+  document.getElementById('tab-btn-register').className = 'auth-tab' + (tab==='register' ? ' active' : '');
+  document.getElementById('login-error').style.display = 'none';
+}
+
+function doLogin() {
+  var u = document.getElementById('inp-user').value.trim();
+  var p = document.getElementById('inp-pass').value;
+  var errEl = document.getElementById('login-error');
+  if (!u || !p) {
+    errEl.style.display = 'block';
+    errEl.textContent = 'Please enter username and password.';
+    return;
+  }
+  // Always reload users fresh (including merged defaults with roles)
+  USERS = loadUsers();
+  var matched = null;
+  for (var i = 0; i < USERS.length; i++) {
+    if (USERS[i].username === u && USERS[i].password === p) { matched = USERS[i]; break; }
+  }
+  if (!matched) {
+    errEl.style.display = 'block';
+    errEl.textContent = '❌ Incorrect username or password.';
+    document.getElementById('inp-pass').value = '';
+    document.getElementById('inp-pass').focus();
+    return;
+  }
+  // Valid login — set session
+  currentUser = u;
+  try { localStorage.setItem('tss_session_user', u); } catch(e){}
+  errEl.style.display = 'none';
+  teacherAssignments = loadTeacherAssignments();
+  loadApprovalData();
+  // Load marks (async encryption), then show app
+  loadMarksFromStorage().then(function() {
+    _showMainApp(matched);
+  }).catch(function() {
+    loadMarksFromStorageFallback();
+    _showMainApp(matched);
+  });
+}
+
+function _showMainApp(matched) {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('main-app').style.display     = 'block';
+  try { renderStudentList(); } catch(e){}
+  try { populateStudentSelects(); } catch(e){}
+  try { updateSummary(); } catch(e){}
+  var role = matched.role || 'teacher';
+  var roleLabel = role==='admin' ? '👑 Admin' : role==='subject_teacher' ? '👩‍🏫 Subject Teacher' : '📚 Teacher';
+  showToast('Welcome, ' + (matched.fullname || matched.username) + '! ' + roleLabel);
+  // Show/hide Teacher Portal based on role
+  updateNavForRole(role);
+  // Update notification badge for pending approvals
+  setTimeout(updateNotifBadge, 300);
+}
+
+// Enter key support — placed after doLogin is defined
+document.getElementById('inp-pass').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
+document.getElementById('inp-user').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('inp-pass').focus(); });
+
+function doLogout() {
+  currentUser = 'guest';
+  localStorage.removeItem('tss_session_user');
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('main-app').style.display     = 'none';
+  document.getElementById('inp-user').value = '';
+  document.getElementById('inp-pass').value = '';
+  document.getElementById('login-error').style.display = 'none';
+}
+
+function checkRegStrength(val) {
+  var score = 0;
+  if (val.length>=8) score++; if (/[A-Z]/.test(val)) score++;
+  if (/[0-9]/.test(val)) score++; if (/[^A-Za-z0-9]/.test(val)) score++;
+  var colors = ['#e53e3e','#dd6b20','#38a169','#2b6cb0'];
+  for (var i=1;i<=4;i++) {
+    var s=document.getElementById('ss'+i);
+    if(s) s.style.background = i<=score ? colors[score-1] : '#e2d6c3';
+  }
+}
+
+function doRegister() {
+  var name  = document.getElementById('reg-fullname').value.trim();
+  var uname = document.getElementById('reg-user').value.trim();
+  var pass  = document.getElementById('reg-pass').value;
+  var pass2 = document.getElementById('reg-pass2').value;
+  ['err-fullname','err-user','err-pass','err-pass2'].forEach(function(id){
+    document.getElementById(id).style.display='none';
+  });
+  var ok = true;
+  if (!name)         { document.getElementById('err-fullname').style.display='block'; ok=false; }
+  if (!uname) {
+    document.getElementById('err-user').textContent='Please enter a username.';
+    document.getElementById('err-user').style.display='block'; ok=false;
+  } else if (USERS.some(function(u){ return u.username===uname; })) {
+    document.getElementById('err-user').textContent='Username already taken.';
+    document.getElementById('err-user').style.display='block'; ok=false;
+  }
+  if (pass.length<8) { document.getElementById('err-pass').style.display='block'; ok=false; }
+  if (pass!==pass2)  { document.getElementById('err-pass2').style.display='block'; ok=false; }
+  if (!ok) return;
+  USERS.push({username:uname, password:pass, fullname:name});
+  saveUsers(USERS);
+  var msg = document.getElementById('reg-msg');
+  msg.textContent = 'Account created for '+name+'! Please sign in.';
+  msg.style.cssText = 'display:block;background:#f0fff4;color:#1a6e2e;border:1px solid #b2dfc0;border-radius:8px;padding:0.55rem 0.8rem;font-size:0.85rem;margin-bottom:0.9rem;text-align:center;';
+  document.getElementById('reg-form').style.display = 'none';
+}
+
+// ============================================================
+// USER MANAGEMENT MODAL
+// ============================================================
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function renderUsersList() {
+  var html = '<table class="users-table"><tr><th>Username</th><th>Password</th><th></th></tr>';
+  USERS.forEach(function(u,i){
+    html += '<tr><td><b>'+u.username+'</b></td>'
+      +'<td style="font-family:monospace">'+u.password+'</td>'
+      +'<td><button class="btn btn-danger" style="padding:3px 8px;font-size:0.75rem" onclick="deleteUser('+i+')">&#128465;</button></td></tr>';
+  });
+  document.getElementById('users-list-area').innerHTML = html+'</table>';
+}
+function saveUser() {
+  var uname=document.getElementById('new-uname').value.trim();
+  var pw=document.getElementById('new-pw').value;
+  if (!uname||!pw) { alert('Enter both username and password.'); return; }
+  var idx=USERS.findIndex(function(u){ return u.username===uname; });
+  if (idx>=0) { USERS[idx].password=pw; alert('Password updated for "'+uname+'"'); }
+  else        { USERS.push({username:uname,password:pw}); alert('User "'+uname+'" added.'); }
+  saveUsers(USERS);
+  document.getElementById('new-uname').value='';
+  document.getElementById('new-pw').value='';
+  renderUsersList();
+}
+function deleteUser(i) {
+  if (USERS.length<=1) { alert('Cannot delete the last user.'); return; }
+  if (!confirm('Delete user "'+USERS[i].username+'"?')) return;
+  USERS.splice(i,1); saveUsers(USERS); renderUsersList();
+}
+
+// ============================================================
+// DATA
+// ============================================================
+var students = [
+  {name:"BINITA DAHAL",       roll:"10200205",stream:"Plant Science",year:"2082/83"},
+  {name:"BINOD DAHAL",        roll:"10200206",stream:"Plant Science",year:"2082/83"},
+  {name:"DIBYA MABO",         roll:"10200207",stream:"Plant Science",year:"2082/83"},
+  {name:"JENI LAKSAM",        roll:"10200208",stream:"Plant Science",year:"2082/83"},
+  {name:"MISEK LINGDEN",      roll:"10200209",stream:"Plant Science",year:"2082/83"},
+  {name:"NABIN ADHIKARI",     roll:"10200210",stream:"Plant Science",year:"2082/83"},
+  {name:"NILIMA MAGAR",       roll:"10200211",stream:"Plant Science",year:"2082/83"},
+  {name:"NISKARSHA ADHIKARI", roll:"10200212",stream:"Plant Science",year:"2082/83"},
+  {name:"PRAJU SIWAKOTI",     roll:"10200213",stream:"Plant Science",year:"2082/83"},
+  {name:"PRERIT KAMBANG",     roll:"10200214",stream:"Plant Science",year:"2082/83"},
+  {name:"PUJA SUBEDI",        roll:"10200215",stream:"Plant Science",year:"2082/83"},
+  {name:"RAMESH KUMAR PAUDEL",roll:"10200216",stream:"Plant Science",year:"2082/83"},
+  {name:"RITU PARA MABO",     roll:"10200217",stream:"Plant Science",year:"2082/83"},
+  {name:"SAGAR YONGHANG",     roll:"10200218",stream:"Plant Science",year:"2082/83"},
+  {name:"SOBHIYA YONGHANG",   roll:"10200219",stream:"Plant Science",year:"2082/83"},
+  {name:"SUDARSHAN KOIRALA",  roll:"10200220",stream:"Plant Science",year:"2082/83"},
+  {name:"SUJAN KATUWAL",      roll:"10200221",stream:"Plant Science",year:"2082/83"}
+];
+var SUBJECTS = {
+  "Plant Science":[
+    {name:"Compulsory English",thMax:75,prMax:25},
+    {name:"Compulsory Nepali",thMax:75,prMax:25},
+    {name:"Physics",thMax:75,prMax:25},
+    {name:"Chemistry",thMax:75,prMax:25},
+    {name:"Biology",thMax:75,prMax:25},
+    {name:"Farm Machinery & Seeds Development",thMax:50,prMax:50},
+    {name:"Commercial Fruit Crop & Post Harvest Tech",thMax:50,prMax:50},
+    {name:"Agricultural Entomology",thMax:50,prMax:50},
+    {name:"Soil Fertility & Nutrient Management",thMax:50,prMax:50}
+  ],
+  "General":[
+    {name:"Compulsory English",thMax:75,prMax:25},
+    {name:"Compulsory Nepali",thMax:75,prMax:25},
+    {name:"Mathematics",thMax:100,prMax:0},
+    {name:"Accountancy",thMax:75,prMax:25},
+    {name:"Economics",thMax:100,prMax:0},
+    {name:"Computer Science",thMax:75,prMax:25},
+    {name:"Social Studies & Life Skills",thMax:75,prMax:25},
+    {name:"Health & Physical Education",thMax:50,prMax:50}
+  ]
+};
+var marksData = {};
+var currentFilter = 'all';
+
+function getKey(roll,exam)  { return roll+'||'+exam; }
+function getGrade(pct) {
+  if(pct>=90)return{g:'A+',gpa:4.0};if(pct>=80)return{g:'A',gpa:3.6};
+  if(pct>=70)return{g:'B+',gpa:3.2};if(pct>=60)return{g:'B',gpa:2.8};
+  if(pct>=50)return{g:'C+',gpa:2.4};if(pct>=40)return{g:'C',gpa:2.0};
+  if(pct>=35)return{g:'D',gpa:1.6};return{g:'NG',gpa:0.0};
+}
+function initials(name) {
+  var p=name.trim().split(' ');
+  return p.length>=2 ? p[0][0]+p[p.length-1][0] : name.substring(0,2);
+}
+
+// ============================================================
+// TABS
+// ============================================================
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.nav-tab').forEach(function(b){ b.classList.remove('active'); });
+  var panel = document.getElementById('tab-'+id);
+  if (panel) panel.classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (id==='marks')          { populateStudentSelects(); loadMarksForm(); }
+  if (id==='results')        { loadGradeSheet(); }
+  if (id==='teacher-portal') { teacherAssignments=loadTeacherAssignments(); renderTeacherAssignmentsTable(); renderTeacherMarksEntry(); }
+  if (id==='marks-approval') { loadApprovalData(); renderApprovalPanel(); }
+  if (id==='result-stats')   { renderResultStats(); }
+}
+
+function updateNavForRole(role) {
+  // Subject teachers: only show Teacher Portal and their relevant tabs
+  var isSubjectTeacher = (role === 'subject_teacher');
+  var isAdminOrTeacher = (role === 'admin' || role === 'teacher');
+  // Show/hide admin-only tabs
+  var adminTabs = ['marks-approval', 'settings'];
+  adminTabs.forEach(function(tabId) {
+    var btn = document.querySelector('[onclick*="showTab(\''+tabId+'\'"]');
+    if (btn) btn.style.display = isAdminOrTeacher ? '' : 'none';
+  });
+  // Always show teacher-portal tab
+  // Update header user display
+  var hdrUser = document.getElementById('hdr-user');
+  if (hdrUser) {
+    var u = USERS.find(function(x){ return x.username===currentUser; });
+    hdrUser.textContent = (u ? (u.fullname||u.username) : currentUser) + (isSubjectTeacher ? ' 👩‍🏫' : isAdminOrTeacher ? ' 👑' : '');
+  }
+}
+
+// ============================================================
+// STUDENTS
+// ============================================================
+function filterStudents(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-tab').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  renderStudentList();
+}
+function renderStudentList() {
+  var list = document.getElementById('student-list');
+  var filtered = students.filter(function(s){ return currentFilter==='all'||s.stream===currentFilter; });
+  if (!filtered.length) {
+    list.innerHTML='<div class="empty-state"><div class="empty-icon">&#128100;</div><p>No students found.</p></div>';
+    return;
+  }
+  list.innerHTML = filtered.map(function(s){
+    var hasMarks = Object.keys(marksData).some(function(k){ return k.startsWith(s.roll+'||'); });
+    var sc = s.stream==='Plant Science' ? 'badge-plant' : 'badge-general';
+    return '<div class="student-item" onclick="quickEnterMarks(\''+s.roll+'\')">'+
+      '<div class="student-avatar">'+initials(s.name)+'</div>'+
+      '<div class="student-info">'+
+        '<div class="student-name">'+s.name+'</div>'+
+        '<div class="student-meta">Roll: <b>'+s.roll+'</b> | '+s.year+'</div>'+
+      '</div>'+
+      '<span class="badge '+sc+'">'+(s.stream==='Plant Science'?'&#127807; Plant':'&#128218; General')+'</span>'+
+      (hasMarks?'<span class="badge badge-marked">&#10003; Marks</span>':'<span class="badge badge-unmarked">No marks</span>')+
+      '</div>';
+  }).join('');
+}
+function quickEnterMarks(roll) {
+  var btn = document.querySelector('[onclick="showTab(\'marks\',this)"]');
+  showTab('marks', btn); btn.classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById('marks-student-sel').value = roll;
+  loadMarksForm();
+}
+function updateSummary() {
+  var plant  = students.filter(function(s){ return s.stream==='Plant Science'; }).length;
+  var gen    = students.filter(function(s){ return s.stream==='General'; }).length;
+  var marked = students.filter(function(s){
+    return Object.keys(marksData).some(function(k){ return k.startsWith(s.roll+'||'); });
+  }).length;
+  document.getElementById('sc-total').textContent   = students.length;
+  document.getElementById('sc-plant').textContent   = plant;
+  document.getElementById('sc-general').textContent = gen;
+  document.getElementById('sc-marked').textContent  = marked;
+}
+
+// ============================================================
+// REGISTER STUDENT
+// ============================================================
+function selectStream(inp) {
+  document.querySelectorAll('.radio-opt').forEach(function(o){ o.classList.remove('selected'); });
+  inp.closest('.radio-opt').classList.add('selected');
+}
+function registerStudent() {
+  var name   = document.getElementById('reg-name').value.trim().toUpperCase();
+  var roll   = document.getElementById('reg-roll').value.trim();
+  var stream = document.querySelector('input[name="stream"]:checked').value;
+  var year   = document.getElementById('reg-year').value.trim();
+  if (!name||!roll) { alert('Enter Name and Roll No.'); return; }
+  if (students.some(function(s){ return s.roll===roll; })) { alert('Roll No. already exists!'); return; }
+ var regno=document.getElementById('reg-regno').value.trim();
+var dobbs=document.getElementById('reg-dob-bs').value.trim();
+var dobad=document.getElementById('reg-dob-ad').value.trim();
+  var newSt={name:name,roll:roll,stream:stream,year:year,regno:regno,dobbs:dobbs,dobad:dobad};
+  students.push(newSt);
+  try {
+    var extra=JSON.parse(localStorage.getItem('tss_extra_students')||'[]');
+    if (!extra.some(function(e){ return e.roll===roll; })) extra.push(newSt);
+    localStorage.setItem('tss_extra_students', JSON.stringify(extra));
+  } catch(e){}
+  document.getElementById('reg-name').value='';
+  document.getElementById('reg-roll').value='';
+  document.getElementById('reg-regno').value='';
+  document.getElementById('reg-dob-bs').value='';
+  document.getElementById('reg-dob-ad').value='';
+  renderStudentList(); populateStudentSelects(); updateSummary();
+  alert('Student "'+name+'" registered!');
+}
+
+// ============================================================
+// MARKS
+// ============================================================
+function populateStudentSelects() {
+  var sel = document.getElementById('marks-student-sel');
+  if (!sel) return;
+  var cur = sel.value;
+  sel.innerHTML = '<option value="">-- Choose student --</option>';
+  students.forEach(function(s){
+    sel.innerHTML += '<option value="'+s.roll+'">'+s.name+' ('+s.roll+')</option>';
+  });
+  if (cur) sel.value = cur;
+}
+function loadMarksForm() {
+  var roll = document.getElementById('marks-student-sel').value;
+  var exam = document.getElementById('marks-exam-sel').value;
+  var area = document.getElementById('marks-form-area');
+  if (!roll) { area.innerHTML=''; return; }
+  var st = students.find(function(s){ return s.roll===roll; });
+  if (!st) return;
+  var subs  = SUBJECTS[st.stream];
+  var saved = marksData[getKey(roll,exam)] || {};
+  var rows  = subs.map(function(sub){
+    var k    = sub.name.replace(/\W/g,'_');
+    var thV  = (saved[sub.name]&&saved[sub.name].th!==undefined) ? saved[sub.name].th : '';
+    var prV  = (saved[sub.name]&&saved[sub.name].pr!==undefined) ? saved[sub.name].pr : '';
+    var prIn = sub.prMax>0
+      ? '<input type="number" id="pr_'+k+'" min="0" max="'+sub.prMax+'" value="'+prV+'" placeholder="0" oninput="recalcRow(\''+k+'\','+sub.thMax+','+sub.prMax+')">'
+      : '<span style="color:#aaa">N/A</span>';
+    var tot  = '';
+    if (thV!==''&&(sub.prMax===0||prV!=='')) {
+      tot = parseInt(thV||0)+parseInt(prV||0);
+    }
+    return '<tr>'+
+      '<td style="font-size:0.78rem">'+sub.name+'</td>'+
+      '<td><input type="number" id="th_'+k+'" min="0" max="'+sub.thMax+'" value="'+thV+'" placeholder="0" oninput="recalcRow(\''+k+'\','+sub.thMax+','+sub.prMax+')"></td>'+
+      '<td>'+prIn+'</td>'+
+      '<td><small style="color:#888">/'+sub.thMax+'</small></td>'+
+      '<td id="tot_'+k+'">'+tot+'</td>'+
+      '</tr>';
+  }).join('');
+  area.innerHTML =
+    '<div class="section-card">'+
+    '<div class="section-head">&#128221; '+st.name+' &mdash; '+exam+'</div>'+
+    '<div style="overflow-x:auto"><table class="marks-table">'+
+    '<tr><th>Subject</th><th>Theory</th><th>Practical</th><th>Max Th</th><th>Total</th></tr>'+
+    rows+
+    '</table></div>'+
+    '<div style="padding:1rem">'+
+    '<button class="btn btn-success btn-full" onclick="saveMarks(\''+roll+'\',\''+exam+'\')">&#128190; Save Marks</button>'+
+    '</div></div>';
+}
+function recalcRow(key,thMax,prMax) {
+  var thEl=document.getElementById('th_'+key);
+  var prEl=document.getElementById('pr_'+key);
+  var th=thEl?parseInt(thEl.value||0):0;
+  var pr=(prEl&&prEl.tagName==='INPUT')?parseInt(prEl.value||0):0;
+  var totEl=document.getElementById('tot_'+key);
+  var hasData=thEl&&thEl.value!==''&&(prMax===0||(prEl&&prEl.tagName==='INPUT'&&prEl.value!==''));
+  if (totEl) totEl.textContent = hasData ? (th+pr) : '';
+}
+function saveMarks(roll,exam) {
+  // NOTE: This is wrapped by the Sync Devices module below.
+  // The wrapper handles the save + reminder. This base version is kept for reference only.
+  var st   = students.find(function(s){ return s.roll===roll; });
+  var subs = SUBJECTS[st.stream];
+  var obj  = {};
+  subs.forEach(function(sub){
+    var k    = sub.name.replace(/\W/g,'_');
+    var thEl = document.getElementById('th_'+k);
+    var prEl = document.getElementById('pr_'+k);
+    obj[sub.name] = {
+      th: thEl&&thEl.value!=='' ? parseInt(thEl.value) : undefined,
+      pr: prEl&&prEl.tagName==='INPUT'&&prEl.value!=='' ? parseInt(prEl.value) : undefined
+    };
+  });
+  marksData[getKey(roll,exam)] = obj;
+  saveMarksToStorage().then(function(){
+    updateSummary(); renderStudentList();
+    logApprovalRequest(exam, st.stream);
+    updateNotifBadge();
+    alert('Marks saved for '+st.name+' — '+exam);
+  });
+}
+
+// ============================================================
+// END-TO-END ENCRYPTION — AES-256 via SubtleCrypto
+// ============================================================
+var _encKey = null;
+var ENC_ENABLED = true;
+
+async function deriveKey(password, salt) {
+  var enc = new TextEncoder();
+  var keyMaterial = await crypto.subtle.importKey('raw', enc.encode(password), {name:'PBKDF2'}, false, ['deriveKey']);
+  return crypto.subtle.deriveKey(
+    {name:'PBKDF2', salt: enc.encode(salt), iterations:100000, hash:'SHA-256'},
+    keyMaterial, {name:'AES-GCM', length:256}, true, ['encrypt','decrypt']
+  );
+}
+
+async function encryptData(data, password) {
+  try {
+    var key = await deriveKey(password, 'tss_salt_2082');
+    var enc = new TextEncoder();
+    var iv = crypto.getRandomValues(new Uint8Array(12));
+    var encrypted = await crypto.subtle.encrypt({name:'AES-GCM', iv:iv}, key, enc.encode(JSON.stringify(data)));
+    var buf = new Uint8Array(iv.length + encrypted.byteLength);
+    buf.set(iv, 0); buf.set(new Uint8Array(encrypted), iv.length);
+    return btoa(String.fromCharCode.apply(null, buf));
+  } catch(e) { return JSON.stringify(data); }
+}
+
+async function decryptData(b64, password) {
+  try {
+    var bytes = Uint8Array.from(atob(b64), c=>c.charCodeAt(0));
+    var iv = bytes.slice(0,12);
+    var data = bytes.slice(12);
+    var key = await deriveKey(password, 'tss_salt_2082');
+    var dec = await crypto.subtle.decrypt({name:'AES-GCM', iv:iv}, key, data);
+    return JSON.parse(new TextDecoder().decode(dec));
+  } catch(e) { try { return JSON.parse(b64); } catch(e2) { return {}; } }
+}
+
+function getEncPassword() { return 'tss_enc_' + (currentUser||'guest') + '_tharpu'; }
+
+// ============================================================
+// MARKS STORAGE — Encrypted per user, merged on login
+// ============================================================
+async function saveMarksToStorage() {
+  try {
+    // Always write the shared plain master first — this ensures any user logging in on the same device sees all marks
+    localStorage.setItem('tss_marks_master', JSON.stringify(marksData));
+    // Also write encrypted per-user copy
+    var pwd = getEncPassword();
+    var encrypted = await encryptData(marksData, pwd);
+    localStorage.setItem('tss_marks_enc_'+(currentUser||'guest'), encrypted);
+    updateEncBadge(true);
+  } catch(e) {
+    try { localStorage.setItem('tss_marks_'+(currentUser||'guest'), JSON.stringify(marksData)); } catch(e2){}
+  }
+}
+
+async function loadMarksFromStorage() {
+  marksData = {};
+  try {
+    // Always load the shared plain master first (covers all users, all logins on this device)
+    try {
+      var master = localStorage.getItem('tss_marks_master');
+      if (master) Object.assign(marksData, JSON.parse(master));
+    } catch(e){}
+    // Then overlay with encrypted per-user data (more recent/authoritative)
+    for (var i=0; i<localStorage.length; i++) {
+      var k = localStorage.key(i);
+      if (!k) continue;
+      if (k.startsWith('tss_marks_enc_')) {
+        var user = k.replace('tss_marks_enc_','');
+        var pwd = 'tss_enc_' + user + '_tharpu';
+        var raw = localStorage.getItem(k);
+        var d = await decryptData(raw, pwd);
+        Object.assign(marksData, d||{});
+      } else if (k.startsWith('tss_marks_') && !k.includes('enc') && !k.includes('master')) {
+        try { var d2 = JSON.parse(localStorage.getItem(k)||'{}'); Object.assign(marksData, d2); } catch(e){}
+      }
+    }
+    // Always re-sync master with merged result so next login picks it all up
+    try { localStorage.setItem('tss_marks_master', JSON.stringify(marksData)); } catch(e){}
+    updateEncBadge(true);
+  } catch(e) { updateEncBadge(false); }
+}
+
+function updateEncBadge(ok) {
+  var b = document.getElementById('enc-status-badge');
+  if (b) {
+    b.className = 'enc-badge' + (ok?' ':' off');
+    b.innerHTML = ok ? '🔒 Encrypted' : '⚠️ Not Encrypted';
+  }
+}
+
+// ============================================================
+// TEACHER ASSIGNMENTS
+// ============================================================
+var teacherAssignments = {}; // subject -> username
+
+function loadTeacherAssignments() {
+  try { var s = localStorage.getItem('tss_teacher_assignments'); if(s) return JSON.parse(s); } catch(e){}
+  return {};
+}
+function saveTeacherAssignmentsData(obj) {
+  try { localStorage.setItem('tss_teacher_assignments', JSON.stringify(obj)); } catch(e){}
+}
+
+function getMySubject() {
+  var u = USERS.find(function(x){ return x.username===currentUser; });
+  if (!u) return null;
+  if (u.role==='admin' || u.role==='teacher') return null; // sees all
+  if (u.role==='subject_teacher') return u.subject || teacherAssignments[currentUser] || null;
+  // Check assignments
+  for (var sub in teacherAssignments) {
+    if (teacherAssignments[sub]===currentUser) return sub;
+  }
+  return null;
+}
+
+function isAdmin() {
+  var u = USERS.find(function(x){ return x.username===currentUser; });
+  return !u || u.role==='admin' || u.role==='teacher';
+}
+
+function renderTeacherAssignmentsTable() {
+  teacherAssignments = loadTeacherAssignments();
+  // Auto-assign from DEFAULT_USERS if not already assigned
+  DEFAULT_USERS.forEach(function(u) {
+    if (u.role==='subject_teacher' && u.subject && !teacherAssignments[u.subject]) {
+      teacherAssignments[u.subject] = u.username;
+    }
+  });
+
+  var allSubjects = [];
+  ['Plant Science','General'].forEach(function(stream) {
+    (SUBJECTS[stream]||[]).forEach(function(s){
+      if (!allSubjects.find(function(x){ return x.name===s.name; }))
+        allSubjects.push({name:s.name, stream:stream});
+    });
+  });
+
+  var teachers = USERS.filter(function(u){ return u.role==='subject_teacher'||u.role==='teacher'; });
+  var html = '<div style="overflow-x:auto"><table class="marks-table" style="min-width:420px">';
+  html += '<thead><tr><th>#</th><th>Subject</th><th>Stream</th><th>Assigned Teacher</th><th>Status</th></tr></thead><tbody>';
+  allSubjects.forEach(function(sub, i){
+    var assigned = teacherAssignments[sub.name] || '';
+    var opts = '<option value="">-- Not Assigned --</option>';
+    teachers.forEach(function(t){
+      opts += '<option value="'+t.username+'"'+(assigned===t.username?' selected':'')+'>'+t.fullname+' ('+t.username+')</option>';
+    });
+    var done = assigned ? '<span class="strow-status strow-done">✓ '+assigned+'</span>' : '<span class="strow-status strow-pending">⚠ Unassigned</span>';
+    var streamBadge = sub.stream==='Plant Science' ? '<span style="color:#1a6e2e;font-size:0.72rem">🌿 Plant</span>' : '<span style="color:#0d47a1;font-size:0.72rem">📘 General</span>';
+    html += '<tr><td style="text-align:center;font-weight:700;color:var(--text-muted)">'+(i+1)+'</td>';
+    html += '<td style="font-weight:600;font-size:0.83rem">'+sub.name+'</td>';
+    html += '<td>'+streamBadge+'</td>';
+    html += '<td><select class="ta-sel" data-sub="'+sub.name+'" style="width:100%;padding:4px 6px;border:1.5px solid var(--border);border-radius:6px;font-size:0.8rem;background:var(--cream)">'+opts+'</select></td>';
+    html += '<td>'+done+'</td></tr>';
+  });
+  html += '</tbody></table></div>';
+  var el = document.getElementById('teacher-assignments-table');
+  if (el) el.innerHTML = html;
+}
+
+function saveTeacherAssignments() {
+  var sels = document.querySelectorAll('.ta-sel');
+  sels.forEach(function(sel){ if(sel.dataset.sub) teacherAssignments[sel.dataset.sub] = sel.value; });
+  saveTeacherAssignmentsData(teacherAssignments);
+  renderTeacherAssignmentsTable();
+  if(typeof showToast==='function') showToast('✅ Teacher assignments saved!');
+}
+
+// ============================================================
+// TEACHER MARKS PORTAL — entry table
+// ============================================================
+function renderTeacherMarksEntry() {
+  teacherAssignments = loadTeacherAssignments();
+  // Auto-fill assignments from DEFAULT_USERS
+  DEFAULT_USERS.forEach(function(u) {
+    if (u.role==='subject_teacher' && u.subject && !teacherAssignments[u.subject]) {
+      teacherAssignments[u.subject] = u.username;
+    }
+  });
+
+  var exam   = document.getElementById('tportal-exam-sel').value;
+  var stream = document.getElementById('tportal-stream-sel').value;
+  var area   = document.getElementById('tportal-marks-area');
+  if (!area) return;
+
+  var mySub   = getMySubject();
+  var adminMode = isAdmin();
+
+  // Update portal title
+  var titleEl = document.getElementById('tportal-entry-title');
+  if (titleEl) titleEl.textContent = adminMode ? 'All Subjects Marks Entry' : 'My Subject: ' + (mySub||'—');
+
+  // Filter subjects
+  var subs = (SUBJECTS[stream]||[]).filter(function(s){
+    if (adminMode) return true;
+    return s.name === mySub;
+  });
+
+  if (!subs.length) {
+    area.innerHTML = '<div class="info-box" style="background:#ffebee;border-color:#f5c6c6;color:#b71c1c;">⚠️ You are not assigned to any subject in the <b>'+stream+'</b> stream.<br>Contact admin to get assigned. Your subject may be in the other stream.</div>';
+    renderTeacherProgress(exam, stream);
+    return;
+  }
+
+  var stList = students.filter(function(st){ return st.stream===stream; });
+  var html = '<div style="overflow-x:auto"><table class="marks-table" style="min-width:'+(350+subs.length*130)+'px">';
+  html += '<thead><tr style="background:var(--maroon);color:white">';
+  html += '<th style="text-align:left">#</th><th style="text-align:left">Student Name</th><th>Roll</th>';
+  subs.forEach(function(s){
+    html += '<th style="min-width:120px">'+s.name+'<br><small style="opacity:0.8">Th/'+s.thMax+(s.prMax?' Pr/'+s.prMax:'')+'</small></th>';
+  });
+  html += '<th>Save</th></tr></thead><tbody>';
+
+  stList.forEach(function(st, idx){
+    var saved = marksData[getKey(st.roll,exam)] || {};
+    html += '<tr id="trow_'+st.roll+'">';
+    html += '<td style="text-align:center;color:var(--text-muted);font-weight:700">'+(idx+1)+'</td>';
+    html += '<td style="font-weight:600;white-space:nowrap">'+st.name+'</td>';
+    html += '<td style="font-size:0.78rem">'+st.roll+'</td>';
+    subs.forEach(function(sub){
+      var thV = (saved[sub.name]&&saved[sub.name].th!==undefined) ? saved[sub.name].th : '';
+      var prV = (saved[sub.name]&&saved[sub.name].pr!==undefined) ? saved[sub.name].pr : '';
+      html += '<td style="white-space:nowrap;padding:4px 6px">';
+      html += '<input type="number" class="tp-th" data-roll="'+st.roll+'" data-sub="'+sub.name+'" min="0" max="'+sub.thMax+'" value="'+thV+'" placeholder="Th" style="width:50px;padding:3px 4px;border:1.5px solid var(--border);border-radius:5px;font-size:0.82rem;text-align:center;background:var(--cream)">';
+      if (sub.prMax>0) {
+        html += ' <input type="number" class="tp-pr" data-roll="'+st.roll+'" data-sub="'+sub.name+'" min="0" max="'+sub.prMax+'" value="'+prV+'" placeholder="Pr" style="width:44px;padding:3px 4px;border:1.5px solid var(--border);border-radius:5px;font-size:0.82rem;text-align:center;background:var(--cream)">';
+      }
+      html += '</td>';
+    });
+    html += '<td><button class="btn btn-success" style="padding:4px 10px;font-size:0.72rem;white-space:nowrap" onclick="saveTeacherMarksRow(\''+st.roll+'\',\''+exam+'\',\''+stream+'\')">💾</button></td>';
+    html += '</tr>';
+  });
+  html += '</tbody></table></div>';
+  html += '<div class="btn-row" style="margin-top:0.8rem;">';
+  html += '<button class="btn btn-primary btn-full" onclick="saveAllTeacherMarks(\''+exam+'\',\''+stream+'\')">💾 Save All Students & Submit</button>';
+  html += '</div>';
+  area.innerHTML = html;
+  renderTeacherProgress(exam, stream);
+}
+
+function saveTeacherMarksRow(roll, exam, stream) {
+  var st = students.find(function(s){ return s.roll===roll; });
+  if (!st) return;
+  var existing = marksData[getKey(roll,exam)] || {};
+  var thInputs = document.querySelectorAll('.tp-th[data-roll="'+roll+'"]');
+  var prInputs = document.querySelectorAll('.tp-pr[data-roll="'+roll+'"]');
+  thInputs.forEach(function(inp){
+    var sub = inp.dataset.sub;
+    if (!existing[sub]) existing[sub] = {};
+    existing[sub].th = inp.value!==''?parseInt(inp.value):undefined;
+  });
+  prInputs.forEach(function(inp){
+    var sub = inp.dataset.sub;
+    if (!existing[sub]) existing[sub] = {};
+    existing[sub].pr = inp.value!==''?parseInt(inp.value):undefined;
+  });
+  marksData[getKey(roll,exam)] = existing;
+  saveMarksToStorage().then(function(){
+    updateSummary(); renderStudentList();
+    logApprovalRequest(exam, stream);
+    updateNotifBadge();
+    var row = document.getElementById('trow_'+roll);
+    if (row) { row.style.background='#f0fff4'; setTimeout(function(){ row.style.background=''; },1500); }
+    if(typeof showToast==='function') showToast('✅ Marks saved for '+st.name);
+  });
+}
+
+function saveAllTeacherMarks(exam, stream) {
+  var stList = students.filter(function(s){ return s.stream===stream; });
+  stList.forEach(function(st){
+    var existing = marksData[getKey(st.roll,exam)] || {};
+    var thInputs = document.querySelectorAll('.tp-th[data-roll="'+st.roll+'"]');
+    var prInputs = document.querySelectorAll('.tp-pr[data-roll="'+st.roll+'"]');
+    thInputs.forEach(function(inp){ var sub=inp.dataset.sub; if(!existing[sub])existing[sub]={}; existing[sub].th=inp.value!==''?parseInt(inp.value):undefined; });
+    prInputs.forEach(function(inp){ var sub=inp.dataset.sub; if(!existing[sub])existing[sub]={}; existing[sub].pr=inp.value!==''?parseInt(inp.value):undefined; });
+    marksData[getKey(st.roll,exam)] = existing;
+  });
+  saveMarksToStorage().then(function(){
+    updateSummary(); renderStudentList();
+    if(typeof showToast==='function') showToast('✅ All marks saved! Subject submitted.');
+    logApprovalRequest(exam, stream);
+    updateNotifBadge();
+  });
+}
+
+function renderTeacherProgress(exam, stream) {
+  var subs = SUBJECTS[stream]||[];
+  var stList = students.filter(function(s){ return s.stream===stream; });
+  var total = stList.length;
+  var html = '';
+  subs.forEach(function(sub){
+    var filled = stList.filter(function(st){
+      var saved = marksData[getKey(st.roll,exam)]||{};
+      var d = saved[sub.name]||{};
+      return d.th!==undefined && (sub.prMax===0||d.pr!==undefined);
+    }).length;
+    var pct = total>0 ? Math.round(filled/total*100):0;
+    var assigned = teacherAssignments[sub.name] || 'Unassigned';
+    html += '<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:3px"><span style="font-weight:600">'+sub.name+'</span><span style="color:var(--text-muted)">'+assigned+' &middot; '+filled+'/'+total+'</span></div>';
+    html += '<div class="subject-progress-bar"><div class="subject-progress-fill" style="width:'+pct+'%;background:'+(pct===100?'var(--success)':'var(--maroon)')+'"></div></div></div>';
+  });
+  document.getElementById('tportal-progress-area').innerHTML = html || '<div class="empty-state"><p>No data.</p></div>';
+}
+
+// ============================================================
+// MARKS APPROVAL & LOCK
+// ============================================================
+var approvalRequests = [];
+var marksLocked = false;
+
+function loadApprovalData() {
+  try { var s=localStorage.getItem('tss_approvals'); if(s) approvalRequests=JSON.parse(s); } catch(e){}
+  try { marksLocked = localStorage.getItem('tss_marks_locked')==='true'; } catch(e){}
+}
+function saveApprovalData() {
+  try { localStorage.setItem('tss_approvals', JSON.stringify(approvalRequests)); } catch(e){}
+  try { localStorage.setItem('tss_marks_locked', marksLocked?'true':'false'); } catch(e){}
+}
+
+function logApprovalRequest(exam, stream) {
+  var existing = approvalRequests.find(function(r){ return r.exam===exam&&r.stream===stream&&r.teacher===currentUser; });
+  if (!existing) {
+    approvalRequests.push({exam:exam,stream:stream,teacher:currentUser,status:'pending',submitted:new Date().toLocaleString()});
+  } else { existing.status='pending'; existing.submitted=new Date().toLocaleString(); }
+  saveApprovalData();
+}
+
+function renderApprovalPanel() {
+  loadApprovalData();
+  var exam = document.getElementById('approval-exam-sel').value;
+  var stream = document.getElementById('approval-stream-sel').value;
+  var relevant = approvalRequests.filter(function(r){ return r.exam===exam && r.stream===stream; });
+  var lock = document.getElementById('global-lock-status');
+  if (lock) lock.innerHTML = marksLocked
+    ? '<div class="enc-badge" style="margin-bottom:0">🔒 Marks are LOCKED — read-only for teachers</div>'
+    : '<div class="enc-badge off" style="margin-bottom:0">🔓 Marks are UNLOCKED — teachers can edit</div>';
+
+  var html = '';
+  if (!relevant.length) { html = '<div class="empty-state"><p>No submissions yet for '+exam+' — '+stream+'.</p></div>'; }
+  else {
+    html = '<table class="marks-table"><thead><tr><th>Teacher</th><th>Exam</th><th>Stream</th><th>Submitted</th><th>Status</th><th>Actions</th></tr></thead><tbody>';
+    relevant.forEach(function(r,i){
+      var sc = r.status==='approved'?'apr-approved':r.status==='rejected'?'apr-rejected':'apr-pending';
+      var actions = isAdmin() ? '<button class="btn btn-success" style="padding:3px 8px;font-size:0.72rem;margin-right:3px" onclick="approveMarks('+i+')">✓ Approve</button><button class="btn btn-danger" style="padding:3px 8px;font-size:0.72rem" onclick="rejectMarks('+i+')">✗ Reject</button>' : '';
+      html += '<tr><td><b>'+r.teacher+'</b></td><td>'+r.exam+'</td><td>'+r.stream+'</td><td>'+r.submitted+'</td><td><span class="apr-status '+sc+'">'+r.status+'</span></td><td>'+actions+'</td></tr>';
+    });
+    html += '</tbody></table>';
+  }
+  document.getElementById('approval-panel').innerHTML = html;
+}
+
+function approveMarks(i) { approvalRequests[i].status='approved'; saveApprovalData(); renderApprovalPanel(); updateNotifBadge(); showToast('✅ Marks approved!'); }
+function rejectMarks(i)  { approvalRequests[i].status='rejected'; saveApprovalData(); renderApprovalPanel(); updateNotifBadge(); showToast('❌ Marks rejected.'); }
+function lockAllMarks()  { marksLocked=true; saveApprovalData(); renderApprovalPanel(); showToast('🔒 All marks locked!'); }
+function unlockAllMarks(){ marksLocked=false; saveApprovalData(); renderApprovalPanel(); showToast('🔓 Marks unlocked.'); }
+
+function updateNotifBadge() {
+  try {
+    loadApprovalData();
+    var pending = approvalRequests.filter(function(r){ return r.status==='pending'; }).length;
+    var badge = document.getElementById('notif-badge');
+    if (!badge) return;
+    if (pending > 0 && isAdmin()) {
+      badge.textContent = pending > 9 ? '9+' : pending;
+      badge.style.display = 'flex';
+    } else {
+      badge.style.display = 'none';
+    }
+  } catch(e){}
+}
+
+// ============================================================
+// RESULT STATISTICS
+// ============================================================
+function renderResultStats() {
+  var exam = document.getElementById('rstats-exam-sel').value;
+  var streamF = document.getElementById('rstats-stream-sel').value;
+  var area = document.getElementById('result-stats-area');
+  var stList = students.filter(function(s){ return streamF==='all'||s.stream===streamF; });
+  if (!stList.length) { area.innerHTML='<div class="empty-state"><p>No students found.</p></div>'; return; }
+
+  var totalMarked=0, passCount=0, failCount=0, gpaTot=0, gpaCount=0;
+  var gradeCount={'A+':0,'A':0,'B+':0,'B':0,'C+':0,'C':0,'D':0,'NG':0};
+  var topStudents=[];
+
+  stList.forEach(function(st){
+    var subs = SUBJECTS[st.stream]||[];
+    var saved = marksData[getKey(st.roll,exam)]||{};
+    var totalGP=0, subCount=0, anyNG=false, allFilled=true;
+    subs.forEach(function(sub){
+      var d=saved[sub.name]||{},max=sub.thMax+sub.prMax;
+      if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
+        var t=(d.th||0)+(d.pr||0);
+        var pct=max>0?t/max*100:0;
+        var gr=getGrade(pct);
+        totalGP+=gr.gpa; subCount++;
+        if(gr.g==='NG') anyNG=true;
+        gradeCount[gr.g]=(gradeCount[gr.g]||0)+1;
+      } else { allFilled=false; }
+    });
+    if (allFilled && subCount>0) {
+      totalMarked++;
+      var cgpa = totalGP/subCount;
+      gpaTot += cgpa; gpaCount++;
+      if (anyNG) failCount++; else passCount++;
+      topStudents.push({name:st.name, roll:st.roll, cgpa:cgpa.toFixed(2), div:cgpaDiv(cgpa)});
+    }
+  });
+
+  topStudents.sort(function(a,b){ return parseFloat(b.cgpa)-parseFloat(a.cgpa); });
+  var avgGPA = gpaCount>0 ? (gpaTot/gpaCount).toFixed(2) : '—';
+  var passRate = totalMarked>0 ? Math.round(passCount/totalMarked*100) : 0;
+
+  var html = '<div class="result-stats-grid">';
+  html += '<div class="rs-card"><div class="rs-num">'+stList.length+'</div><div class="rs-lbl">Total Students</div></div>';
+  html += '<div class="rs-card"><div class="rs-num">'+totalMarked+'</div><div class="rs-lbl">Results Generated</div></div>';
+  html += '<div class="rs-card"><div class="rs-num" style="color:var(--success)">'+passCount+'</div><div class="rs-lbl">Passed</div></div>';
+  html += '<div class="rs-card"><div class="rs-num" style="color:var(--danger)">'+failCount+'</div><div class="rs-lbl">Failed / NG</div></div>';
+  html += '<div class="rs-card"><div class="rs-num">'+passRate+'%</div><div class="rs-lbl">Pass Rate</div></div>';
+  html += '<div class="rs-card"><div class="rs-num">'+avgGPA+'</div><div class="rs-lbl">Avg CGPA</div></div>';
+  html += '</div>';
+
+  // Grade distribution
+  html += '<div class="section-card"><div class="section-head">📊 Grade Distribution</div><div class="section-body">';
+  ['A+','A','B+','B','C+','C','D','NG'].forEach(function(g){
+    var cnt = gradeCount[g]||0;
+    var maxCnt = Math.max.apply(null, Object.values(gradeCount).filter(Boolean))||1;
+    var pct = Math.round(cnt/maxCnt*100);
+    var cls = {A:'gp-aplus','A+':'gp-aplus',B:'gp-b','B+':'gp-bplus',C:'gp-c','C+':'gp-cplus',D:'gp-d',NG:'gp-ng'}[g]||'gp-ng';
+    html += '<div class="bar-row"><div class="bar-label"><span class="grade-pill '+cls+'">'+g+'</span></div><div class="bar-track"><div class="bar-fill" style="width:'+pct+'%"></div></div><div class="bar-val">'+cnt+'</div></div>';
+  });
+  html += '</div></div>';
+
+  // Top 10 students
+  html += '<div class="section-card" style="margin-top:1rem"><div class="section-head">🏆 Top Students — '+exam+'</div><div style="overflow-x:auto"><table class="marks-table"><thead><tr><th>Rank</th><th>Name</th><th>Roll</th><th>CGPA</th><th>Division</th></tr></thead><tbody>';
+  topStudents.slice(0,10).forEach(function(s,i){
+    var rankCls = i===0?'rank-gold':i===1?'rank-silver':i===2?'rank-bronze':'';
+    html += '<tr><td style="text-align:center"><span class="rank-num r'+(i+1)+'">'+( i<3?['🥇','🥈','🥉'][i]:i+1)+'</span></td><td style="font-weight:600">'+s.name+'</td><td>'+s.roll+'</td><td><b>'+s.cgpa+'</b></td><td>'+s.div+'</td></tr>';
+  });
+  html += '</tbody></table></div></div>';
+
+  area.innerHTML = html;
+}
+
+// ============================================================
+// SHOW TAB HOOK — initialize new tabs
+// ============================================================
+
+// ============================================================
+// GRADE SHEET — all students, single page
+// ============================================================
+function loadGradeSheet() {
+  var exam    = document.getElementById('result-exam-sel').value;
+  var streamF = document.getElementById('result-stream-sel').value;
+  var area    = document.getElementById('result-display');
+  var streams = streamF==='all' ? ['Plant Science','General'] : [streamF];
+  var filtered= students.filter(function(s){ return streamF==='all'||s.stream===streamF; });
+  if (!filtered.length) {
+    area.innerHTML='<div class="empty-state"><div class="empty-icon">&#128196;</div><p>No students found.</p></div>';
+    return;
+  }
+  var html = '<div class="result-card">'+
+    '<div class="result-header"><h2>THARPU SECONDARY SCHOOL</h2>'+
+    '<p>Yangwarak-4, Panchthar, Koshi Province, Nepal | Code: TSS-PAN</p>'+
+    '<p style="margin-top:6px;font-weight:700;font-size:0.9rem;">'+exam+' &mdash; Grade Sheet &mdash; 2082/83</p></div>';
+  streams.forEach(function(stream){
+    var slist=filtered.filter(function(s){ return s.stream===stream; });
+    if (!slist.length) return;
+    var subs=SUBJECTS[stream];
+    html+='<div style="padding:0.8rem 0.8rem 0;font-weight:700;color:var(--maroon)">'+stream+' Stream</div>'+
+      '<div style="overflow-x:auto"><table class="result-table" style="font-size:0.70rem">'+
+      '<thead><tr style="background:var(--maroon);color:white">'+
+      '<th style="text-align:left">SN</th><th style="text-align:left">Name</th><th>Roll</th>';
+    subs.forEach(function(sub){
+      html+='<th>'+sub.name.split(' ').slice(0,2).join(' ')+'<br><small>GPA</small></th>';
+    });
+   ''+
+    slist.forEach(function(st,idx){
+      var saved=marksData[getKey(st.roll,exam)]||{};
+      var totalGPA=0,subCount=0,allFilled=true,anyNG=false;
+      var cells=subs.map(function(sub){
+        var d=saved[sub.name]||{},max=sub.thMax+sub.prMax;
+        if (d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)) {
+          var t=(d.th||0)+(d.pr||0);
+          var pct=max>0?(t/max*100):0;
+          var gr=getGrade(pct);
+          totalGPA+=gr.gpa; subCount++;
+          if(gr.g==='NG') anyNG=true;
+         return '<td>'+gr.gpa.toFixed(1)+'</td>';
+        } else { allFilled=false; return '<td style="color:#bbb">—</td>'; }
+      }).join('');
+      var cgpa=allFilled&&subCount>0?(totalGPA/subCount).toFixed(2):'—';
+      var division=!allFilled?'—':anyNG?'Fail':cgpaDiv(parseFloat(cgpa));
+      var res=!allFilled?'&#9203;':anyNG?'<span style="color:#b71c1c">&#10060; NG</span>':'<span style="color:#1a6e2e">&#9989; Pass</span>';
+      html+='<tr style="'+(idx%2?'background:#fdf6ec':'')+'" >'+
+        '<td>'+(idx+1)+'</td>'+
+        '<td style="white-space:nowrap;text-align:left">'+st.name+'</td>'+
+        '<td>'+st.roll+'</td>'+
+        cells+
+        '<td><b>'+(allFilled?cgpa:'—')+'</b></td>'+
+    
+        '<td>'+res+'</td>'+
+        '<td><button class="btn btn-sm" style="background:var(--maroon);color:white;padding:3px 7px;font-size:0.7rem;border:none;border-radius:5px;cursor:pointer" onclick="showIndividualSheet(\''+st.roll+'\',\''+exam+'\')">&#128196;</button></td>'+
+        '</tr>';
+    });
+    html+='</tbody></table></div>';
+  });
+  html+='<div style="padding:0.7rem;font-size:0.72rem;color:var(--text-muted)">Generated: '+new Date().toLocaleString()+' | Tharpu Secondary School</div></div>';
+  area.innerHTML=html;
+}
+
+function gpaPillClass(g) {
+  var m={'A+':'gp-aplus','A':'gp-a','B+':'gp-bplus','B':'gp-b','C+':'gp-cplus','C':'gp-c','D':'gp-d','NG':'gp-ng'};
+  return m[g]||'gp-ng';
+}
+function cgpaDiv(cgpa) {
+  if(cgpa>=3.6) return 'Distinction';
+  if(cgpa>=2.8) return 'First Div';
+  if(cgpa>=2.0) return 'Second Div';
+  if(cgpa>=1.6) return 'Pass';
+  return 'Fail';
+}
+
+function showIndividualSheet(roll,exam) {
+  var st=students.find(function(s){ return s.roll===roll; });
+  if (!st) return;
+  var subs=SUBJECTS[st.stream];
+  var saved=marksData[getKey(roll,exam)]||{};
+
+  // Credit hours per subject
+  var creditMap={
+    'Physics':3,'Chemistry':3,'Biology':3,'Compulsory Nepali':3
+  };
+  function getCredit(name){ return creditMap[name]||4; }
+
+  // NEB: GPA = gradepoint (not weighted). CGPA = sum(GP)/count
+  var totalGP=0,subCount=0,anyNG=false,allFilled=true;
+
+// Correct NEB subject codes
+var subjectCodes = {
+  'Compulsory English': '003',
+  'Compulsory Nepali':  '002',
+  'Physics':            '212',
+  'Chemistry':          '175',
+  'Biology':            '149',
+  'Farm Machinery & Seeds Development':            '246',
+  'Soil Fertility & Nutrient Management':          '253',
+  'Commercial Fruit Crop & Post Harvest Tech':     '260',
+  'Agricultural Entomology':                       '268',
+  'Mathematics':        '006',
+  'Accountancy':        '221',
+  'Economics':          '219',
+  'Computer Science':   '320',
+  'Social Studies & Life Skills': '010',
+  'Health & Physical Education':  '014'
+};
+
+var rows=subs.map(function(sub,i){
+    var d=saved[sub.name]||{},max=sub.thMax+sub.prMax;
+    var credit=getCredit(sub.name);
+    var code = subjectCodes[sub.name] || (101+i);
+    if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
+      var t=(d.th||0)+(d.pr||0);
+      var pct=max>0?t/max*100:0;
+      var gr=getGrade(pct);
+      totalGP+=gr.gpa; subCount++;
+      if(gr.g==='NG') anyNG=true;
+      var inGP  = sub.prMax>0 ? gr.gpa.toFixed(1) : '—';
+      var inG   = sub.prMax>0 ? gr.g : '—';
+      var exGP  = gr.gpa.toFixed(1);
+      var exG   = gr.g;
+      return '<tr>'
+        +'<td style="text-align:center">'+code+'</td>'
+        +'<td style="text-align:left;padding-left:8px">'+sub.name+'</td>'
+        +'<td style="text-align:center">'+credit+'</td>'
+        +'<td style="text-align:center">'+inGP+'</td>'
+        +'<td style="text-align:center">'+inG+'</td>'
+        +'<td style="text-align:center">'+exGP+'</td>'
+        +'<td style="text-align:center">'+exG+'</td>'
+        +'<td style="text-align:center">'+gr.g+'</td>'
+        +'<td style="text-align:center">'+(gr.g==='NG'?'Not Graded':gr.g==='D'?'Basic':'Passed')+'</td>'
+        +'</tr>';
+    } else {
+      allFilled=false;
+      return '<tr>'
+        +'<td style="text-align:center">'+code+'</td>'
+        +'<td style="text-align:left;padding-left:8px">'+sub.name+'</td>'
+        +'<td style="text-align:center">'+credit+'</td>'
+        +'<td style="text-align:center">—</td>'
+        +'<td style="text-align:center">—</td>'
+        +'<td style="text-align:center">—</td>'
+        +'<td style="text-align:center">—</td>'
+        +'<td style="text-align:center">—</td>'
+        +'<td style="text-align:center">—</td>'
+        +'</tr>';
+    }
+  }).join('');
+
+  // Empty filler rows so table looks full like NEB format
+  var fillerNeeded=Math.max(0,10-subs.length);
+ for(var f=0;f<fillerNeeded;f++){
+    rows+='<tr><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>';
+  }
+
+  var cgpa=allFilled&&subCount>0?(totalGP/subCount).toFixed(2):'—';
+  var today=new Date();
+  var dateStr=today.getFullYear()+'/'+(today.getMonth()+1)+'/'+(today.getDate());
+
+  var w=window.open('','_blank');
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8">'+
+    '<title>Grade Sheet — '+st.name+'</title>'+
+    '<style>'+
+    '*{box-sizing:border-box;margin:0;padding:0}'+
+    'body{font-family:Arial,sans-serif;font-size:12px;color:#000;background:#fff;padding:20px}'+
+    '.page{max-width:740px;margin:0 auto;border:2px solid #000;padding:18px 24px}'+
+    '.top-right{text-align:right;font-size:11px;font-weight:bold;margin-bottom:4px}'+
+    '.header-row{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;margin-bottom:10px}'+
+    '.school-name{flex:1;padding-top:6px}'+
+    '.school-name .line{border-bottom:1px dotted #000;min-width:400px;display:block;margin-bottom:6px;font-size:13px;font-weight:bold;letter-spacing:1px}'+
+    '.school-name .line2{border-bottom:1px dotted #000;min-width:300px;display:block;margin-bottom:0;font-size:11px}'+
+    '.grade-sheet-title{text-align:center;font-size:15px;font-weight:bold;margin:10px 0 14px;letter-spacing:2px;text-decoration:underline}'+
+    '.info-line{margin-bottom:7px;font-size:12px;display:flex;align-items:baseline;gap:4px}'+
+    '.info-line .dotline{border-bottom:1px dotted #000;flex:1;min-width:80px;display:inline-block}'+
+    '.info-line .label{white-space:nowrap;font-weight:normal}'+
+    '.info-block{margin-bottom:4px}'+
+    'table{width:100%;border-collapse:collapse;margin:14px 0 0}'+
+    'th,td{border:1px solid #000;padding:5px 4px;font-size:11px}'+
+    'th{font-weight:bold;text-align:center;background:#fff}'+
+    '.total-row td{font-weight:bold;border-top:2px solid #000}'+
+    '.footer-sigs{display:flex;justify-content:space-between;margin-top:28px;font-size:11px}'+
+    '.sig-block{text-align:center}'+
+    '.sig-line{border-top:1px solid #000;width:160px;margin:0 auto 4px}'+
+    '.date-line{margin-top:16px;font-size:12px}'+
+    '.note-box{border:1px solid #000;margin-top:16px;padding:7px 10px;font-size:10.5px}'+
+    '.note-box div{margin-bottom:2px}'+
+    '@media print{body{padding:0}.page{border:2px solid #000;padding:15px 20px}button{display:none!important}}'+
+    '</style></head><body>'+
+
+    '<div class="page">'+
+
+  // Header: logo beside school name
+   '<div style="display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:14px">'+
+'<div style="width:80px;height:80px;border-radius:50%;border:2.5px solid #000;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:#fff">'+
+'<img src="THARPU SECONDARY SCHOOL.png" style="width:100%;height:100%;object-fit:cover;object-position:center;border-radius:50%" onerror="this.style.display=\'none\'">'+
+'</div>'+
+'<div style="text-align:center">'+
+'<b style="font-size:15px;letter-spacing:1px;display:block;margin-bottom:6px">THARPU SECONDARY SCHOOL</b>'+
+'<span style="font-size:11.5px;display:block;margin-bottom:5px">Yangwarak-4, Panchthar, Koshi Province, Nepal</span>'+
+'<span style="font-size:10.5px;display:block">Affiliated to National Examinations Board (NEB)</span>'+
+'</div>'+
+'</div>'+
+      
+    // Title
+    '<div class="grade-sheet-title">GRADE-SHEET</div>'+
+
+    // Info lines
+    '<div class="info-block">'+
+     '<div class="info-line"><span class="label">DATE OF BIRTH :</span><span class="dotline">&nbsp;'+(st.dobbs||'')+'&nbsp;</span><span class="label">B.S. &nbsp;&nbsp;&nbsp;(&nbsp;</span><span class="dotline">&nbsp;'+(st.dobad||'')+'&nbsp;</span><span class="label">A.D.)</span></div>'+
+'<div class="info-line"><span class="label">REGISTRATION NO</span><span class="dotline">&nbsp;'+(st.regno||'')+'&nbsp;</span><span class="label">&nbsp;SYMBOL NO:</span><span class="dotline">&nbsp;'+st.roll+'&nbsp;</span><span class="label">&nbsp;&nbsp;GRADE : XI</span></div>'+ 
+      '<div class="info-line"><span class="label">IN THE <b>'+exam.toUpperCase()+'</b> CONDUCTED BY SCHOOL IN</span><span class="dotline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="label">B.S.</span></div>'+
+      '<div class="info-line"><span class="label">(&nbsp;</span><span class="dotline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="label">&nbsp;A.D.) ARE GIVEN BELOW.</span></div>'+
+    '</div>'+
+
+    // Main table
+    '<table>'+
+  '<thead>'+
+    '<tr>'+
+      '<th rowspan="3" style="width:60px">SUBJECT<br>CODE</th>'+
+      '<th rowspan="3">SUBJECTS</th>'+
+      '<th rowspan="3" style="width:50px">CREDIT<br>HOUR<br>(CH)</th>'+
+      '<th colspan="2">THEORY (TH)</th>'+
+      '<th colspan="2">PRACTICAL (PR)</th>'+
+      '<th rowspan="3" style="width:60px">FINAL<br>GRADE</th>'+
+      '<th rowspan="3" style="width:70px">REMARKS</th>'+
+    '</tr>'+
+    '<tr>'+
+      '<th style="width:55px">GRADE<br>POINT</th>'+
+      '<th style="width:45px">GRADE</th>'+
+      '<th style="width:55px">GRADE<br>POINT</th>'+
+      '<th style="width:45px">GRADE</th>'+
+    '</tr>'+
+  '</thead>'+
+      '<tbody>'+rows+
+        '<tr class="total-row">'+
+          '<td colspan="2" style="text-align:right;padding-right:8px">TOTAL</td>'+
+          '<td></td>'+
+          '<td colspan="2" style="text-align:left;padding-left:6px">GRADE POINT AVERAGE (GPA): <b>'+cgpa+'</b></td>'+
+          '<td></td>'+
+          '<td></td>'+
+        '</tr>'+
+      '</tbody>'+
+    '</table>'+
+
+    // Signatures
+    '<div class="footer-sigs">'+
+      '<div class="sig-block">'+
+        '<div style="margin-bottom:22px">PREPARED BY :</div>'+
+        '<div class="sig-line"></div>'+
+        '<div><b>CHECKED BY</b></div>'+
+        '<div><b>(CLASS TEACHER)</b></div>'+
+      '</div>'+
+      '<div class="sig-block" style="text-align:right">'+
+        '<div style="margin-bottom:22px">&nbsp;</div>'+
+        '<div class="sig-line" style="margin-left:auto;margin-right:0"></div>'+
+        '<div><b>HEAD TEACHER</b></div>'+
+      '</div>'+
+    '</div>'+
+
+    '<div class="date-line">DATE OF ISSUE : '+dateStr+'</div>'+
+
+    // Note box
+    '<div class="note-box">'+
+      '<div>NOTE: ONE CREDIT HOUR EQUALS 32 CLOCK HOURS.</div>'+
+      '<div style="display:flex;gap:60px;margin-top:4px">'+
+        '<div>TH= THEORY</div><div>PR= PRACTICAL</div>'+
+      '</div>'+
+      '<div style="display:flex;gap:60px;margin-top:2px">'+
+        '<div>ABS= ABSENT</div><div>W= WITHHELD</div>'+
+      '</div>'+
+    '</div>'+
+
+    // Print button
+    '<div style="text-align:center;margin-top:14px">'+
+      '<button onclick="window.print()" style="background:#7B1C1C;color:white;border:none;padding:8px 24px;border-radius:6px;font-size:13px;cursor:pointer">&#128424; Print / Save PDF</button>'+
+    '</div>'+
+
+    '</div>'+ // end .page
+    '</body></html>');
+  w.document.close();
+}
+// ============================================================
+// EXPORT EXCEL
+// ============================================================
+function exportExcel() {
+  var exam    = document.getElementById('result-exam-sel').value;
+  var streamF = document.getElementById('result-stream-sel').value;
+  var streams = streamF==='all' ? ['Plant Science','General'] : [streamF];
+  var rows    = ['"THARPU SECONDARY SCHOOL"','"'+exam+' — 2082/83"',''];
+  streams.forEach(function(stream){
+    var slist=students.filter(function(s){ return (streamF==='all'||s.stream===streamF)&&s.stream===stream; });
+    if (!slist.length) return;
+    var subs=SUBJECTS[stream];
+    rows.push('"'+stream+' Stream"');
+    var hdr=['SN','Name','Roll No.'];
+    subs.forEach(function(sub){ hdr.push(sub.name+' Grade'); hdr.push(sub.name+' GPA'); });
+    hdr.push('CGPA','Division','Result');
+    rows.push(hdr.map(function(h){ return '"'+h+'"'; }).join(','));
+    slist.forEach(function(st,i){
+      var saved=marksData[getKey(st.roll,exam)]||{};
+      var row=[i+1,st.name,st.roll],totalGPA=0,subCount=0,filled=true,ng=false;
+      subs.forEach(function(sub){
+        var d=saved[sub.name]||{},max=sub.thMax+sub.prMax;
+        if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
+          var t=(d.th||0)+(d.pr||0);
+          var gr=getGrade(max>0?t/max*100:0);
+          totalGPA+=gr.gpa; subCount++;
+          row.push(gr.g); row.push(gr.gpa.toFixed(1));
+          if(gr.g==='NG') ng=true;
+        } else { row.push(''); row.push(''); filled=false; }
+      });
+      var cgpa=filled&&subCount>0?(totalGPA/subCount).toFixed(2):'';
+      row.push(cgpa);
+      row.push(filled?cgpaDiv(parseFloat(cgpa)):'Incomplete');
+      row.push(!filled?'Incomplete':ng?'Not Graded':'Pass');
+      rows.push(row.map(function(c){ return '"'+c+'"'; }).join(','));
+    });
+    rows.push('');
+  });
+  var csv='\uFEFF'+rows.join('\n');
+  var a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download='Tharpu_GradeSheet_'+exam.replace(/ /g,'_')+'.csv';
+  a.click();
+}
+// ============================================================
+// EXPORT & SHARE — data baked into the HTML file itself
+// ============================================================
+// How sharing works:
+//   1. Teacher enters marks → saved in localStorage on their device.
+//   2. Teacher clicks "Export & Share File" → downloads a .html file
+//      that has ALL marks + students embedded as a <script> block.
+//   3. Anyone who opens that .html file (WhatsApp, email, USB, etc.)
+//      sees ALL the saved data immediately — no login needed to VIEW,
+//      and can log in to ADD more marks which then stay on their device.
+//   4. They can re-export with their additions and share again.
+// ============================================================
+// ── Bulk Print All Grade Sheets ──
+function printAllSheets(){
+  var exam=document.getElementById('result-exam-sel').value;
+  var streamF=document.getElementById('result-stream-sel').value;
+  var list=students.filter(function(s){return streamF==='all'||s.stream===streamF;});
+  if(!list.length){alert('No students found.');return;}
+  var w=window.open('','_blank');
+  var pages=list.map(function(st){
+    var subs=SUBJECTS[st.stream],saved=marksData[getKey(st.roll,exam)]||{};
+    var totalGP=0,cnt=0,anyNG=false,allFilled=true;
+    var rows=subs.map(function(sub){
+      var d=saved[sub.name]||{},max=sub.thMax+sub.prMax,credit=4;
+      if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
+        var t=(d.th||0)+(d.pr||0),pct=max?t/max*100:0,gr=getGrade(pct);
+        totalGP+=gr.gpa;cnt++;if(gr.g==='NG')anyNG=true;
+        return '<tr><td></td><td>'+sub.name+'</td><td>'+credit+'</td><td>'+gr.gpa.toFixed(1)+'</td><td>'+gr.g+'</td><td>'+gr.g+'</td><td>'+(gr.g==='NG'?'Fail':'Pass')+'</td></tr>';
+      }else{allFilled=false;return '<tr><td></td><td>'+sub.name+'</td><td>'+credit+'</td><td colspan="4">—</td></tr>';}
+    }).join('');
+    var cgpa=allFilled&&cnt?(totalGP/cnt).toFixed(2):'—';
+    return '<div class="page">'+
+      '<div style="text-align:center;margin-bottom:8px"><b style="font-size:15px">THARPU SECONDARY SCHOOL</b><br><span style="font-size:11px">Yangwarak-4, Panchthar | Affiliated to NEB</span></div>'+
+      '<div style="font-size:12px;margin-bottom:6px"><b>Name:</b> '+st.name+' &nbsp; <b>Roll:</b> '+st.roll+' &nbsp; <b>Exam:</b> '+exam+'</div>'+
+      '<table><thead><tr><th>Code</th><th>Subject</th><th>CH</th><th>Grade Point</th><th>Grade</th><th>Final Grade</th><th>Remarks</th></tr></thead><tbody>'+rows+'</tbody></table>'+
+      '<div style="margin-top:10px;font-size:13px"><b>CGPA: '+cgpa+'</b> &nbsp;&nbsp; <b>Result: '+(anyNG?'FAIL':'PASS')+'</b></div>'+
+    '</div>';
+  }).join('');
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8">'+
+    '<style>*{box-sizing:border-box}body{font-family:Arial,sans-serif;font-size:12px;padding:10px}'+
+    '.page{max-width:700px;margin:0 auto 0;padding:20px;page-break-after:always;border:1px solid #ccc}'+
+    'table{width:100%;border-collapse:collapse;margin-top:10px}th,td{border:1px solid #000;padding:5px;font-size:11px}'+
+    'th{background:#f0f0f0}@media print{button{display:none!important}}'+
+    '</style></head><body>'+
+    '<div style="text-align:center;margin:0 0 12px"><button onclick="window.print()" style="background:#7B1C1C;color:white;padding:8px 24px;border:none;border-radius:6px;font-size:14px;cursor:pointer">🖨️ Print All '+list.length+' Grade Sheets</button></div>'+
+    pages+'</body></html>');
+  w.document.close();
+}
+
+// ==========================================================
+
+function saveResultHTML() {
+  loadGradeSheet();
+  setTimeout(function(){
+    var c=document.getElementById('result-display').innerHTML;
+    if (!c) { alert('No grade sheet generated.'); return; }
+    var a=document.createElement('a');
+    a.href='data:text/html;charset=utf-8,'+encodeURIComponent(
+      '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Grade Sheet</title>'+
+      '<style>body{font-family:sans-serif;padding:20px;max-width:1400px;margin:auto}'+
+      'table{border-collapse:collapse;width:100%;margin-bottom:1rem}'+
+      'th,td{border:1px solid #ccc;padding:5px 7px;font-size:11px}'+
+      'th{background:#7B1C1C;color:white}</style></head><body>'+c+'</body></html>');
+    a.download='GradeSheet_Tharpu.html'; a.click();
+  },300);
+}
+
+function exportShare() {
+  // Collect ALL marks from localStorage across all users, merged with current session
+  var allMarks = {};
+  try {
+    for (var i=0; i<localStorage.length; i++) {
+      var k=localStorage.key(i);
+      if (k && k.startsWith('tss_marks_')) {
+        var d=JSON.parse(localStorage.getItem(k)||'{}');
+        Object.assign(allMarks, d);
+      }
+    }
+  } catch(e){}
+  // Also merge current in-memory marks (may be newer)
+  Object.assign(allMarks, marksData);
+
+  var payload = JSON.stringify({ students: students, marks: allMarks });
+
+  // Read the source HTML — use the original page source, not outerHTML
+  // (outerHTML misses doctype and can have stale injected scripts)
+  var sourceHTML = (typeof _originalHTML !== 'undefined') ? _originalHTML : document.documentElement.outerHTML;
+
+  // Remove any previously embedded _savedData script block so we don't double-inject
+  var cleaned = sourceHTML.replace(/<script[^>]*>[\s\S]*?var _savedData\s*=[\s\S]*?<\/script>/,'');
+
+  // Inject fresh data block right before </head>
+  var inject = '<'+'script id="_data_block">var _savedData='+payload+';<'+'/script>';
+  var out = cleaned.replace('</head>', inject + '</head>');
+
+  var fname = 'Tharpu_School_'+new Date().toISOString().slice(0,10)+'.html';
+  var blob = new Blob([out], {type:'text/html;charset=utf-8'});
+  var url  = URL.createObjectURL(blob);
+  var a    = document.createElement('a');
+  a.href   = url; a.download = fname; a.click();
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+
+  // Show share instructions
+  setTimeout(function(){
+    alert(
+      'File "'+fname+'" downloaded!\n\n'+
+      'Share this file via WhatsApp, Email, USB, or Google Drive.\n'+
+      'Anyone who opens it will see all '+Object.keys(allMarks).length+' marks records.\n\n'+
+      'They can also log in, add more marks, and re-export to share back.'
+    );
+  }, 400);
+}
+
+// ============================================================
+// RESTORE — runs immediately when page loads
+// ============================================================
+// Priority: 1) baked-in _savedData (shared file)  2) localStorage (own device)
+(function() {
+  if (typeof _savedData !== 'undefined' && _savedData) {
+    // This is a shared/exported file — load baked-in data
+    if (_savedData.students && Array.isArray(_savedData.students)) {
+      // Merge: keep built-in students, add any extra ones from shared file
+      _savedData.students.forEach(function(s){
+        if (!students.some(function(e){ return e.roll===s.roll; })) {
+          students.push(s);
+        }
+      });
+    }
+    if (_savedData.marks) {
+      // Merge shared marks on top of any localStorage marks
+      Object.assign(marksData, _savedData.marks);
+    }
+    // Also push these marks into localStorage so any edits here persist
+    try { localStorage.setItem('tss_marks_shared', JSON.stringify(_savedData.marks||{})); } catch(e){}
+    // Show the "you opened a shared file" banner
+    var banner = document.getElementById('shared-file-banner');
+    if (banner) banner.style.display = 'block';
+  } else {
+    // Own device — load from localStorage
+    loadMarksFromStorage();
+    // Also load any previously registered extra students
+    try {
+      var extra = JSON.parse(localStorage.getItem('tss_extra_students')||'[]');
+      extra.forEach(function(s){
+        if (!students.some(function(e){ return e.roll===s.roll; })) students.push(s);
+      });
+    } catch(e){}
+  }
+
+  // Auto-login if session exists
+  var savedUser = localStorage.getItem('tss_session_user');
+  if (savedUser && USERS.some(function(u){ return u.username===savedUser; })) {
+    currentUser = savedUser;
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('main-app').style.display     = 'block';
+  }
+
+  renderStudentList();
+  populateStudentSelects();
+  updateSummary();
+})();
+
+// ══════════════════════════════════════════════════════
+// PREMIUM FEATURES JS
+// ══════════════════════════════════════════════════════
+
+// ── Toast notification ──
+function showToast(msg, duration) {
+  var t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(function(){ t.classList.remove('show'); }, duration || 2800);
+}
+
+// ── Dark mode ──
+function toggleDark() {
+  document.body.classList.toggle('dark-mode');
+  var on = document.body.classList.contains('dark-mode');
+  try { localStorage.setItem('tss_dark', on ? '1' : '0'); } catch(e){}
+  document.getElementById('dark-toggle').textContent = on ? '☀️' : '🌙';
+  showToast(on ? '🌙 Dark mode on' : '☀️ Light mode on');
+}
+(function(){
+  try { if(localStorage.getItem('tss_dark')==='1'){ document.body.classList.add('dark-mode'); var b=document.getElementById('dark-toggle'); if(b) b.textContent='☀️'; } } catch(e){}
+})();
+
+// ── Show current user in header ──
+function updateHeaderUser() {
+  var el = document.getElementById('hdr-user');
+  if (el && currentUser && currentUser !== 'guest') el.textContent = '👤 ' + currentUser;
+}
+
+// ── Patch renderStudentList to add search + count ──
+var _origRenderStudentList = renderStudentList;
+renderStudentList = function() {
+  var list = document.getElementById('student-list');
+  var searchEl = document.getElementById('search-student');
+  var q = searchEl ? searchEl.value.trim().toLowerCase() : '';
+  var filtered = students.filter(function(s){
+    var matchStream = currentFilter === 'all' || s.stream === currentFilter;
+    var matchSearch = !q || s.name.toLowerCase().includes(q) || s.roll.toLowerCase().includes(q);
+    return matchStream && matchSearch;
+  });
+  var countEl = document.getElementById('student-count');
+  if (countEl) countEl.textContent = filtered.length;
+  if (!filtered.length) {
+    list.innerHTML='<div class="empty-state"><div class="empty-icon">🔍</div><p>No students match your search.</p></div>';
+    return;
+  }
+  list.innerHTML = filtered.map(function(s, idx){
+    var hasMarks = Object.keys(marksData).some(function(k){ return k.startsWith(s.roll+'||'); });
+    var sc = s.stream==='Plant Science' ? 'badge-plant' : 'badge-general';
+    // Calculate CGPA across all exams for quick display
+    var exams = ['First Terminal','Second Terminal','Annual Examination','Pre-board'];
+    var bestCGPA = null;
+    exams.forEach(function(exam){
+      var saved = marksData[getKey(s.roll, exam)];
+      if (!saved) return;
+      var subs = SUBJECTS[s.stream], total=0, cnt=0, all=true;
+      subs.forEach(function(sub){
+        var d=saved[sub.name]||{}, max=sub.thMax+sub.prMax;
+        if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
+          var t=(d.th||0)+(d.pr||0), gr=getGrade(max?t/max*100:0);
+          total+=gr.gpa; cnt++;
+        } else { all=false; }
+      });
+      if(all&&cnt){ var c=(total/cnt); if(bestCGPA===null||c>bestCGPA) bestCGPA=c; }
+    });
+    var cgpaStr = bestCGPA!==null ? ' · CGPA <b>'+bestCGPA.toFixed(2)+'</b>' : '';
+    return '<div class="student-item" onclick="quickEnterMarks(\''+s.roll+'\')">'+
+      '<div class="student-avatar">'+initials(s.name)+'</div>'+
+      '<div class="student-info">'+
+        '<div class="student-name">'+s.name+'</div>'+
+        '<div class="student-meta">Roll: <b>'+s.roll+'</b> | '+s.year+cgpaStr+'</div>'+
+      '</div>'+
+      '<span class="badge '+sc+'">'+(s.stream==='Plant Science'?'🌿 Plant':'📘 Gen')+'</span>'+
+      (hasMarks?'<span class="badge badge-marked">✓ Marks</span>':'<span class="badge badge-unmarked">No marks</span>')+
+      '</div>';
+  }).join('');
+};
+
+// ── Patch showTab to load analytics & attendance ──
+var _origShowTab = showTab;
+showTab = function(id, btn) {
+  _origShowTab(id, btn);
+  if (id === 'analytics') renderAnalytics();
+  if (id === 'attendance') { populateAttStudentSel(); renderAttendance(); }
+  updateHeaderUser();
+};
+
+// ── Patch saveMarks to show toast ──
+var _origSaveMarks = saveMarks;
+saveMarks = function(roll, exam) {
+  _origSaveMarks(roll, exam);
+  var st = students.find(function(s){ return s.roll===roll; });
+  showToast('✅ Marks saved for ' + (st?st.name:roll));
+};
+
+// ── Patch registerStudent to show toast ──
+var _origRegisterStudent = registerStudent;
+registerStudent = function() {
+  var name = document.getElementById('reg-name').value.trim().toUpperCase();
+  _origRegisterStudent();
+  if (name) showToast('🎓 Student "'+name+'" registered!');
+};
+
+// ══════════════════════════════════════════════════════
+// ANALYTICS
+// ══════════════════════════════════════════════════════
+function renderAnalytics() {
+  var exam = document.getElementById('analytics-exam-sel') ? document.getElementById('analytics-exam-sel').value : 'First Terminal';
+  var body = document.getElementById('analytics-body');
+  if (!body) return;
+  if (!students.length) { body.innerHTML='<div class="empty-state"><p>No students yet.</p></div>'; return; }
+
+  var passCount=0, failCount=0, incomplete=0;
+  var gradeCount={'A+':0,'A':0,'B+':0,'B':0,'C+':0,'C':0,'D':0,'NG':0};
+  var cgpaList = [];
+  var topStudents = [];
+
+  students.forEach(function(st){
+    var saved = marksData[getKey(st.roll, exam)] || {};
+    var subs = SUBJECTS[st.stream];
+    var total=0, cnt=0, anyNG=false, allFilled=true;
+    subs.forEach(function(sub){
+      var d=saved[sub.name]||{}, max=sub.thMax+sub.prMax;
+      if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
+        var t=(d.th||0)+(d.pr||0), gr=getGrade(max?t/max*100:0);
+        total+=gr.gpa; cnt++;
+        gradeCount[gr.g]=(gradeCount[gr.g]||0)+1;
+        if(gr.g==='NG') anyNG=true;
+      } else { allFilled=false; }
+    });
+    if (!allFilled || !cnt) { incomplete++; return; }
+    var cgpa = total/cnt;
+    cgpaList.push(cgpa);
+    topStudents.push({name:st.name, roll:st.roll, cgpa:cgpa, stream:st.stream});
+    if (anyNG) failCount++; else passCount++;
+  });
+
+  var avgCGPA = cgpaList.length ? (cgpaList.reduce(function(a,b){return a+b;},0)/cgpaList.length).toFixed(2) : '—';
+  var highest = cgpaList.length ? Math.max.apply(null,cgpaList).toFixed(2) : '—';
+  var passRate = (passCount+failCount) ? Math.round(passCount/(passCount+failCount)*100) : 0;
+
+  topStudents.sort(function(a,b){return b.cgpa-a.cgpa;});
+
+  var topHTML = topStudents.slice(0,5).map(function(s,i){
+    var medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':''+(i+1)+'.';
+    var cls = i===0?'rank-gold':i===1?'rank-silver':i===2?'rank-bronze':'';
+    return '<div class="student-item" style="padding:0.5rem 0.8rem">'+
+      '<div style="font-size:1.1rem;width:28px">'+medal+'</div>'+
+      '<div class="student-info"><div class="student-name" style="font-size:0.85rem">'+s.name+'</div>'+
+      '<div class="student-meta">'+s.stream.split(' ')[0]+'</div></div>'+
+      '<span class="'+cls+'" style="font-size:0.82rem;font-weight:700">'+s.cgpa.toFixed(2)+'</span></div>';
+  }).join('');
+
+  var gradeOrder=['A+','A','B+','B','C+','C','D','NG'];
+  var maxGC = Math.max.apply(null, gradeOrder.map(function(g){return gradeCount[g]||0;})) || 1;
+  var gradeColors={'A+':'#2e7d32','A':'#388e3c','B+':'#1565c0','B':'#1976d2','C+':'#f9a825','C':'#ef6c00','D':'#d84315','NG':'#b71c1c'};
+  var barsHTML = gradeOrder.map(function(g){
+    var val = gradeCount[g]||0;
+    var pct = Math.round(val/maxGC*100);
+    return '<div class="bar-row"><div class="bar-label">'+g+'</div>'+
+      '<div class="bar-track"><div class="bar-fill" style="width:'+pct+'%;background:'+gradeColors[g]+'"></div></div>'+
+      '<div class="bar-val">'+val+'</div></div>';
+  }).join('');
+
+  body.innerHTML =
+    '<div class="analytics-grid">'+
+      '<div class="analytics-card"><div class="a-num">'+passRate+'%</div><div class="a-lbl">Pass Rate</div><div class="a-sub">'+passCount+' passed, '+failCount+' failed</div></div>'+
+      '<div class="analytics-card"><div class="a-num">'+avgCGPA+'</div><div class="a-lbl">Class Avg CGPA</div><div class="a-sub">Highest: '+highest+'</div></div>'+
+      '<div class="analytics-card"><div class="a-num">'+incomplete+'</div><div class="a-lbl">Incomplete</div><div class="a-sub">marks not entered</div></div>'+
+      '<div class="analytics-card"><div class="a-num">'+(topStudents.length?topStudents[0].name.split(' ')[0]:'—')+'</div><div class="a-lbl">🏆 Top Student</div><div class="a-sub">'+(topStudents.length?topStudents[0].cgpa.toFixed(2)+' GPA':'')+'</div></div>'+
+    '</div>'+
+    '<div class="section-card"><div class="section-head">📊 Grade Distribution — '+exam+'</div><div class="section-body">'+barsHTML+'</div></div>'+
+    (topStudents.length?'<div class="section-card"><div class="section-head">🏅 Top 5 Students</div>'+topHTML+'</div>':'');
+}
+
+// ══════════════════════════════════════════════════════
+// ATTENDANCE
+// ══════════════════════════════════════════════════════
+var attData = {};
+try { attData = JSON.parse(localStorage.getItem('tss_attendance')||'{}'); } catch(e){}
+
+function saveAttData() {
+  try { localStorage.setItem('tss_attendance', JSON.stringify(attData)); } catch(e){}
+}
+
+function populateAttStudentSel() {
+  var sel = document.getElementById('att-student-sel');
+  if (!sel) return;
+  var cur = sel.value;
+  sel.innerHTML = '<option value="">-- Choose student --</option>';
+  students.forEach(function(s){
+    sel.innerHTML += '<option value="'+s.roll+'">'+s.name+'</option>';
+  });
+  if (cur) sel.value = cur;
+}
+
+function renderAttendance() {
+  var roll = document.getElementById('att-student-sel') ? document.getElementById('att-student-sel').value : '';
+  var month = document.getElementById('att-month-sel') ? document.getElementById('att-month-sel').value : 'Ashwin';
+  var cal = document.getElementById('att-calendar');
+  var sum = document.getElementById('att-summary');
+  if (!cal) return;
+  if (!roll) { cal.innerHTML='<div class="empty-state"><p>Select a student to track attendance.</p></div>'; if(sum) sum.textContent=''; return; }
+
+  var key = roll+'||'+month;
+  var days = attData[key] || {};
+  var totalDays = 26; // typical school month days
+
+  var html = '<div class="att-grid">';
+  ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(function(d){ html+='<div class="att-day hdr">'+d+'</div>'; });
+  for(var d=1; d<=totalDays; d++){
+    var status = days[d] || '';
+    var cls = status==='P'?'present':status==='A'?'absent':status==='H'?'holiday':'';
+    html+='<div class="att-day '+cls+'" onclick="cycleAttDay(\''+key+'\','+d+')" title="Day '+d+'">'+d+'</div>';
+  }
+  html += '</div>';
+  cal.innerHTML = html;
+
+  var present=0, absent=0, holiday=0;
+  for(var k in days){ if(days[k]==='P') present++; else if(days[k]==='A') absent++; else if(days[k]==='H') holiday++; }
+  var worked = present+absent;
+  var pct = worked ? Math.round(present/worked*100) : 0;
+  if (sum) sum.innerHTML = '✅ Present: <b>'+present+'</b> &nbsp; ❌ Absent: <b>'+absent+'</b> &nbsp; 🔵 Holiday: <b>'+holiday+'</b> &nbsp; | Attendance: <b style="color:'+(pct>=75?'#1a6e2e':'#991b1b')+'">'+pct+'%</b>'+(pct<75?' ⚠️ Below 75%':'');
+}
+
+function cycleAttDay(key, d) {
+  if (!attData[key]) attData[key]={};
+  var cur = attData[key][d] || '';
+  attData[key][d] = cur===''?'P':cur==='P'?'A':cur==='A'?'H':'';
+  renderAttendance();
+}
+
+function saveAttendance() {
+  saveAttData();
+  showToast('📅 Attendance saved!');
+}
+
+function exportAttCSV() {
+  var roll = document.getElementById('att-student-sel') ? document.getElementById('att-student-sel').value : '';
+  var month = document.getElementById('att-month-sel') ? document.getElementById('att-month-sel').value : '';
+  if (!roll || !month) { showToast('Select a student and month first.'); return; }
+  var st = students.find(function(s){ return s.roll===roll; });
+  var key = roll+'||'+month;
+  var days = attData[key] || {};
+  var rows = ['"Student","Roll","Month","Day","Status"'];
+  for(var d=1; d<=26; d++){
+    rows.push('"'+(st?st.name:roll)+'","'+roll+'","'+month+'","'+d+'","'+(days[d]||'—')+'"');
+  }
+  var a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(rows.join('\n'));
+  a.download = 'Attendance_'+roll+'_'+month+'.csv';
+  a.click();
+  showToast('📊 Attendance CSV exported!');
+}
+
+// ── Init premium features on login ──
+var _origDoLoginInner = doLogin;
+// Patch updateSummary to also refresh count chip
+var _origUpdateSummary = updateSummary;
+updateSummary = function() {
+  _origUpdateSummary();
+  var countEl = document.getElementById('student-count');
+  if (countEl) {
+    var q = document.getElementById('search-student');
+    var qv = q ? q.value.trim().toLowerCase() : '';
+    var filtered = students.filter(function(s){
+      return (currentFilter==='all'||s.stream===currentFilter) &&
+             (!qv||s.name.toLowerCase().includes(qv)||s.roll.toLowerCase().includes(qv));
+    });
+    countEl.textContent = filtered.length;
+  }
+  updateHeaderUser();
+};
+
+
+// ══════════════════════════════════════════════════════════════
+// WORLD CLASS FEATURES
+// ══════════════════════════════════════════════════════════════
+
+// ── Motivational quotes ──
+var QUOTES = [
+  {q:'Education is the most powerful weapon which you can use to change the world.',a:'Nelson Mandela'},
+  {q:'The beautiful thing about learning is that no one can take it away from you.',a:'B.B. King'},
+  {q:'An investment in knowledge pays the best interest.',a:'Benjamin Franklin'},
+  {q:'The more that you read, the more things you will know.',a:'Dr. Seuss'},
+  {q:'It always seems impossible until it is done.',a:'Nelson Mandela'},
+  {q:'Success is the sum of small efforts repeated day in and day out.',a:'Robert Collier'},
+  {q:'The expert in anything was once a beginner.',a:'Helen Hayes'},
+  {q:'Dream big and dare to fail.',a:'Norman Vaughan'},
+  {q:'Strive for progress, not perfection.',a:'Unknown'},
+  {q:'Hard work beats talent when talent does not work hard.',a:'Tim Notke'}
+];
+(function(){
+  var q = QUOTES[Math.floor(Math.random()*QUOTES.length)];
+  var qEl = document.getElementById('mot-quote');
+  var aEl = document.getElementById('mot-attr');
+  if(qEl) qEl.textContent = '\u201c'+q.q+'\u201d';
+  if(aEl) aEl.textContent = '\u2014 '+q.a;
+})();
+
+// ── Nepali months / day names ──
+var BS_MONTHS = ['Baisakh','Jestha','Ashadh','Shrawan','Bhadra','Ashwin','Kartik','Mangsir','Poush','Magh','Falgun','Chaitra'];
+var BS_DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+// Rough AD→BS conversion (approximate for 2080-2083)
+function getBSDate(adDate) {
+  // Simple offset: BS year ≈ AD year + 56 (Baisakh onwards), month offset ~3.5
+  adDate = adDate || new Date();
+  var adY = adDate.getFullYear(), adM = adDate.getMonth()+1, adD = adDate.getDate();
+  var bsY = adY + 56;
+  var bsM = adM + 8; if(bsM>12){bsM-=12;bsY++;} // rough
+  var bsD = adD + 16; if(bsD>30){bsD-=30;bsM++; if(bsM>12){bsM=1;bsY++;}}
+  // Clamp
+  bsM = Math.max(1,Math.min(12,bsM)); bsD = Math.max(1,Math.min(30,bsD));
+  return {y:bsY, m:bsM, d:bsD, mName:BS_MONTHS[bsM-1]};
+}
+
+// ── Dashboard BS date strip ──
+function renderBSStrip() {
+  var strip = document.getElementById('bs-strip');
+  var dateEl = document.getElementById('dash-bs-date');
+  if (!strip) return;
+  var today = getBSDate();
+  if (dateEl) dateEl.textContent = today.d+' '+today.mName+' '+today.y+' B.S.';
+  var el = document.getElementById('hdr-bs-date');
+  if (el) el.textContent = today.d+' '+today.mName+' '+today.y+' B.S.';
+  var html = '';
+  for (var d = Math.max(1, today.d-3); d <= Math.min(30, today.d+10); d++) {
+    var dow = BS_DAYS[(new Date().getDay() + (d - today.d) + 7) % 7];
+    var isTod = d === today.d;
+    var isFri = dow === 'Fri'; // Holiday in Nepal
+    html += '<div class="bs-day'+(isTod?' today':'')+(isFri&&!isTod?' has-event':'')+'">'+
+      '<div class="bs-day-num">'+d+'</div>'+
+      '<div class="bs-day-name">'+dow+'</div>'+
+    '</div>';
+  }
+  strip.innerHTML = html;
+}
+renderBSStrip();
+
+// ── Activity Log ──
+var activityLog = [];
+function logActivity(icon, text, color) {
+  var now = new Date();
+  var timeStr = now.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+  activityLog.unshift({icon:icon, text:text, color:color||'#e8f5e9', time:timeStr});
+  if (activityLog.length > 15) activityLog.pop();
+  renderActivityLog();
+}
+function renderActivityLog() {
+  var el = document.getElementById('activity-log');
+  if (!el) return;
+  var html = activityLog.map(function(a){
+    return '<div class="act-item"><div class="act-icon" style="background:'+a.color+'">'+a.icon+'</div>'+
+      '<div class="act-info"><div>'+a.text+'</div><div class="act-time">'+a.time+'</div></div></div>';
+  }).join('');
+  if (!html) html = '<div style="color:var(--text-muted);font-size:0.82rem;padding:0.5rem">No activity yet.</div>';
+  el.innerHTML = html;
+}
+// Init start time
+(function(){
+  var el = document.getElementById('act-start-time');
+  if(el) el.textContent = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+})();
+
+// ── Dashboard render ──
+function renderDashboard() {
+  // Circular progress: total students
+  var total = students.length;
+  var marked = students.filter(function(s){
+    return Object.keys(marksData).some(function(k){ return k.startsWith(s.roll+'||'); });
+  }).length;
+  var pct = total ? Math.round(marked/total*100) : 0;
+  var circ = document.getElementById('dash-circ-total');
+  var circN = document.getElementById('dash-circ-num');
+  if(circ){ var C=2*Math.PI*36; circ.style.strokeDashoffset=0; }
+  if(circN) circN.textContent = total;
+  var circM = document.getElementById('dash-circ-marks');
+  var circMN = document.getElementById('dash-circ-marks-num');
+  if(circM){ var C2=2*Math.PI*36; circM.style.strokeDashoffset = C2*(1-pct/100); }
+  if(circMN) circMN.textContent = pct+'%';
+  // Stream bars
+  var plant = students.filter(function(s){return s.stream==='Plant Science';}).length;
+  var gen   = students.filter(function(s){return s.stream==='General';}).length;
+  var maxS = Math.max(plant,gen,1);
+  var sbEl = document.getElementById('dash-stream-bars');
+  if(sbEl) sbEl.innerHTML =
+    '<div class="sub-perf-row"><div class="sub-perf-name">🌿 Plant Science</div><div class="sub-perf-bar"><div class="sub-perf-fill" style="width:'+Math.round(plant/maxS*100)+'%;background:#2e7d32"></div></div><div class="sub-perf-val">'+plant+'</div></div>'+
+    '<div class="sub-perf-row"><div class="sub-perf-name">📘 General</div><div class="sub-perf-bar"><div class="sub-perf-fill" style="width:'+Math.round(gen/maxS*100)+'%;background:#1565c0"></div></div><div class="sub-perf-val">'+gen+'</div></div>';
+}
+
+// ── Student Profile Modal ──
+function openStudentProfile(roll) {
+  var st = students.find(function(s){ return s.roll===roll; });
+  if (!st) return;
+  var avEl = document.getElementById('profile-avatar');
+  var nmEl = document.getElementById('profile-name');
+  var sbEl = document.getElementById('profile-sub');
+  if(avEl) avEl.textContent = initials(st.name);
+  if(nmEl) nmEl.textContent = st.name;
+  if(sbEl) sbEl.textContent = 'Roll: '+st.roll+' · '+st.stream+' · '+st.year;
+  // Stats across all exams
+  var exams = ['First Terminal','Second Terminal','Annual Examination','Pre-board'];
+  var bestCGPA = null, totalExams = 0, passCount = 0;
+  var subPerf = {}; // subject → {total, count}
+  exams.forEach(function(exam){
+    var saved = marksData[getKey(st.roll, exam)];
+    if (!saved) return;
+    var subs = SUBJECTS[st.stream];
+    var tot=0, cnt=0, allFilled=true, anyNG=false;
+    subs.forEach(function(sub){
+      var d=saved[sub.name]||{}, max=sub.thMax+sub.prMax;
+      if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
+        var t=(d.th||0)+(d.pr||0), pct=max?t/max*100:0, gr=getGrade(pct);
+        tot+=gr.gpa; cnt++;
+        if(gr.g==='NG') anyNG=true;
+        if(!subPerf[sub.name]) subPerf[sub.name]={total:0,count:0,max:max};
+        subPerf[sub.name].total += pct;
+        subPerf[sub.name].count++;
+      } else { allFilled=false; }
+    });
+    if(allFilled&&cnt){
+      totalExams++;
+      var cgpa=tot/cnt;
+      if(bestCGPA===null||cgpa>bestCGPA) bestCGPA=cgpa;
+      if(!anyNG) passCount++;
+    }
+  });
+  var statsEl = document.getElementById('profile-stats');
+  if(statsEl) statsEl.innerHTML =
+    '<div class="profile-stat"><div class="ps-num">'+(bestCGPA!==null?bestCGPA.toFixed(2):'—')+'</div><div class="ps-lbl">Best CGPA</div></div>'+
+    '<div class="profile-stat"><div class="ps-num">'+totalExams+'</div><div class="ps-lbl">Exams Done</div></div>'+
+    '<div class="profile-stat"><div class="ps-num">'+passCount+'</div><div class="ps-lbl">Exams Passed</div></div>'+
+    '<div class="profile-stat"><div class="ps-num">'+(totalExams?cgpaDiv(bestCGPA):'—')+'</div><div class="ps-lbl">Division</div></div>';
+  // Subject performance bars
+  var sEl = document.getElementById('profile-subjects');
+  if(sEl){
+    var bars = Object.keys(subPerf).map(function(sn){
+      var avg = subPerf[sn].total / subPerf[sn].count;
+      var gr = getGrade(avg);
+      var col = avg>=80?'#2e7d32':avg>=60?'#1565c0':avg>=40?'#f9a825':'#b71c1c';
+      return '<div class="sub-perf-row">'+
+        '<div class="sub-perf-name" title="'+sn+'">'+sn.split(' ').slice(0,2).join(' ')+'</div>'+
+        '<div class="sub-perf-bar"><div class="sub-perf-fill" style="width:'+Math.round(avg)+'%;background:'+col+'"></div></div>'+
+        '<div class="sub-perf-val" style="color:'+col+'">'+gr.g+'</div></div>';
+    }).join('');
+    sEl.innerHTML = bars || '<div style="color:var(--text-muted);font-size:0.82rem;padding:0.4rem 0">No marks entered yet.</div>';
+  }
+  openModal('profile-modal');
+}
+
+// Patch renderStudentList to add profile button
+var _baseRenderStudentList = renderStudentList;
+renderStudentList = function() {
+  _baseRenderStudentList();
+  // Add profile eye buttons via event delegation already handled by onclick
+};
+// Override student item rendering to include profile icon
+var ___orig = renderStudentList;
+renderStudentList = function() {
+  var list = document.getElementById('student-list');
+  var searchEl = document.getElementById('search-student');
+  var q = searchEl ? searchEl.value.trim().toLowerCase() : '';
+  var filtered = students.filter(function(s){
+    var matchStream = currentFilter === 'all' || s.stream === currentFilter;
+    var matchSearch = !q || s.name.toLowerCase().includes(q) || s.roll.toLowerCase().includes(q);
+    return matchStream && matchSearch;
+  });
+  var countEl = document.getElementById('student-count');
+  if (countEl) countEl.textContent = filtered.length;
+  if (!filtered.length) {
+    list.innerHTML='<div class="empty-state"><div class="empty-icon">🔍</div><p>No students match your search.</p></div>';
+    return;
+  }
+  list.innerHTML = filtered.map(function(s){
+    var hasMarks = Object.keys(marksData).some(function(k){ return k.startsWith(s.roll+'||'); });
+    var sc = s.stream==='Plant Science' ? 'badge-plant' : 'badge-general';
+    var exams=['First Terminal','Second Terminal','Annual Examination','Pre-board'];
+    var bestCGPA=null;
+    exams.forEach(function(exam){
+      var saved=marksData[getKey(s.roll,exam)]; if(!saved)return;
+      var subs=SUBJECTS[s.stream],tot=0,cnt=0,all=true;
+      subs.forEach(function(sub){
+        var d=saved[sub.name]||{},max=sub.thMax+sub.prMax;
+        if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){var t=(d.th||0)+(d.pr||0),gr=getGrade(max?t/max*100:0);tot+=gr.gpa;cnt++;}else{all=false;}
+      });
+      if(all&&cnt){var c=tot/cnt;if(bestCGPA===null||c>bestCGPA)bestCGPA=c;}
+    });
+    var cgpaStr = bestCGPA!==null ? ' &middot; CGPA <b>'+bestCGPA.toFixed(2)+'</b>' : '';
+    return '<div class="student-item">'+
+      '<div class="student-avatar" onclick="quickEnterMarks(\''+s.roll+'\')" style="cursor:pointer">'+initials(s.name)+'</div>'+
+      '<div class="student-info" onclick="quickEnterMarks(\''+s.roll+'\')" style="cursor:pointer">'+
+        '<div class="student-name">'+s.name+'</div>'+
+        '<div class="student-meta">Roll: <b>'+s.roll+'</b> | '+s.year+cgpaStr+'</div>'+
+      '</div>'+
+      '<span class="badge '+sc+'">'+(s.stream==='Plant Science'?'🌿 Plant':'📘 Gen')+'</span>'+
+      (hasMarks?'<span class="badge badge-marked">✓</span>':'<span class="badge badge-unmarked">—</span>')+
+      '<button onclick="openStudentProfile(\''+s.roll+'\')" style="background:none;border:none;cursor:pointer;font-size:1rem;padding:2px 4px;" title="View Profile">👤</button>'+
+    '</div>';
+  }).join('');
+};
+
+// ══════════════════════════════════════════════════════════════
+// NOTICES
+// ══════════════════════════════════════════════════════════════
+var notices = [];
+try { notices = JSON.parse(localStorage.getItem('tss_notices')||'[]'); } catch(e){}
+// Default notices
+if (!notices.length) notices = [
+  {id:1, title:'First Terminal Exam Schedule Released', body:'First Terminal examinations will commence from 2082 Kartik 15. All students must carry their admit cards.', type:'urgent', by:'admin', date:'2082/07/01'},
+  {id:2, title:'School Closed – Dashain Holidays', body:'School will remain closed from Ashwin 25 to Kartik 05 on the occasion of Dashain festival.', type:'info', by:'admin', date:'2082/06/24'},
+  {id:3, title:'Parent-Teacher Meeting', body:'A parent-teacher meeting is scheduled for Kartik 10 at 10:00 AM in the school hall.', type:'general', by:'admin', date:'2082/07/05'}
+];
+function saveNotices(){ try{localStorage.setItem('tss_notices',JSON.stringify(notices));}catch(e){} }
+function renderNotices(){
+  var el=document.getElementById('notice-list');
+  if(!el)return;
+  if(!notices.length){el.innerHTML='<div class="empty-state"><div class="empty-icon">📢</div><p>No notices yet.</p></div>';return;}
+  el.innerHTML=notices.map(function(n,i){
+    return '<div class="notice-item">'+
+      '<div class="notice-dot '+n.type+'"></div>'+
+      '<div style="flex:1">'+
+        '<div class="notice-title">'+n.title+'</div>'+
+        '<div class="notice-meta">Posted by <b>'+n.by+'</b> &middot; '+n.date+'</div>'+
+        '<div class="notice-body">'+n.body+'</div>'+
+      '</div>'+
+      '<button onclick="deleteNotice('+i+')" style="background:none;border:none;cursor:pointer;font-size:1rem;color:#b71c1c;padding:2px 6px;">🗑</button>'+
+    '</div>';
+  }).join('');
+}
+function openAddNotice(){openModal('notice-modal');}
+function saveNotice(){
+  var t=document.getElementById('n-title').value.trim();
+  var b=document.getElementById('n-body').value.trim();
+  var tp=document.getElementById('n-type').value;
+  if(!t||!b){showToast('Please fill title and message.');return;}
+  var bs=getBSDate();
+  notices.unshift({id:Date.now(),title:t,body:b,type:tp,by:currentUser,date:bs.y+'/'+String(bs.m).padStart(2,'0')+'/'+String(bs.d).padStart(2,'0')});
+  saveNotices();renderNotices();
+  document.getElementById('n-title').value='';
+  document.getElementById('n-body').value='';
+  closeModal('notice-modal');
+  showToast('📢 Notice posted!');
+  logActivity('📢','"'+t+'" notice posted','#fff3e0');
+}
+function deleteNotice(i){
+  if(!confirm('Delete this notice?'))return;
+  notices.splice(i,1);saveNotices();renderNotices();showToast('Notice deleted.');
+}
+
+// ══════════════════════════════════════════════════════════════
+// FEES
+// ══════════════════════════════════════════════════════════════
+var feeData = {};
+try { feeData = JSON.parse(localStorage.getItem('tss_fees')||'{}'); } catch(e){}
+var _curFeeRoll = '';
+function saveFeeData(){ try{localStorage.setItem('tss_fees',JSON.stringify(feeData));}catch(e){} }
+function renderFees(){
+  var stream=document.getElementById('fee-stream-sel')?document.getElementById('fee-stream-sel').value:'all';
+  var list=document.getElementById('fee-list');
+  var sumEl=document.getElementById('fee-summary');
+  if(!list)return;
+  var filtered=students.filter(function(s){return stream==='all'||s.stream===stream;});
+  if(!filtered.length){list.innerHTML='<div class="empty-state"><p>No students.</p></div>';return;}
+  var totalFees=0,totalPaid=0;
+  list.innerHTML=filtered.map(function(st){
+    var fd=feeData[st.roll]||{total:5000,paid:0,date:'',remarks:''};
+    var pct=fd.total?Math.round(fd.paid/fd.total*100):0;
+    var status=pct>=100?'paid':pct>0?'partial':'due';
+    var statusLabel=pct>=100?'Paid':pct>0?'Partial':'Due';
+    totalFees+=fd.total; totalPaid+=fd.paid;
+    return '<div class="fee-row">'+
+      '<div class="fee-status fee-'+status+'"></div>'+
+      '<div style="flex:1">'+
+        '<div class="fee-name">'+st.name+'</div>'+
+        '<div style="font-size:0.72rem;color:var(--text-muted)">Rs. '+fd.paid+' / Rs. '+fd.total+
+        (fd.date?' &middot; '+fd.date:'')+
+        '</div>'+
+        '<div class="prog-wrap"><div class="prog-fill" style="width:'+pct+'%;background:'+(pct>=100?'#2e7d32':pct>0?'#f9a825':'#e0e0e0')+'"></div></div>'+
+      '</div>'+
+      '<span class="fee-badge '+status+'">'+statusLabel+'</span>'+
+      '<button onclick="openFeeModal(\''+st.roll+'\')" style="background:none;border:none;cursor:pointer;font-size:1rem;padding:2px 6px;">✏️</button>'+
+    '</div>';
+  }).join('');
+  // Summary
+  var overallPct=totalFees?Math.round(totalPaid/totalFees*100):0;
+  if(sumEl) sumEl.innerHTML=
+    '<div style="display:flex;gap:10px;flex-wrap:wrap;">'+
+    '<div style="flex:1;min-width:100px"><div style="font-size:0.75rem;color:var(--text-muted);font-weight:700;">Total Receivable</div><div style="font-size:1.2rem;font-weight:800;color:var(--maroon)">Rs. '+totalFees.toLocaleString()+'</div></div>'+
+    '<div style="flex:1;min-width:100px"><div style="font-size:0.75rem;color:var(--text-muted);font-weight:700;">Collected</div><div style="font-size:1.2rem;font-weight:800;color:#2e7d32">Rs. '+totalPaid.toLocaleString()+'</div></div>'+
+    '<div style="flex:1;min-width:100px"><div style="font-size:0.75rem;color:var(--text-muted);font-weight:700;">Outstanding</div><div style="font-size:1.2rem;font-weight:800;color:#b71c1c">Rs. '+(totalFees-totalPaid).toLocaleString()+'</div></div>'+
+    '</div>'+
+    '<div class="prog-wrap" style="margin-top:0.7rem;height:12px"><div class="prog-fill" style="width:'+overallPct+'%;background:var(--success)"></div></div>'+
+    '<div style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;">'+overallPct+'% of fees collected</div>';
+}
+function openFeeModal(roll){
+  _curFeeRoll=roll;
+  var st=students.find(function(s){return s.roll===roll;});
+  var fd=feeData[roll]||{total:5000,paid:0,date:'',remarks:''};
+  document.getElementById('fee-modal-name').textContent=st?st.name:'';
+  document.getElementById('fee-total').value=fd.total;
+  document.getElementById('fee-paid-amt').value=fd.paid;
+  document.getElementById('fee-date').value=fd.date||'';
+  document.getElementById('fee-remarks').value=fd.remarks||'';
+  openModal('fee-modal');
+}
+function saveFee(){
+  if(!_curFeeRoll)return;
+  var tot=parseInt(document.getElementById('fee-total').value)||5000;
+  var paid=parseInt(document.getElementById('fee-paid-amt').value)||0;
+  var dt=document.getElementById('fee-date').value.trim();
+  var rem=document.getElementById('fee-remarks').value.trim();
+  feeData[_curFeeRoll]={total:tot,paid:Math.min(paid,tot),date:dt,remarks:rem};
+  saveFeeData();renderFees();closeModal('fee-modal');
+  showToast('💰 Fee updated!');
+  logActivity('💰','Fee updated for '+(_curFeeRoll),'#e8f5e9');
+}
+
+// ══════════════════════════════════════════════════════════════
+// TIMETABLE
+// ══════════════════════════════════════════════════════════════
+var TT = {
+  'Plant Science': {
+    periods: ['P1\n8:00','P2\n8:45','Break','P3\n9:45','P4\n10:30','Lunch','P5\n12:30','P6\n1:15'],
+    Mon:['English','Nepali','—','Physics','Chemistry','—','Biology','Agri'],
+    Tue:['Physics','English','—','Agri','Nepali','—','Chemistry','Biology'],
+    Wed:['Chemistry','Biology','—','English','Agri','—','Physics','Nepali'],
+    Thu:['Agri','Physics','—','Biology','English','—','Nepali','Chemistry'],
+    Fri:['Biology','Chemistry','—','Nepali','Physics','—','Agri','English'],
+    Sat:['English','Agri','—','Chemistry','Biology','—','Physics','Nepali']
+  },
+  'General': {
+    periods: ['P1\n8:00','P2\n8:45','Break','P3\n9:45','P4\n10:30','Lunch','P5\n12:30','P6\n1:15'],
+    Mon:['English','Nepali','—','Math','Economics','—','Computer','Accounts'],
+    Tue:['Math','English','—','Accounts','Nepali','—','Economics','Computer'],
+    Wed:['Economics','Computer','—','English','Accounts','—','Math','Nepali'],
+    Thu:['Accounts','Math','—','Computer','English','—','Nepali','Economics'],
+    Fri:['Computer','Economics','—','Nepali','Math','—','Accounts','English'],
+    Sat:['English','Accounts','—','Economics','Computer','—','Math','Nepali']
+  }
+};
+var TT_COLORS = {
+  'English':'tt-eng','Nepali':'tt-nep','Physics':'tt-sci','Chemistry':'tt-sci',
+  'Biology':'tt-sci','Agri':'tt-agr','Math':'tt-math','Economics':'tt-eng',
+  'Computer':'tt-nep','Accounts':'tt-math','—':'tt-break'
+};
+function renderTimetable(){
+  var stream=document.getElementById('tt-stream-sel')?document.getElementById('tt-stream-sel').value:'Plant Science';
+  var tt=TT[stream]; if(!tt)return;
+  var days=['Mon','Tue','Wed','Thu','Fri','Sat'];
+  var html='<div class="tt-grid">';
+  // Header row
+  html+='<div class="tt-cell tt-hdr">Period</div>';
+  days.forEach(function(d){html+='<div class="tt-cell tt-hdr">'+d+'</div>';});
+  // Period rows
+  tt.periods.forEach(function(per,pi){
+    var isBreak = per==='Break'||per==='Lunch';
+    html+='<div class="tt-cell tt-time">'+per.replace('\n','<br>')+'</div>';
+    days.forEach(function(day){
+      var subj = tt[day][pi];
+      var cls = isBreak||subj==='—'?'tt-break':(TT_COLORS[subj]||'');
+      var disp = isBreak?(per==='Lunch'?'🍱 Lunch':'☕ Break'):subj;
+      html+='<div class="tt-cell '+cls+'">'+disp+'</div>';
+    });
+  });
+  html+='</div>';
+  document.getElementById('tt-grid-area').innerHTML=html;
+}
+
+// ══════════════════════════════════════════════════════════════
+// EXAM SCHEDULE
+// ══════════════════════════════════════════════════════════════
+var examSchedule = [];
+try { examSchedule = JSON.parse(localStorage.getItem('tss_exam_schedule')||'[]'); } catch(e){}
+if(!examSchedule.length) examSchedule=[
+  {id:1,name:'First Terminal',subject:'All Subjects',date:'2082/07/15',time:'10:00 AM',stream:'All',status:'upcoming'},
+  {id:2,name:'First Terminal',subject:'Physics',date:'2082/07/16',time:'10:00 AM – 1:00 PM',stream:'Plant Science',status:'upcoming'},
+  {id:3,name:'First Terminal',subject:'Mathematics',date:'2082/07/16',time:'10:00 AM – 1:00 PM',stream:'General',status:'upcoming'},
+  {id:4,name:'Pre-board',subject:'All Subjects',date:'2082/09/01',time:'10:00 AM',stream:'All',status:'upcoming'}
+];
+function saveExamSchedule(){ try{localStorage.setItem('tss_exam_schedule',JSON.stringify(examSchedule));}catch(e){} }
+function renderExamSchedule(){
+  var el=document.getElementById('exam-schedule-list');
+  if(!el)return;
+  if(!examSchedule.length){el.innerHTML='<div class="empty-state"><div class="empty-icon">📝</div><p>No exams scheduled.</p></div>';return;}
+  el.innerHTML=examSchedule.map(function(ex,i){
+    var parts=ex.date.split('/');
+    var day=parts[2]||'?';
+    var mon=BS_MONTHS[parseInt(parts[1]||1)-1]||'';
+    return '<div class="exam-item">'+
+      '<div class="exam-date-box"><div class="edb-day">'+day+'</div><div class="edb-mon">'+mon.substring(0,3)+'</div></div>'+
+      '<div class="exam-info">'+
+        '<div class="exam-name">'+ex.name+' — '+ex.subject+'</div>'+
+        '<div class="exam-sub">'+ex.time+' &middot; '+ex.stream+'</div>'+
+      '</div>'+
+      '<span class="exam-status exam-'+ex.status+'">'+ex.status+'</span>'+
+      '<button onclick="deleteExam('+i+')" style="background:none;border:none;cursor:pointer;font-size:1rem;padding:2px 6px;color:#b71c1c">🗑</button>'+
+    '</div>';
+  }).join('');
+}
+function openAddExam(){openModal('exam-modal');}
+function saveExam(){
+  var n=document.getElementById('ex-name').value.trim();
+  var s=document.getElementById('ex-subject').value.trim();
+  var d=document.getElementById('ex-date').value.trim();
+  var t=document.getElementById('ex-time').value.trim();
+  var st=document.getElementById('ex-stream').value;
+  if(!n||!s||!d){showToast('Please fill all required fields.');return;}
+  examSchedule.push({id:Date.now(),name:n,subject:s,date:d,time:t,stream:st,status:'upcoming'});
+  saveExamSchedule();renderExamSchedule();closeModal('exam-modal');
+  ['ex-name','ex-subject','ex-date','ex-time'].forEach(function(id){document.getElementById(id).value='';});
+  showToast('📝 Exam scheduled!');
+  logActivity('📝',n+' — '+s+' scheduled','#e3f2fd');
+}
+function deleteExam(i){
+  if(!confirm('Remove this exam?'))return;
+  examSchedule.splice(i,1);saveExamSchedule();renderExamSchedule();
+}
+
+// ── Patch showTab to load new tabs ──
+var __origShowTab = showTab;
+showTab = function(id, btn) {
+  __origShowTab(id, btn);
+  if(id==='dashboard')  renderDashboard();
+  if(id==='notices')    renderNotices();
+  if(id==='fees')       renderFees();
+  if(id==='timetable')  renderTimetable();
+  if(id==='exams')      renderExamSchedule();
+};
+
+// ── Patch updateSummary to refresh dashboard ──
+var __origUpdateSummary2 = updateSummary;
+updateSummary = function(){
+  __origUpdateSummary2();
+  renderDashboard();
+};
+
+// ── Patch logActivity into saveMarks ──
+var __origSaveMarks2 = saveMarks;
+saveMarks = function(roll,exam){
+  __origSaveMarks2(roll,exam);
+  var st=students.find(function(s){return s.roll===roll;});
+  logActivity('✏️','Marks saved: '+(st?st.name:roll)+' — '+exam,'#e8f5e9');
+};
+var __origRegSt2 = registerStudent;
+registerStudent = function(){
+  var name=document.getElementById('reg-name').value.trim().toUpperCase();
+  __origRegSt2();
+  if(name){ logActivity('🎓','New student: '+name,'#e3f2fd'); }
+};
+
+// ── On login, render dashboard ──
+var __origDoLogin2 = doLogin;
+doLogin = function(){
+  __origDoLogin2();
+  if(currentUser&&currentUser!=='guest'){
+    renderDashboard();
+    renderBSStrip();
+    // Ensure dashboard tab is shown
+    var btn=document.querySelector('.nav-tab');
+    if(btn){ document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
+      document.querySelectorAll('.nav-tab').forEach(function(b){b.classList.remove('active');});
+      var dashPanel=document.getElementById('tab-dashboard');
+      if(dashPanel) dashPanel.classList.add('active');
+      btn.classList.add('active');
+    }
+    logActivity('🔑',currentUser+' logged in','#fff3e0');
+  }
+};
+
+// ── Export fees to CSV ──
+function exportFeesCSV(){
+  var rows=['"Name","Roll","Stream","Total Fee","Paid","Balance","Status","Last Payment","Remarks"'];
+  students.forEach(function(st){
+    var fd=feeData[st.roll]||{total:5000,paid:0,date:'',remarks:''};
+    var status=fd.paid>=fd.total?'Paid':fd.paid>0?'Partial':'Due';
+    rows.push('"'+st.name+'","'+st.roll+'","'+st.stream+'","'+fd.total+'","'+fd.paid+'","'+(fd.total-fd.paid)+'","'+status+'","'+fd.date+'","'+fd.remarks+'"');
+  });
+  var a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(rows.join('\n'));
+  a.download='Tharpu_Fees_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+  showToast('💰 Fee report exported!');
+}
+
+// Init on page load
+(function(){
+  renderDashboard();
+  renderBSStrip();
+  // Pre-populate attendance student selector
+  try { populateAttStudentSel(); } catch(e){}
+})();
+
+</script>
 
   <!-- ══ COMPARE TAB ══ -->
   <div class="tab-panel" id="tab-compare">
@@ -1294,7 +3505,7 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
           <input type="text" id="wa-mobile" placeholder="e.g. 98XXXXXXXX">
         </div>
         <div class="form-group"><label>Preview</label>
-          <textarea id="wa-preview" class="import-textarea" rows="3" readonly=""></textarea>
+          <textarea id="wa-preview" class="import-textarea" rows="3" readonly></textarea>
         </div>
         <div class="btn-row">
           <button class="btn btn-success" onclick="sendWAAlert()">📱 Simulate Send</button>
@@ -1342,15 +3553,15 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
         </div>
         <div class="settings-row">
           <div><div class="settings-label">Color-code grade cells</div><div class="settings-sub">Highlight pass/fail in green/red</div></div>
-          <label class="toggle-switch"><input type="checkbox" id="toggle-hl" checked="" onchange="saveDisplayPrefs()"><span class="toggle-slider"></span></label>
+          <label class="toggle-switch"><input type="checkbox" id="toggle-hl" checked onchange="saveDisplayPrefs()"><span class="toggle-slider"></span></label>
         </div>
         <div class="settings-row">
           <div><div class="settings-label">Show rank column</div></div>
-          <label class="toggle-switch"><input type="checkbox" id="toggle-rank" checked="" onchange="saveDisplayPrefs()"><span class="toggle-slider"></span></label>
+          <label class="toggle-switch"><input type="checkbox" id="toggle-rank" checked onchange="saveDisplayPrefs()"><span class="toggle-slider"></span></label>
         </div>
         <div class="settings-row">
           <div><div class="settings-label">Inline editable gradesheet</div><div class="settings-sub">Edit marks directly in Results tab</div></div>
-          <label class="toggle-switch"><input type="checkbox" id="toggle-inline-edit" checked="" onchange="saveDisplayPrefs()"><span class="toggle-slider"></span></label>
+          <label class="toggle-switch"><input type="checkbox" id="toggle-inline-edit" checked onchange="saveDisplayPrefs()"><span class="toggle-slider"></span></label>
         </div>
       </div>
     </div>
@@ -1417,8 +3628,7 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
         </div>
         <div class="form-group">
           <label>CSV Data</label>
-          <textarea class="import-textarea" id="batch-csv" rows="6" placeholder="10200205,Compulsory English,65,20,First Terminal
-10200206,Physics,70,22,First Terminal"></textarea>
+          <textarea class="import-textarea" id="batch-csv" rows="6" placeholder="10200205,Compulsory English,65,20,First Terminal&#10;10200206,Physics,70,22,First Terminal"></textarea>
         </div>
         <div class="btn-row">
           <button class="btn btn-primary" onclick="importBatchCSV()">📥 Import Marks</button>
@@ -2537,45 +4747,50 @@ function toggleAutoRemind(on) {
   };
 })();
 
-// ── Method 2: QR Code Sync (fully offline using qrcodejs from cdnjs) ──
+// ── Method 2: QR Code Sync ──
 function generateSyncQR() {
-  var area = document.getElementById('qr-area');
-
-  // Check that the QRCode library loaded
-  if (typeof QRCode === 'undefined') {
-    area.innerHTML = '<div class="info-box" style="background:#fff3cd;border-color:#f0ad4e;color:#7d4e00">⚠️ QR library not loaded. Connect to the internet once to load it, then you can use QR offline. Or use <b>Method 3 (Copy-Paste Code)</b> which is fully offline.</div>';
-    return;
-  }
-
-  // Use the same data code as Method 3 so the receiver can paste it into the Import box
-  var code = getDataCode();
-  var count = Object.keys(marksData).length;
-
-  // QR codes can hold at most ~2953 bytes at error-correction level L
-  if (code.length > 2953) {
-    area.innerHTML = '<div class="info-box" style="background:#fff3cd;border-color:#f0ad4e;color:#7d4e00;text-align:left">⚠️ Data is too large for a single QR code ('+count+' records, '+code.length+' chars). Use <b>Method 1 (Export File)</b> or <b>Method 3 (Copy-Paste Code)</b> instead.</div>';
-    return;
-  }
-
-  // Build container and render QR into it
-  area.innerHTML =
-    '<div id="qr-canvas-wrap" style="background:white;display:inline-block;padding:12px;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,0.15)">' +
-      '<div id="qr-canvas"></div>' +
-    '</div>' +
-    '<div style="margin-top:0.7rem;font-size:0.78rem;color:var(--text-muted)">Contains <b>'+count+'</b> mark records.<br>📱 Scan QR → open a QR-reading app that shows the text → copy the text → paste into <b>Method 3 Import</b> box on the other device.</div>';
-
+  var allMarks = {};
   try {
-    new QRCode(document.getElementById('qr-canvas'), {
-      text: code,
-      width: 220,
-      height: 220,
-      correctLevel: QRCode.CorrectLevel.L
-    });
-    document.getElementById('qr-instructions').style.display = 'block';
-    showToast('📷 QR code ready — scan with phone!');
-  } catch(e) {
-    area.innerHTML = '<div class="info-box" style="background:#fff3cd;border-color:#f0ad4e;color:#7d4e00">⚠️ Failed to generate QR: '+e.message+'. Use <b>Method 3 (Copy-Paste Code)</b> instead.</div>';
+    for (var i=0; i<localStorage.length; i++) {
+      var k=localStorage.key(i);
+      if (k && k.startsWith('tss_marks_')) {
+        try { var d=JSON.parse(localStorage.getItem(k)||'{}'); Object.assign(allMarks, d); } catch(e){}
+      }
+    }
+  } catch(e){}
+  Object.assign(allMarks, marksData);
+
+  var payload = { students: students.filter(function(s){
+    var extra = [];
+    try { extra = JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){}
+    return extra.some(function(e){ return e.roll===s.roll; });
+  }), marks: allMarks };
+
+  var encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+  var count = Object.keys(allMarks).length;
+
+  if (encoded.length > 2900) {
+    // Too large for QR — show chunked copy-paste instead
+    var area = document.getElementById('qr-area');
+    area.innerHTML = '<div class="info-box" style="background:#fff3cd;border-color:#f0ad4e;color:#7d4e00;text-align:left">⚠️ Data is too large for a QR code ('+count+' records). Please use <b>Method 1 (Export File)</b> or <b>Method 3 (Copy-Paste Code)</b> instead.</div>';
+    return;
   }
+
+  var currentURL = window.location.href.split('?')[0].split('#')[0];
+  var qrURL = currentURL + '?syncdata=' + encodeURIComponent(encoded);
+
+  // Use Google Chart API to generate QR
+  var qrImgURL = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(qrURL);
+
+  var area = document.getElementById('qr-area');
+  area.innerHTML =
+    '<div style="background:white;display:inline-block;padding:12px;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,0.15)">' +
+    '<img src="'+qrImgURL+'" alt="Sync QR Code" width="220" height="220" style="display:block;" onerror="document.getElementById(\'qr-area\').innerHTML=\'<div class=\\\"info-box\\\" style=\\\"background:#fff3cd;border-color:#f0ad4e;color:#7d4e00\\\">⚠️ Could not generate QR image. Please use Method 3 (Copy-Paste Code) instead.</div>\'">' +
+    '</div>' +
+    '<div style="margin-top:0.7rem;font-size:0.78rem;color:var(--text-muted)">Contains <b>'+count+'</b> mark records + '+payload.students.length+' extra students</div>';
+
+  document.getElementById('qr-instructions').style.display = 'block';
+  showToast('📷 QR code ready — scan with phone!');
 }
 
 // ── Method 3: Copy-Paste Data Code ──
@@ -2716,7 +4931,6 @@ function copyShareLink() {
   };
 })();
 </script>
+</body>
+</html>
 
-
-
-</body></html>
