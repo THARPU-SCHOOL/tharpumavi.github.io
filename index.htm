@@ -465,6 +465,7 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
 .subject-progress-fill{height:100%;border-radius:3px;background:var(--maroon);transition:width 0.6s;}
 
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 <div id="toast"></div>
@@ -4779,15 +4780,23 @@ function generateSyncQR() {
   var currentURL = window.location.href.split('?')[0].split('#')[0];
   var qrURL = currentURL + '?syncdata=' + encodeURIComponent(encoded);
 
-  // Use Google Chart API to generate QR
-  var qrImgURL = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(qrURL);
-
   var area = document.getElementById('qr-area');
   area.innerHTML =
-    '<div style="background:white;display:inline-block;padding:12px;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,0.15)">' +
-    '<img src="'+qrImgURL+'" alt="Sync QR Code" width="220" height="220" style="display:block;" onerror="document.getElementById(\'qr-area\').innerHTML=\'<div class=\\\"info-box\\\" style=\\\"background:#fff3cd;border-color:#f0ad4e;color:#7d4e00\\\">⚠️ Could not generate QR image. Please use Method 3 (Copy-Paste Code) instead.</div>\'">' +
-    '</div>' +
+    '<div id="qr-canvas-wrap" style="background:white;display:inline-block;padding:12px;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,0.15)"></div>' +
     '<div style="margin-top:0.7rem;font-size:0.78rem;color:var(--text-muted)">Contains <b>'+count+'</b> mark records + '+payload.students.length+' extra students</div>';
+
+  try {
+    new QRCode(document.getElementById('qr-canvas-wrap'), {
+      text: qrURL,
+      width: 220,
+      height: 220,
+      colorDark: '#000000',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  } catch(e) {
+    area.innerHTML = '<div class="info-box" style="background:#fff3cd;border-color:#f0ad4e;color:#7d4e00">⚠️ Could not generate QR code. Please use Method 3 (Copy-Paste Code) instead.<br><small>Error: '+e.message+'</small></div>';
+  }
 
   document.getElementById('qr-instructions').style.display = 'block';
   showToast('📷 QR code ready — scan with phone!');
