@@ -3491,6 +3491,38 @@ function exportFeesCSV(){
       </div>
     </div>
 
+    <!-- ☁️ CLOUD SYNC SECTION -->
+    <div class="section-card" id="cloud-sync-card">
+      <div class="section-head">☁️ Cloud Sync — Access from Any Device</div>
+      <div class="section-body">
+        <div class="info-box" style="background:#e8f0fe;border-color:#4a90d9;color:#1a3a6e;">
+          <b>☁️ How Cloud Sync works:</b><br>
+          1. Go to <b><a href="https://jsonbin.io" target="_blank" style="color:#1a3a6e">jsonbin.io</a></b> → Sign up free<br>
+          2. Get your <b>API Key</b> from the dashboard<br>
+          3. Paste it below and click <b>"Setup Cloud Sync"</b><br>
+          4. From then on, every Save automatically uploads to the cloud.<br>
+          5. On any other device (mobile/laptop), paste the same API Key + Bin ID → click <b>"Load from Cloud"</b> to get all marks instantly.
+        </div>
+        <div class="form-group">
+          <label>JSONBin API Key</label>
+          <input type="text" id="sync-api-key" placeholder="$2b$10$..." autocomplete="off" style="font-family:monospace;font-size:0.82rem;">
+        </div>
+        <div class="form-group">
+          <label>Bin ID <small style="font-weight:400;color:var(--text-muted)">(auto-filled after Setup, or paste from another device)</small></label>
+          <input type="text" id="sync-bin-id" placeholder="64abc123..." autocomplete="off" style="font-family:monospace;font-size:0.82rem;">
+        </div>
+        <div id="sync-status" style="font-size:0.82rem;margin-bottom:0.7rem;min-height:1.2em;"></div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="cloudSetup()">☁️ Setup Cloud Sync</button>
+          <button class="btn btn-success" onclick="cloudPush()">⬆️ Upload Now</button>
+          <button class="btn btn-secondary" onclick="cloudPull()">⬇️ Load from Cloud</button>
+        </div>
+        <div style="margin-top:0.6rem;font-size:0.75rem;color:var(--text-muted);">
+          Cloud Sync Status: <span id="sync-indicator">⬜ Not configured</span>
+        </div>
+      </div>
+    </div>
+
     <div class="section-card">
       <div class="section-head">📋 Audit Trail</div>
       <div class="section-body" style="padding:0" id="audit-list">
