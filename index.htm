@@ -11,6 +11,9 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png" sizes="192x192">
 <link rel="apple-touch-icon" href="icon-512.png">
+<!-- Firebase for cross-device real-time sync -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <title>Tharpu Secondary School — Result Management System</title>
 <style>
 :root{--maroon:#7B1C1C;--maroon-dark:#5a1414;--maroon-light:#9e2e2e;--cream:#FDF6EC;--cream-dark:#f0e4cc;--gold:#c8922a;--gold-light:#f0c96e;--text:#2c1a0e;--text-muted:#6b4c2a;--border:#d4b896;--white:#fff;--success:#1a6e2e;--danger:#991b1b;--shadow:0 2px 12px rgba(123,28,28,0.13);}
@@ -793,10 +796,10 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
     <div id="result-display"></div>
   </div>
 
- <!-- GRADING TAB -->
+  <!-- GRADING TAB -->
   <div class="tab-panel" id="tab-grading">
     <div class="section-card">
-      <div class="section-head">&#128202; NEB Grading Scale</div>
+      <div class="section-head">&#128202; NEB Grading Scale (Class XI)</div>
       <div class="section-body" style="padding:0;">
         <table class="grade-guide-table">
           <tr><th>Grade</th><th>Marks %</th><th>GPA</th><th>Remarks</th></tr>
@@ -809,6 +812,33 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
           <tr><td><span class="grade-pill gp-d">D</span></td><td>35 - 39%</td><td>1.6</td><td>Basic</td></tr>
           <tr><td><span class="grade-pill gp-ng">NG</span></td><td>Below 35%</td><td>0.0</td><td>Not Graded</td></tr>
         </table>
+      </div>
+    </div>
+    <div class="section-card" style="margin-top:1rem;">
+      <div class="section-head">📋 NEB Division / CGPA Guide</div>
+      <div class="section-body" style="padding:0;">
+        <table class="grade-guide-table">
+          <tr><th>CGPA Range</th><th>Division</th></tr>
+          <tr><td>3.6 – 4.0</td><td><b>Distinction</b></td></tr>
+          <tr><td>3.2 – 3.59</td><td><b>First Division</b></td></tr>
+          <tr><td>2.8 – 3.19</td><td><b>Second Division</b></td></tr>
+          <tr><td>2.0 – 2.79</td><td><b>Third Division</b></td></tr>
+          <tr><td>1.6 – 1.99</td><td><b>Pass</b></td></tr>
+          <tr><td>Below 1.6 or any NG</td><td><b style="color:#b71c1c">Fail / Not Graded</b></td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="section-card" style="margin-top:1rem;">
+      <div class="section-head" style="background:#b71c1c;">⚠️ NEB Theory &amp; Practical Pass Rule</div>
+      <div class="section-body">
+        <div class="info-box" style="background:#ffebee;border-color:#b71c1c;color:#7f0000;margin-bottom:0;">
+          <b>A student must pass Theory and Practical SEPARATELY:</b><br>
+          • Minimum <b>35% in Theory</b> marks (out of thMax)<br>
+          • Minimum <b>35% in Practical</b> marks (out of prMax, if subject has practical)<br>
+          • If <b>either</b> is below 35%, the entire subject is graded <b>NG</b> regardless of total.<br>
+          • CGPA = Sum of all subject GPAs ÷ Number of subjects<br>
+          • A student with <b>any NG</b> subject is considered <b>Failed</b>.
+        </div>
       </div>
     </div>
     <!-- EDITABLE SUBJECTS GRADESHEET -->
@@ -1168,7 +1198,46 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
       </div>
     </div>
 
-    <!-- METHOD 5: Auto-sync reminder after saving -->
+    <!-- METHOD 5: Firebase Cloud Sync (Real-time, any device) -->
+    <div class="section-card" style="margin-top:1rem;border:2px solid #1565c0;">
+      <div class="section-head" style="background:linear-gradient(135deg,#1565c0,#1976d2);">☁️ Method 5: Cloud Sync — Real-Time (Any Device, Any Time)</div>
+      <div class="section-body">
+        <div class="info-box" style="background:#e3f2fd;border-color:#1565c0;color:#0d47a1;">
+          <b>🌐 One-click cloud sync!</b> Push all marks to cloud → instantly available on <b>any device, any browser</b> — no file sharing needed. Uses your school's private Firebase database.
+        </div>
+        <div class="form-group">
+          <label>🔑 Sync Room ID (shared secret — all devices must use same ID)</label>
+          <input type="text" id="fb-room-id" value="tharpu-school-2082" placeholder="e.g. tharpu-school-2082" style="font-family:monospace;">
+        </div>
+        <div id="fb-status" style="margin-bottom:0.7rem;font-size:0.82rem;color:var(--text-muted);">Status: Not connected</div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="fbPushMarks()">☁️ Push Marks to Cloud</button>
+          <button class="btn btn-success" onclick="fbPullMarks()">📥 Pull Marks from Cloud</button>
+          <button class="btn btn-secondary" onclick="fbEnableLiveSync()">🔴 Enable Live Sync</button>
+        </div>
+        <div style="margin-top:0.8rem;font-size:0.78rem;color:var(--text-muted);">
+          <b>How to use:</b><br>
+          • <b>Push</b> — Upload all marks from this device to cloud.<br>
+          • <b>Pull</b> — Download latest marks from cloud to this device.<br>
+          • <b>Live Sync</b> — Auto-update this device when any other device saves marks.<br>
+          • All devices must use the <b>same Room ID</b>.<br>
+          <b>⚠️ Setup required:</b> You need a free Firebase project. <a href="#" onclick="document.getElementById('fb-setup-guide').style.display=document.getElementById('fb-setup-guide').style.display==='none'?'block':'none';return false;" style="color:#1565c0">Show setup guide ▼</a>
+        </div>
+        <div id="fb-setup-guide" style="display:none;margin-top:0.8rem;background:#fff8e1;border:1px solid #f0ad4e;border-radius:8px;padding:0.8rem;font-size:0.78rem;color:#5d3f00;">
+          <b>📋 Firebase Setup (one-time, 5 minutes):</b><br>
+          1. Go to <a href="https://console.firebase.google.com" target="_blank" style="color:#1565c0">console.firebase.google.com</a><br>
+          2. Create a new project (free Spark plan is enough)<br>
+          3. Go to <b>Realtime Database</b> → Create database → Start in test mode<br>
+          4. Copy your database URL (e.g. <code>https://your-project-default-rtdb.firebaseio.com</code>)<br>
+          5. Go to <b>Project Settings</b> → Your apps → Add web app → Copy the <code>firebaseConfig</code> object<br>
+          6. In this file, find the comment <code>// FIREBASE CONFIG — REPLACE THIS</code> and paste your config<br>
+          <br>
+          <b>Current config status:</b> <span id="fb-config-status" style="font-weight:700;color:#b71c1c">⚠️ Using demo config — replace with your own</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- METHOD 6: Auto-sync reminder after saving -->
     <div class="section-card" style="margin-top:1rem;">
       <div class="section-head">⚙️ Settings: Auto-Remind to Sync After Saving</div>
       <div class="section-body">
@@ -1518,6 +1587,30 @@ function getGrade(pct) {
   if(pct>=50)return{g:'C+',gpa:2.4};if(pct>=40)return{g:'C',gpa:2.0};
   if(pct>=35)return{g:'D',gpa:1.6};return{g:'NG',gpa:0.0};
 }
+// NEB: Student must pass TH (≥35% of thMax) AND PR (≥35% of prMax) separately.
+// If either TH or PR fails, entire subject = NG regardless of total.
+function getSubjectResult(th, pr, thMax, prMax) {
+  var thPassed = true, prPassed = true;
+  var thPct = thMax > 0 ? (th / thMax * 100) : 100;
+  var prPct = prMax > 0 ? (pr / prMax * 100) : 100;
+  if (thMax > 0 && thPct < 35) thPassed = false;
+  if (prMax > 0 && prPct < 35) prPassed = false;
+  var total = th + pr;
+  var totalMax = thMax + prMax;
+  var totalPct = totalMax > 0 ? (total / totalMax * 100) : 0;
+  var gr = getGrade(totalPct);
+  // If either component fails, override to NG
+  if (!thPassed || !prPassed) { gr = {g:'NG', gpa:0.0}; }
+  var thGr = thMax > 0 ? getGrade(thPct) : null;
+  var prGr = prMax > 0 ? getGrade(prPct) : null;
+  return {
+    grade: gr.g, gpa: gr.gpa,
+    thGrade: thGr ? thGr.g : '—', thGpa: thGr ? thGr.gpa : null,
+    prGrade: prGr ? prGr.g : '—', prGpa: prGr ? prGr.gpa : null,
+    thPassed: thPassed, prPassed: prPassed,
+    passed: thPassed && prPassed
+  };
+}
 function initials(name) {
   var p=name.trim().split(' ');
   return p.length>=2 ? p[0][0]+p[p.length-1][0] : name.substring(0,2);
@@ -1670,23 +1763,34 @@ function loadMarksForm() {
     var prIn = sub.prMax>0
       ? '<input type="number" id="pr_'+k+'" min="0" max="'+sub.prMax+'" value="'+prV+'" placeholder="0" oninput="recalcRow(\''+k+'\','+sub.thMax+','+sub.prMax+')">'
       : '<span style="color:#aaa">N/A</span>';
-    var tot  = '';
+    var tot = '', gradeHtml = '';
     if (thV!==''&&(sub.prMax===0||prV!=='')) {
-      tot = parseInt(thV||0)+parseInt(prV||0);
+      var th=parseInt(thV||0), pr=sub.prMax>0?parseInt(prV||0):0;
+      tot = th+pr;
+      var res=getSubjectResult(th,pr,sub.thMax,sub.prMax);
+      var grColor=res.grade==='NG'?'#b71c1c':res.gpa>=2.0?'#1a6e2e':'#e65100';
+      gradeHtml='<span style="font-weight:700;color:'+grColor+'">'+res.grade+'</span>';
+      if(!res.thPassed) gradeHtml+='<br><small style="color:#b71c1c">TH Fail</small>';
+      if(!res.prPassed) gradeHtml+='<br><small style="color:#b71c1c">PR Fail</small>';
     }
     return '<tr>'+
       '<td style="font-size:0.78rem">'+sub.name+'</td>'+
-      '<td><input type="number" id="th_'+k+'" min="0" max="'+sub.thMax+'" value="'+thV+'" placeholder="0" oninput="recalcRow(\''+k+'\','+sub.thMax+','+sub.prMax+')"></td>'+
+      '<td><input type="number" id="th_'+k+'" min="0" max="'+sub.thMax+'" value="'+thV+'" placeholder="0" oninput="recalcRow(\''+k+'\','+sub.thMax+','+sub.prMax+')" style="border-color:'+(thV!==''&&parseInt(thV)<Math.ceil(sub.thMax*0.35)?'#b71c1c':'')+'"></td>'+
       '<td>'+prIn+'</td>'+
-      '<td><small style="color:#888">/'+sub.thMax+'</small></td>'+
+      '<td><small style="color:#888">'+sub.thMax+'</small></td>'+
+      '<td><small style="color:#888">'+(sub.prMax>0?sub.prMax:'—')+'</small></td>'+
       '<td id="tot_'+k+'">'+tot+'</td>'+
+      '<td id="grade_'+k+'" style="text-align:center">'+gradeHtml+'</td>'+
       '</tr>';
   }).join('');
   area.innerHTML =
     '<div class="section-card">'+
     '<div class="section-head">&#128221; '+st.name+' &mdash; '+exam+'</div>'+
+    '<div class="info-box" style="background:#fff8e1;border-color:#f0ad4e;color:#5d3f00;font-size:0.78rem;padding:0.5rem 0.8rem;margin:0.5rem">'+
+      '⚠️ <b>NEB Rule:</b> Student must score <b>≥35%</b> in Theory AND Practical separately. Failing either = NG for that subject.'+
+    '</div>'+
     '<div style="overflow-x:auto"><table class="marks-table">'+
-    '<tr><th>Subject</th><th>Theory</th><th>Practical</th><th>Max Th</th><th>Total</th></tr>'+
+    '<tr><th>Subject</th><th>Theory<br><small style="font-weight:400;color:#888">(Min 35% of max)</small></th><th>Practical<br><small style="font-weight:400;color:#888">(Min 35% of max)</small></th><th>Th Max</th><th>Pr Max</th><th>Total</th><th>Grade</th></tr>'+
     rows+
     '</table></div>'+
     '<div style="padding:1rem">'+
@@ -1699,8 +1803,29 @@ function recalcRow(key,thMax,prMax) {
   var th=thEl?parseInt(thEl.value||0):0;
   var pr=(prEl&&prEl.tagName==='INPUT')?parseInt(prEl.value||0):0;
   var totEl=document.getElementById('tot_'+key);
+  var gradeEl=document.getElementById('grade_'+key);
   var hasData=thEl&&thEl.value!==''&&(prMax===0||(prEl&&prEl.tagName==='INPUT'&&prEl.value!==''));
   if (totEl) totEl.textContent = hasData ? (th+pr) : '';
+  // Live grade with TH/PR pass check
+  if (gradeEl) {
+    if (hasData) {
+      var res=getSubjectResult(th,pr,thMax,prMax);
+      var grColor=res.grade==='NG'?'#b71c1c':res.gpa>=2.0?'#1a6e2e':'#e65100';
+      var html='<span style="font-weight:700;color:'+grColor+'">'+res.grade+'</span>';
+      if(!res.thPassed) html+='<br><small style="color:#b71c1c">TH Fail</small>';
+      else if(!res.prPassed) html+='<br><small style="color:#b71c1c">PR Fail</small>';
+      gradeEl.innerHTML=html;
+    } else { gradeEl.innerHTML=''; }
+  }
+  // Highlight red border if below min pass mark
+  if (thEl && thEl.value!=='') {
+    var thPct=thMax>0?th/thMax*100:100;
+    thEl.style.borderColor = thPct<35?'#b71c1c':'';
+  }
+  if (prEl && prEl.tagName==='INPUT' && prEl.value!=='') {
+    var prPct=prMax>0?pr/prMax*100:100;
+    prEl.style.borderColor = prPct<35?'#b71c1c':'';
+  }
 }
 function saveMarks(roll,exam) {
   // NOTE: This is wrapped by the Sync Devices module below.
@@ -2118,14 +2243,13 @@ function renderResultStats() {
     var saved = marksData[getKey(st.roll,exam)]||{};
     var totalGP=0, subCount=0, anyNG=false, allFilled=true;
     subs.forEach(function(sub){
-      var d=saved[sub.name]||{},max=sub.thMax+sub.prMax;
+      var d=saved[sub.name]||{};
       if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
-        var t=(d.th||0)+(d.pr||0);
-        var pct=max>0?t/max*100:0;
-        var gr=getGrade(pct);
-        totalGP+=gr.gpa; subCount++;
-        if(gr.g==='NG') anyNG=true;
-        gradeCount[gr.g]=(gradeCount[gr.g]||0)+1;
+        var th=d.th||0, pr=d.pr||0;
+        var res=getSubjectResult(th,pr,sub.thMax,sub.prMax);
+        totalGP+=res.gpa; subCount++;
+        if(res.grade==='NG') anyNG=true;
+        gradeCount[res.grade]=(gradeCount[res.grade]||0)+1;
       } else { allFilled=false; }
     });
     if (allFilled && subCount>0) {
@@ -2204,19 +2328,18 @@ function loadGradeSheet() {
     subs.forEach(function(sub){
       html+='<th>'+sub.name.split(' ').slice(0,2).join(' ')+'<br><small>GPA</small></th>';
     });
-   ''+
+    html+='<th>CGPA</th><th>Result</th><th>Sheet</th></tr></thead><tbody>';
     slist.forEach(function(st,idx){
       var saved=marksData[getKey(st.roll,exam)]||{};
       var totalGPA=0,subCount=0,allFilled=true,anyNG=false;
       var cells=subs.map(function(sub){
-        var d=saved[sub.name]||{},max=sub.thMax+sub.prMax;
+        var d=saved[sub.name]||{};
         if (d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)) {
-          var t=(d.th||0)+(d.pr||0);
-          var pct=max>0?(t/max*100):0;
-          var gr=getGrade(pct);
-          totalGPA+=gr.gpa; subCount++;
-          if(gr.g==='NG') anyNG=true;
-         return '<td>'+gr.gpa.toFixed(1)+'</td>';
+          var th=d.th||0, pr=d.pr||0;
+          var res=getSubjectResult(th,pr,sub.thMax,sub.prMax);
+          totalGPA+=res.gpa; subCount++;
+          if(res.grade==='NG') anyNG=true;
+         return '<td>'+(res.grade==='NG'?'<span style="color:#b71c1c">NG</span>':res.gpa.toFixed(1))+'</td>';
         } else { allFilled=false; return '<td style="color:#bbb">—</td>'; }
       }).join('');
       var cgpa=allFilled&&subCount>0?(totalGPA/subCount).toFixed(2):'—';
@@ -2245,8 +2368,9 @@ function gpaPillClass(g) {
 }
 function cgpaDiv(cgpa) {
   if(cgpa>=3.6) return 'Distinction';
-  if(cgpa>=2.8) return 'First Div';
-  if(cgpa>=2.0) return 'Second Div';
+  if(cgpa>=3.2) return 'First Division';
+  if(cgpa>=2.8) return 'Second Division';
+  if(cgpa>=2.0) return 'Third Division';
   if(cgpa>=1.6) return 'Pass';
   return 'Fail';
 }
@@ -2286,29 +2410,36 @@ var subjectCodes = {
 };
 
 var rows=subs.map(function(sub,i){
-    var d=saved[sub.name]||{},max=sub.thMax+sub.prMax;
+    var d=saved[sub.name]||{};
     var credit=getCredit(sub.name);
     var code = subjectCodes[sub.name] || (101+i);
     if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
-      var t=(d.th||0)+(d.pr||0);
-      var pct=max>0?t/max*100:0;
-      var gr=getGrade(pct);
-      totalGP+=gr.gpa; subCount++;
-      if(gr.g==='NG') anyNG=true;
-      var inGP  = sub.prMax>0 ? gr.gpa.toFixed(1) : '—';
-      var inG   = sub.prMax>0 ? gr.g : '—';
-      var exGP  = gr.gpa.toFixed(1);
-      var exG   = gr.g;
+      var th=d.th||0, pr=d.pr||0;
+      var res=getSubjectResult(th,pr,sub.thMax,sub.prMax);
+      totalGP+=res.gpa; subCount++;
+      if(res.grade==='NG') anyNG=true;
+      var inGP  = sub.prMax>0 ? (res.prGpa!==null?res.prGpa.toFixed(1):'—') : '—';
+      var inG   = sub.prMax>0 ? res.prGrade : '—';
+      var exGP  = res.thGpa!==null ? res.thGpa.toFixed(1) : '—';
+      var exG   = res.thGrade;
+      var finalGradeCell = res.grade==='NG'
+        ? '<b style="color:#b71c1c">NG</b>'
+        : '<b>'+res.grade+'</b>';
+      var remarkCell = !res.thPassed
+        ? '<span style="color:#b71c1c">TH Fail</span>'
+        : !res.prPassed
+          ? '<span style="color:#b71c1c">PR Fail</span>'
+          : (res.grade==='NG'?'Not Graded':res.grade==='D'?'Basic':'Passed');
       return '<tr>'
         +'<td style="text-align:center">'+code+'</td>'
         +'<td style="text-align:left;padding-left:8px">'+sub.name+'</td>'
         +'<td style="text-align:center">'+credit+'</td>'
-        +'<td style="text-align:center">'+inGP+'</td>'
-        +'<td style="text-align:center">'+inG+'</td>'
         +'<td style="text-align:center">'+exGP+'</td>'
         +'<td style="text-align:center">'+exG+'</td>'
-        +'<td style="text-align:center">'+gr.g+'</td>'
-        +'<td style="text-align:center">'+(gr.g==='NG'?'Not Graded':gr.g==='D'?'Basic':'Passed')+'</td>'
+        +'<td style="text-align:center">'+inGP+'</td>'
+        +'<td style="text-align:center">'+inG+'</td>'
+        +'<td style="text-align:center">'+finalGradeCell+'</td>'
+        +'<td style="text-align:center">'+remarkCell+'</td>'
         +'</tr>';
     } else {
       allFilled=false;
@@ -2342,7 +2473,11 @@ var rows=subs.map(function(sub,i){
     '<style>'+
     '*{box-sizing:border-box;margin:0;padding:0}'+
     'body{font-family:Arial,sans-serif;font-size:12px;color:#000;background:#fff;padding:20px}'+
-    '.page{max-width:740px;margin:0 auto;border:2px solid #000;padding:18px 24px}'+
+    '.page{max-width:740px;margin:0 auto;border:2px solid #000;padding:18px 24px;position:relative;overflow:hidden}'+
+    '.watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-35deg);opacity:0.07;pointer-events:none;z-index:0;text-align:center}'+
+    '.watermark img{width:340px;height:340px;object-fit:contain}'+
+    '.watermark-text{font-size:52px;font-weight:900;color:#7B1C1C;white-space:nowrap;letter-spacing:4px}'+
+    '.page>*:not(.watermark){position:relative;z-index:1}'+
     '.top-right{text-align:right;font-size:11px;font-weight:bold;margin-bottom:4px}'+
     '.header-row{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;margin-bottom:10px}'+
     '.school-name{flex:1;padding-top:6px}'+
@@ -2363,10 +2498,16 @@ var rows=subs.map(function(sub,i){
     '.date-line{margin-top:16px;font-size:12px}'+
     '.note-box{border:1px solid #000;margin-top:16px;padding:7px 10px;font-size:10.5px}'+
     '.note-box div{margin-bottom:2px}'+
-    '@media print{body{padding:0}.page{border:2px solid #000;padding:15px 20px}button{display:none!important}}'+
+    '@media print{body{padding:0}.page{border:2px solid #000;padding:15px 20px}.watermark{-webkit-print-color-adjust:exact;print-color-adjust:exact}button{display:none!important}}'+
     '</style></head><body>'+
 
     '<div class="page">'+
+
+    // Watermark
+    '<div class="watermark">'+
+      '<img src="THARPU SECONDARY SCHOOL.png" onerror="this.style.display=\'none\';this.nextSibling.style.display=\'block\'">'+
+      '<div class="watermark-text" style="display:none">TSS</div>'+
+    '</div>'+
 
   // Header: logo beside school name
    '<div style="display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:14px">'+
@@ -2414,7 +2555,7 @@ var rows=subs.map(function(sub,i){
         '<tr class="total-row">'+
           '<td colspan="2" style="text-align:right;padding-right:8px">TOTAL</td>'+
           '<td></td>'+
-          '<td colspan="2" style="text-align:left;padding-left:6px">GRADE POINT AVERAGE (GPA): <b>'+cgpa+'</b></td>'+
+          '<td colspan="2" style="text-align:left;padding-left:6px">CUMULATIVE GRADE POINT AVERAGE (CGPA): <b>'+cgpa+'</b></td>'+
           '<td></td>'+
           '<td></td>'+
         '</tr>'+
@@ -3059,7 +3200,7 @@ function renderDashboard() {
 }
 
 // ── Student Profile Modal ──
-function openStudentProfile(roll) {
+function openStudentProfile(rollOrEl) { var roll = (rollOrEl && typeof rollOrEl === "object") ? rollOrEl.dataset.roll : rollOrEl;
   var st = students.find(function(s){ return s.roll===roll; });
   if (!st) return;
   var avEl = document.getElementById('profile-avatar');
@@ -3945,7 +4086,7 @@ function saveStudentNotes() {
 //  STUDENT PROFILE MODAL
 // ═══════════════════════════════════════════════════════
 var _profileRoll = null;
-function openStudentProfile(roll) {
+function openStudentProfile(rollOrEl) { var roll = (rollOrEl && typeof rollOrEl === "object") ? rollOrEl.dataset.roll : rollOrEl;
   _profileRoll = roll;
   var st = students.find(function(s){return s.roll===roll;});
   if (!st) return;
@@ -4151,9 +4292,9 @@ function loadGradeSheetEditable() {
         var cell = '<td class="'+hlCls+'">';
         if(inlineEdit && !locked) {
           cell += '<div style="display:flex;gap:3px;align-items:center;justify-content:center">';
-          cell += '<input class="gs-edit-input" type="number" id="gs_th_'+sanitize(st.roll)+'_'+k+'" value="'+thV+'" min="0" max="'+sub.thMax+'" placeholder="Th" title="Theory /'+sub.thMax+'" oninput="gsRecalc(''+sanitize(st.roll)+'',''+sanitize(exam)+'')" onblur="gsValidate(this,'+sub.thMax+')" style="width:44px">';
+          cell += '<input class="gs-edit-input" type="number" id="gs_th_'+sanitize(st.roll)+'_'+k+'" value="'+thV+'" min="0" max="'+sub.thMax+'" placeholder="Th" title="Theory /'+sub.thMax+'" oninput="gsRecalc(this)" data-roll="'+sanitize(st.roll)+'" data-exam="'+sanitize(exam)+'" onblur="gsValidate(this,'+sub.thMax+')" style="width:44px">';
           if(sub.prMax>0) {
-            cell += '<input class="gs-edit-input" type="number" id="gs_pr_'+sanitize(st.roll)+'_'+k+'" value="'+prV+'" min="0" max="'+sub.prMax+'" placeholder="Pr" title="Practical /'+sub.prMax+'" oninput="gsRecalc(''+sanitize(st.roll)+'',''+sanitize(exam)+'')" onblur="gsValidate(this,'+sub.prMax+')" style="width:38px">';
+            cell += '<input class="gs-edit-input" type="number" id="gs_pr_'+sanitize(st.roll)+'_'+k+'" value="'+prV+'" min="0" max="'+sub.prMax+'" placeholder="Pr" title="Practical /'+sub.prMax+'" oninput="gsRecalc(this)" data-roll="'+sanitize(st.roll)+'" data-exam="'+sanitize(exam)+'" onblur="gsValidate(this,'+sub.prMax+')" style="width:38px">';
           }
           cell += '</div>';
         } else {
@@ -4170,7 +4311,7 @@ function loadGradeSheetEditable() {
       html += '<tr id="gs-row-'+sanitize(st.roll)+'">';
       if(showRank) html += '<td>'+rankHtml+'</td>';
       html += '<td>'+(idx+1)+'</td>';
-      html += '<td style="text-align:left;cursor:pointer" onclick="openStudentProfile(''+sanitize(st.roll)+'')"><span style="color:var(--maroon);text-decoration:underline dotted">'+sanitize(st.name)+'</span>'+
+      html += '<td style="text-align:left;cursor:pointer" onclick="openStudentProfile(this.dataset.roll)" data-roll="'+sanitize(st.roll)+'"><span style="color:var(--maroon);text-decoration:underline dotted">'+sanitize(st.name)+'</span>'+
         (locked ? ' <span style="font-size:0.65rem">🔒</span>' : '')+'</td>';
       html += '<td>'+sanitize(st.roll)+'</td>';
       html += cells;
@@ -4178,9 +4319,9 @@ function loadGradeSheetEditable() {
       html += '<td>'+div+'</td>';
       html += '<td>'+res+'</td>';
       html += '<td class="no-print" style="white-space:nowrap">';
-      if(inlineEdit&&!locked) html += '<button class="btn btn-success" style="padding:3px 7px;font-size:0.68rem" onclick="gsSaveRow(''+sanitize(st.roll)+'',''+sanitize(exam)+'')">💾</button> ';
-      html += '<button class="btn btn-primary" style="padding:3px 7px;font-size:0.68rem" onclick="showIndividualSheet(''+sanitize(st.roll)+'',''+sanitize(exam)+'')">📄</button> ';
-      html += '<button class="btn '+(locked?'btn-secondary':'btn-danger')+'" style="padding:3px 7px;font-size:0.68rem" onclick="toggleLock(''+sanitize(st.roll)+'',''+sanitize(exam)+'')">'+(locked?'🔓':'🔒')+'</button>';
+      if(inlineEdit&&!locked) html += '<button class="btn btn-success" style="padding:3px 7px;font-size:0.68rem" onclick="gsSaveRow(this.dataset.roll,this.dataset.exam)" data-roll="'+sanitize(st.roll)+'" data-exam="'+sanitize(exam)+'">💾</button> ';
+      html += '<button class="btn btn-primary" style="padding:3px 7px;font-size:0.68rem" onclick="showIndividualSheet(this.dataset.roll,this.dataset.exam)" data-roll="'+sanitize(st.roll)+'" data-exam="'+sanitize(exam)+'">📄</button> ';
+      html += '<button class="btn '+(locked?'btn-secondary':'btn-danger')+'" style="padding:3px 7px;font-size:0.68rem" onclick="toggleLock(this.dataset.roll,this.dataset.exam)" data-roll="'+sanitize(st.roll)+'" data-exam="'+sanitize(exam)+'">'+(locked?'🔓':'🔒')+'</button>';
       html += '</td></tr>';
     });
     html += '</tbody></table></div>';
@@ -4200,7 +4341,11 @@ function gsValidate(input, max) {
     input.classList.remove('invalid');
   }
 }
-function gsRecalc(roll, exam) {
+function gsRecalc(el) {
+  // Accept element - read roll/exam from data attributes
+  var roll = el ? el.dataset.roll : null;
+  var exam = el ? el.dataset.exam : null;
+  if (!roll) return;
   // Mark row as having unsaved changes
   var row = document.getElementById('gs-row-'+roll);
   if (row) row.classList.add('gs-row-unsaved');
@@ -4495,15 +4640,15 @@ renderStudentList = function() {
     var photo = studentPhotos[s.roll];
     var avatarHtml = photo ? '<img src="'+photo+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">' : initials(s.name);
     return '<div class="student-item">'+
-      '<div class="student-avatar" onclick="openStudentProfile(''+s.roll+'')" style="cursor:pointer" title="View profile">'+avatarHtml+'</div>'+
-      '<div class="student-info" onclick="quickEnterMarks(''+s.roll+'')" style="cursor:pointer">'+
+      '<div class="student-avatar" onclick="openStudentProfile(this.dataset.roll)" data-roll="'+s.roll+'" style="cursor:pointer" title="View profile">'+avatarHtml+'</div>'+
+      '<div class="student-info" onclick="quickEnterMarks(this.dataset.roll)" data-roll="'+s.roll+'" style="cursor:pointer">'+
         '<div class="student-name">'+sanitize(s.name)+'</div>'+
         '<div class="student-meta">Roll: <b>'+sanitize(s.roll)+'</b> | '+sanitize(s.year)+'</div>'+
       '</div>'+
       '<span class="badge '+sc+'">'+(s.stream==='Plant Science'?'🌿 Plant':'📘 Gen')+'</span>'+
       (hasMarks?'<span class="badge badge-marked">✓</span>':'<span class="badge badge-unmarked">—</span>')+
       '<label class="photo-upload-wrap" title="Upload photo">'+
-        '<input type="file" accept="image/*" onchange="uploadStudentPhoto(''+s.roll+'',this)">'+
+        '<input type="file" accept="image/*" onchange="uploadStudentPhoto(this.dataset.roll,this)" data-roll="'+s.roll+'"">'+
         '<span class="photo-upload-btn" style="padding:4px 8px;font-size:0.7rem">📷</span>'+
       '</label>'+
       '</div>';
@@ -4896,6 +5041,136 @@ function copyShareLink() {
     document.body.appendChild(tmp); tmp.select(); document.execCommand('copy'); document.body.removeChild(tmp);
     showToast('🔗 Link copied!');
   }
+}
+
+// ============================================================
+// FIREBASE CLOUD SYNC — Cross-device real-time sync
+// ============================================================
+// FIREBASE CONFIG — REPLACE THIS with your own project config
+// Get it from: Firebase Console → Project Settings → Your apps → Web app
+var FB_CONFIG = {
+  apiKey: "AIzaSyDEMO_REPLACE_WITH_YOUR_KEY",
+  authDomain: "your-project.firebaseapp.com",
+  databaseURL: "https://your-project-default-rtdb.firebaseio.com",
+  projectId: "your-project",
+  storageBucket: "your-project.appspot.com",
+  messagingSenderId: "000000000000",
+  appId: "1:000000000000:web:0000000000000000"
+};
+
+var _fbApp = null, _fbDB = null, _fbLiveSyncOff = null;
+
+function fbInit() {
+  try {
+    if (_fbApp) return true;
+    if (typeof firebase === 'undefined') {
+      fbSetStatus('❌ Firebase SDK not loaded. Check internet connection.', 'danger');
+      return false;
+    }
+    // Check if real config
+    if (FB_CONFIG.apiKey.indexOf('DEMO') >= 0 || FB_CONFIG.databaseURL.indexOf('your-project') >= 0) {
+      fbSetStatus('⚠️ Demo config detected. Please replace with your Firebase config (see setup guide).', 'warn');
+      var cs = document.getElementById('fb-config-status');
+      if (cs) cs.innerHTML = '⚠️ Demo config — not functional. Replace with your config.';
+      return false;
+    }
+    if (!firebase.apps.length) {
+      _fbApp = firebase.initializeApp(FB_CONFIG);
+    } else {
+      _fbApp = firebase.apps[0];
+    }
+    _fbDB = firebase.database(_fbApp);
+    fbSetStatus('✅ Firebase connected!', 'ok');
+    return true;
+  } catch(e) {
+    fbSetStatus('❌ Firebase error: ' + e.message, 'danger');
+    return false;
+  }
+}
+
+function fbRoomRef() {
+  var room = (document.getElementById('fb-room-id')||{value:'tharpu-school-2082'}).value.trim() || 'tharpu-school-2082';
+  return _fbDB.ref('schools/' + room.replace(/[.#$\[\]]/g,'_'));
+}
+
+function fbSetStatus(msg, type) {
+  var el = document.getElementById('fb-status');
+  if (!el) return;
+  var colors = {ok:'#1a6e2e', danger:'#b71c1c', warn:'#7d4e00', info:'#0d47a1'};
+  el.innerHTML = '<span style="color:'+(colors[type]||'#555')+'">'+msg+'</span>';
+}
+
+function fbPushMarks() {
+  if (!fbInit()) return;
+  fbSetStatus('⏳ Pushing marks to cloud...', 'info');
+  var payload = {
+    marks: marksData,
+    students: (function(){ try { return JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){ return []; } })(),
+    pushedBy: currentUser,
+    pushedAt: new Date().toISOString(),
+    deviceInfo: navigator.userAgent.substring(0,60)
+  };
+  fbRoomRef().set(payload).then(function() {
+    fbSetStatus('✅ Marks pushed successfully! Available on all devices now. (' + Object.keys(marksData).length + ' records)', 'ok');
+    if(typeof showToast==='function') showToast('☁️ Marks synced to cloud!');
+  }).catch(function(e) {
+    fbSetStatus('❌ Push failed: ' + e.message + ' — Check Firebase config and database rules.', 'danger');
+  });
+}
+
+function fbPullMarks() {
+  if (!fbInit()) return;
+  fbSetStatus('⏳ Pulling marks from cloud...', 'info');
+  fbRoomRef().once('value').then(function(snap) {
+    var data = snap.val();
+    if (!data) { fbSetStatus('⚠️ No data found in cloud for this Room ID.', 'warn'); return; }
+    var markCount = Object.keys(data.marks||{}).length;
+    var stCount = (data.students||[]).length;
+    if (!confirm('Pull ' + markCount + ' mark records and ' + stCount + ' students from cloud?\n\nPushed by: ' + (data.pushedBy||'unknown') + '\nAt: ' + (data.pushedAt||'unknown') + '\n\nExisting local marks will be MERGED.')) return;
+    Object.assign(marksData, data.marks||{});
+    var extra = [];
+    try { extra = JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){}
+    (data.students||[]).forEach(function(s){
+      if (!extra.some(function(e){ return e.roll===s.roll; })) extra.push(s);
+      if (!students.some(function(e){ return e.roll===s.roll; })) students.push(s);
+    });
+    try { localStorage.setItem('tss_extra_students', JSON.stringify(extra)); } catch(e){}
+    saveMarksToStorage().then(function(){
+      renderStudentList(); populateStudentSelects(); updateSummary();
+      fbSetStatus('✅ Pulled ' + markCount + ' mark records from cloud! Last synced by: ' + (data.pushedBy||'unknown'), 'ok');
+      if(typeof showToast==='function') showToast('📥 ' + markCount + ' marks pulled from cloud!');
+    });
+  }).catch(function(e) {
+    fbSetStatus('❌ Pull failed: ' + e.message, 'danger');
+  });
+}
+
+function fbEnableLiveSync() {
+  if (!fbInit()) return;
+  if (_fbLiveSyncOff) {
+    _fbLiveSyncOff(); _fbLiveSyncOff = null;
+    fbSetStatus('⏹️ Live sync disabled.', 'info');
+    if(typeof showToast==='function') showToast('⏹️ Live sync off');
+    return;
+  }
+  fbSetStatus('🔴 Live sync ACTIVE — watching for changes...', 'ok');
+  if(typeof showToast==='function') showToast('🔴 Live sync enabled!');
+  var ref = fbRoomRef();
+  var handler = ref.on('value', function(snap) {
+    var data = snap.val();
+    if (!data) return;
+    var newMarkCount = Object.keys(data.marks||{}).length;
+    var changed = JSON.stringify(data.marks) !== JSON.stringify(marksData);
+    if (changed && data.pushedBy && data.pushedBy !== currentUser) {
+      Object.assign(marksData, data.marks||{});
+      saveMarksToStorage().then(function(){
+        renderStudentList(); populateStudentSelects(); updateSummary();
+        if(typeof showToast==='function') showToast('🔄 Auto-synced: '+newMarkCount+' marks from '+data.pushedBy);
+        fbSetStatus('🔄 Auto-synced ' + newMarkCount + ' marks from ' + data.pushedBy + ' at ' + new Date().toLocaleTimeString(), 'ok');
+      });
+    }
+  });
+  _fbLiveSyncOff = function() { ref.off('value', handler); };
 }
 
 // ── URL syncdata auto-import on load ──
