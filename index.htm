@@ -31,62 +31,62 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--cream);color:var(-
 .input-wrap{position:relative;margin-bottom:1rem;}
 .input-wrap input{width:100%;padding:0.72rem 2.6rem 0.72rem 0.9rem;border:1.5px solid var(--border);border-radius:9px;font-size:0.97rem;color:var(--text);background:var(--cream);outline:none;transition:border-color 0.2s;}
 .input-wrap input:focus{border-color:var(--maroon);background:#fff;}
-.toggle-pw{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-muted);padding:2px 4px;display:flex;align-items:;}
+.toggle-pw{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-muted);padding:2px 4px;display:flex;align-items:center;}
 .toggle-pw svg{width:20px;height:20px;}
 .btn-login{width:100%;padding:0.85rem;background:var(--maroon);color:var(--white);border:none;border-radius:9px;font-size:1rem;font-weight:700;cursor:pointer;letter-spacing:0.5px;transition:background 0.2s,transform 0.1s;margin-top:0.3rem;}
 .btn-login:hover{background:var(--maroon-dark);}
 .btn-login:active{transform:scale(0.98);}
-.login-hint{font-size:0.75rem;color:var(--text-muted);text-align:;margin-top:1rem;opacity:0.8;}
+.login-hint{font-size:0.75rem;color:var(--text-muted);text-align:center;margin-top:1rem;opacity:0.8;}
 .auth-tabs{display:flex;border-bottom:1.5px solid var(--cream-dark);margin-bottom:1.2rem;}
-.auth-tab{flex:1;text-align:;padding:9px 0;font-size:0.88rem;font-weight:600;cursor:pointer;color:var(--text-muted);border-bottom:2.5px solid transparent;transition:color 0.2s,border-color 0.2s;margin-bottom:-1.5px;}
+.auth-tab{flex:1;text-align:center;padding:9px 0;font-size:0.88rem;font-weight:600;cursor:pointer;color:var(--text-muted);border-bottom:2.5px solid transparent;transition:color 0.2s,border-color 0.2s;margin-bottom:-1.5px;}
 .auth-tab.active{color:var(--maroon);border-bottom-color:var(--maroon);}
 .strength-row{display:flex;gap:4px;margin-top:5px;margin-bottom:4px;}
 .strength-seg{flex:1;height:4px;border-radius:2px;background:var(--cream-dark);transition:background 0.3s;}
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:999;align-items:;justify-content:;padding:1.5rem;}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:999;align-items:center;justify-content:center;padding:1.5rem;}
 .modal-overlay.open{display:flex;}
 .modal-box{background:white;border-radius:16px;padding:1.5rem;width:100%;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,0.25);}
 .modal-box h3{font-size:1rem;color:var(--maroon);margin-bottom:1rem;font-weight:700;}
 .modal-box .form-group{margin-bottom:0.8rem;}
 .modal-actions{display:flex;gap:8px;margin-top:1rem;}
 #main-app{display:none;}
-.app-header{background:var(--maroon);color:white;padding:0.7rem 1rem;display:flex;align-items:;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.18);}
-.app-header-left{display:flex;align-items:;gap:10px;}
-.header-emblem{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.4);display:flex;align-items:;justify-content:;font-weight:700;font-size:0.85rem;color:var(--gold-light);overflow:hidden;}
+.app-header{background:var(--maroon);color:white;padding:0.7rem 1rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.18);}
+.app-header-left{display:flex;align-items:center;gap:10px;}
+.header-emblem{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;color:var(--gold-light);overflow:hidden;}
 .header-emblem img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
 .header-title{font-size:0.88rem;font-weight:700;line-height:1.25;}
 .header-sub{font-size:0.7rem;opacity:0.75;}
 .header-actions{display:flex;gap:6px;}
 .btn-sm{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;border-radius:7px;padding:5px 10px;font-size:0.75rem;cursor:pointer;font-weight:600;white-space:nowrap;}
 .summary-row{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:1rem 1rem 0;}
-.summary-card{background:var(--white);border-radius:12px;padding:0.85rem 1rem;border:1px solid var(--border);box-shadow:var(--shadow);text-align:;}
+.summary-card{background:var(--white);border-radius:12px;padding:0.85rem 1rem;border:1px solid var(--border);box-shadow:var(--shadow);text-align:center;}
 .summary-card .sc-num{font-size:1.7rem;font-weight:700;color:var(--maroon);line-height:1;}
 .summary-card .sc-lbl{font-size:0.72rem;color:var(--text-muted);margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:0.4px;}
 .nav-tabs{display:flex;padding:0.9rem 1rem 0;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
 .nav-tabs::-webkit-scrollbar{display:none;}
-.nav-tab{display:flex;flex-direction:column;align-items:;gap:3px;padding:8px 13px;border-radius:10px 10px 0 0;border:1px solid transparent;border-bottom:none;cursor:pointer;font-size:0.72rem;font-weight:600;color:var(--text-muted);background:transparent;white-space:nowrap;transition:all 0.18s;flex-shrink:0;}
+.nav-tab{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 13px;border-radius:10px 10px 0 0;border:1px solid transparent;border-bottom:none;cursor:pointer;font-size:0.72rem;font-weight:600;color:var(--text-muted);background:transparent;white-space:nowrap;transition:all 0.18s;flex-shrink:0;}
 .nav-tab .tab-icon{font-size:1.15rem;}
 .nav-tab.active{background:var(--white);color:var(--maroon);border-color:var(--border);}
 .tab-panel{display:none;padding:1rem;}
 .tab-panel.active{display:block;}
 .section-card{background:var(--white);border-radius:13px;border:1px solid var(--border);box-shadow:var(--shadow);margin-bottom:1rem;overflow:hidden;}
-.section-head{background:var(--maroon);color:white;padding:0.7rem 1rem;font-size:0.9rem;font-weight:700;display:flex;align-items:;gap:8px;}
+.section-head{background:var(--maroon);color:white;padding:0.7rem 1rem;font-size:0.9rem;font-weight:700;display:flex;align-items:center;gap:8px;}
 .section-body{padding:1rem;}
 .form-group{margin-bottom:0.85rem;}
 .form-group label{display:block;font-size:0.8rem;font-weight:600;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.4px;}
 .form-group select,.form-group input[type="text"],.form-group input[type="number"],.form-group input[type="password"]{width:100%;padding:0.62rem 0.85rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.93rem;color:var(--text);background:var(--cream);outline:none;transition:border-color 0.2s;-webkit-appearance:none;}
 .form-group select:focus,.form-group input:focus{border-color:var(--maroon);background:#fff;}
 .radio-group{display:flex;gap:10px;flex-wrap:wrap;}
-.radio-opt{display:flex;align-items:;gap:5px;padding:7px 14px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;color:var(--text-muted);background:var(--cream);transition:all 0.15s;user-select:none;}
+.radio-opt{display:flex;align-items:center;gap:5px;padding:7px 14px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;color:var(--text-muted);background:var(--cream);transition:all 0.15s;user-select:none;}
 .radio-opt input{display:none;}
 .radio-opt.selected{border-color:var(--maroon);background:#fdf0f0;color:var(--maroon);}
-.btn{display:inline-flex;align-items:;gap:6px;padding:0.65rem 1.1rem;border-radius:9px;border:none;font-size:0.88rem;font-weight:700;cursor:pointer;transition:opacity 0.15s,transform 0.1s;}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:0.65rem 1.1rem;border-radius:9px;border:none;font-size:0.88rem;font-weight:700;cursor:pointer;transition:opacity 0.15s,transform 0.1s;}
 .btn:active{transform:scale(0.97);}
 .btn-primary{background:var(--maroon);color:white;}
 .btn-secondary{background:var(--cream-dark);color:var(--maroon);border:1.5px solid var(--border);}
 .btn-success{background:var(--success);color:white;}
 .btn-danger{background:var(--danger);color:white;}
 .btn-gold{background:var(--gold);color:white;}
-.btn-full{width:100%;justify-content:;}
+.btn-full{width:100%;justify-content:center;}
 .btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:0.8rem;}
 .student-item{display:flex;align-items:center;gap:10px;padding:0.75rem 1rem;border-bottom:1px solid var(--cream-dark);cursor:pointer;transition:background 0.13s;}
 .student-item:last-child{border-bottom:none;}
@@ -1554,29 +1554,92 @@ var students = [
   {name:"SUDARSHAN KOIRALA",  roll:"10200220",stream:"Plant Science",year:"2082/83"},
   {name:"SUJAN KATUWAL",      roll:"10200221",stream:"Plant Science",year:"2082/83"}
 ];
+// Credit hour rules (NEB):
+//   Total 3 CH subject: thCredit=2.25, prCredit=0.75
+//   Total 4 CH subject: thCredit=3,    prCredit=1
+// Theory GPA  = Σ(thCredit × thGradePoint) / Σ(thCredit)
+// Practical GPA= Σ(prCredit × prGradePoint) / Σ(prCredit)
+// Final GPA (CGPA) = Σ(totalCredit × finalGradePoint) / Σ(totalCredit)
 var SUBJECTS = {
   "Plant Science":[
-    {name:"Compulsory English",thMax:75,prMax:25},
-    {name:"Compulsory Nepali",thMax:75,prMax:25},
-    {name:"Physics",thMax:75,prMax:25},
-    {name:"Chemistry",thMax:75,prMax:25},
-    {name:"Biology",thMax:75,prMax:25},
-    {name:"Farm Machinery & Seeds Development",thMax:50,prMax:50},
-    {name:"Commercial Fruit Crop & Post Harvest Tech",thMax:50,prMax:50},
-    {name:"Agricultural Entomology",thMax:50,prMax:50},
-    {name:"Soil Fertility & Nutrient Management",thMax:50,prMax:50}
+    {name:"Compulsory English",thMax:75,prMax:25,credit:4},
+    {name:"Compulsory Nepali", thMax:75,prMax:25,credit:3},
+    {name:"Physics",           thMax:75,prMax:25,credit:4},
+    {name:"Chemistry",         thMax:75,prMax:25,credit:4},
+    {name:"Biology",           thMax:75,prMax:25,credit:3},
+    {name:"Farm Machinery & Seeds Development",         thMax:50,prMax:50,credit:4},
+    {name:"Commercial Fruit Crop & Post Harvest Tech",  thMax:50,prMax:50,credit:4},
+    {name:"Agricultural Entomology",                    thMax:50,prMax:50,credit:3},
+    {name:"Soil Fertility & Nutrient Management",       thMax:50,prMax:50,credit:3}
   ],
   "General":[
-    {name:"Compulsory English",thMax:75,prMax:25},
-    {name:"Compulsory Nepali",thMax:75,prMax:25},
-    {name:"Mathematics",thMax:100,prMax:0},
-    {name:"Accountancy",thMax:75,prMax:25},
-    {name:"Economics",thMax:100,prMax:0},
-    {name:"Computer Science",thMax:75,prMax:25},
-    {name:"Social Studies & Life Skills",thMax:75,prMax:25},
-    {name:"Health & Physical Education",thMax:50,prMax:50}
+    {name:"Compulsory English",          thMax:75, prMax:25,credit:4},
+    {name:"Compulsory Nepali",           thMax:75, prMax:25,credit:3},
+    {name:"Mathematics",                 thMax:100,prMax:0, credit:4},
+    {name:"Accountancy",                 thMax:75, prMax:25,credit:4},
+    {name:"Economics",                   thMax:100,prMax:0, credit:4},
+    {name:"Computer Science",            thMax:75, prMax:25,credit:4},
+    {name:"Social Studies & Life Skills",thMax:75, prMax:25,credit:3},
+    {name:"Health & Physical Education", thMax:50, prMax:50,credit:3}
   ]
 };
+
+// Helper: get credit hour split for theory/practical based on total credit
+function getCreditSplit(totalCredit, hasPractical) {
+  if (!hasPractical) return {thCredit: totalCredit, prCredit: 0};
+  if (totalCredit === 3) return {thCredit: 2.25, prCredit: 0.75};
+  return {thCredit: 3, prCredit: 1}; // 4 CH
+}
+
+// CGPA = Σ(Credit × GradePoint) / Σ(Credit) — NEB weighted formula
+function calcCGPA(subs, saved) {
+  var totalCreditPoints = 0, totalCredits = 0, anyNG = false, allFilled = true;
+  subs.forEach(function(sub) {
+    var d = saved[sub.name] || {};
+    var hasData = d.th !== undefined && (sub.prMax === 0 || d.pr !== undefined);
+    if (!hasData) { allFilled = false; return; }
+    var th = d.th || 0, pr = d.pr || 0;
+    var res = getSubjectResult(th, pr, sub.thMax, sub.prMax);
+    if (res.grade === 'NG') anyNG = true;
+    totalCreditPoints += (sub.credit || 4) * res.gpa;
+    totalCredits += (sub.credit || 4);
+  });
+  var cgpa = totalCredits > 0 ? totalCreditPoints / totalCredits : 0;
+  return {cgpa: cgpa, anyNG: anyNG, allFilled: allFilled, totalCredits: totalCredits};
+}
+
+// Theory GPA (weighted): Σ(thCredit × thGradePoint) / Σ(thCredit)
+function calcTheoryGPA(subs, saved) {
+  var totalCreditPoints = 0, totalCredits = 0;
+  subs.forEach(function(sub) {
+    var d = saved[sub.name] || {};
+    if (d.th === undefined) return;
+    var th = d.th || 0;
+    var thPct = sub.thMax > 0 ? th / sub.thMax * 100 : 0;
+    var thGR = getGrade(thPct);
+    var split = getCreditSplit(sub.credit || 4, sub.prMax > 0);
+    totalCreditPoints += split.thCredit * thGR.gpa;
+    totalCredits += split.thCredit;
+  });
+  return totalCredits > 0 ? (totalCreditPoints / totalCredits) : 0;
+}
+
+// Practical GPA (weighted): Σ(prCredit × prGradePoint) / Σ(prCredit)
+function calcPracticalGPA(subs, saved) {
+  var totalCreditPoints = 0, totalCredits = 0;
+  subs.forEach(function(sub) {
+    if (sub.prMax === 0) return;
+    var d = saved[sub.name] || {};
+    if (d.pr === undefined) return;
+    var pr = d.pr || 0;
+    var prPct = sub.prMax > 0 ? pr / sub.prMax * 100 : 0;
+    var prGR = getGrade(prPct);
+    var split = getCreditSplit(sub.credit || 4, true);
+    totalCreditPoints += split.prCredit * prGR.gpa;
+    totalCredits += split.prCredit;
+  });
+  return totalCredits > 0 ? (totalCreditPoints / totalCredits) : 0;
+}
 var marksData = {};
 var currentFilter = 'all';
 
@@ -2209,20 +2272,7 @@ function rejectMarks(i)  { approvalRequests[i].status='rejected'; saveApprovalDa
 function lockAllMarks()  { marksLocked=true; saveApprovalData(); renderApprovalPanel(); showToast('🔒 All marks locked!'); }
 function unlockAllMarks(){ marksLocked=false; saveApprovalData(); renderApprovalPanel(); showToast('🔓 Marks unlocked.'); }
 
-function updateNotifBadge() {
-  try {
-    loadApprovalData();
-    var pending = approvalRequests.filter(function(r){ return r.status==='pending'; }).length;
-    var badge = document.getElementById('notif-badge');
-    if (!badge) return;
-    if (pending > 0 && isAdmin()) {
-      badge.textContent = pending > 9 ? '9+' : pending;
-      badge.style.display = 'flex';
-    } else {
-      badge.style.display = 'none';
-    }
-  } catch(e){}
-}
+// updateNotifBadge defined later (merged with notification system)
 
 // ============================================================
 // RESULT STATISTICS
@@ -2392,15 +2442,15 @@ function showIndividualSheet(roll,exam) {
 
 // Correct NEB subject codes
 var subjectCodes = {
-  'Compulsory English': '0031',
-  'Compulsory Nepali':  '0011',
-  'Biology':            '8101',
-  'Chemistry':          '8111',
-  'Physics':            '8121',
-  'Farm Machinery & Seed Technology':            '8221',
-  'Soil Fertility & Nutrient Management':          '8231',
-  'Commercial Fruit Crop & Post Harvest Technology':     '8241',
-  'Agricultural Entomology':                       '8251',
+  'Compulsory English': '003',
+  'Compulsory Nepali':  '002',
+  'Physics':            '212',
+  'Chemistry':          '175',
+  'Biology':            '149',
+  'Farm Machinery & Seeds Development':            '246',
+  'Soil Fertility & Nutrient Management':          '253',
+  'Commercial Fruit Crop & Post Harvest Tech':     '260',
+  'Agricultural Entomology':                       '268',
   'Mathematics':        '006',
   'Accountancy':        '221',
   'Economics':          '219',
@@ -3983,12 +4033,20 @@ function addNotif(icon, title, body) {
   updateNotifBadge();
 }
 function updateNotifBadge() {
-  var unread = notifications.filter(function(n){return !n.read;}).length;
-  var badge = document.getElementById('notif-badge');
-  if (badge) {
-    badge.textContent = unread || '';
-    badge.style.display = unread ? 'flex' : 'none';
-  }
+  try {
+    var unread = notifications ? notifications.filter(function(n){return !n.read;}).length : 0;
+    var pending = 0;
+    try {
+      loadApprovalData();
+      pending = approvalRequests.filter(function(r){ return r.status==='pending'; }).length;
+    } catch(e){}
+    var total = unread + (isAdmin() ? pending : 0);
+    var badge = document.getElementById('notif-badge');
+    if (badge) {
+      badge.textContent = total > 9 ? '9+' : (total || '');
+      badge.style.display = total > 0 ? 'flex' : 'none';
+    }
+  } catch(e){}
 }
 function renderNotifs() {
   var el = document.getElementById('notif-list');
