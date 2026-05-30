@@ -14,6 +14,22 @@
 <!-- Firebase for cross-device real-time sync -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script>
+  // Paste your configuration here
+  const firebaseConfig = {
+    apiKey: "AIzaSyAUggBXJWKO0FbVG2QaRhfI-0AysduuOnA",
+    authDomain: "tharpu-mavi.firebaseapp.com",
+    databaseURL: "https://tharpu-mavi-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "tharpu-mavi",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "tharpu-mavi.firebasestorage.app",
+    appId: "1:716386428782:web:c380a8fa0402be9206037f"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+</script>
 <title>Tharpu Secondary School — Result Management System</title>
 <style>
 :root{--maroon:#7B1C1C;--maroon-dark:#5a1414;--maroon-light:#9e2e2e;--cream:#FDF6EC;--cream-dark:#f0e4cc;--gold:#c8922a;--gold-light:#f0c96e;--text:#2c1a0e;--text-muted:#6b4c2a;--border:#d4b896;--white:#fff;--success:#1a6e2e;--danger:#991b1b;--shadow:0 2px 12px rgba(123,28,28,0.13);}
