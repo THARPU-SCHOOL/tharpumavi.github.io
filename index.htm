@@ -4694,8 +4694,7 @@ renderStudentList = function() {
     return '<div class="student-item">'+
       '<div class="student-avatar" onclick="openStudentProfile(this.dataset.roll)" data-roll="'+s.roll+'" style="cursor:pointer" title="View profile">'+avatarHtml+'</div>'+
       '<div class="student-info" onclick="quickEnterMarks(this.dataset.roll)" data-roll="'+s.roll+'" style="cursor:pointer">'+
-        '<div class="student-name" onclick="openEditDobRegno(\''+s.roll+'\')" style="cursor:pointer;text-decoration:underline dotted;color:var(--maroon)" title="Edit DOB & Reg No">'+sanitize(s.name)+'</div>'+
-        '<div class="student-meta">Roll: <b>'+sanitize(s.roll)+'</b> | '+sanitize(s.year)+'</div>'+
+        '<div class="student-name" onclick="event.stopPropagation();openEditDobRegno(\''+s.roll+'\')" style="cursor:pointer;text-decoration:underline dotted;color:var(--maroon)" title="Edit DOB & Reg No">'+sanitize(s.name)+'</div>'+
       '</div>'+
       '<span class="badge '+sc+'">'+(s.stream==='Plant Science'?'🌿 Plant':'📘 Gen')+'</span>'+
       (hasMarks?'<span class="badge badge-marked">✓</span>':'<span class="badge badge-unmarked">—</span>')+
