@@ -836,7 +836,7 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
           • Minimum <b>35% in Theory</b> marks (out of thMax)<br>
           • Minimum <b>35% in Practical</b> marks (out of prMax, if subject has practical)<br>
           • If <b>either</b> is below 35%, the entire subject is graded <b>NG</b> regardless of total.<br>
-          • CGPA = Sum of all subject GPAs ÷ Number of subjects<br>
+          • CGPA = Σ(Credit Hours × GPA) ÷ Σ(Credit Hours) — weighted by credit hours per subject<br>
           • A student with <b>any NG</b> subject is considered <b>Failed</b>.
         </div>
       </div>
@@ -2291,22 +2291,24 @@ function renderResultStats() {
   stList.forEach(function(st){
     var subs = SUBJECTS[st.stream]||[];
     var saved = marksData[getKey(st.roll,exam)]||{};
-    var totalGP=0, subCount=0, anyNG=false, allFilled=true;
+    // Count grade distribution separately (doesn't affect CGPA)
+    var anyNG=false;
     subs.forEach(function(sub){
       var d=saved[sub.name]||{};
       if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
         var th=d.th||0, pr=d.pr||0;
         var res=getSubjectResult(th,pr,sub.thMax,sub.prMax);
-        totalGP+=res.gpa; subCount++;
         if(res.grade==='NG') anyNG=true;
         gradeCount[res.grade]=(gradeCount[res.grade]||0)+1;
-      } else { allFilled=false; }
+      }
     });
-    if (allFilled && subCount>0) {
+    // Use weighted CGPA formula: Σ(credit×GPA)/Σ(credit)
+    var cgpaResult = calcCGPA(subs, saved);
+    if (cgpaResult.allFilled && cgpaResult.totalCredits>0) {
       totalMarked++;
-      var cgpa = totalGP/subCount;
+      var cgpa = cgpaResult.cgpa;
       gpaTot += cgpa; gpaCount++;
-      if (anyNG) failCount++; else passCount++;
+      if (cgpaResult.anyNG) failCount++; else passCount++;
       topStudents.push({name:st.name, roll:st.roll, cgpa:cgpa.toFixed(2), div:cgpaDiv(cgpa)});
     }
   });
@@ -2381,26 +2383,29 @@ function loadGradeSheet() {
     html+='<th>CGPA</th><th>Result</th><th>Sheet</th></tr></thead><tbody>';
     slist.forEach(function(st,idx){
       var saved=marksData[getKey(st.roll,exam)]||{};
-      var totalGPA=0,subCount=0,allFilled=true,anyNG=false;
+      var anyNG=false, allFilled=true;
       var cells=subs.map(function(sub){
         var d=saved[sub.name]||{};
         if (d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)) {
           var th=d.th||0, pr=d.pr||0;
           var res=getSubjectResult(th,pr,sub.thMax,sub.prMax);
-          totalGPA+=res.gpa; subCount++;
           if(res.grade==='NG') anyNG=true;
          return '<td>'+(res.grade==='NG'?'<span style="color:#b71c1c">NG</span>':res.gpa.toFixed(1))+'</td>';
         } else { allFilled=false; return '<td style="color:#bbb">—</td>'; }
       }).join('');
-      var cgpa=allFilled&&subCount>0?(totalGPA/subCount).toFixed(2):'—';
-      var division=!allFilled?'—':anyNG?'Fail':cgpaDiv(parseFloat(cgpa));
-      var res=!allFilled?'&#9203;':anyNG?'<span style="color:#b71c1c">&#10060; NG</span>':'<span style="color:#1a6e2e">&#9989; Pass</span>';
+      // Weighted CGPA: Σ(credit×GPA)/Σ(credit)
+      var cgpaResult=calcCGPA(subs,saved);
+      var cgpa=cgpaResult.allFilled&&cgpaResult.totalCredits>0?cgpaResult.cgpa.toFixed(2):'—';
+      var _af=cgpaResult.allFilled;
+      anyNG=cgpaResult.anyNG;
+      var division=!_af?'—':anyNG?'Fail':cgpaDiv(parseFloat(cgpa));
+      var res=!_af?'&#9203;':anyNG?'<span style="color:#b71c1c">&#10060; NG</span>':'<span style="color:#1a6e2e">&#9989; Pass</span>';
       html+='<tr style="'+(idx%2?'background:#fdf6ec':'')+'" >'+
         '<td>'+(idx+1)+'</td>'+
         '<td style="white-space:nowrap;text-align:left">'+st.name+'</td>'+
         '<td>'+st.roll+'</td>'+
         cells+
-        '<td><b>'+(allFilled?cgpa:'—')+'</b></td>'+
+        '<td><b>'+(_af?cgpa:'—')+'</b></td>'+
     
         '<td>'+res+'</td>'+
         '<td><button class="btn btn-sm" style="background:var(--maroon);color:white;padding:3px 7px;font-size:0.7rem;border:none;border-radius:5px;cursor:pointer" onclick="showIndividualSheet(\''+st.roll+'\',\''+exam+'\')">&#128196;</button></td>'+
@@ -2431,14 +2436,15 @@ function showIndividualSheet(roll,exam) {
   var subs=SUBJECTS[st.stream];
   var saved=marksData[getKey(roll,exam)]||{};
 
-  // Credit hours per subject
-  var creditMap={
-    'Physics':3,'Chemistry':3,'Biology':3,'Compulsory Nepali':3
-  };
-  function getCredit(name){ return creditMap[name]||4; }
+  // Credit hours per subject — use sub.credit from SUBJECTS definition
+  function getCredit(name){
+    var sub = subs.find(function(s){ return s.name===name; });
+    return sub ? (sub.credit||4) : 4;
+  }
 
-  // NEB: GPA = gradepoint (not weighted). CGPA = sum(GP)/count
-  var totalGP=0,subCount=0,anyNG=false,allFilled=true;
+  // Weighted CGPA: Σ(credit×GPA)/Σ(credit)
+  var cgpaResult=calcCGPA(subs,saved);
+  var anyNG=cgpaResult.anyNG, allFilled=cgpaResult.allFilled;
 
 // Correct NEB subject codes
 var subjectCodes = {
@@ -2466,8 +2472,7 @@ var rows=subs.map(function(sub,i){
     if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
       var th=d.th||0, pr=d.pr||0;
       var res=getSubjectResult(th,pr,sub.thMax,sub.prMax);
-      totalGP+=res.gpa; subCount++;
-      if(res.grade==='NG') anyNG=true;
+      // (CGPA is computed via calcCGPA — no accumulation needed here)
       var inGP  = sub.prMax>0 ? (res.prGpa!==null?res.prGpa.toFixed(1):'—') : '—';
       var inG   = sub.prMax>0 ? res.prGrade : '—';
       var exGP  = res.thGpa!==null ? res.thGpa.toFixed(1) : '—';
@@ -2513,7 +2518,7 @@ var rows=subs.map(function(sub,i){
     rows+='<tr><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>';
   }
 
-  var cgpa=allFilled&&subCount>0?(totalGP/subCount).toFixed(2):'—';
+  var cgpa=allFilled&&cgpaResult.totalCredits>0?cgpaResult.cgpa.toFixed(2):'—';
   var today=new Date();
   var dateStr=today.getFullYear()+'/'+(today.getMonth()+1)+'/'+(today.getDate());
 
@@ -2668,18 +2673,21 @@ function exportExcel() {
     rows.push(hdr.map(function(h){ return '"'+h+'"'; }).join(','));
     slist.forEach(function(st,i){
       var saved=marksData[getKey(st.roll,exam)]||{};
-      var row=[i+1,st.name,st.roll],totalGPA=0,subCount=0,filled=true,ng=false;
+      var row=[i+1,st.name,st.roll], ng=false;
       subs.forEach(function(sub){
         var d=saved[sub.name]||{},max=sub.thMax+sub.prMax;
         if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
           var t=(d.th||0)+(d.pr||0);
           var gr=getGrade(max>0?t/max*100:0);
-          totalGPA+=gr.gpa; subCount++;
           row.push(gr.g); row.push(gr.gpa.toFixed(1));
           if(gr.g==='NG') ng=true;
-        } else { row.push(''); row.push(''); filled=false; }
+        } else { row.push(''); row.push(''); }
       });
-      var cgpa=filled&&subCount>0?(totalGPA/subCount).toFixed(2):'';
+      // Weighted CGPA: Σ(credit×GPA)/Σ(credit)
+      var cr=calcCGPA(subs,saved);
+      var cgpa=cr.allFilled&&cr.totalCredits>0?cr.cgpa.toFixed(2):'';
+      var filled=cr.allFilled;
+      ng=cr.anyNG;
       row.push(cgpa);
       row.push(filled?cgpaDiv(parseFloat(cgpa)):'Incomplete');
       row.push(!filled?'Incomplete':ng?'Not Graded':'Pass');
@@ -2913,15 +2921,9 @@ renderStudentList = function() {
     exams.forEach(function(exam){
       var saved = marksData[getKey(s.roll, exam)];
       if (!saved) return;
-      var subs = SUBJECTS[s.stream], total=0, cnt=0, all=true;
-      subs.forEach(function(sub){
-        var d=saved[sub.name]||{}, max=sub.thMax+sub.prMax;
-        if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
-          var t=(d.th||0)+(d.pr||0), gr=getGrade(max?t/max*100:0);
-          total+=gr.gpa; cnt++;
-        } else { all=false; }
-      });
-      if(all&&cnt){ var c=(total/cnt); if(bestCGPA===null||c>bestCGPA) bestCGPA=c; }
+      var subs = SUBJECTS[s.stream];
+      var cr = calcCGPA(subs, saved);
+      if(cr.allFilled && cr.totalCredits){ var c=cr.cgpa; if(bestCGPA===null||c>bestCGPA) bestCGPA=c; }
     });
     var cgpaStr = bestCGPA!==null ? ' · CGPA <b>'+bestCGPA.toFixed(2)+'</b>' : '';
     return '<div class="student-item" onclick="quickEnterMarks(\''+s.roll+'\')">'+
@@ -2978,21 +2980,23 @@ function renderAnalytics() {
   students.forEach(function(st){
     var saved = marksData[getKey(st.roll, exam)] || {};
     var subs = SUBJECTS[st.stream];
-    var total=0, cnt=0, anyNG=false, allFilled=true;
+    var anyNG=false, allFilled=true;
     subs.forEach(function(sub){
-      var d=saved[sub.name]||{}, max=sub.thMax+sub.prMax;
+      var d=saved[sub.name]||{};
       if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
-        var t=(d.th||0)+(d.pr||0), gr=getGrade(max?t/max*100:0);
-        total+=gr.gpa; cnt++;
+        var th=d.th||0, pr=d.pr||0, max=sub.thMax+sub.prMax;
+        var gr=getGrade(max?((th+pr)/max*100):0);
         gradeCount[gr.g]=(gradeCount[gr.g]||0)+1;
         if(gr.g==='NG') anyNG=true;
       } else { allFilled=false; }
     });
-    if (!allFilled || !cnt) { incomplete++; return; }
-    var cgpa = total/cnt;
+    // Weighted CGPA: Σ(credit×GPA)/Σ(credit)
+    var cgpaResult=calcCGPA(subs,saved);
+    if (!cgpaResult.allFilled || !cgpaResult.totalCredits) { incomplete++; return; }
+    var cgpa = cgpaResult.cgpa;
     cgpaList.push(cgpa);
     topStudents.push({name:st.name, roll:st.roll, cgpa:cgpa, stream:st.stream});
-    if (anyNG) failCount++; else passCount++;
+    if (cgpaResult.anyNG) failCount++; else passCount++;
   });
 
   var avgCGPA = cgpaList.length ? (cgpaList.reduce(function(a,b){return a+b;},0)/cgpaList.length).toFixed(2) : '—';
@@ -3267,23 +3271,22 @@ function openStudentProfile(rollOrEl) { var roll = (rollOrEl && typeof rollOrEl 
     var saved = marksData[getKey(st.roll, exam)];
     if (!saved) return;
     var subs = SUBJECTS[st.stream];
-    var tot=0, cnt=0, allFilled=true, anyNG=false;
     subs.forEach(function(sub){
       var d=saved[sub.name]||{}, max=sub.thMax+sub.prMax;
       if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
-        var t=(d.th||0)+(d.pr||0), pct=max?t/max*100:0, gr=getGrade(pct);
-        tot+=gr.gpa; cnt++;
-        if(gr.g==='NG') anyNG=true;
+        var t=(d.th||0)+(d.pr||0), pct=max?t/max*100:0;
         if(!subPerf[sub.name]) subPerf[sub.name]={total:0,count:0,max:max};
         subPerf[sub.name].total += pct;
         subPerf[sub.name].count++;
-      } else { allFilled=false; }
+      }
     });
-    if(allFilled&&cnt){
+    // Weighted CGPA: Σ(credit×GPA)/Σ(credit)
+    var cr=calcCGPA(subs,saved);
+    if(cr.allFilled&&cr.totalCredits){
       totalExams++;
-      var cgpa=tot/cnt;
+      var cgpa=cr.cgpa;
       if(bestCGPA===null||cgpa>bestCGPA) bestCGPA=cgpa;
-      if(!anyNG) passCount++;
+      if(!cr.anyNG) passCount++;
     }
   });
   var statsEl = document.getElementById('profile-stats');
@@ -3339,12 +3342,9 @@ renderStudentList = function() {
     var bestCGPA=null;
     exams.forEach(function(exam){
       var saved=marksData[getKey(s.roll,exam)]; if(!saved)return;
-      var subs=SUBJECTS[s.stream],tot=0,cnt=0,all=true;
-      subs.forEach(function(sub){
-        var d=saved[sub.name]||{},max=sub.thMax+sub.prMax;
-        if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){var t=(d.th||0)+(d.pr||0),gr=getGrade(max?t/max*100:0);tot+=gr.gpa;cnt++;}else{all=false;}
-      });
-      if(all&&cnt){var c=tot/cnt;if(bestCGPA===null||c>bestCGPA)bestCGPA=c;}
+      var subs=SUBJECTS[s.stream];
+      var cr=calcCGPA(subs,saved);
+      if(cr.allFilled&&cr.totalCredits){var c=cr.cgpa;if(bestCGPA===null||c>bestCGPA)bestCGPA=c;}
     });
     var cgpaStr = bestCGPA!==null ? ' &middot; CGPA <b>'+bestCGPA.toFixed(2)+'</b>' : '';
     return '<div class="student-item">'+
@@ -4169,15 +4169,9 @@ function openStudentProfile(rollOrEl) { var roll = (rollOrEl && typeof rollOrEl 
   var cgpaArr = [];
   exams.forEach(function(ex){
     var saved = marksData[getKey(roll,ex)] || {};
-    var subs = SUBJECTS[st.stream], total=0, cnt=0, allFilled=true, anyNG=false;
-    subs.forEach(function(sub){
-      var d=saved[sub.name]||{}, max=sub.thMax+sub.prMax;
-      if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
-        var t=(d.th||0)+(d.pr||0), gr=getGrade(max?t/max*100:0);
-        total+=gr.gpa; cnt++; if(gr.g==='NG') anyNG=true;
-      } else allFilled=false;
-    });
-    if(allFilled&&cnt) cgpaArr.push({ex:ex,cgpa:(total/cnt)});
+    var subs = SUBJECTS[st.stream];
+    var cr = calcCGPA(subs, saved);
+    if(cr.allFilled&&cr.totalCredits) cgpaArr.push({ex:ex,cgpa:cr.cgpa});
   });
   if (cgpaArr.length) {
     var best = cgpaArr.reduce(function(a,b){return a.cgpa>b.cgpa?a:b;});
@@ -4203,18 +4197,13 @@ function openStudentProfile(rollOrEl) { var roll = (rollOrEl && typeof rollOrEl 
     var html = '';
     ['First Terminal','Second Terminal','Annual Examination','Pre-board'].forEach(function(ex){
       var saved = marksData[getKey(roll,ex)] || {};
-      var subs = SUBJECTS[st.stream], total=0, cnt=0, allFilled=true, anyNG=false;
-      subs.forEach(function(sub){
-        var d=saved[sub.name]||{}, max=sub.thMax+sub.prMax;
-        if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
-          var t=(d.th||0)+(d.pr||0), gr=getGrade(max?t/max*100:0);
-          total+=gr.gpa; cnt++; if(gr.g==='NG') anyNG=true;
-        } else allFilled=false;
-      });
-      if (!cnt) return;
-      var cgpa = allFilled&&cnt?(total/cnt).toFixed(2):'Inc.';
+      var subs = SUBJECTS[st.stream];
+      var cr = calcCGPA(subs, saved);
+      if (!cr.totalCredits && !Object.keys(saved).length) return;
+      if (!Object.keys(saved).length) return;
+      var cgpa = cr.allFilled&&cr.totalCredits?cr.cgpa.toFixed(2):'Inc.';
       html += '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--cream-dark);font-size:0.83rem">'+
-        '<span>'+ex+'</span><span style="font-weight:700;color:'+(anyNG?'#b71c1c':'#1a6e2e')+'">'+cgpa+'</span></div>';
+        '<span>'+ex+'</span><span style="font-weight:700;color:'+(cr.anyNG?'#b71c1c':'#1a6e2e')+'">'+cgpa+'</span></div>';
     });
     mb.innerHTML = html || '<div class="empty-state"><p>No marks yet.</p></div>';
   }
@@ -4289,13 +4278,9 @@ function loadGradeSheetEditable() {
   var rankMap = {};
   if (showRank) {
     var cgpaList = filtered.map(function(st){
-      var saved=marksData[getKey(st.roll,exam)]||{}, subs=SUBJECTS[st.stream], total=0,cnt=0,allFilled=true;
-      subs.forEach(function(sub){
-        var d=saved[sub.name]||{},max=sub.thMax+sub.prMax;
-        if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){var t=(d.th||0)+(d.pr||0);total+=getGrade(max?t/max*100:0).gpa;cnt++;}
-        else allFilled=false;
-      });
-      return {roll:st.roll, cgpa:allFilled&&cnt?(total/cnt):null};
+      var saved=marksData[getKey(st.roll,exam)]||{}, subs=SUBJECTS[st.stream];
+      var cr=calcCGPA(subs,saved);
+      return {roll:st.roll, cgpa:cr.allFilled&&cr.totalCredits?cr.cgpa:null};
     }).filter(function(r){return r.cgpa!==null;});
     cgpaList.sort(function(a,b){return b.cgpa-a.cgpa;});
     cgpaList.forEach(function(r,i){rankMap[r.roll]=i+1;});
@@ -4325,7 +4310,7 @@ function loadGradeSheetEditable() {
     slist.forEach(function(st, idx) {
       var saved = marksData[getKey(st.roll, exam)] || {};
       var locked = isLocked(st.roll, exam);
-      var totalGPA=0, subCount=0, allFilled=true, anyNG=false;
+      var anyNG=false, allFilled=true;
       var cells = subs.map(function(sub) {
         var d = saved[sub.name]||{}, max=sub.thMax+sub.prMax;
         var thV = d.th !== undefined ? d.th : '';
@@ -4336,7 +4321,6 @@ function loadGradeSheetEditable() {
           var t = (parseInt(thV)||0) + (parseInt(prV)||0);
           var pct = max>0 ? t/max*100 : 0;
           gr = getGrade(pct);
-          totalGPA += gr.gpa; subCount++;
           if(gr.g==='NG') anyNG=true;
         } else allFilled=false;
         var k = sub.name.replace(/\W/g,'_');
@@ -4361,7 +4345,10 @@ function loadGradeSheetEditable() {
         cell += '</td>';
         return cell;
       }).join('');
-      var cgpa = allFilled&&subCount>0 ? (totalGPA/subCount).toFixed(2) : '—';
+      // Weighted CGPA: Σ(credit×GPA)/Σ(credit)
+      var cgpaResult = calcCGPA(subs, saved);
+      allFilled = cgpaResult.allFilled; anyNG = cgpaResult.anyNG;
+      var cgpa = allFilled&&cgpaResult.totalCredits>0 ? cgpaResult.cgpa.toFixed(2) : '—';
       var div  = !allFilled ? '—' : anyNG ? '<span class="gs-fail">Fail</span>' : cgpaDiv(parseFloat(cgpa));
       var res  = !allFilled ? '<span class="gs-pending">⏳</span>' : anyNG ? '<span class="gs-fail">❌ NG</span>' : '<span class="gs-pass">✅ Pass</span>';
       var rankNum = rankMap[st.roll];
@@ -4449,18 +4436,12 @@ function gsSaveRow(roll, exam) {
   if (row) { row.classList.remove('gs-row-unsaved'); row.classList.add('gs-row-saved'); }
   updateSummary();
   showToast('✅ Saved: '+st.name);
-  // Refresh CGPA display
+  // Refresh CGPA display using weighted formula
   var saved2 = marksData[getKey(roll, exam)] || {};
-  var subs2 = SUBJECTS[st.stream], total2=0, cnt2=0, allFilled2=true, anyNG2=false;
-  subs2.forEach(function(sub){
-    var d=saved2[sub.name]||{}, max=sub.thMax+sub.prMax;
-    if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
-      var t=(d.th||0)+(d.pr||0), gr=getGrade(max?t/max*100:0);
-      total2+=gr.gpa; cnt2++; if(gr.g==='NG') anyNG2=true;
-    } else allFilled2=false;
-  });
+  var subs2 = SUBJECTS[st.stream];
+  var cr2 = calcCGPA(subs2, saved2);
   var cgpaEl = document.getElementById('gs-cgpa-'+roll);
-  if(cgpaEl) cgpaEl.innerHTML = '<b>'+(allFilled2&&cnt2?(total2/cnt2).toFixed(2):'—')+'</b>';
+  if(cgpaEl) cgpaEl.innerHTML = '<b>'+(cr2.allFilled&&cr2.totalCredits?cr2.cgpa.toFixed(2):'—')+'</b>';
 }
 
 // ═══════════════════════════════════════════════════════
@@ -4487,13 +4468,9 @@ function renderCompare() {
   // CGPA progression chart
   html += '<div class="compare-card"><h4>📈 CGPA Progression — '+sanitize(st.name)+'</h4>';
   var cgpaData = exams.map(function(ex){
-    var saved=marksData[getKey(roll,ex)]||{}, total=0,cnt=0,allFilled=true,anyNG=false;
-    subs.forEach(function(sub){
-      var d=saved[sub.name]||{},max=sub.thMax+sub.prMax;
-      if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){var t=(d.th||0)+(d.pr||0),gr=getGrade(max?t/max*100:0);total+=gr.gpa;cnt++;if(gr.g==='NG')anyNG=true;}
-      else allFilled=false;
-    });
-    return {ex:ex,cgpa:allFilled&&cnt?(total/cnt):null,anyNG:anyNG};
+    var saved=marksData[getKey(roll,ex)]||{};
+    var cr=calcCGPA(subs,saved);
+    return {ex:ex,cgpa:cr.allFilled&&cr.totalCredits?cr.cgpa:null,anyNG:cr.anyNG};
   });
   var maxCGPA = 4.0;
   cgpaData.forEach(function(r){
