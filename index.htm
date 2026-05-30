@@ -5271,6 +5271,37 @@ function fbEnableLiveSync() {
     }
   };
 })();
+
+// ── Edit DOB / Reg No ──
+var _editDobRoll = null;
+function openEditDobRegno(roll) {
+  _editDobRoll = roll;
+  var st = students.find(function(s){ return s.roll === roll; });
+  if (!st) return;
+  document.getElementById('edit-modal-name').textContent = st.name;
+  document.getElementById('edit-dob-bs').value  = st.dobbs || '';
+  document.getElementById('edit-dob-ad').value  = st.dobad || '';
+  document.getElementById('edit-regno').value   = st.regno || '';
+  openModal('edit-dob-regno-modal');
+}
+function saveEditDobRegno() {
+  if (!_editDobRoll) return;
+  var st = students.find(function(s){ return s.roll === _editDobRoll; });
+  if (!st) return;
+  st.dobbs = document.getElementById('edit-dob-bs').value.trim();
+  st.dobad = document.getElementById('edit-dob-ad').value.trim();
+  st.regno = document.getElementById('edit-regno').value.trim();
+  try {
+    var extra = JSON.parse(localStorage.getItem('tss_extra_students') || '[]');
+    var idx = extra.findIndex(function(e){ return e.roll === _editDobRoll; });
+    if (idx >= 0) extra[idx] = st; else extra.push(st);
+    localStorage.setItem('tss_extra_students', JSON.stringify(extra));
+  } catch(e) {}
+  closeModal('edit-dob-regno-modal');
+  showToast('✅ DOB & Reg No saved for ' + st.name);
+  renderStudentList();
+  try { loadGradeSheet(); } catch(e) {}
+}
 </script>
 <div class="modal-overlay" id="edit-dob-regno-modal">
   <div class="modal-box" style="max-width:380px">
@@ -5287,38 +5318,6 @@ function fbEnableLiveSync() {
     </div>
   </div>
 </div>
-<script>
-var _editDobRoll=null;
-function openEditDobRegno(roll){
-  _editDobRoll=roll;
-  var st=students.find(function(s){return s.roll===roll;});
-  if(!st)return;
-  document.getElementById('edit-modal-name').textContent=st.name;
-  document.getElementById('edit-dob-bs').value=st.dobbs||'';
-  document.getElementById('edit-dob-ad').value=st.dobad||'';
-  document.getElementById('edit-regno').value=st.regno||'';
-  openModal('edit-dob-regno-modal');
-}
-function saveEditDobRegno(){
-  if(!_editDobRoll)return;
-  var st=students.find(function(s){return s.roll===_editDobRoll;});
-  if(!st)return;
-  st.dobbs=document.getElementById('edit-dob-bs').value.trim();
-  st.dobad=document.getElementById('edit-dob-ad').value.trim();
-  st.regno=document.getElementById('edit-regno').value.trim();
-  try{
-    var extra=JSON.parse(localStorage.getItem('tss_extra_students')||'[]');
-    var idx=extra.findIndex(function(e){return e.roll===_editDobRoll;});
-    if(idx>=0)extra[idx]=st; else extra.push(st);
-    localStorage.setItem('tss_extra_students',JSON.stringify(extra));
-  }catch(e){}
-  closeModal('edit-dob-regno-modal');
-  showToast('✅ DOB & Reg No saved for '+st.name);
-  renderStudentList();
-  // Refresh results tab if it's currently active
-  try{ loadGradeSheet(); }catch(e){}
-}
 </body>
-</script>
 </html>
 
