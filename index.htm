@@ -21,8 +21,8 @@
     authDomain: "tharpu-mavi.firebaseapp.com",
     databaseURL: "https://tharpu-mavi-default-rtdb.asia-southeast1.firebasedatabase.app",
     projectId: "tharpu-mavi",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "tharpu-mavi.firebasestorage.app",
+    storageBucket: "tharpu-mavi.appspot.com",
+    messagingSenderId: "716386428782",
     appId: "1:716386428782:web:c380a8fa0402be9206037f"
   };
 
@@ -5100,35 +5100,29 @@ function copyShareLink() {
 // FIREBASE CONFIG — REPLACE THIS with your own project config
 // Get it from: Firebase Console → Project Settings → Your apps → Web app
 var FB_CONFIG = {
-  apiKey: "AIzaSyDEMO_REPLACE_WITH_YOUR_KEY",
-  authDomain: "your-project.firebaseapp.com",
-  databaseURL: "https://your-project-default-rtdb.firebaseio.com",
-  projectId: "your-project",
-  storageBucket: "your-project.appspot.com",
-  messagingSenderId: "000000000000",
-  appId: "1:000000000000:web:0000000000000000"
+  apiKey: "AIzaSyAUggBXJWKO0FbVG2QaRhfI-0AysduuOnA",
+  authDomain: "tharpu-mavi.firebaseapp.com",
+  databaseURL: "https://tharpu-mavi-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "tharpu-mavi",
+  storageBucket: "tharpu-mavi.appspot.com",
+  messagingSenderId: "716386428782",
+  appId: "1:716386428782:web:c380a8fa0402be9206037f"
 };
 
 var _fbApp = null, _fbDB = null, _fbLiveSyncOff = null;
 
 function fbInit() {
   try {
-    if (_fbApp) return true;
+    if (_fbApp && _fbDB) return true;
     if (typeof firebase === 'undefined') {
       fbSetStatus('❌ Firebase SDK not loaded. Check internet connection.', 'danger');
       return false;
     }
-    // Check if real config
-    if (FB_CONFIG.apiKey.indexOf('DEMO') >= 0 || FB_CONFIG.databaseURL.indexOf('your-project') >= 0) {
-      fbSetStatus('⚠️ Demo config detected. Please replace with your Firebase config (see setup guide).', 'warn');
-      var cs = document.getElementById('fb-config-status');
-      if (cs) cs.innerHTML = '⚠️ Demo config — not functional. Replace with your config.';
-      return false;
-    }
-    if (!firebase.apps.length) {
-      _fbApp = firebase.initializeApp(FB_CONFIG);
-    } else {
+    // Reuse the already-initialized app (initialized at page load)
+    if (firebase.apps.length) {
       _fbApp = firebase.apps[0];
+    } else {
+      _fbApp = firebase.initializeApp(FB_CONFIG);
     }
     _fbDB = firebase.database(_fbApp);
     fbSetStatus('✅ Firebase connected!', 'ok');
