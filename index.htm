@@ -2741,7 +2741,7 @@ function printAllSheets(){
     var subs=SUBJECTS[st.stream],saved=marksData[getKey(st.roll,exam)]||{};
     var totalGP=0,cnt=0,anyNG=false,allFilled=true;
     var rows=subs.map(function(sub){
-      var d=saved[sub.name]||{},max=sub.thMax+sub.prMax,credit=4;
+      var d=saved[sub.name]||{},max=sub.thMax+sub.prMax,credit=sub.credit||4;
       if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
         var t=(d.th||0)+(d.pr||0),pct=max?t/max*100:0,gr=getGrade(pct);
         totalGP+=gr.gpa;cnt++;if(gr.g==='NG')anyNG=true;
