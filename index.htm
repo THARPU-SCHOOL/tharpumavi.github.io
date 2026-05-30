@@ -2598,6 +2598,7 @@ var rows=sortedSubs.map(function(sub,i){
 
     // Info lines
     '<div class="info-block">'+
+                   '<div class="info-line"><span class="label">THE FOLLOWING ARE THE GRADE(S) OBTAINED BY : </span><span class="dotline">&nbsp;'+st.name+'&nbsp;</span></div>'+
      '<div class="info-line"><span class="label">DATE OF BIRTH :</span><span class="dotline">&nbsp;'+(st.dobbs||'')+'&nbsp;</span><span class="label">B.S. &nbsp;&nbsp;&nbsp;(&nbsp;</span><span class="dotline">&nbsp;'+(st.dobad||'')+'&nbsp;</span><span class="label">A.D.)</span></div>'+
 '<div class="info-line"><span class="label">REGISTRATION NO</span><span class="dotline">&nbsp;'+(st.regno||'')+'&nbsp;</span><span class="label">&nbsp;SYMBOL NO:</span><span class="dotline">&nbsp;'+st.roll+'&nbsp;</span><span class="label">&nbsp;&nbsp;GRADE : XI</span></div>'+ 
       '<div class="info-line"><span class="label">IN THE <b>'+exam.toUpperCase()+'</b> CONDUCTED BY SCHOOL IN</span><span class="dotline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="label">B.S.</span></div>'+
@@ -5297,10 +5298,84 @@ function saveEditDobRegno(){
     if(idx>=0)extra[idx]=st; else extra.push(st);
     localStorage.setItem('tss_extra_students',JSON.stringify(extra));
   }catch(e){}
+  // Sync to Firebase if available
+  try {
+    if (typeof db !== 'undefined') {
+      db.ref('students/' + st.roll).update({ dobbs: st.dobbs, dobad: st.dobad, regno: st.regno });
+    }
+  } catch(e){}
   closeModal('edit-dob-regno-modal');
   showToast('✅ Details saved for '+st.name);
   renderStudentList();
 }
+  <!-- AI PREDICTOR MODAL -->
+<div class="modal-overlay" id="ai-predictor-modal">
+  <div class="modal-box" style="max-width:420px;max-height:85vh;overflow-y:auto">
+    <h3>🤖 AI Grade Predictor — <span id="aip-name"></span></h3>
+    <div id="aip-body"><div style="text-align:center;padding:2rem;color:var(--text-muted)">Analysing student data...</div></div>
+    <div class="modal-actions" style="margin-top:1rem">
+      <button class="btn btn-secondary" onclick="closeModal('ai-predictor-modal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════
+// FEATURE 1: AI GRADE PREDICTOR (Claude API)
+// ══════════════════════════════════════════════════
+async function openAIPredictor(roll) {
+  var st = students.find(function(s){ return s.roll===roll; });
+  if (!st) return;
+  document.getElementById('aip-name').textContent = st.name;
+  document.getElementById('aip-body').innerHTML = '<div style="text-align:center;padding:2rem"><span style="font-size:2rem">🤖</span><br><br>Analysing marks across all exams...<br><small style="color:var(--text-muted)">Powered by Claude AI</small></div>';
+  openModal('ai-predictor-modal');
+
+  // Build marks summary for all exams
+  var exams = ['First Terminal','Second Terminal','Pre-board','Annual Examination'];
+  var subs = SUBJECTS[st.stream];
+  var summary = 'Student: '+st.name+'\nStream: '+st.stream+'\n\n';
+  exams.forEach(function(exam){
+    var saved = marksData[getKey(st.roll, exam)] || {};
+    var hasAny = subs.some(function(sub){ return saved[sub.name] && saved[sub.name].th !== undefined; });
+    if (!hasAny) return;
+    summary += exam + ':\n';
+    subs.forEach(function(sub){
+      var d = saved[sub.name];
+      if (!d || d.th === undefined) return;
+      var total = (d.th||0)+(d.pr||0);
+      var max = sub.thMax+sub.prMax;
+      var pct = max ? Math.round(total/max*100) : 0;
+      var gr = getGrade(pct);
+      summary += '  '+sub.name+': '+total+'/'+max+' ('+pct+'%) → '+gr.g+'\n';
+    });
+    var cr = calcCGPA(subs, saved);
+    if (cr.totalCredits) summary += '  CGPA: '+cr.cgpa.toFixed(2)+'\n';
+    summary += '\n';
+  });
+
+  try {
+    var resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        messages:[{
+          role:'user',
+          content:'You are an academic advisor for Tharpu Secondary School, Nepal (NEB grading system). Based on the following student marks history, provide:\n1. Predicted grade/CGPA for Annual Examination\n2. Which subjects need urgent attention (risk of NG)\n3. Specific improvement tips per weak subject\n4. Motivational note for the student\n\nNEB grades: A+(4.0,90%+), A(3.6,80-89%), B+(3.2,70-79%), B(2.8,60-69%), C+(2.4,50-59%), C(2.0,40-49%), D(1.6,35-39%), NG(0,<35%). Pass requires 35% in Theory AND Practical separately.\n\nFormat your response in clear sections with emojis. Be specific and encouraging.\n\n'+summary
+        }]
+      })
+    });
+    var data = await resp.json();
+    var text = data.content && data.content[0] ? data.content[0].text : 'Could not generate prediction.';
+    // Convert markdown-like text to HTML
+    text = text.replace(/\*\*(.*?)\*\*/g,'<b>$1</b>').replace(/\n/g,'<br>').replace(/#{1,3} (.*?)<br>/g,'<div style="font-weight:700;margin:0.8rem 0 0.3rem;font-size:1rem">$1</div>');
+    document.getElementById('aip-body').innerHTML = '<div style="font-size:0.88rem;line-height:1.7;color:var(--text)">'+text+'</div>';
+  } catch(e) {
+    document.getElementById('aip-body').innerHTML = '<div style="color:var(--danger)">⚠ Could not connect to AI. Check internet connection.</div>';
+  }
+}
+</script>
 </body>
 </script>
 </html>
