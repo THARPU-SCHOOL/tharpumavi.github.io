@@ -1749,14 +1749,23 @@ function renderStudentList() {
   list.innerHTML = filtered.map(function(s){
     var hasMarks = Object.keys(marksData).some(function(k){ return k.startsWith(s.roll+'||'); });
     var sc = s.stream==='Plant Science' ? 'badge-plant' : 'badge-general';
-    return '<div class="student-item" onclick="quickEnterMarks(\''+s.roll+'\')">'+
-      '<div class="student-avatar">'+initials(s.name)+'</div>'+
-      '<div class="student-info">'+
-        '<div class="student-name">'+s.name+'</div>'+
-        '<div class="student-meta">Roll: <b>'+s.roll+'</b> | '+s.year+'</div>'+
+    var hasDob = s.dobbs || s.dobad;
+    var hasReg = s.regno;
+    var profileStatus = (hasDob && hasReg)
+      ? '<span class="badge" style="background:#e8f5e9;color:#1b5e20" title="DOB & Reg No set">&#10003; Profile</span>'
+      : '<span class="badge" style="background:#fff3e0;color:#e65100" title="DOB or Reg No missing">&#9888; Profile</span>';
+    return '<div class="student-item" style="position:relative">'+
+      '<div style="flex:1;display:flex;align-items:center;gap:10px;cursor:pointer" onclick="quickEnterMarks(\''+s.roll+'\')">'+
+        '<div class="student-avatar">'+initials(s.name)+'</div>'+
+        '<div class="student-info">'+
+          '<div class="student-name">'+s.name+'</div>'+
+          '<div class="student-meta">Roll: <b>'+s.roll+'</b>'+(s.regno?' | Reg: '+s.regno:'')+(s.dobbs?' | DOB(BS): '+s.dobbs:'')+'</div>'+
+        '</div>'+
       '</div>'+
       '<span class="badge '+sc+'">'+(s.stream==='Plant Science'?'&#127807; Plant':'&#128218; General')+'</span>'+
       (hasMarks?'<span class="badge badge-marked">&#10003; Marks</span>':'<span class="badge badge-unmarked">No marks</span>')+
+      profileStatus+
+      '<button onclick="event.stopPropagation();openEditDobRegno(\''+s.roll+'\')" style="background:var(--maroon);color:white;border:none;border-radius:6px;padding:4px 9px;font-size:0.72rem;cursor:pointer;font-weight:600;flex-shrink:0;margin-left:4px">&#9998; Edit</button>'+
       '</div>';
   }).join('');
 }
@@ -2596,11 +2605,11 @@ var rows=sortedSubs.map(function(sub,i){
     // Title
     '<div class="grade-sheet-title">GRADE-SHEET</div>'+
 
-    // Info lines
+    // Student name line with edit note
     '<div class="info-block">'+
-                   '<div class="info-line"><span class="label">THE FOLLOWING ARE THE GRADE(S) OBTAINED BY : </span><span class="dotline">&nbsp;'+st.name+'&nbsp;</span></div>'+
-     '<div class="info-line"><span class="label">DATE OF BIRTH :</span><span class="dotline">&nbsp;'+(st.dobbs||'')+'&nbsp;</span><span class="label">B.S. &nbsp;&nbsp;&nbsp;(&nbsp;</span><span class="dotline">&nbsp;'+(st.dobad||'')+'&nbsp;</span><span class="label">A.D.)</span></div>'+
-'<div class="info-line"><span class="label">REGISTRATION NO</span><span class="dotline">&nbsp;'+(st.regno||'')+'&nbsp;</span><span class="label">&nbsp;SYMBOL NO:</span><span class="dotline">&nbsp;'+st.roll+'&nbsp;</span><span class="label">&nbsp;&nbsp;GRADE : XI</span></div>'+ 
+    '<div class="info-line"><span class="label">STUDENT NAME :</span><span class="dotline">&nbsp;<b>'+st.name+'</b>&nbsp;</span><span class="label">&nbsp;&nbsp;STREAM :</span><span class="dotline">&nbsp;'+st.stream+'&nbsp;</span></div>'+
+     '<div class="info-line"><span class="label">DATE OF BIRTH :</span><span class="dotline">&nbsp;'+(st.dobbs||'_______________')+'&nbsp;</span><span class="label">B.S. &nbsp;&nbsp;&nbsp;(&nbsp;</span><span class="dotline">&nbsp;'+(st.dobad||'_______________')+'&nbsp;</span><span class="label">A.D.)</span></div>'+
+'<div class="info-line"><span class="label">REGISTRATION NO</span><span class="dotline">&nbsp;'+(st.regno||'_______________')+'&nbsp;</span><span class="label">&nbsp;SYMBOL NO:</span><span class="dotline">&nbsp;'+st.roll+'&nbsp;</span><span class="label">&nbsp;&nbsp;GRADE : XI</span></div>'+ 
       '<div class="info-line"><span class="label">IN THE <b>'+exam.toUpperCase()+'</b> CONDUCTED BY SCHOOL IN</span><span class="dotline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="label">B.S.</span></div>'+
       '<div class="info-line"><span class="label">(&nbsp;</span><span class="dotline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="label">&nbsp;A.D.) ARE GIVEN BELOW.</span></div>'+
     '</div>'+
@@ -2665,6 +2674,7 @@ var rows=sortedSubs.map(function(sub,i){
 
     // Print button
     '<div style="text-align:center;margin-top:14px">'+
+    ((!st.dobbs||!st.regno)?'<div style="background:#fff3e0;border:1px solid #f0ad4e;border-radius:8px;padding:8px 12px;font-size:11px;color:#7d4e00;margin-bottom:10px;text-align:left">⚠️ <b>DOB or Registration No. is missing.</b> Close this window, go to the Students tab, click <b>✎ Edit</b> next to this student\'s name, and fill in the details before printing.</div>':'')+
       '<button onclick="window.print()" style="background:#7B1C1C;color:white;border:none;padding:8px 24px;border-radius:6px;font-size:13px;cursor:pointer">&#128424; Print / Save PDF</button>'+
     '</div>'+
 
@@ -4695,7 +4705,8 @@ renderStudentList = function() {
     return '<div class="student-item">'+
       '<div class="student-avatar" onclick="openStudentProfile(this.dataset.roll)" data-roll="'+s.roll+'" style="cursor:pointer" title="View profile">'+avatarHtml+'</div>'+
       '<div class="student-info" onclick="quickEnterMarks(this.dataset.roll)" data-roll="'+s.roll+'" style="cursor:pointer">'+
-        '<div class="student-name" onclick="event.stopPropagation();openEditDobRegno(\''+s.roll+'\')" style="cursor:pointer;text-decoration:underline dotted;color:var(--maroon)" title="Edit DOB & Reg No">'+sanitize(s.name)+'</div>'+
+        '<div class="student-name" onclick="openEditDobRegno(\''+s.roll+'\')" style="cursor:pointer;text-decoration:underline dotted;color:var(--maroon)" title="Edit DOB & Reg No">'+sanitize(s.name)+'</div>'+
+        '<div class="student-meta">Roll: <b>'+sanitize(s.roll)+'</b> | '+sanitize(s.year)+'</div>'+
       '</div>'+
       '<span class="badge '+sc+'">'+(s.stream==='Plant Science'?'🌿 Plant':'📘 Gen')+'</span>'+
       (hasMarks?'<span class="badge badge-marked">✓</span>':'<span class="badge badge-unmarked">—</span>')+
@@ -5263,7 +5274,10 @@ function fbEnableLiveSync() {
 </script>
 <div class="modal-overlay" id="edit-dob-regno-modal">
   <div class="modal-box" style="max-width:380px">
-    <h3>✏️ Edit — <span id="edit-modal-name"></span></h3>
+    <h3>✏️ Edit Profile — <span id="edit-modal-name"></span></h3>
+    <div style="background:#fff8e1;border:1px solid #f0c96e;border-radius:8px;padding:0.5rem 0.8rem;font-size:0.78rem;color:#6d4c00;margin-bottom:0.9rem;">
+      These details appear on the printed Grade Sheet. Fill them carefully.
+    </div>
     <div class="form-group"><label>Date of Birth (B.S.)</label><input type="text" id="edit-dob-bs" placeholder="e.g. 2062/05/15"></div>
     <div class="form-group"><label>Date of Birth (A.D.)</label><input type="text" id="edit-dob-ad" placeholder="e.g. 2005/08/31"></div>
     <div class="form-group"><label>Registration No.</label><input type="text" id="edit-regno" placeholder="e.g. 2023-12345"></div>
@@ -5298,84 +5312,12 @@ function saveEditDobRegno(){
     if(idx>=0)extra[idx]=st; else extra.push(st);
     localStorage.setItem('tss_extra_students',JSON.stringify(extra));
   }catch(e){}
-  // Sync to Firebase if available
-  try {
-    if (typeof db !== 'undefined') {
-      db.ref('students/' + st.roll).update({ dobbs: st.dobbs, dobad: st.dobad, regno: st.regno });
-    }
-  } catch(e){}
   closeModal('edit-dob-regno-modal');
-  showToast('✅ Details saved for '+st.name);
+  showToast('✅ DOB & Reg No saved for '+st.name);
   renderStudentList();
+  // Refresh results tab if it's currently active
+  try{ loadGradeSheet(); }catch(e){}
 }
-  <!-- AI PREDICTOR MODAL -->
-<div class="modal-overlay" id="ai-predictor-modal">
-  <div class="modal-box" style="max-width:420px;max-height:85vh;overflow-y:auto">
-    <h3>🤖 AI Grade Predictor — <span id="aip-name"></span></h3>
-    <div id="aip-body"><div style="text-align:center;padding:2rem;color:var(--text-muted)">Analysing student data...</div></div>
-    <div class="modal-actions" style="margin-top:1rem">
-      <button class="btn btn-secondary" onclick="closeModal('ai-predictor-modal')">Close</button>
-    </div>
-  </div>
-</div>
-
-<script>
-// ══════════════════════════════════════════════════
-// FEATURE 1: AI GRADE PREDICTOR (Claude API)
-// ══════════════════════════════════════════════════
-async function openAIPredictor(roll) {
-  var st = students.find(function(s){ return s.roll===roll; });
-  if (!st) return;
-  document.getElementById('aip-name').textContent = st.name;
-  document.getElementById('aip-body').innerHTML = '<div style="text-align:center;padding:2rem"><span style="font-size:2rem">🤖</span><br><br>Analysing marks across all exams...<br><small style="color:var(--text-muted)">Powered by Claude AI</small></div>';
-  openModal('ai-predictor-modal');
-
-  // Build marks summary for all exams
-  var exams = ['First Terminal','Second Terminal','Pre-board','Annual Examination'];
-  var subs = SUBJECTS[st.stream];
-  var summary = 'Student: '+st.name+'\nStream: '+st.stream+'\n\n';
-  exams.forEach(function(exam){
-    var saved = marksData[getKey(st.roll, exam)] || {};
-    var hasAny = subs.some(function(sub){ return saved[sub.name] && saved[sub.name].th !== undefined; });
-    if (!hasAny) return;
-    summary += exam + ':\n';
-    subs.forEach(function(sub){
-      var d = saved[sub.name];
-      if (!d || d.th === undefined) return;
-      var total = (d.th||0)+(d.pr||0);
-      var max = sub.thMax+sub.prMax;
-      var pct = max ? Math.round(total/max*100) : 0;
-      var gr = getGrade(pct);
-      summary += '  '+sub.name+': '+total+'/'+max+' ('+pct+'%) → '+gr.g+'\n';
-    });
-    var cr = calcCGPA(subs, saved);
-    if (cr.totalCredits) summary += '  CGPA: '+cr.cgpa.toFixed(2)+'\n';
-    summary += '\n';
-  });
-
-  try {
-    var resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:1000,
-        messages:[{
-          role:'user',
-          content:'You are an academic advisor for Tharpu Secondary School, Nepal (NEB grading system). Based on the following student marks history, provide:\n1. Predicted grade/CGPA for Annual Examination\n2. Which subjects need urgent attention (risk of NG)\n3. Specific improvement tips per weak subject\n4. Motivational note for the student\n\nNEB grades: A+(4.0,90%+), A(3.6,80-89%), B+(3.2,70-79%), B(2.8,60-69%), C+(2.4,50-59%), C(2.0,40-49%), D(1.6,35-39%), NG(0,<35%). Pass requires 35% in Theory AND Practical separately.\n\nFormat your response in clear sections with emojis. Be specific and encouraging.\n\n'+summary
-        }]
-      })
-    });
-    var data = await resp.json();
-    var text = data.content && data.content[0] ? data.content[0].text : 'Could not generate prediction.';
-    // Convert markdown-like text to HTML
-    text = text.replace(/\*\*(.*?)\*\*/g,'<b>$1</b>').replace(/\n/g,'<br>').replace(/#{1,3} (.*?)<br>/g,'<div style="font-weight:700;margin:0.8rem 0 0.3rem;font-size:1rem">$1</div>');
-    document.getElementById('aip-body').innerHTML = '<div style="font-size:0.88rem;line-height:1.7;color:var(--text)">'+text+'</div>';
-  } catch(e) {
-    document.getElementById('aip-body').innerHTML = '<div style="color:var(--danger)">⚠ Could not connect to AI. Check internet connection.</div>';
-  }
-}
-</script>
 </body>
 </script>
 </html>
