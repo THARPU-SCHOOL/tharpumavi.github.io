@@ -2481,7 +2481,8 @@ var subjectCodes = {
   'Health & Physical Education':  '014'
 };
 
-var rows=subs.map(function(sub,i){
+var sortedSubs = subs.slice().sort(function(a,b){ return (parseInt(subjectCodes[a.name])||999)-(parseInt(subjectCodes[b.name])||999); });
+var rows=sortedSubs.map(function(sub,i){
     var d=saved[sub.name]||{};
     var credit=getCredit(sub.name);
     var code = subjectCodes[sub.name] || (101+i);
@@ -4693,7 +4694,7 @@ renderStudentList = function() {
     return '<div class="student-item">'+
       '<div class="student-avatar" onclick="openStudentProfile(this.dataset.roll)" data-roll="'+s.roll+'" style="cursor:pointer" title="View profile">'+avatarHtml+'</div>'+
       '<div class="student-info" onclick="quickEnterMarks(this.dataset.roll)" data-roll="'+s.roll+'" style="cursor:pointer">'+
-        '<div class="student-name">'+sanitize(s.name)+'</div>'+
+        '<div class="student-name" onclick="openEditDobRegno(\''+s.roll+'\')" style="cursor:pointer;text-decoration:underline dotted;color:var(--maroon)" title="Edit DOB & Reg No">'+sanitize(s.name)+'</div>'+
         '<div class="student-meta">Roll: <b>'+sanitize(s.roll)+'</b> | '+sanitize(s.year)+'</div>'+
       '</div>'+
       '<span class="badge '+sc+'">'+(s.stream==='Plant Science'?'🌿 Plant':'📘 Gen')+'</span>'+
@@ -5260,6 +5261,47 @@ function fbEnableLiveSync() {
   };
 })();
 </script>
-</body>
+<div class="modal-overlay" id="edit-dob-regno-modal">
+  <div class="modal-box" style="max-width:380px">
+    <h3>✏️ Edit — <span id="edit-modal-name"></span></h3>
+    <div class="form-group"><label>Date of Birth (B.S.)</label><input type="text" id="edit-dob-bs" placeholder="e.g. 2062/05/15"></div>
+    <div class="form-group"><label>Date of Birth (A.D.)</label><input type="text" id="edit-dob-ad" placeholder="e.g. 2005/08/31"></div>
+    <div class="form-group"><label>Registration No.</label><input type="text" id="edit-regno" placeholder="e.g. 2023-12345"></div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" style="flex:1" onclick="saveEditDobRegno()">💾 Save</button>
+      <button class="btn btn-secondary" onclick="closeModal('edit-dob-regno-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+<script>
+var _editDobRoll=null;
+function openEditDobRegno(roll){
+  _editDobRoll=roll;
+  var st=students.find(function(s){return s.roll===roll;});
+  if(!st)return;
+  document.getElementById('edit-modal-name').textContent=st.name;
+  document.getElementById('edit-dob-bs').value=st.dobbs||'';
+  document.getElementById('edit-dob-ad').value=st.dobad||'';
+  document.getElementById('edit-regno').value=st.regno||'';
+  openModal('edit-dob-regno-modal');
+}
+function saveEditDobRegno(){
+  if(!_editDobRoll)return;
+  var st=students.find(function(s){return s.roll===_editDobRoll;});
+  if(!st)return;
+  st.dobbs=document.getElementById('edit-dob-bs').value.trim();
+  st.dobad=document.getElementById('edit-dob-ad').value.trim();
+  st.regno=document.getElementById('edit-regno').value.trim();
+  try{
+    var extra=JSON.parse(localStorage.getItem('tss_extra_students')||'[]');
+    var idx=extra.findIndex(function(e){return e.roll===_editDobRoll;});
+    if(idx>=0)extra[idx]=st; else extra.push(st);
+    localStorage.setItem('tss_extra_students',JSON.stringify(extra));
+  }catch(e){}
+  closeModal('edit-dob-regno-modal');
+  showToast('✅ Details saved for '+st.name);
+  renderStudentList();
+}
+</script>
 </html>
 
