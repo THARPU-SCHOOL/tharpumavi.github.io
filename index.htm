@@ -2606,8 +2606,9 @@ var rows=sortedSubs.map(function(sub,i){
     '<div class="grade-sheet-title">GRADE-SHEET</div>'+
 
     // Student name line with edit note
-    '<div class="info-block">'+
-    '<div class="info-line"><span class="label">STUDENT NAME :</span><span class="dotline">&nbsp;<b>'+st.name+'</b>&nbsp;</span><span class="label">&nbsp;&nbsp;STREAM :</span><span class="dotline">&nbsp;'+st.stream+'&nbsp;</span></div>'+
+   '<div class="info-block">'+
+'<div class="info-line" style="text-align:center;font-weight:700;font-size:12px;letter-spacing:0.6px;margin-bottom:6px"><span class="label">THE FOLLOWING ARE THE GRADE(S) OBTAINED BY :</span></div>'+
+'<div class="info-line"><span class="label">STUDENT NAME :</span>
      '<div class="info-line"><span class="label">DATE OF BIRTH :</span><span class="dotline">&nbsp;'+(st.dobbs||'_______________')+'&nbsp;</span><span class="label">B.S. &nbsp;&nbsp;&nbsp;(&nbsp;</span><span class="dotline">&nbsp;'+(st.dobad||'_______________')+'&nbsp;</span><span class="label">A.D.)</span></div>'+
 '<div class="info-line"><span class="label">REGISTRATION NO</span><span class="dotline">&nbsp;'+(st.regno||'_______________')+'&nbsp;</span><span class="label">&nbsp;SYMBOL NO:</span><span class="dotline">&nbsp;'+st.roll+'&nbsp;</span><span class="label">&nbsp;&nbsp;GRADE : XI</span></div>'+ 
       '<div class="info-line"><span class="label">IN THE <b>'+exam.toUpperCase()+'</b> CONDUCTED BY SCHOOL IN</span><span class="dotline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="label">B.S.</span></div>'+
