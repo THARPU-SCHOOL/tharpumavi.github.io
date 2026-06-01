@@ -688,14 +688,11 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
     <button class="nav-tab" onclick="showTab('grading',this)"><span class="tab-icon">&#128202;</span>Grading</button>
     <button class="nav-tab" onclick="showTab('register',this)"><span class="tab-icon">&#10133;</span>Register</button>
     <button class="nav-tab" onclick="showTab('attendance',this)"><span class="tab-icon">📅</span>Attendance</button>
-    <button class="nav-tab" onclick="showTab('timetable',this)"><span class="tab-icon">🕐</span>Timetable</button>
     <button class="nav-tab" onclick="showTab('character-cert',this)"><span class="tab-icon">📜</span>Char. Certificate</button>
-    <button class="nav-tab" onclick="showTab('compare',this)"><span class="tab-icon">📉</span>Compare</button>
     <button class="nav-tab" onclick="showTab('notifications',this)" style="position:relative"><span class="tab-icon">🔔</span>Alerts<span id="notif-badge" style="display:none;position:absolute;top:4px;right:4px;background:#b71c1c;color:white;border-radius:50%;width:14px;height:14px;font-size:0.55rem;font-weight:700;align-items:center;justify-content:center;"></span></button>
     <button class="nav-tab" onclick="showTab('settings',this)"><span class="tab-icon">⚙️</span>Settings</button>
     <button class="nav-tab" onclick="showTab('teacher-portal',this)"><span class="tab-icon">👩‍🏫</span>Teacher Portal</button>
     <button class="nav-tab" onclick="showTab('marks-approval',this)"><span class="tab-icon">✅</span>Approval</button>
-    <button class="nav-tab" onclick="showTab('result-stats',this)"><span class="tab-icon">📊</span>Result Stats</button>
     <button class="nav-tab" id="sync-tab-btn" onclick="showTab('sync',this)" style="background:linear-gradient(135deg,#1a6e2e,#2e7d32);color:white;border-radius:10px 10px 0 0;border:2px solid #4caf50;animation:syncPulse 2s infinite;"><span class="tab-icon">📲</span>Sync Devices</button>
   </div>
 
@@ -968,7 +965,7 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
         </div>
         <div class="btn-row">
           <button class="btn btn-primary" onclick="previewCharCert()">👁️ Preview Certificate</button>
-         <button class="btn btn-gold" onclick="printCharCert()">🖨️ Print Certificate</button>
+          <button class="btn btn-gold" onclick="printCharCert()">🖨️ Print Certificate</button>
           <button class="btn btn-success" onclick="exportCertWord()">📄 Export Word</button>
         </div>
       </div>
@@ -979,90 +976,105 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
       <div class="section-card">
         <div class="section-head">👁️ Certificate Preview</div>
         <div class="section-body" style="padding:0;">
-          <div id="cert-printable" style="background:white;padding:2rem 2.2rem;font-family:'Times New Roman',Times,serif;color:#111;line-height:1.7;border:3px double #7B1C1C;margin:1rem;border-radius:4px;position:relative;">
+          <div id="cert-printable" style="background:white;padding:1.4rem 1.8rem;font-family:'Times New Roman',Times,serif;color:#111;line-height:1.7;border:4px solid #c00;margin:1rem;position:relative;overflow:hidden;">
 
-            <!-- Watermark border pattern -->
-          <div style="position:absolute;inset:8px;border:1px solid #c8922a;pointer-events:none;border-radius:2px;"></div>
-            <!-- Watermark -->
+            <!-- Inner decorative border -->
+            <div style="position:absolute;inset:7px;border:1.5px solid #c00;pointer-events:none;"></div>
+
+            <!-- Diagonal watermark -->
             <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-35deg);opacity:0.06;pointer-events:none;text-align:center;z-index:0;">
-              <img src="THARPU SECONDARY SCHOOL.jpeg" style="width:280px;height:280px;object-fit:contain;" onerror="this.style.display='none';this.nextSibling.style.display='block'">
-              <div style="display:none;font-size:56px;font-weight:900;color:#7B1C1C;letter-spacing:4px;">TSS</div>
+              <img src="THARPU SECONDARY SCHOOL.jpeg" style="width:300px;height:300px;object-fit:contain;" onerror="this.style.display='none';this.nextSibling.style.display='block'">
+              <div style="display:none;font-size:60px;font-weight:900;color:#7B1C1C;letter-spacing:4px;">TSS</div>
             </div>
-          <!-- Header -->
-            <div style="text-align:center;margin-bottom:0.5rem;">
-              <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:6px;">
-                <div style="width:72px;height:72px;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid #7B1C1C;">
-                  <img src="THARPU SECONDARY SCHOOL.jpeg" style="width:100%;height:100%;object-fit:contain;border-radius:50%;" onerror="this.style.display='none'">
+
+            <!-- Content above watermark -->
+            <div style="position:relative;z-index:1;">
+
+              <!-- TOP ROW: Logo | School Name | Photo Box -->
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:0.4rem;">
+
+                <!-- Logo -->
+                <div style="flex-shrink:0;width:78px;height:78px;border-radius:50%;border:2px solid #7B1C1C;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#fff;">
+                  <img src="THARPU SECONDARY SCHOOL.jpeg" style="width:100%;height:100%;object-fit:contain;" onerror="this.style.display='none'">
                 </div>
-                <div style="text-align:center;">
-                  <div style="font-size:1.1rem;font-weight:900;letter-spacing:2px;color:#7B1C1C;text-transform:uppercase;">Tharpu Secondary School</div>
-                  <div style="font-size:0.85rem;color:#555;margin-top:2px;">Yangwarak-4, Panchthar, Koshi Province, Nepal</div>
-                  <div style="font-size:0.8rem;color:#555;">School Code: TSS-PAN | Affiliated to NEB</div>
+
+                <!-- School name center -->
+                <div style="flex:1;text-align:center;padding:0 12px;">
+                  <div style="font-size:1.05rem;font-weight:900;letter-spacing:1.5px;color:#7B1C1C;text-transform:uppercase;">THARPU SECONDARY SCHOOL</div>
+                  <div style="font-size:0.78rem;color:#333;margin-top:1px;">Yangwarak-4, Panchthar, Koshi Province, Nepal</div>
+                  <div style="font-size:0.74rem;color:#555;">Affiliated to National Examinations Board (NEB)</div>
+                  <div style="margin:0.4rem auto 0;border-top:2.5px solid #7B1C1C;border-bottom:1px solid #c8922a;padding:3px 0;max-width:320px;">
+                    <span style="font-size:1.1rem;font-weight:900;color:#7B1C1C;font-style:italic;letter-spacing:1px;">Character Certificate</span>
+                  </div>
+                </div>
+
+                <!-- Photo paste box -->
+                <div style="flex-shrink:0;width:80px;height:96px;border:1.5px solid #7B1C1C;display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:#aaa;background:#fafafa;text-align:center;line-height:1.4;">
+                  Paste<br>Photo<br>Here
+                </div>
+
+              </div>
+
+              <!-- S. No. -->
+              <div style="font-size:0.85rem;margin-bottom:0.55rem;">
+                S. No. .............. <b id="cp-cert-no">—</b>
+              </div>
+
+              <!-- Body -->
+              <p style="text-align:justify;font-size:0.9rem;margin-bottom:0.5rem;line-height:1.8;">
+                This is to certify that Ms./Mr. <b><u><span id="cp-name">———————————————</span></u></b>,
+                <span id="cp-gender-text">son/daughter</span> of <b><span id="cp-father">———————————</span></b>
+                and <b><span id="cp-mother">———————————</span></b>,
+                bearing Roll No. <b><span id="cp-roll">———</span></b>,
+                Registration No. <b><span id="cp-regno">——————————</span></b>,
+                Date of Birth: <b><span id="cp-dob-bs">——————</span></b> B.S.
+                (<b><span id="cp-dob-ad">——————</span></b> A.D.)
+                has been a student of Grade XI (<b><span id="cp-stream">——————</span></b>) of this school
+                for the academic year <b><span id="cp-year">2081/82</span></b>
+                under the National Examinations Board (NEB), Nepal.
+              </p>
+
+              <p style="text-align:justify;font-size:0.9rem;margin-bottom:0.5rem;line-height:1.8;">
+                During his/her stay at this institution, his/her conduct and character were found to be <b>good</b>.
+                He/She has not been involved in any immoral, unethical, or unlawful activity and has always
+                maintained respectful behaviour towards teachers and fellow students,
+                following all rules and regulations of this school.
+              </p>
+
+              <p style="text-align:justify;font-size:0.9rem;margin-bottom:0.9rem;line-height:1.8;">
+                This certificate is issued on his/her request for the purpose of
+                <b><u><span id="cp-purpose">——————————————</span></u></b>.
+                We wish him/her every success in his/her future endeavours.
+              </p>
+
+              <!-- Issue Date -->
+              <div style="font-size:0.88rem;margin-bottom:1.5rem;">
+                Issue Date : <b><span id="cp-date-bs">——————</span></b> B.S. &nbsp;&nbsp;
+                ( <b><span id="cp-date">——————</span></b> A.D. )
+              </div>
+
+              <!-- 3 Signatures -->
+              <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+                <div style="text-align:center;font-size:0.82rem;min-width:110px;">
+                  <div style="height:40px;"></div>
+                  <div style="border-top:1px solid #333;padding-top:4px;">Prepared by</div>
+                </div>
+                <div style="text-align:center;font-size:0.82rem;min-width:110px;">
+                  <div style="height:40px;"></div>
+                  <div style="border-top:1px solid #333;padding-top:4px;">Checked by</div>
+                </div>
+                <div style="text-align:center;font-size:0.82rem;min-width:130px;">
+                  <div style="height:40px;"></div>
+                  <div style="border-top:1px solid #333;padding-top:4px;"><b id="cp-principal">Principal</b></div>
+                  <div style="font-size:0.72rem;color:#555;">Tharpu Secondary School</div>
                 </div>
               </div>
-              <div style="margin:0.6rem 0;border-top:2px solid #7B1C1C;border-bottom:1px solid #c8922a;padding:4px 0;">
-                <span style="font-size:1rem;font-weight:800;letter-spacing:3px;color:#7B1C1C;">CHARACTER CERTIFICATE</span>
-              </div>
-            </div>
-<!-- Photo box -->
-            <div style="float:right;margin:0 0 0.5rem 1rem;text-align:center;">
-              <div style="width:90px;height:110px;border:1.5px solid #7B1C1C;display:flex;align-items:center;justify-content:center;font-size:0.65rem;color:#999;font-family:Arial,sans-serif;background:#fafafa;">
-                Photo<br>Paste Here
-              </div>
-            </div>
-            <!-- Certificate Number & Date -->
-            <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:1rem;">
-              <span>Cert. No: <b id="cp-cert-no">—</b></span>
-              <span>Date: <b id="cp-date">—</b></span>
-            </div>
 
-            <!-- Body Text -->
-            <p style="text-align:justify;margin-bottom:0.8rem;font-size:0.92rem;">
-              This is to certify that <b><span id="cp-name">—</span></b>,
-              <span id="cp-gender-text">son/daughter</span> of <b><span id="cp-father">—</span></b>
-              and <b><span id="cp-mother">—</span></b>,
-              bearing Roll No. <b><span id="cp-roll">—</span></b> and
-              Registration No. <b><span id="cp-regno">—</span></b>,
-              Date of Birth (B.S.): <b><span id="cp-dob-bs">—</span></b>
-              (A.D.: <b><span id="cp-dob-ad">—</span></b>),
-              was a student of this school and appeared in the Grade XI (<span id="cp-stream">—</span>) examination
-              for the academic year <b><span id="cp-year">—</span></b> under the National Examinations Board (NEB), Nepal.
-            </p>
-
-            <p style="text-align:justify;margin-bottom:0.8rem;font-size:0.92rem;">
-              During his/her stay at this institution, his/her <b>conduct and character were found to be good</b>.
-              He/She has not been involved in any immoral, unethical, or unlawful activity.
-              He/She has always shown respectful behavior towards teachers and fellow students,
-              and has followed all rules and regulations of this school.
-            </p>
-
-            <p style="text-align:justify;margin-bottom:1.2rem;font-size:0.92rem;">
-              This certificate is issued on his/her request for the purpose of
-              <b><span id="cp-purpose">—</span></b>.
-              We wish him/her all the best in his/her future endeavors.
-            </p>
-
-            <!-- Signature Section -->
-            <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:2rem;">
-              <div style="text-align:center;font-size:0.82rem;">
-                <div style="border-top:1px solid #333;width:130px;margin-bottom:4px;"></div>
-                <div>Class Teacher</div>
-                <div style="color:#555;font-size:0.75rem;">Signature</div>
+              <!-- School Seal -->
+              <div style="text-align:center;margin-top:0.7rem;">
+                <div style="width:62px;height:62px;border:1px dashed #aaa;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:0.6rem;color:#bbb;line-height:1.3;">School<br>Seal</div>
               </div>
-              <div style="text-align:center;font-size:0.82rem;">
-                <div style="width:70px;height:70px;border:1px dashed #999;display:flex;align-items:center;justify-content:center;font-size:0.65rem;color:#aaa;margin:0 auto 4px;">School<br>Seal</div>
-              </div>
-              <div style="text-align:center;font-size:0.82rem;">
-                <div style="border-top:1px solid #333;width:160px;margin-bottom:4px;"></div>
-                <div id="cp-principal">Principal</div>
-                <div style="color:#555;font-size:0.75rem;">Tharpu Secondary School</div>
-                <div style="color:#555;font-size:0.75rem;">Panchthar, Nepal</div>
-              </div>
-            </div>
 
-            <!-- Footer -->
-            <div style="margin-top:1.5rem;border-top:1px solid #c8922a;padding-top:0.5rem;font-size:0.72rem;color:#888;text-align:center;">
-              This certificate is computer-generated. For verification, contact the school office.
             </div>
           </div>
         </div>
@@ -1139,24 +1151,6 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
   </div>
 
   <!-- TIMETABLE TAB -->
-  <div class="tab-panel" id="tab-timetable">
-    <div class="section-card">
-      <div class="section-head">🕐 Weekly Timetable</div>
-      <div class="section-body">
-        <div class="form-group">
-          <label>Stream</label>
-          <select id="tt-stream-sel" onchange="renderTimetable()">
-            <option value="Plant Science">🌿 Plant Science</option>
-            <option value="General">📘 General</option>
-          </select>
-        </div>
-      </div>
-      <div style="overflow-x:auto;padding:0 0.8rem 0.8rem">
-        <div id="tt-grid-area"></div>
-      </div>
-    </div>
-    <div class="info-box">💡 Timetable is based on the standard NEB Class XI schedule. Periods are 45 minutes each.</div>
-  </div>
 
   <!-- EXAM SCHEDULE TAB -->
   <div class="tab-panel" id="tab-exams">
@@ -1464,32 +1458,6 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
   </div>
 
   <!-- RESULT STATS TAB -->
-  <div class="tab-panel" id="tab-result-stats">
-    <div class="section-card">
-      <div class="section-head">📊 Result Statistics &amp; Analysis</div>
-      <div class="section-body">
-        <div class="form-group">
-          <label>Examination</label>
-          <select id="rstats-exam-sel" onchange="renderResultStats()">
-            <option value="First Terminal">First Terminal</option>
-            <option value="Second Terminal">Second Terminal</option>
-            <option value="Annual Examination">Annual Examination</option>
-            <option value="Pre-board">Pre-board</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Stream</label>
-          <select id="rstats-stream-sel" onchange="renderResultStats()">
-            <option value="all">All Streams</option>
-            <option value="Plant Science">🌿 Plant Science</option>
-            <option value="General">📘 General</option>
-          </select>
-        </div>
-        <button class="btn btn-primary" onclick="renderResultStats()">📊 Generate Report</button>
-      </div>
-    </div>
-    <div id="result-stats-area" style="margin-top:1rem;"></div>
-  </div>
 
 </div>
 
@@ -1617,16 +1585,6 @@ function _showMainApp(matched) {
   updateNavForRole(role);
   // Update notification badge for pending approvals
   setTimeout(updateNotifBadge, 300);
-  // Render dashboard and activate dashboard tab
-  try { renderDashboard(); } catch(e){}
-  try { renderBSStrip(); } catch(e){}
-  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
-  document.querySelectorAll('.nav-tab').forEach(function(b){b.classList.remove('active');});
-  var dashPanel = document.getElementById('tab-dashboard');
-  if (dashPanel) dashPanel.classList.add('active');
-  var firstTab = document.querySelector('.nav-tab');
-  if (firstTab) firstTab.classList.add('active');
-  try { logActivity('🔑', matched.username + ' logged in', '#fff3e0'); } catch(e){}
 }
 
 // Enter key support — placed after doLogin is defined
@@ -3816,7 +3774,24 @@ registerStudent = function(){
   if(name){ logActivity('🎓','New student: '+name,'#e3f2fd'); }
 };
 
-// ── On login, render dashboard ── (handled inside _showMainApp to avoid async race)
+// ── On login, render dashboard ──
+var __origDoLogin2 = doLogin;
+doLogin = function(){
+  __origDoLogin2();
+  if(currentUser&&currentUser!=='guest'){
+    renderDashboard();
+    renderBSStrip();
+    // Ensure dashboard tab is shown
+    var btn=document.querySelector('.nav-tab');
+    if(btn){ document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
+      document.querySelectorAll('.nav-tab').forEach(function(b){b.classList.remove('active');});
+      var dashPanel=document.getElementById('tab-dashboard');
+      if(dashPanel) dashPanel.classList.add('active');
+      btn.classList.add('active');
+    }
+    logActivity('🔑',currentUser+' logged in','#fff3e0');
+  }
+};
 
 // ── Export fees to CSV ──
 function exportFeesCSV(){
@@ -3844,20 +3819,6 @@ function exportFeesCSV(){
 </script>
 
   <!-- ══ COMPARE TAB ══ -->
-  <div class="tab-panel" id="tab-compare">
-    <div class="section-card">
-      <div class="section-head">📉 Multi-Exam Performance Comparison</div>
-      <div class="section-body">
-        <div class="form-group">
-          <label>Select Student</label>
-          <select id="cmp-student-sel" onchange="renderCompare()">
-            <option value="">-- Choose student --</option>
-          </select>
-        </div>
-      </div>
-    </div>
-    <div id="compare-body"></div>
-  </div>
 
   <!-- ══ NOTIFICATIONS TAB ══ -->
   <div class="tab-panel" id="tab-notifications">
@@ -5496,9 +5457,6 @@ function previewCharCert() {
   var purpose = document.getElementById('cert-purpose').value.trim() || 'General Purpose';
   var principal = document.getElementById('cert-principal').value.trim() || 'Principal';
 
-  // Combined date display
-  var dateDisplay = dateBS + (dateAD ? ' (A.D.: ' + dateAD + ')' : '');
-
   // Fill certificate fields
   document.getElementById('cp-name').textContent    = st.name;
   document.getElementById('cp-roll').textContent    = st.roll;
@@ -5506,9 +5464,10 @@ function previewCharCert() {
   document.getElementById('cp-dob-bs').textContent  = st.dobbs || '—';
   document.getElementById('cp-dob-ad').textContent  = st.dobad || '—';
   document.getElementById('cp-stream').textContent  = st.stream || '—';
-  document.getElementById('cp-year').textContent    = st.year   || '2082/83';
+  document.getElementById('cp-year').textContent    = st.year   || '2081/82';
   document.getElementById('cp-cert-no').textContent = certNo;
-  document.getElementById('cp-date').textContent    = dateDisplay;
+  document.getElementById('cp-date-bs').textContent = dateBS;
+  document.getElementById('cp-date').textContent    = dateAD || '—';
   document.getElementById('cp-purpose').textContent = purpose;
   document.getElementById('cp-principal').textContent = principal;
 
@@ -5537,32 +5496,25 @@ function printCharCert() {
   printWin.document.close();
   setTimeout(function(){ printWin.print(); }, 500);
 }
+
 function exportCertWord() {
   var area = document.getElementById('cert-printable');
   if (!area || document.getElementById('cert-preview-area').style.display === 'none') {
-    showToast('⚠️ Please preview the certificate first.');
-    return;
+    showToast('⚠️ Please preview the certificate first.'); return;
   }
-  var html = '<!DOCTYPE html><html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">' +
-    '<head><meta charset="utf-8">' +
-    '<!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom><w:DoNotOptimizeForBrowser/></w:WordDocument></xml><![endif]-->' +
-    '<style>' +
-    'body{font-family:"Times New Roman",Times,serif;font-size:12pt;color:#111;margin:2cm;}' +
-    'b{font-weight:bold;}' +
-    'p{margin:6pt 0;line-height:1.7;}' +
-    '</style></head><body>' +
-    area.innerHTML +
-    '</body></html>';
-  var blob = new Blob(['\ufeff' + html], { type: 'application/msword' });
+  var html2 = '<!DOCTYPE html><html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">'+
+    '<head><meta charset="utf-8"><!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom></w:WordDocument></xml><![endif]-->'+
+    '<style>body{font-family:"Times New Roman",Times,serif;font-size:12pt;color:#111;margin:2cm;}b{font-weight:bold;}p{margin:6pt 0;line-height:1.8;}</style>'+
+    '</head><body>'+area.innerHTML+'</body></html>';
+  var blob = new Blob(['\ufeff'+html2], {type:'application/msword'});
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a');
   var name = document.getElementById('cp-name').textContent || 'Student';
-  a.href = url;
-  a.download = 'CharacterCertificate_' + name.replace(/\s+/g,'_') + '.doc';
-  a.click();
+  a.href = url; a.download = 'CharacterCertificate_'+name.replace(/\s+/g,'_')+'.doc'; a.click();
   setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
   showToast('📄 Word document downloaded!');
 }
+
 // Patch showTab to populate cert select when navigating to character-cert
 (function(){
   var _origShowTab2 = window.showTab;
