@@ -968,7 +968,8 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
         </div>
         <div class="btn-row">
           <button class="btn btn-primary" onclick="previewCharCert()">👁️ Preview Certificate</button>
-          <button class="btn btn-gold" onclick="printCharCert()">🖨️ Print Certificate</button>
+         <button class="btn btn-gold" onclick="printCharCert()">🖨️ Print Certificate</button>
+          <button class="btn btn-success" onclick="exportCertWord()">📄 Export Word</button>
         </div>
       </div>
     </div>
@@ -5536,7 +5537,32 @@ function printCharCert() {
   printWin.document.close();
   setTimeout(function(){ printWin.print(); }, 500);
 }
-
+function exportCertWord() {
+  var area = document.getElementById('cert-printable');
+  if (!area || document.getElementById('cert-preview-area').style.display === 'none') {
+    showToast('⚠️ Please preview the certificate first.');
+    return;
+  }
+  var html = '<!DOCTYPE html><html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">' +
+    '<head><meta charset="utf-8">' +
+    '<!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom><w:DoNotOptimizeForBrowser/></w:WordDocument></xml><![endif]-->' +
+    '<style>' +
+    'body{font-family:"Times New Roman",Times,serif;font-size:12pt;color:#111;margin:2cm;}' +
+    'b{font-weight:bold;}' +
+    'p{margin:6pt 0;line-height:1.7;}' +
+    '</style></head><body>' +
+    area.innerHTML +
+    '</body></html>';
+  var blob = new Blob(['\ufeff' + html], { type: 'application/msword' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  var name = document.getElementById('cp-name').textContent || 'Student';
+  a.href = url;
+  a.download = 'CharacterCertificate_' + name.replace(/\s+/g,'_') + '.doc';
+  a.click();
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+  showToast('📄 Word document downloaded!');
+}
 // Patch showTab to populate cert select when navigating to character-cert
 (function(){
   var _origShowTab2 = window.showTab;
