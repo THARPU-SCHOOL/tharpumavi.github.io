@@ -11,24 +11,51 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png" sizes="192x192">
 <link rel="apple-touch-icon" href="icon-512.png">
-<!-- Firebase for cross-device real-time sync -->
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
-  <script>
-  // Paste your configuration here
-  const firebaseConfig = {
-    apiKey: "AIzaSyAUggBXJWKO0FbVG2QaRhfI-0AysduuOnA",
-    authDomain: "tharpu-mavi.firebaseapp.com",
-    databaseURL: "https://tharpu-mavi-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "tharpu-mavi",
-    storageBucket: "tharpu-mavi.appspot.com",
-    messagingSenderId: "716386428782",
-    appId: "1:716386428782:web:c380a8fa0402be9206037f"
-  };
-
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
+<!-- Firebase for cross-device real-time sync — loaded async so it never blocks the page -->
+<script>
+  // Firebase will be initialized lazily when the Sync tab is used.
+  // This prevents network failures from blocking the login screen.
+  var _firebaseReadyCallbacks = [];
+  function _onFirebaseReady(cb) {
+    if (typeof firebase !== 'undefined' && firebase.apps) { cb(); }
+    else { _firebaseReadyCallbacks.push(cb); }
+  }
+  function _loadFirebaseSDK() {
+    if (typeof firebase !== 'undefined') return; // already loaded
+    var s1 = document.createElement('script');
+    s1.src = 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js';
+    s1.onload = function() {
+      var s2 = document.createElement('script');
+      s2.src = 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js';
+      s2.onload = function() {
+        try {
+          if (!firebase.apps.length) {
+            firebase.initializeApp({
+              apiKey: "AIzaSyAUggBXJWKO0FbVG2QaRhfI-0AysduuOnA",
+              authDomain: "tharpu-mavi.firebaseapp.com",
+              databaseURL: "https://tharpu-mavi-default-rtdb.asia-southeast1.firebasedatabase.app",
+              projectId: "tharpu-mavi",
+              storageBucket: "tharpu-mavi.appspot.com",
+              messagingSenderId: "716386428782",
+              appId: "1:716386428782:web:c380a8fa0402be9206037f"
+            });
+          }
+        } catch(e) {}
+        _firebaseReadyCallbacks.forEach(function(cb){ try{cb();}catch(e){} });
+        _firebaseReadyCallbacks = [];
+      };
+      s2.onerror = function() { console.warn('Firebase database SDK failed to load.'); };
+      document.head.appendChild(s2);
+    };
+    s1.onerror = function() { console.warn('Firebase app SDK failed to load.'); };
+    document.head.appendChild(s1);
+  }
+  // Start loading Firebase in background — non-blocking
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', _loadFirebaseSDK);
+  } else {
+    _loadFirebaseSDK();
+  }
 </script>
 <title>Tharpu Secondary School — Result Management System</title>
 <style>
@@ -1573,6 +1600,16 @@ function _showMainApp(matched) {
   updateNavForRole(role);
   // Update notification badge for pending approvals
   setTimeout(updateNotifBadge, 300);
+  // Render dashboard and activate dashboard tab
+  try { renderDashboard(); } catch(e){}
+  try { renderBSStrip(); } catch(e){}
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.nav-tab').forEach(function(b){b.classList.remove('active');});
+  var dashPanel = document.getElementById('tab-dashboard');
+  if (dashPanel) dashPanel.classList.add('active');
+  var firstTab = document.querySelector('.nav-tab');
+  if (firstTab) firstTab.classList.add('active');
+  try { logActivity('🔑', matched.username + ' logged in', '#fff3e0'); } catch(e){}
 }
 
 // Enter key support — placed after doLogin is defined
@@ -2059,6 +2096,7 @@ var _encKey = null;
 var ENC_ENABLED = true;
 
 async function deriveKey(password, salt) {
+  if (!window.crypto || !window.crypto.subtle) throw new Error('crypto.subtle unavailable');
   var enc = new TextEncoder();
   var keyMaterial = await crypto.subtle.importKey('raw', enc.encode(password), {name:'PBKDF2'}, false, ['deriveKey']);
   return crypto.subtle.deriveKey(
@@ -2721,8 +2759,8 @@ var rows=sortedSubs.map(function(sub,i){
     // Student name line with edit note
    '<div class="info-block">'+
 '<div class="info-line" style="text-align:center;font-weight:700;font-size:12px;letter-spacing:0.6px;margin-bottom:6px"><span class="label">THE FOLLOWING ARE THE GRADE(S) OBTAINED BY :</span></div>'+
-'<div class="info-line"><span class="label">STUDENT NAME :</span>
-     '<div class="info-line"><span class="label">DATE OF BIRTH :</span><span class="dotline">&nbsp;'+(st.dobbs||'_______________')+'&nbsp;</span><span class="label">B.S. &nbsp;&nbsp;&nbsp;(&nbsp;</span><span class="dotline">&nbsp;'+(st.dobad||'_______________')+'&nbsp;</span><span class="label">A.D.)</span></div>'+
+'<div class="info-line"><span class="label">STUDENT NAME :</span><span class="dotline">&nbsp;'+st.name+'&nbsp;</span></div>'+
+'<div class="info-line"><span class="label">DATE OF BIRTH :</span><span class="dotline">&nbsp;'+(st.dobbs||'_______________')+'&nbsp;</span><span class="label">B.S. &nbsp;&nbsp;&nbsp;(&nbsp;</span><span class="dotline">&nbsp;'+(st.dobad||'_______________')+'&nbsp;</span><span class="label">A.D.)</span></div>'+
 '<div class="info-line"><span class="label">REGISTRATION NO</span><span class="dotline">&nbsp;'+(st.regno||'_______________')+'&nbsp;</span><span class="label">&nbsp;SYMBOL NO:</span><span class="dotline">&nbsp;'+st.roll+'&nbsp;</span><span class="label">&nbsp;&nbsp;GRADE : XI</span></div>'+ 
       '<div class="info-line"><span class="label">IN THE <b>'+exam.toUpperCase()+'</b> CONDUCTED BY SCHOOL IN</span><span class="dotline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="label">B.S.</span></div>'+
       '<div class="info-line"><span class="label">(&nbsp;</span><span class="dotline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="label">&nbsp;A.D.) ARE GIVEN BELOW.</span></div>'+
@@ -3761,24 +3799,7 @@ registerStudent = function(){
   if(name){ logActivity('🎓','New student: '+name,'#e3f2fd'); }
 };
 
-// ── On login, render dashboard ──
-var __origDoLogin2 = doLogin;
-doLogin = function(){
-  __origDoLogin2();
-  if(currentUser&&currentUser!=='guest'){
-    renderDashboard();
-    renderBSStrip();
-    // Ensure dashboard tab is shown
-    var btn=document.querySelector('.nav-tab');
-    if(btn){ document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
-      document.querySelectorAll('.nav-tab').forEach(function(b){b.classList.remove('active');});
-      var dashPanel=document.getElementById('tab-dashboard');
-      if(dashPanel) dashPanel.classList.add('active');
-      btn.classList.add('active');
-    }
-    logActivity('🔑',currentUser+' logged in','#fff3e0');
-  }
-};
+// ── On login, render dashboard ── (handled inside _showMainApp to avoid async race)
 
 // ── Export fees to CSV ──
 function exportFeesCSV(){
@@ -5251,7 +5272,9 @@ function fbInit() {
   try {
     if (_fbApp && _fbDB) return true;
     if (typeof firebase === 'undefined') {
-      fbSetStatus('❌ Firebase SDK not loaded. Check internet connection.', 'danger');
+      fbSetStatus('⏳ Firebase SDK loading… please try again in a moment.', 'danger');
+      // Trigger load if not already loading
+      if (typeof _loadFirebaseSDK === 'function') _loadFirebaseSDK();
       return false;
     }
     // Reuse the already-initialized app (initialized at page load)
