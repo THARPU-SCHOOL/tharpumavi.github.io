@@ -150,6 +150,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--cream);color:var(-
 .info-box{background:#fff8e1;border:1px solid var(--gold);border-radius:10px;padding:0.8rem 1rem;font-size:0.8rem;color:#6d4c00;margin-bottom:1rem;}
 #login-error{display:none;background:#fff0f0;color:var(--danger);border:1px solid #f5c6c6;border-radius:8px;padding:0.55rem 0.8rem;font-size:0.85rem;margin-bottom:0.9rem;text-align:center;}
 @media print{body>*:not(#main-app){display:none !important;}#main-app>*:not(#tab-results){display:none !important;}.app-header,.nav-tabs,.btn-row,.form-group,.section-card:not(:last-child){display:none !important;}.result-card{border:1.5px solid #333;}body{background:white;}}
+@media print{#cert-preview-area{display:block!important;} .tab-panel:not(#tab-character-cert){display:none!important;}}
 
 /* ─── PREMIUM ENHANCEMENTS ─── */
 /* Toast notification */
@@ -659,12 +660,9 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
     <button class="nav-tab" onclick="showTab('results',this)"><span class="tab-icon">&#128196;</span>Results</button>
     <button class="nav-tab" onclick="showTab('grading',this)"><span class="tab-icon">&#128202;</span>Grading</button>
     <button class="nav-tab" onclick="showTab('register',this)"><span class="tab-icon">&#10133;</span>Register</button>
-    <button class="nav-tab" onclick="showTab('analytics',this)"><span class="tab-icon">📈</span>Analytics</button>
     <button class="nav-tab" onclick="showTab('attendance',this)"><span class="tab-icon">📅</span>Attendance</button>
-    <button class="nav-tab" onclick="showTab('notices',this)"><span class="tab-icon">📢</span>Notices</button>
-    <button class="nav-tab" onclick="showTab('fees',this)"><span class="tab-icon">💰</span>Fees</button>
     <button class="nav-tab" onclick="showTab('timetable',this)"><span class="tab-icon">🕐</span>Timetable</button>
-    <button class="nav-tab" onclick="showTab('exams',this)"><span class="tab-icon">📝</span>Exam Schedule</button>
+    <button class="nav-tab" onclick="showTab('character-cert',this)"><span class="tab-icon">📜</span>Char. Certificate</button>
     <button class="nav-tab" onclick="showTab('compare',this)"><span class="tab-icon">📉</span>Compare</button>
     <button class="nav-tab" onclick="showTab('notifications',this)" style="position:relative"><span class="tab-icon">🔔</span>Alerts<span id="notif-badge" style="display:none;position:absolute;top:4px;right:4px;background:#b71c1c;color:white;border-radius:50%;width:14px;height:14px;font-size:0.55rem;font-weight:700;align-items:center;justify-content:center;"></span></button>
     <button class="nav-tab" onclick="showTab('settings',this)"><span class="tab-icon">⚙️</span>Settings</button>
@@ -693,8 +691,8 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
     <div class="quick-actions">
       <div class="qa-btn" onclick="showTab('marks', document.querySelector('[onclick*=\'marks\']'))"><div class="qa-icon">✏️</div>Enter Marks</div>
       <div class="qa-btn" onclick="showTab('results', document.querySelector('[onclick*=\'results\']'))"><div class="qa-icon">📊</div>Results</div>
-      <div class="qa-btn" onclick="showTab('notices', document.querySelector('[onclick*=\'notices\']'))"><div class="qa-icon">📢</div>Notices</div>
-      <div class="qa-btn" onclick="showTab('fees', document.querySelector('[onclick*=\'fees\']'))"><div class="qa-icon">💰</div>Fees</div>
+      <div class="qa-btn" onclick="showTab('character-cert', document.querySelector('[onclick*=\'character-cert\']'))"><div class="qa-icon">📜</div>Certificate</div>
+      <div class="qa-btn" onclick="showTab('attendance', document.querySelector('[onclick*=\'attendance\']'))"><div class="qa-icon">📅</div>Attendance</div>
     </div>
 
     <!-- Stats grid -->
@@ -910,8 +908,123 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
     </div>
   </div>
 
-  <!-- NOTICES TAB -->
-  <div class="tab-panel" id="tab-notices">
+  <!-- CHARACTER CERTIFICATE TAB -->
+  <div class="tab-panel" id="tab-character-cert">
+    <div class="section-card">
+      <div class="section-head">📜 Character Certificate Generator</div>
+      <div class="section-body">
+        <div class="form-group">
+          <label>Select Student</label>
+          <select id="cert-student-sel" onchange="loadCertStudent()">
+            <option value="">-- Choose Student --</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Issue Date (B.S.)</label>
+          <input type="text" id="cert-date-bs" placeholder="e.g. 2082/02/15">
+        </div>
+        <div class="form-group">
+          <label>Issue Date (A.D.)</label>
+          <input type="text" id="cert-date-ad" placeholder="e.g. 2025/05/29">
+        </div>
+        <div class="form-group">
+          <label>Certificate Number</label>
+          <input type="text" id="cert-number" placeholder="e.g. TSS/CC/2082/001">
+        </div>
+        <div class="form-group">
+          <label>Purpose / Reason for Certificate</label>
+          <input type="text" id="cert-purpose" placeholder="e.g. Higher Education / Employment / General Purpose">
+        </div>
+        <div class="form-group">
+          <label>Principal Name</label>
+          <input type="text" id="cert-principal" value="Mr./Ms. [Principal Name]" placeholder="Full name of principal">
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="previewCharCert()">👁️ Preview Certificate</button>
+          <button class="btn btn-gold" onclick="printCharCert()">🖨️ Print Certificate</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CERTIFICATE PREVIEW -->
+    <div id="cert-preview-area" style="display:none;margin-top:1rem;">
+      <div class="section-card">
+        <div class="section-head">👁️ Certificate Preview</div>
+        <div class="section-body" style="padding:0;">
+          <div id="cert-printable" style="background:white;padding:2rem 2.2rem;font-family:'Times New Roman',Times,serif;color:#111;line-height:1.7;border:3px double #7B1C1C;margin:1rem;border-radius:4px;position:relative;">
+
+            <!-- Watermark border pattern -->
+            <div style="position:absolute;inset:8px;border:1px solid #c8922a;pointer-events:none;border-radius:2px;"></div>
+
+            <!-- Header -->
+            <div style="text-align:center;margin-bottom:0.5rem;">
+              <div style="font-size:1.1rem;font-weight:900;letter-spacing:2px;color:#7B1C1C;text-transform:uppercase;">Tharpu Secondary School</div>
+              <div style="font-size:0.85rem;color:#555;margin-top:2px;">Yangwarak-4, Panchthar, Koshi Province, Nepal</div>
+              <div style="font-size:0.8rem;color:#555;">School Code: TSS-PAN | Phone: —</div>
+              <div style="margin:0.6rem 0;border-top:2px solid #7B1C1C;border-bottom:1px solid #c8922a;padding:4px 0;">
+                <span style="font-size:1rem;font-weight:800;letter-spacing:3px;color:#7B1C1C;">CHARACTER CERTIFICATE</span>
+              </div>
+            </div>
+
+            <!-- Certificate Number & Date -->
+            <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:1rem;">
+              <span>Cert. No: <b id="cp-cert-no">—</b></span>
+              <span>Date: <b id="cp-date">—</b></span>
+            </div>
+
+            <!-- Body Text -->
+            <p style="text-align:justify;margin-bottom:0.8rem;font-size:0.92rem;">
+              This is to certify that <b><span id="cp-name">—</span></b>,
+              <span id="cp-gender-text">son/daughter</span> of <b><span id="cp-father">—</span></b>
+              and <b><span id="cp-mother">—</span></b>,
+              bearing Roll No. <b><span id="cp-roll">—</span></b> and
+              Registration No. <b><span id="cp-regno">—</span></b>,
+              Date of Birth (B.S.): <b><span id="cp-dob-bs">—</span></b>
+              (A.D.: <b><span id="cp-dob-ad">—</span></b>),
+              was a student of this school and appeared in the Grade XI (<span id="cp-stream">—</span>) examination
+              for the academic year <b><span id="cp-year">—</span></b> under the National Examinations Board (NEB), Nepal.
+            </p>
+
+            <p style="text-align:justify;margin-bottom:0.8rem;font-size:0.92rem;">
+              During his/her stay at this institution, his/her <b>conduct and character were found to be good</b>.
+              He/She has not been involved in any immoral, unethical, or unlawful activity.
+              He/She has always shown respectful behavior towards teachers and fellow students,
+              and has followed all rules and regulations of this school.
+            </p>
+
+            <p style="text-align:justify;margin-bottom:1.2rem;font-size:0.92rem;">
+              This certificate is issued on his/her request for the purpose of
+              <b><span id="cp-purpose">—</span></b>.
+              We wish him/her all the best in his/her future endeavors.
+            </p>
+
+            <!-- Signature Section -->
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:2rem;">
+              <div style="text-align:center;font-size:0.82rem;">
+                <div style="border-top:1px solid #333;width:130px;margin-bottom:4px;"></div>
+                <div>Class Teacher</div>
+                <div style="color:#555;font-size:0.75rem;">Signature</div>
+              </div>
+              <div style="text-align:center;font-size:0.82rem;">
+                <div style="width:70px;height:70px;border:1px dashed #999;display:flex;align-items:center;justify-content:center;font-size:0.65rem;color:#aaa;margin:0 auto 4px;">School<br>Seal</div>
+              </div>
+              <div style="text-align:center;font-size:0.82rem;">
+                <div style="border-top:1px solid #333;width:160px;margin-bottom:4px;"></div>
+                <div id="cp-principal">Principal</div>
+                <div style="color:#555;font-size:0.75rem;">Tharpu Secondary School</div>
+                <div style="color:#555;font-size:0.75rem;">Panchthar, Nepal</div>
+              </div>
+            </div>
+
+            <!-- Footer -->
+            <div style="margin-top:1.5rem;border-top:1px solid #c8922a;padding-top:0.5rem;font-size:0.72rem;color:#888;text-align:center;">
+              This certificate is computer-generated. For verification, contact the school office.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
     <div class="section-card">
       <div class="section-head">📢 Notice Board
         <button class="btn-sm" style="margin-left:auto" onclick="openAddNotice()">＋ Add</button>
@@ -2881,10 +2994,20 @@ function exportShare() {
 
   // Auto-login if session exists
   var savedUser = localStorage.getItem('tss_session_user');
-  if (savedUser && USERS.some(function(u){ return u.username===savedUser; })) {
-    currentUser = savedUser;
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('main-app').style.display     = 'block';
+  if (savedUser) {
+    var matchedSaved = USERS.find(function(u){ return u.username===savedUser; });
+    if (matchedSaved) {
+      currentUser = savedUser;
+      teacherAssignments = loadTeacherAssignments();
+      loadApprovalData();
+      loadMarksFromStorage().then(function() {
+        _showMainApp(matchedSaved);
+      }).catch(function() {
+        loadMarksFromStorageFallback();
+        _showMainApp(matchedSaved);
+      });
+      return; // Exit early, _showMainApp will call render functions
+    }
   }
 
   renderStudentList();
@@ -5303,6 +5426,94 @@ function saveEditDobRegno() {
   renderStudentList();
   try { loadGradeSheet(); } catch(e) {}
 }
+
+// ============================================================
+// CHARACTER CERTIFICATE
+// ============================================================
+function populateCertStudentSelect() {
+  var sel = document.getElementById('cert-student-sel');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">-- Choose Student --</option>';
+  students.forEach(function(s){
+    sel.innerHTML += '<option value="'+s.roll+'">'+s.name+' (Roll: '+s.roll+')</option>';
+  });
+}
+
+function loadCertStudent() {
+  // Auto-hide preview when changing student
+  document.getElementById('cert-preview-area').style.display = 'none';
+}
+
+function previewCharCert() {
+  var roll = document.getElementById('cert-student-sel').value;
+  if (!roll) { showToast('⚠️ Please select a student first.'); return; }
+  var st = students.find(function(s){ return s.roll === roll; });
+  if (!st) return;
+
+  var dateBS = document.getElementById('cert-date-bs').value.trim() || '—';
+  var dateAD = document.getElementById('cert-date-ad').value.trim();
+  var certNo  = document.getElementById('cert-number').value.trim() || 'TSS/CC/2082/—';
+  var purpose = document.getElementById('cert-purpose').value.trim() || 'General Purpose';
+  var principal = document.getElementById('cert-principal').value.trim() || 'Principal';
+
+  // Combined date display
+  var dateDisplay = dateBS + (dateAD ? ' (A.D.: ' + dateAD + ')' : '');
+
+  // Fill certificate fields
+  document.getElementById('cp-name').textContent    = st.name;
+  document.getElementById('cp-roll').textContent    = st.roll;
+  document.getElementById('cp-regno').textContent   = st.regno || '—';
+  document.getElementById('cp-dob-bs').textContent  = st.dobbs || '—';
+  document.getElementById('cp-dob-ad').textContent  = st.dobad || '—';
+  document.getElementById('cp-stream').textContent  = st.stream || '—';
+  document.getElementById('cp-year').textContent    = st.year   || '2082/83';
+  document.getElementById('cp-cert-no').textContent = certNo;
+  document.getElementById('cp-date').textContent    = dateDisplay;
+  document.getElementById('cp-purpose').textContent = purpose;
+  document.getElementById('cp-principal').textContent = principal;
+
+  // Father/Mother placeholders (if not stored, use dash)
+  document.getElementById('cp-father').textContent  = st.father || '—';
+  document.getElementById('cp-mother').textContent  = st.mother || '—';
+  document.getElementById('cp-gender-text').textContent = st.gender === 'Female' ? 'daughter' : 'son/daughter';
+
+  document.getElementById('cert-preview-area').style.display = 'block';
+  document.getElementById('cert-preview-area').scrollIntoView({behavior:'smooth'});
+}
+
+function printCharCert() {
+  var area = document.getElementById('cert-printable');
+  if (!area || document.getElementById('cert-preview-area').style.display === 'none') {
+    showToast('⚠️ Please preview the certificate first.');
+    return;
+  }
+  var printWin = window.open('', '_blank', 'width=800,height=700');
+  printWin.document.write('<!DOCTYPE html><html><head><title>Character Certificate</title><style>'+
+    'body{margin:0;padding:20px;font-family:"Times New Roman",Times,serif;color:#111;}'+
+    '@page{size:A4;margin:15mm;}'+
+    '@media print{body{padding:0;}}'+
+    'b{font-weight:bold;}'+
+    '</style></head><body>'+area.outerHTML+'</body></html>');
+  printWin.document.close();
+  setTimeout(function(){ printWin.print(); }, 500);
+}
+
+// Patch showTab to populate cert select when navigating to character-cert
+(function(){
+  var _origShowTab2 = window.showTab;
+  window.showTab = function(id, btn) {
+    if (typeof _origShowTab2 === 'function') _origShowTab2(id, btn);
+    if (id === 'character-cert') {
+      populateCertStudentSelect();
+      // Set today's date suggestion
+      var dateEl = document.getElementById('cert-date-bs');
+      if (dateEl && !dateEl.value) dateEl.value = '2082/02/15';
+      var dateAdEl = document.getElementById('cert-date-ad');
+      var now = new Date();
+      if (dateAdEl && !dateAdEl.value) dateAdEl.value = now.getFullYear()+'/'+(now.getMonth()+1<10?'0':'')+(now.getMonth()+1)+'/'+now.getDate();
+    }
+  };
+})();
 </script>
 <div class="modal-overlay" id="edit-dob-regno-modal">
   <div class="modal-box" style="max-width:380px">
