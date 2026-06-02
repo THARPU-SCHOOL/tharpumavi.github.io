@@ -1609,7 +1609,7 @@ function doLogin() {
   });
 }
 
-function _showMainApp(matched) {
+function _showMainApp(matched) {sessionStorage.setItem('tss_session_active', '1');
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('main-app').style.display     = 'block';
   try { renderStudentList(); } catch(e){}
@@ -3107,9 +3107,10 @@ function exportShare() {
     } catch(e){}
   }
 
-  // Auto-login if session exists
+// Auto-login if session exists AND page was not refreshed from a new URL open
   var savedUser = localStorage.getItem('tss_session_user');
-  if (savedUser) {
+  var sessionValid = sessionStorage.getItem('tss_session_active'); // only lives for the browser tab
+  if (savedUser && sessionValid) {
     var matchedSaved = USERS.find(function(u){ return u.username===savedUser; });
     if (matchedSaved) {
       currentUser = savedUser;
