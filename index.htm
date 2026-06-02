@@ -566,7 +566,6 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
         </div>
       </div>
       <button class="btn-login" id="btn-signin" onclick="doLogin()">&#128275; Sign In</button>
-      <button type="button" style="width:100%;padding:0.6rem;background:transparent;color:var(--text-muted);border:1.5px solid var(--border);border-radius:9px;font-size:0.88rem;font-weight:600;cursor:pointer;margin-top:8px;transition:background 0.2s;" onmouseover="this.style.background='var(--cream-dark)'" onmouseout="this.style.background='transparent'" onclick="document.getElementById('inp-user').value='guest';document.getElementById('inp-pass').value='guest@123';doLogin();">&#128100; Sign In as Guest</button>
       <p class="login-hint">Contact your school administrator for login credentials.<br><span style="font-size:0.72rem;opacity:0.7">Guest: <b>guest</b> / <b>guest@123</b> (view only)</span></p>
     </div>
 
@@ -1634,23 +1633,11 @@ function _showMainApp(matched) {sessionStorage.setItem('tss_session_active', '1'
 document.getElementById('inp-pass').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
 document.getElementById('inp-user').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('inp-pass').focus(); });
 
-// ── Auto-resume saved session ──
+// ── Always show login screen ──
 (function(){
-  if (_savedSession) {
-    USERS = loadUsers();
-    var found = USERS.find(function(u){ return u.username === _savedSession; });
-    if (found) {
-      currentUser = found.username;
-      teacherAssignments = loadTeacherAssignments();
-      loadApprovalData();
-      loadMarksFromStorage().then(function(){ _showMainApp(found); }).catch(function(){ loadMarksFromStorageFallback(); _showMainApp(found); });
-      return;
-    }
-  }
-  // No saved session — show login
+  localStorage.removeItem('tss_session_user');
   document.getElementById('login-screen').style.display = 'flex';
 })();
-
 // ── Guest mode restrictions ──
 function applyGuestRestrictions() {
   // Inject banner
