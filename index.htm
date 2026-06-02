@@ -566,7 +566,8 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
         </div>
       </div>
       <button class="btn-login" id="btn-signin" onclick="doLogin()">&#128275; Sign In</button>
-      <p class="login-hint">Contact your school administrator for login credentials.</p>
+      <button type="button" style="width:100%;padding:0.6rem;background:transparent;color:var(--text-muted);border:1.5px solid var(--border);border-radius:9px;font-size:0.88rem;font-weight:600;cursor:pointer;margin-top:8px;transition:background 0.2s;" onmouseover="this.style.background='var(--cream-dark)'" onmouseout="this.style.background='transparent'" onclick="document.getElementById('inp-user').value='guest';document.getElementById('inp-pass').value='guest@123';doLogin();">&#128100; Sign In as Guest</button>
+      <p class="login-hint">Contact your school administrator for login credentials.<br><span style="font-size:0.72rem;opacity:0.7">Guest: <b>guest</b> / <b>guest@123</b> (view only)</span></p>
     </div>
 
     <!-- REGISTER PANEL -->
@@ -1295,6 +1296,40 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
 
   <!-- SYNC DEVICES TAB -->
   <div class="tab-panel" id="tab-sync">
+    <!-- NEW: Terminal Transfer Panel -->
+    <div class="section-card" style="border:2px solid var(--maroon);margin-bottom:1rem;">
+      <div class="section-head" style="background:linear-gradient(135deg,var(--maroon),#9e2e2e);">🖥️ Terminal-to-Terminal Result Transfer</div>
+      <div class="section-body">
+        <div class="info-box" style="background:#fff8e1;border-color:#c8922a;color:#5d3f00;">
+          <b>🔄 Transfer results between any two computers/terminals.</b> Use the same Room ID on both. Push from one terminal → Pull from any other terminal instantly — no USB, no email needed.
+        </div>
+        <div class="form-group">
+          <label>🔑 Transfer Room ID <small style="font-weight:400;text-transform:none">(both terminals must use same ID)</small></label>
+          <div style="display:flex;gap:8px;">
+            <input type="text" id="transfer-room-id" value="tharpu-transfer-2082" placeholder="e.g. tharpu-transfer-2082" style="font-family:monospace;flex:1;">
+            <button class="btn btn-secondary" onclick="var r=Math.random().toString(36).slice(2,8);document.getElementById('transfer-room-id').value='room-'+r;document.getElementById('fb-room-id').value='room-'+r;showToast('🔑 New Room ID generated!');" title="Generate random ID" style="padding:0.62rem 0.9rem;white-space:nowrap;">🎲 New ID</button>
+          </div>
+        </div>
+        <div id="transfer-status" style="min-height:28px;font-size:0.82rem;padding:6px 0;color:var(--text-muted);">Status: Not connected — click Push or Pull to begin.</div>
+        <div class="btn-row">
+          <button class="btn btn-primary" style="flex:1" onclick="terminalPush()">⬆️ Push ALL Results to Cloud</button>
+          <button class="btn btn-success" style="flex:1" onclick="terminalPull()">⬇️ Pull Results from Cloud</button>
+        </div>
+        <div class="btn-row" style="margin-top:6px;">
+          <button class="btn btn-secondary" onclick="terminalLiveSync()">🔴 Live Sync (Auto)</button>
+          <button class="btn btn-gold" onclick="terminalExportLocal()">💾 Export Full Backup (.json)</button>
+          <button class="btn btn-secondary" onclick="document.getElementById('terminal-import-file').click()">📂 Import from File</button>
+          <input type="file" id="terminal-import-file" accept=".json" style="display:none" onchange="terminalImportFile(this)">
+        </div>
+        <div style="margin-top:0.8rem;background:var(--cream);border-radius:8px;padding:0.7rem 0.9rem;font-size:0.78rem;color:var(--text-muted);">
+          <b>📋 Steps for terminal-to-terminal:</b><br>
+          1. Open this app on <b>Terminal A</b> → Set same Room ID on both → Click <b>Push</b><br>
+          2. Open this app on <b>Terminal B</b> → Set same Room ID → Click <b>Pull</b><br>
+          3. Or click <b>Live Sync</b> on both — changes appear automatically in real-time ✅
+        </div>
+      </div>
+    </div>
+
     <div class="section-card" style="border:2px solid #4caf50;">
       <div class="section-head" style="background:linear-gradient(135deg,#1a6e2e,#2e7d32);">📲 Cross-Device Sync — Share Marks Across Phone &amp; Laptop</div>
       <div class="section-body">
@@ -1468,6 +1503,7 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
 var DEFAULT_USERS = [
   {username:"admin",        password:"tharpu2082", role:"admin",          fullname:"Administrator"},
   {username:"teacher",      password:"school123",  role:"teacher",        fullname:"Class Teacher"},
+  {username:"guest",        password:"guest@123",  role:"guest",          fullname:"Guest Viewer"},
   // Plant Science subject teachers
   {username:"eng_teacher",  password:"eng123",     role:"subject_teacher", fullname:"English Teacher",            subject:"Compulsory English"},
   {username:"nep_teacher",  password:"nep123",     role:"subject_teacher", fullname:"Nepali Teacher",             subject:"Compulsory Nepali"},
@@ -1509,7 +1545,8 @@ function saveUsers(arr) {
   try { localStorage.setItem('tss_users', JSON.stringify(arr)); } catch(e){}
 }
 var USERS = loadUsers();
-var currentUser = localStorage.getItem('tss_session_user') || 'guest';
+var _savedSession = localStorage.getItem('tss_session_user');
+var currentUser = null; // always null until login is completed
 
 // ============================================================
 // LOGIN / REGISTER
@@ -1579,21 +1616,75 @@ function _showMainApp(matched) {
   try { populateStudentSelects(); } catch(e){}
   try { updateSummary(); } catch(e){}
   var role = matched.role || 'teacher';
-  var roleLabel = role==='admin' ? '👑 Admin' : role==='subject_teacher' ? '👩‍🏫 Subject Teacher' : '📚 Teacher';
+  var roleLabel = role==='admin' ? '👑 Admin' : role==='subject_teacher' ? '👩‍🏫 Subject Teacher' : role==='guest' ? '👁 Guest' : '📚 Teacher';
   showToast('Welcome, ' + (matched.fullname || matched.username) + '! ' + roleLabel);
   // Show/hide Teacher Portal based on role
   updateNavForRole(role);
   // Update notification badge for pending approvals
   setTimeout(updateNotifBadge, 300);
+  // Guest mode: show read-only banner and hide write controls
+  if (role === 'guest') {
+    applyGuestRestrictions();
+  } else {
+    removeGuestRestrictions();
+  }
 }
 
 // Enter key support — placed after doLogin is defined
 document.getElementById('inp-pass').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
 document.getElementById('inp-user').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('inp-pass').focus(); });
 
+// ── Auto-resume saved session ──
+(function(){
+  if (_savedSession) {
+    USERS = loadUsers();
+    var found = USERS.find(function(u){ return u.username === _savedSession; });
+    if (found) {
+      currentUser = found.username;
+      teacherAssignments = loadTeacherAssignments();
+      loadApprovalData();
+      loadMarksFromStorage().then(function(){ _showMainApp(found); }).catch(function(){ loadMarksFromStorageFallback(); _showMainApp(found); });
+      return;
+    }
+  }
+  // No saved session — show login
+  document.getElementById('login-screen').style.display = 'flex';
+})();
+
+// ── Guest mode restrictions ──
+function applyGuestRestrictions() {
+  // Inject banner
+  var banner = document.getElementById('guest-banner');
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.id = 'guest-banner';
+    banner.style.cssText = 'background:#fff8e1;border-bottom:2px solid #f0c96e;padding:8px 14px;font-size:0.8rem;color:#5d3f00;text-align:center;font-weight:600;position:sticky;top:56px;z-index:99;';
+    banner.innerHTML = '👁 <b>Guest Mode</b> — View only. Enter marks, edit students, and export are disabled. <button onclick="doLogout()" style="margin-left:10px;background:var(--maroon);color:white;border:none;border-radius:6px;padding:3px 10px;cursor:pointer;font-size:0.78rem;">Switch Account</button>';
+    var header = document.querySelector('.app-header');
+    if (header && header.nextSibling) header.parentNode.insertBefore(banner, header.nextSibling);
+    else document.getElementById('main-app').prepend(banner);
+  }
+  // Hide write-action buttons
+  document.querySelectorAll('.btn-primary, .btn-success, .btn-danger, .btn-gold').forEach(function(btn){
+    if (btn.textContent.match(/save|enter|add|delete|lock|export|import|push|pull|sync|register|upload|backup|restore|post|send/i)) {
+      btn.dataset.guestHidden = '1';
+      btn.style.display = 'none';
+    }
+  });
+}
+function removeGuestRestrictions() {
+  var banner = document.getElementById('guest-banner');
+  if (banner) banner.remove();
+  document.querySelectorAll('[data-guest-hidden="1"]').forEach(function(btn){
+    btn.style.display = '';
+    delete btn.dataset.guestHidden;
+  });
+}
+
 function doLogout() {
-  currentUser = 'guest';
+  currentUser = null;
   localStorage.removeItem('tss_session_user');
+  removeGuestRestrictions();
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('main-app').style.display     = 'none';
   document.getElementById('inp-user').value = '';
@@ -1840,18 +1931,27 @@ function updateNavForRole(role) {
   // Subject teachers: only show Teacher Portal and their relevant tabs
   var isSubjectTeacher = (role === 'subject_teacher');
   var isAdminOrTeacher = (role === 'admin' || role === 'teacher');
+  var isGuest = (role === 'guest');
   // Show/hide admin-only tabs
   var adminTabs = ['marks-approval', 'settings'];
   adminTabs.forEach(function(tabId) {
     var btn = document.querySelector('[onclick*="showTab(\''+tabId+'\'"]');
     if (btn) btn.style.display = isAdminOrTeacher ? '' : 'none';
   });
+  // Guest: hide write-heavy tabs
+  if (isGuest) {
+    ['marks','register','teacher-portal','marks-approval','settings','sync'].forEach(function(tabId){
+      var btn = document.querySelector('[onclick*="showTab(\''+tabId+'\'"]');
+      if (btn) btn.style.display = 'none';
+    });
+  }
   // Always show teacher-portal tab
   // Update header user display
   var hdrUser = document.getElementById('hdr-user');
   if (hdrUser) {
     var u = USERS.find(function(x){ return x.username===currentUser; });
-    hdrUser.textContent = (u ? (u.fullname||u.username) : currentUser) + (isSubjectTeacher ? ' 👩‍🏫' : isAdminOrTeacher ? ' 👑' : '');
+    var roleIcon = isGuest ? ' 👁' : isSubjectTeacher ? ' 👩‍🏫' : isAdminOrTeacher ? ' 👑' : '';
+    hdrUser.textContent = (u ? (u.fullname||u.username) : currentUser) + roleIcon;
   }
 }
 
@@ -2185,7 +2285,9 @@ function getMySubject() {
 
 function isAdmin() {
   var u = USERS.find(function(x){ return x.username===currentUser; });
-  return !u || u.role==='admin' || u.role==='teacher';
+  if (!u) return false;
+  if (u.role==='guest') return false;
+  return u.role==='admin' || u.role==='teacher';
 }
 
 function renderTeacherAssignmentsTable() {
@@ -5395,6 +5497,174 @@ function fbEnableLiveSync() {
       try { document.getElementById('auto-remind-toggle').checked = localStorage.getItem('tss_auto_remind')==='1'; } catch(e){}
     }
   };
+})();
+
+// ═══════════════════════════════════════════════════════
+//  TERMINAL-TO-TERMINAL RESULT TRANSFER
+// ═══════════════════════════════════════════════════════
+var _terminalLiveSyncOff = null;
+
+function getTransferRoomId() {
+  var el = document.getElementById('transfer-room-id');
+  var v = (el ? el.value.trim() : '') || 'tharpu-transfer-2082';
+  // Keep fb-room-id in sync
+  var fbEl = document.getElementById('fb-room-id');
+  if (fbEl) fbEl.value = v;
+  return v.replace(/[.#$\[\]]/g,'_');
+}
+
+function setTransferStatus(msg, type) {
+  var el = document.getElementById('transfer-status');
+  if (!el) return;
+  var colors = {ok:'#1a6e2e', danger:'#b71c1c', warn:'#7d4e00', info:'#0d47a1'};
+  el.innerHTML = '<span style="font-weight:600;color:'+(colors[type]||'var(--text-muted)')+'">'+msg+'</span>';
+  // Also update Firebase status
+  var fbEl = document.getElementById('fb-status');
+  if (fbEl) fbEl.innerHTML = el.innerHTML;
+}
+
+function buildTransferPayload() {
+  // Full snapshot: marks + extra students + attendance + fees + notices + settings
+  var payload = {
+    v: 3,
+    marks: marksData,
+    students: (function(){ try { return JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){ return []; } })(),
+    attendance: attData,
+    fees: (function(){ try { return JSON.parse(localStorage.getItem('tss_fees')||'{}'); } catch(e){ return {}; } })(),
+    notices: (function(){ try { return JSON.parse(localStorage.getItem('tss_notices')||'[]'); } catch(e){ return []; } })(),
+    settings: schoolSettings,
+    pushedBy: currentUser,
+    pushedAt: new Date().toISOString(),
+    device: navigator.userAgent.substring(0, 60)
+  };
+  return payload;
+}
+
+function applyTransferPayload(data, silent) {
+  if (!data) return 0;
+  var markCount = Object.keys(data.marks||{}).length;
+  Object.assign(marksData, data.marks||{});
+  // Merge extra students
+  var extra = [];
+  try { extra = JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){}
+  (data.students||[]).forEach(function(s){
+    if (!extra.some(function(e){ return e.roll===s.roll; })) extra.push(s);
+    if (!students.some(function(e){ return e.roll===s.roll; })) students.push(s);
+  });
+  try { localStorage.setItem('tss_extra_students', JSON.stringify(extra)); } catch(e){}
+  // Attendance
+  if (data.attendance) { Object.assign(attData, data.attendance); try { localStorage.setItem('tss_attendance', JSON.stringify(attData)); } catch(e){} }
+  // Fees
+  if (data.fees) { try { var ef = JSON.parse(localStorage.getItem('tss_fees')||'{}'); Object.assign(ef, data.fees); localStorage.setItem('tss_fees', JSON.stringify(ef)); } catch(e){} }
+  // Notices
+  if (data.notices && data.notices.length) { try { localStorage.setItem('tss_notices', JSON.stringify(data.notices)); } catch(e){} }
+  saveMarksToStorage().then(function(){
+    renderStudentList();
+    try { populateStudentSelects(); } catch(e){}
+    updateSummary();
+    if (!silent && typeof showToast === 'function') showToast('📥 '+markCount+' mark records pulled from terminal!');
+  });
+  return markCount;
+}
+
+function terminalPush() {
+  if (!fbInit()) { setTransferStatus('❌ Firebase not ready — ensure network access.', 'danger'); return; }
+  setTransferStatus('⏳ Pushing all data to cloud...', 'info');
+  var payload = buildTransferPayload();
+  var room = getTransferRoomId();
+  _fbDB.ref('schools/' + room).set(payload).then(function() {
+    var cnt = Object.keys(payload.marks||{}).length;
+    setTransferStatus('✅ Pushed '+cnt+' mark records + attendance + fees to cloud! Room: '+room, 'ok');
+    addAudit('Transfer', 'Terminal push: '+cnt+' records by '+currentUser+' to room '+room);
+    if (typeof showToast==='function') showToast('⬆️ Results pushed to cloud!');
+  }).catch(function(e) {
+    setTransferStatus('❌ Push failed: '+e.message, 'danger');
+  });
+}
+
+function terminalPull() {
+  if (!fbInit()) { setTransferStatus('❌ Firebase not ready.', 'danger'); return; }
+  setTransferStatus('⏳ Pulling data from cloud...', 'info');
+  var room = getTransferRoomId();
+  _fbDB.ref('schools/' + room).once('value').then(function(snap) {
+    var data = snap.val();
+    if (!data) { setTransferStatus('⚠️ No data found for Room ID: '+room, 'warn'); return; }
+    var cnt = Object.keys(data.marks||{}).length;
+    var st = (data.students||[]).length;
+    if (!confirm('Pull from cloud?\n\n• '+cnt+' mark records\n• '+st+' students\n• Attendance, fees, notices\n\nPushed by: '+(data.pushedBy||'unknown')+'\nAt: '+(data.pushedAt||'unknown')+'\n\nExisting local data will be MERGED (nothing deleted).')) return;
+    var loaded = applyTransferPayload(data);
+    setTransferStatus('✅ Pulled '+loaded+' mark records from Room: '+room+' (by '+data.pushedBy+' at '+new Date(data.pushedAt||Date.now()).toLocaleTimeString()+')', 'ok');
+    addAudit('Transfer', 'Terminal pull: '+loaded+' records by '+currentUser+' from room '+room);
+  }).catch(function(e) {
+    setTransferStatus('❌ Pull failed: '+e.message, 'danger');
+  });
+}
+
+function terminalLiveSync() {
+  if (!fbInit()) { setTransferStatus('❌ Firebase not ready.', 'danger'); return; }
+  if (_terminalLiveSyncOff) {
+    _terminalLiveSyncOff(); _terminalLiveSyncOff = null;
+    setTransferStatus('⏹️ Live sync disabled.', 'info');
+    if (typeof showToast==='function') showToast('⏹️ Live sync off');
+    return;
+  }
+  var room = getTransferRoomId();
+  setTransferStatus('🔴 Live sync ACTIVE on Room: '+room+' — watching for changes...', 'ok');
+  if (typeof showToast==='function') showToast('🔴 Live sync enabled!');
+  var ref = _fbDB.ref('schools/' + room);
+  var handler = ref.on('value', function(snap) {
+    var data = snap.val();
+    if (!data) return;
+    var changed = JSON.stringify(data.marks) !== JSON.stringify(marksData);
+    if (changed && data.pushedBy && data.pushedBy !== currentUser) {
+      var cnt = applyTransferPayload(data, true);
+      setTransferStatus('🔄 Auto-synced '+cnt+' records from '+data.pushedBy+' at '+new Date().toLocaleTimeString(), 'ok');
+      if (typeof showToast==='function') showToast('🔄 Live sync: '+cnt+' marks from '+data.pushedBy);
+    }
+  });
+  _terminalLiveSyncOff = function() { ref.off('value', handler); };
+}
+
+function terminalExportLocal() {
+  var backup = buildTransferPayload();
+  backup.exportedBy = currentUser;
+  backup.exportedAt = new Date().toISOString();
+  var blob = new Blob([JSON.stringify(backup, null, 2)], {type:'application/json;charset=utf-8'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'Tharpu_Results_Transfer_'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
+  addAudit('Transfer', 'Local export downloaded by '+currentUser);
+  showToast('💾 Transfer file downloaded!');
+}
+
+function terminalImportFile(input) {
+  if (!input.files || !input.files[0]) return;
+  if (!confirm('Import transfer file? Existing data will be MERGED (nothing deleted).')) { input.value=''; return; }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      var data = JSON.parse(e.target.result);
+      if (!data.marks) { showToast('❌ Invalid transfer file'); return; }
+      var cnt = applyTransferPayload(data);
+      setTransferStatus('✅ Imported '+cnt+' mark records from file.', 'ok');
+      addAudit('Transfer', 'File import: '+cnt+' records by '+currentUser);
+      showToast('✅ '+cnt+' marks imported from file!');
+    } catch(ex) { showToast('❌ Import failed: '+ex.message); }
+    input.value = '';
+  };
+  reader.readAsText(input.files[0]);
+}
+
+// Keep transfer-room-id and fb-room-id in sync
+(function(){
+  var ti = document.getElementById('transfer-room-id');
+  var fi = document.getElementById('fb-room-id');
+  if (ti && fi) {
+    ti.addEventListener('input', function(){ fi.value = ti.value; });
+    fi.addEventListener('input', function(){ ti.value = fi.value; });
+  }
 })();
 
 // ── Edit DOB / Reg No ──
