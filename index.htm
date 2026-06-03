@@ -566,6 +566,7 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
         </div>
       </div>
       <button class="btn-login" id="btn-signin" onclick="doLogin()">&#128275; Sign In</button>
+      <button type="button" style="width:100%;padding:0.6rem;background:transparent;color:var(--text-muted);border:1.5px solid var(--border);border-radius:9px;font-size:0.88rem;font-weight:600;cursor:pointer;margin-top:8px;transition:background 0.2s;" onmouseover="this.style.background='var(--cream-dark)'" onmouseout="this.style.background='transparent'" onclick="document.getElementById('inp-user').value='guest';document.getElementById('inp-pass').value='guest@123';doLogin();">&#128100; Sign In as Guest</button>
       <p class="login-hint">Contact your school administrator for login credentials.<br><span style="font-size:0.72rem;opacity:0.7">Guest: <b>guest</b> / <b>guest@123</b> (view only)</span></p>
     </div>
 
@@ -791,7 +792,7 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
           <select id="marks-exam-sel" onchange="loadMarksForm()">
             <option value="First Terminal">First Terminal</option>
             <option value="Second Terminal">Second Terminal</option>
-            <option value="Annual Examination">Annual Examination</option>
+            <option value="Annual Examination" selected>Annual Examination</option>
             <option value="Pre-board">Pre-board</option>
           </select>
         </div>
@@ -810,7 +811,7 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
           <select id="result-exam-sel" onchange="loadGradeSheet()">
             <option value="First Terminal">First Terminal</option>
             <option value="Second Terminal">Second Terminal</option>
-            <option value="Annual Examination">Annual Examination</option>
+            <option value="Annual Examination" selected>Annual Examination</option>
             <option value="Pre-board">Pre-board</option>
           </select>
         </div>
@@ -937,33 +938,68 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
     <div class="section-card">
       <div class="section-head">📜 Character Certificate Generator</div>
       <div class="section-body">
-        <div class="form-group">
-          <label>Select Student</label>
-          <select id="cert-student-sel" onchange="loadCertStudent()">
-            <option value="">-- Choose Student --</option>
-          </select>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
+          <div class="form-group" style="margin-bottom:0">
+            <label>Select Student</label>
+            <select id="cert-student-sel" onchange="loadCertStudent()" style="width:100%">
+              <option value="">-- Choose Student --</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label>Certificate Number</label>
+            <input type="text" id="cert-number" placeholder="e.g. TSS/CC/2082/001">
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label>Issue Date (B.S.)</label>
+            <input type="text" id="cert-date-bs" placeholder="e.g. 2082/02/15">
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label>Issue Date (A.D.)</label>
+            <input type="text" id="cert-date-ad" placeholder="e.g. 2025/05/29">
+          </div>
         </div>
-        <div class="form-group">
-          <label>Issue Date (B.S.)</label>
-          <input type="text" id="cert-date-bs" placeholder="e.g. 2082/02/15">
-        </div>
-        <div class="form-group">
-          <label>Issue Date (A.D.)</label>
-          <input type="text" id="cert-date-ad" placeholder="e.g. 2025/05/29">
-        </div>
-        <div class="form-group">
-          <label>Certificate Number</label>
-          <input type="text" id="cert-number" placeholder="e.g. TSS/CC/2082/001">
-        </div>
-        <div class="form-group">
+        <div class="form-group" style="margin-top:0.7rem">
           <label>Purpose / Reason for Certificate</label>
-          <input type="text" id="cert-purpose" placeholder="e.g. Higher Education / Employment / General Purpose">
+          <select id="cert-purpose-sel" onchange="var v=this.value;var ci=document.getElementById('cert-purpose');if(v!=='custom'){ci.value=v;ci.style.display='none';}else{ci.value='';ci.style.display='block';ci.focus();}">
+            <option value="Higher Education Admission">Higher Education Admission</option>
+            <option value="University Enrollment">University Enrollment</option>
+            <option value="Scholarship Application">Scholarship Application</option>
+            <option value="Employment / Job Application">Employment / Job Application</option>
+            <option value="Passport / Visa Application">Passport / Visa Application</option>
+            <option value="Bank Account Opening">Bank Account Opening</option>
+            <option value="General Purpose">General Purpose</option>
+            <option value="custom">✏️ Custom...</option>
+          </select>
+          <input type="text" id="cert-purpose" value="Higher Education Admission" placeholder="Enter custom purpose..." style="display:none;margin-top:6px;">
         </div>
-        <div class="form-group">
-          <label>Principal Name</label>
-          <input type="text" id="cert-principal" value="Mr./Ms. [Principal Name]" placeholder="Full name of principal">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
+          <div class="form-group" style="margin-bottom:0">
+            <label>Conduct / Character Rating</label>
+            <select id="cert-conduct">
+              <option value="good">Good</option>
+              <option value="very good">Very Good</option>
+              <option value="excellent">Excellent</option>
+              <option value="satisfactory">Satisfactory</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label>Attendance % (Optional)</label>
+            <input type="text" id="cert-attendance" placeholder="e.g. 85%" style="width:100%">
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label>Class Teacher Name</label>
+            <input type="text" id="cert-class-teacher" placeholder="e.g. Mr. Ram Prasad Koirala">
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label>Principal Name</label>
+            <input type="text" id="cert-principal" value="" placeholder="Full name of principal">
+          </div>
         </div>
-        <div class="btn-row">
+        <div class="form-group" style="margin-top:0.7rem">
+          <label>Extra-Curricular / Achievements (Optional)</label>
+          <input type="text" id="cert-extra" placeholder="e.g. Participated in Science Exhibition 2081, School Football Team Captain">
+        </div>
+        <div class="btn-row" style="margin-top:0.8rem">
           <button class="btn btn-primary" onclick="previewCharCert()">👁️ Preview Certificate</button>
           <button class="btn btn-gold" onclick="printCharCert()">🖨️ Print Certificate</button>
           <button class="btn btn-success" onclick="exportCertWord()">📄 Export Word</button>
@@ -976,103 +1012,137 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
       <div class="section-card">
         <div class="section-head">👁️ Certificate Preview</div>
         <div class="section-body" style="padding:0;">
-          <div id="cert-printable" style="background:white;padding:1.4rem 1.8rem;font-family:'Times New Roman',Times,serif;color:#111;line-height:1.7;border:4px solid #c00;margin:1rem;position:relative;overflow:hidden;">
+          <div id="cert-printable" style="background:white;padding:1.5rem 2rem;font-family:'Times New Roman',Times,serif;color:#111;line-height:1.7;border:3px double #7B1C1C;margin:1rem;position:relative;overflow:hidden;max-width:720px;margin-left:auto;margin-right:auto;">
 
-            <!-- Inner decorative border -->
-            <div style="position:absolute;inset:7px;border:1.5px solid #c00;pointer-events:none;"></div>
+            <!-- Inner decorative border (double-line style like NEB certs) -->
+            <div style="position:absolute;inset:6px;border:1px solid #c8922a;pointer-events:none;z-index:0;"></div>
+            <div style="position:absolute;inset:10px;border:0.5px solid #e8c88a;pointer-events:none;z-index:0;"></div>
 
-            <!-- Diagonal watermark -->
-            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-35deg);opacity:0.06;pointer-events:none;text-align:center;z-index:0;">
-              <img src="THARPU SECONDARY SCHOOL.jpeg" style="width:300px;height:300px;object-fit:contain;" onerror="this.style.display='none';this.nextSibling.style.display='block'">
-              <div style="display:none;font-size:60px;font-weight:900;color:#7B1C1C;letter-spacing:4px;">TSS</div>
+            <!-- WATERMARK — School emblem, center diagonal -->
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-35deg);pointer-events:none;text-align:center;z-index:0;-webkit-print-color-adjust:exact;print-color-adjust:exact;opacity:1;">
+              <img src="THARPU SECONDARY SCHOOL.jpeg" style="width:320px;height:320px;object-fit:contain;opacity:0.07;-webkit-print-color-adjust:exact;print-color-adjust:exact;" onerror="this.style.display='none';this.nextSibling.style.display='block'">
+              <div style="display:none;font-size:72px;font-weight:900;color:#7B1C1C;letter-spacing:4px;opacity:0.07;-webkit-print-color-adjust:exact;print-color-adjust:exact;">TSS</div>
             </div>
 
-            <!-- Content above watermark -->
+            <!-- Content layer above watermark -->
             <div style="position:relative;z-index:1;">
 
               <!-- TOP ROW: Logo | School Name | Photo Box -->
-              <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:0.4rem;">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:0.5rem;padding-top:4px;">
 
-                <!-- Logo -->
-                <div style="flex-shrink:0;width:78px;height:78px;border-radius:50%;border:2px solid #7B1C1C;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#fff;">
-                  <img src="THARPU SECONDARY SCHOOL.jpeg" style="width:100%;height:100%;object-fit:contain;" onerror="this.style.display='none'">
+                <!-- School Emblem / Logo -->
+                <div style="flex-shrink:0;width:82px;height:82px;border-radius:50%;border:2.5px solid #7B1C1C;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#fff;box-shadow:0 0 0 3px #f5e8c8;">
+                  <img src="THARPU SECONDARY SCHOOL.jpeg" style="width:96%;height:96%;object-fit:contain;border-radius:50%;" onerror="this.style.display='none';this.parentNode.innerHTML='<span style='font-size:1.4rem;font-weight:900;color:#7B1C1C;'>TSS</span>'">
                 </div>
 
-                <!-- School name center -->
-                <div style="flex:1;text-align:center;padding:0 12px;">
-                  <div style="font-size:1.05rem;font-weight:900;letter-spacing:1.5px;color:#7B1C1C;text-transform:uppercase;">THARPU SECONDARY SCHOOL</div>
-                  <div style="font-size:0.78rem;color:#333;margin-top:1px;">Yangwarak-4, Panchthar, Koshi Province, Nepal</div>
-                  <div style="font-size:0.74rem;color:#555;">Affiliated to National Examinations Board (NEB)</div>
-                  <div style="margin:0.4rem auto 0;border-top:2.5px solid #7B1C1C;border-bottom:1px solid #c8922a;padding:3px 0;max-width:320px;">
-                    <span style="font-size:1.1rem;font-weight:900;color:#7B1C1C;font-style:italic;letter-spacing:1px;">Character Certificate</span>
+                <!-- School info center -->
+                <div style="flex:1;text-align:center;padding:0 10px;">
+                  <div style="font-size:1.08rem;font-weight:900;letter-spacing:1.5px;color:#7B1C1C;text-transform:uppercase;line-height:1.2;">THARPU SECONDARY SCHOOL</div>
+                  <div style="font-size:0.75rem;color:#444;margin-top:3px;">Yangwarak-4, Panchthar, Koshi Province, Nepal</div>
+                  <div style="font-size:0.72rem;color:#666;margin-top:1px;">Phone: — &nbsp;|&nbsp; Email: — &nbsp;|&nbsp; Estd: 2030 B.S.</div>
+                  <div style="font-size:0.72rem;color:#555;">Affiliated to National Examinations Board (NEB), Nepal</div>
+                  <!-- Title bar styled like top Nepali colleges -->
+                  <div style="margin:5px auto 0;background:linear-gradient(135deg,#7B1C1C,#9e2e2e);color:white;padding:4px 14px;border-radius:3px;display:inline-block;">
+                    <span style="font-size:1rem;font-weight:900;letter-spacing:2px;font-style:italic;">CHARACTER CERTIFICATE</span>
                   </div>
                 </div>
 
-                <!-- Photo paste box -->
-                <div style="flex-shrink:0;width:80px;height:96px;border:1.5px solid #7B1C1C;display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:#aaa;background:#fafafa;text-align:center;line-height:1.4;">
-                  Paste<br>Photo<br>Here
+                <!-- Photo box — right side -->
+                <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px;">
+                  <div style="width:82px;height:100px;border:1.5px solid #7B1C1C;display:flex;align-items:center;justify-content:center;font-size:0.58rem;color:#aaa;background:#fafafa;text-align:center;line-height:1.5;font-style:italic;">
+                    Paste<br>Passport<br>Photo<br>Here
+                  </div>
+                  <div style="font-size:0.58rem;color:#888;text-align:center;">Affix Photo &amp;<br>School Stamp</div>
                 </div>
 
               </div>
 
-              <!-- S. No. -->
-              <div style="font-size:0.85rem;margin-bottom:0.55rem;">
-                S. No. .............. <b id="cp-cert-no">—</b>
+              <!-- Ref / Serial No row -->
+              <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:0.4rem;border-top:1px solid #d4b896;border-bottom:1px solid #d4b896;padding:3px 0;">
+                <span>Ref. No.: <b id="cp-cert-no">—</b></span>
+                <span>Issue Date: <b><span id="cp-date-bs">—</span></b> B.S. &nbsp;(<b><span id="cp-date">—</span></b> A.D.)</span>
               </div>
 
-              <!-- Body -->
-              <p style="text-align:justify;font-size:0.9rem;margin-bottom:0.5rem;line-height:1.8;">
-                This is to certify that Ms./Mr. <b><u><span id="cp-name">———————————————</span></u></b>,
+              <!-- Salutation line -->
+              <div style="text-align:center;font-size:0.78rem;font-weight:700;color:#7B1C1C;letter-spacing:0.5px;margin:6px 0 8px;">
+                TO WHOMSOEVER IT MAY CONCERN
+              </div>
+
+              <!-- Main body paragraph 1 — student identity -->
+              <p style="text-align:justify;font-size:0.88rem;margin-bottom:0.55rem;line-height:1.85;text-indent:2em;">
+                This is to certify that <b><u><span id="cp-name">———————————</span></u></b>,
                 <span id="cp-gender-text">son/daughter</span> of <b><span id="cp-father">———————————</span></b>
                 and <b><span id="cp-mother">———————————</span></b>,
-                bearing Roll No. <b><span id="cp-roll">———</span></b>,
+                bearing Symbol No. <b><span id="cp-roll">———</span></b> and
                 Registration No. <b><span id="cp-regno">——————————</span></b>,
                 Date of Birth: <b><span id="cp-dob-bs">——————</span></b> B.S.
                 (<b><span id="cp-dob-ad">——————</span></b> A.D.)
-                has been a student of Grade XI (<b><span id="cp-stream">——————</span></b>) of this school
-                for the academic year <b><span id="cp-year">2081/82</span></b>
+                has been a bonafide student of Grade XI (<b><span id="cp-stream">——————</span></b> stream)
+                of this school during the academic year <b><span id="cp-year">2082/83</span></b>,
                 under the National Examinations Board (NEB), Nepal.
               </p>
 
-              <p style="text-align:justify;font-size:0.9rem;margin-bottom:0.5rem;line-height:1.8;">
-                During his/her stay at this institution, his/her conduct and character were found to be <b>good</b>.
-                He/She has not been involved in any immoral, unethical, or unlawful activity and has always
-                maintained respectful behaviour towards teachers and fellow students,
-                following all rules and regulations of this school.
+              <!-- Paragraph 2 — conduct -->
+              <p style="text-align:justify;font-size:0.88rem;margin-bottom:0.55rem;line-height:1.85;text-indent:2em;">
+                During his/her tenure at this institution, his/her conduct and character were observed to be
+                <b><span id="cp-conduct">good</span></b>. He/She has never been involved in any immoral,
+                unethical, or unlawful activities, and has always demonstrated respectful, disciplined behaviour
+                towards the teaching staff, fellow students, and school authorities, abiding by all rules and
+                regulations of this school.
               </p>
 
-              <p style="text-align:justify;font-size:0.9rem;margin-bottom:0.9rem;line-height:1.8;">
-                This certificate is issued on his/her request for the purpose of
+              <!-- Paragraph 3 — extra-curricular (shown only if filled) -->
+              <p id="cp-extra-para" style="text-align:justify;font-size:0.88rem;margin-bottom:0.55rem;line-height:1.85;text-indent:2em;display:none;">
+                He/She has also actively participated in co-curricular and extra-curricular activities:
+                <b><span id="cp-extra"></span></b>.
+              </p>
+
+              <!-- Attendance line (shown only if filled) -->
+              <p id="cp-att-para" style="text-align:justify;font-size:0.88rem;margin-bottom:0.55rem;line-height:1.85;text-indent:2em;display:none;">
+                His/Her attendance during the academic year was recorded as
+                <b><span id="cp-attendance"></span></b>.
+              </p>
+
+              <!-- Paragraph 4 — issuance and purpose -->
+              <p style="text-align:justify;font-size:0.88rem;margin-bottom:0.9rem;line-height:1.85;text-indent:2em;">
+                This certificate is being issued at his/her own request for the purpose of
                 <b><u><span id="cp-purpose">——————————————</span></u></b>.
-                We wish him/her every success in his/her future endeavours.
+                We wish him/her all the best in his/her future academic and professional endeavours.
               </p>
 
-              <!-- Issue Date -->
-              <div style="font-size:0.88rem;margin-bottom:1.5rem;">
-                Issue Date : <b><span id="cp-date-bs">——————</span></b> B.S. &nbsp;&nbsp;
-                ( <b><span id="cp-date">——————</span></b> A.D. )
+              <!-- Signatures row — 3 columns like NEB/college standard -->
+              <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:18px;gap:8px;">
+                <div style="text-align:center;font-size:0.78rem;flex:1;">
+                  <div style="height:44px;"></div>
+                  <div style="border-top:1px solid #444;padding-top:4px;">
+                    <div style="font-weight:700;" id="cp-class-teacher">Class Teacher</div>
+                    <div style="font-size:0.68rem;color:#555;">Class Teacher / Invigilator</div>
+                  </div>
+                </div>
+                <div style="text-align:center;font-size:0.78rem;flex:1;">
+                  <div style="height:44px;display:flex;align-items:flex-end;justify-content:center;">
+                    <!-- School Seal placeholder -->
+                    <div style="width:64px;height:64px;border:1px dashed #999;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.55rem;color:#bbb;line-height:1.3;text-align:center;">School<br>Seal</div>
+                  </div>
+                  <div style="border-top:1px solid #444;padding-top:4px;">
+                    <div style="font-weight:700;">Office Stamp</div>
+                    <div style="font-size:0.68rem;color:#555;">School Seal / Stamp</div>
+                  </div>
+                </div>
+                <div style="text-align:center;font-size:0.78rem;flex:1;">
+                  <div style="height:44px;"></div>
+                  <div style="border-top:1px solid #444;padding-top:4px;">
+                    <div style="font-weight:900;" id="cp-principal">Principal</div>
+                    <div style="font-size:0.68rem;color:#555;">Principal / Head Teacher</div>
+                    <div style="font-size:0.68rem;font-weight:700;color:#7B1C1C;">Tharpu Secondary School</div>
+                  </div>
+                </div>
               </div>
 
-              <!-- 3 Signatures -->
-              <div style="display:flex;justify-content:space-between;align-items:flex-end;">
-                <div style="text-align:center;font-size:0.82rem;min-width:110px;">
-                  <div style="height:40px;"></div>
-                  <div style="border-top:1px solid #333;padding-top:4px;">Prepared by</div>
-                </div>
-                <div style="text-align:center;font-size:0.82rem;min-width:110px;">
-                  <div style="height:40px;"></div>
-                  <div style="border-top:1px solid #333;padding-top:4px;">Checked by</div>
-                </div>
-                <div style="text-align:center;font-size:0.82rem;min-width:130px;">
-                  <div style="height:40px;"></div>
-                  <div style="border-top:1px solid #333;padding-top:4px;"><b id="cp-principal">Principal</b></div>
-                  <div style="font-size:0.72rem;color:#555;">Tharpu Secondary School</div>
-                </div>
-              </div>
-
-              <!-- School Seal -->
-              <div style="text-align:center;margin-top:0.7rem;">
-                <div style="width:62px;height:62px;border:1px dashed #aaa;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:0.6rem;color:#bbb;line-height:1.3;">School<br>Seal</div>
+              <!-- Bottom note strip -->
+              <div style="margin-top:12px;border-top:1px solid #d4b896;padding-top:5px;font-size:0.65rem;color:#888;text-align:center;letter-spacing:0.3px;">
+                This certificate is valid only with the official seal and signature of the authorized school authority.
+                Any alteration or forgery will render it invalid and liable for legal action.
               </div>
 
             </div>
@@ -1193,7 +1263,7 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
           <select id="analytics-exam-sel" onchange="renderAnalytics()">
             <option value="First Terminal">First Terminal</option>
             <option value="Second Terminal">Second Terminal</option>
-            <option value="Annual Examination">Annual Examination</option>
+            <option value="Annual Examination" selected>Annual Examination</option>
             <option value="Pre-board">Pre-board</option>
           </select>
         </div>
@@ -1268,7 +1338,7 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
           <select id="tportal-exam-sel" onchange="renderTeacherMarksEntry()">
             <option value="First Terminal">First Terminal</option>
             <option value="Second Terminal">Second Terminal</option>
-            <option value="Annual Examination">Annual Examination</option>
+            <option value="Annual Examination" selected>Annual Examination</option>
             <option value="Pre-board">Pre-board</option>
           </select>
         </div>
@@ -1464,7 +1534,7 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
           <select id="approval-exam-sel" onchange="renderApprovalPanel()">
             <option value="First Terminal">First Terminal</option>
             <option value="Second Terminal">Second Terminal</option>
-            <option value="Annual Examination">Annual Examination</option>
+            <option value="Annual Examination" selected>Annual Examination</option>
             <option value="Pre-board">Pre-board</option>
           </select>
         </div>
@@ -1564,11 +1634,11 @@ function togglePw(inputId, svgId) {
 }
 
 function switchAuthTab(tab) {
-  document.getElementById('auth-panel-login').style.display    = (tab==='login')    ? 'block' : 'none';
-  document.getElementById('auth-panel-register').style.display = (tab==='register') ? 'block' : 'none';
-  document.getElementById('tab-btn-login').className    = 'auth-tab' + (tab==='login'    ? ' active' : '');
-  document.getElementById('tab-btn-register').className = 'auth-tab' + (tab==='register' ? ' active' : '');
-  document.getElementById('login-error').style.display = 'none';
+  var _apl=document.getElementById('auth-panel-login'); if(_apl) _apl.style.display=(tab==='login')?'block':'none';
+  var _apr=document.getElementById('auth-panel-register'); if(_apr) _apr.style.display=(tab==='register')?'block':'none';
+  var _tbl=document.getElementById('tab-btn-login'); if(_tbl) _tbl.className='auth-tab'+(tab==='login'?' active':'');
+  var _tbr=document.getElementById('tab-btn-register'); if(_tbr) _tbr.className='auth-tab'+(tab==='register'?' active':'');
+  var _le=document.getElementById('login-error'); if(_le) _le.style.display='none';
 }
 
 function doLogin() {
@@ -1608,9 +1678,9 @@ function doLogin() {
   });
 }
 
-function _showMainApp(matched) {sessionStorage.setItem('tss_session_active', '1');
-  document.getElementById('login-screen').style.display = 'none';
-  document.getElementById('main-app').style.display     = 'block';
+function _showMainApp(matched) {
+  var _ls=document.getElementById('login-screen'); if(_ls) _ls.style.display='none';
+  var _ma=document.getElementById('main-app'); if(_ma) _ma.style.display='block';
   try { renderStudentList(); } catch(e){}
   try { populateStudentSelects(); } catch(e){}
   try { updateSummary(); } catch(e){}
@@ -1633,11 +1703,23 @@ function _showMainApp(matched) {sessionStorage.setItem('tss_session_active', '1'
 document.getElementById('inp-pass').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
 document.getElementById('inp-user').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('inp-pass').focus(); });
 
-// ── Always show login screen ──
+// ── Auto-resume saved session ──
 (function(){
-  localStorage.removeItem('tss_session_user');
-  document.getElementById('login-screen').style.display = 'flex';
+  if (_savedSession) {
+    USERS = loadUsers();
+    var found = USERS.find(function(u){ return u.username === _savedSession; });
+    if (found) {
+      currentUser = found.username;
+      teacherAssignments = loadTeacherAssignments();
+      loadApprovalData();
+      loadMarksFromStorage().then(function(){ _showMainApp(found); }).catch(function(){ loadMarksFromStorageFallback(); _showMainApp(found); });
+      return;
+    }
+  }
+  // No saved session — show login
+  var _ls3=document.getElementById('login-screen'); if(_ls3) _ls3.style.display='flex';
 })();
+
 // ── Guest mode restrictions ──
 function applyGuestRestrictions() {
   // Inject banner
@@ -1672,11 +1754,11 @@ function doLogout() {
   currentUser = null;
   localStorage.removeItem('tss_session_user');
   removeGuestRestrictions();
-  document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('main-app').style.display     = 'none';
-  document.getElementById('inp-user').value = '';
-  document.getElementById('inp-pass').value = '';
-  document.getElementById('login-error').style.display = 'none';
+  var _ls2=document.getElementById('login-screen'); if(_ls2) _ls2.style.display='flex';
+  var _ma2=document.getElementById('main-app'); if(_ma2) _ma2.style.display='none';
+  var _iu=document.getElementById('inp-user'); if(_iu) _iu.value='';
+  var _ip=document.getElementById('inp-pass'); if(_ip) _ip.value='';
+  var _le2=document.getElementById('login-error'); if(_le2) _le2.style.display='none';
 }
 
 function checkRegStrength(val) {
@@ -1696,7 +1778,7 @@ function doRegister() {
   var pass  = document.getElementById('reg-pass').value;
   var pass2 = document.getElementById('reg-pass2').value;
   ['err-fullname','err-user','err-pass','err-pass2'].forEach(function(id){
-    document.getElementById(id).style.display='none';
+    var _el=document.getElementById(id); if(_el) _el.style.display='none';
   });
   var ok = true;
   if (!name)         { document.getElementById('err-fullname').style.display='block'; ok=false; }
@@ -1715,7 +1797,7 @@ function doRegister() {
   var msg = document.getElementById('reg-msg');
   msg.textContent = 'Account created for '+name+'! Please sign in.';
   msg.style.cssText = 'display:block;background:#f0fff4;color:#1a6e2e;border:1px solid #b2dfc0;border-radius:8px;padding:0.55rem 0.8rem;font-size:0.85rem;margin-bottom:0.9rem;text-align:center;';
-  document.getElementById('reg-form').style.display = 'none';
+  var _rf=document.getElementById('reg-form'); if(_rf) _rf.style.display='none';
 }
 
 // ============================================================
@@ -2912,7 +2994,7 @@ function exportExcel() {
     var subs=SUBJECTS[stream];
     rows.push('"'+stream+' Stream"');
     var hdr=['SN','Name','Roll No.'];
-    subs.forEach(function(sub){ hdr.push(sub.name+' Grade'); hdr.push(sub.name+' GPA'); });
+    subs.forEach(function(sub){ hdr.push(sub.name+' Grade'); });
     hdr.push('CGPA','Division','Result');
     rows.push(hdr.map(function(h){ return '"'+h+'"'; }).join(','));
     slist.forEach(function(st,i){
@@ -2923,9 +3005,9 @@ function exportExcel() {
         if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
           var t=(d.th||0)+(d.pr||0);
           var gr=getGrade(max>0?t/max*100:0);
-          row.push(gr.g); row.push(gr.gpa.toFixed(1));
+          row.push(gr.g);
           if(gr.g==='NG') ng=true;
-        } else { row.push(''); row.push(''); }
+        } else { row.push(''); }
       });
       // Weighted CGPA: Σ(credit×GPA)/Σ(credit)
       var cr=calcCGPA(subs,saved);
@@ -3094,10 +3176,9 @@ function exportShare() {
     } catch(e){}
   }
 
-// Auto-login if session exists AND page was not refreshed from a new URL open
+  // Auto-login if session exists
   var savedUser = localStorage.getItem('tss_session_user');
-  var sessionValid = sessionStorage.getItem('tss_session_active'); // only lives for the browser tab
-  if (savedUser && sessionValid) {
+  if (savedUser) {
     var matchedSaved = USERS.find(function(u){ return u.username===savedUser; });
     if (matchedSaved) {
       currentUser = savedUser;
@@ -5219,7 +5300,7 @@ function generateSyncQR() {
     area.innerHTML = '<div class="info-box" style="background:#fff3cd;border-color:#f0ad4e;color:#7d4e00">⚠️ Could not generate QR code. Please use Method 3 (Copy-Paste Code) instead.<br><small>Error: '+e.message+'</small></div>';
   }
 
-  document.getElementById('qr-instructions').style.display = 'block';
+  var _qi=document.getElementById('qr-instructions'); if(_qi) _qi.style.display='block';
   showToast('📷 QR code ready — scan with phone!');
 }
 
@@ -5700,7 +5781,7 @@ function populateCertStudentSelect() {
 
 function loadCertStudent() {
   // Auto-hide preview when changing student
-  document.getElementById('cert-preview-area').style.display = 'none';
+  var _cpa=document.getElementById('cert-preview-area'); if(_cpa) _cpa.style.display='none';
 }
 
 function previewCharCert() {
@@ -5709,33 +5790,69 @@ function previewCharCert() {
   var st = students.find(function(s){ return s.roll === roll; });
   if (!st) return;
 
-  var dateBS = document.getElementById('cert-date-bs').value.trim() || '—';
-  var dateAD = document.getElementById('cert-date-ad').value.trim();
-  var certNo  = document.getElementById('cert-number').value.trim() || 'TSS/CC/2082/—';
-  var purpose = document.getElementById('cert-purpose').value.trim() || 'General Purpose';
-  var principal = document.getElementById('cert-principal').value.trim() || 'Principal';
+  // Get form values
+  var dateBS  = (document.getElementById('cert-date-bs')||{}).value||''; dateBS = dateBS.trim() || '—';
+  var dateAD  = (document.getElementById('cert-date-ad')||{}).value||''; dateAD = dateAD.trim();
+  var certNo  = (document.getElementById('cert-number')||{}).value||''; certNo = certNo.trim() || 'TSS/CC/2082/—';
+  // Purpose: prefer custom input if visible, else dropdown
+  var purposeInput = document.getElementById('cert-purpose');
+  var purposeSel   = document.getElementById('cert-purpose-sel');
+  var purpose = (purposeInput && purposeInput.style.display !== 'none' ? purposeInput.value.trim() : (purposeSel ? purposeSel.value : '')) || 'Higher Education Admission';
+  var principal    = (document.getElementById('cert-principal')||{}).value||''; principal = principal.trim() || 'Principal';
+  var conduct      = (document.getElementById('cert-conduct')||{}).value||'good';
+  var attendance   = (document.getElementById('cert-attendance')||{}).value||''; attendance = attendance.trim();
+  var classTeacher = (document.getElementById('cert-class-teacher')||{}).value||''; classTeacher = classTeacher.trim();
+  var extra        = (document.getElementById('cert-extra')||{}).value||''; extra = extra.trim();
 
-  // Fill certificate fields
-  document.getElementById('cp-name').textContent    = st.name;
-  document.getElementById('cp-roll').textContent    = st.roll;
-  document.getElementById('cp-regno').textContent   = st.regno || '—';
-  document.getElementById('cp-dob-bs').textContent  = st.dobbs || '—';
-  document.getElementById('cp-dob-ad').textContent  = st.dobad || '—';
-  document.getElementById('cp-stream').textContent  = st.stream || '—';
-  document.getElementById('cp-year').textContent    = st.year   || '2081/82';
-  document.getElementById('cp-cert-no').textContent = certNo;
-  document.getElementById('cp-date-bs').textContent = dateBS;
-  document.getElementById('cp-date').textContent    = dateAD || '—';
-  document.getElementById('cp-purpose').textContent = purpose;
-  document.getElementById('cp-principal').textContent = principal;
+  // Determine gender-based pronouns
+  var isFemale = (st.gender === 'Female') ||
+    (st.name && /KUMARI|DEVI|MAYA|SITA|LAXMI|BINA|SUNA|PUJA|NITU|BINITA|PRAJU|NILIMA|JENI|SOBHIYA|RITU/i.test(st.name));
+  var genderTxt = isFemale ? 'daughter' : 'son/daughter';
 
-  // Father/Mother placeholders (if not stored, use dash)
-  document.getElementById('cp-father').textContent  = st.father || '—';
-  document.getElementById('cp-mother').textContent  = st.mother || '—';
-  document.getElementById('cp-gender-text').textContent = st.gender === 'Female' ? 'daughter' : 'son/daughter';
+  // Fill standard fields
+  function setTxt(id, val) { var el = document.getElementById(id); if(el) el.textContent = val; }
+  setTxt('cp-name',    st.name);
+  setTxt('cp-roll',    st.roll);
+  setTxt('cp-regno',   st.regno  || '—');
+  setTxt('cp-dob-bs',  st.dobbs  || '—');
+  setTxt('cp-dob-ad',  st.dobad  || '—');
+  setTxt('cp-stream',  st.stream || '—');
+  setTxt('cp-year',    st.year   || '2082/83');
+  setTxt('cp-cert-no', certNo);
+  setTxt('cp-date-bs', dateBS);
+  setTxt('cp-date',    dateAD || '—');
+  setTxt('cp-purpose', purpose);
+  setTxt('cp-principal', principal);
+  setTxt('cp-conduct', conduct);
+  setTxt('cp-father',  st.father || '—');
+  setTxt('cp-mother',  st.mother || '—');
+  setTxt('cp-gender-text', genderTxt);
 
-  document.getElementById('cert-preview-area').style.display = 'block';
-  document.getElementById('cert-preview-area').scrollIntoView({behavior:'smooth'});
+  // Class teacher signature label
+  var ctEl = document.getElementById('cp-class-teacher');
+  if (ctEl) ctEl.textContent = classTeacher || 'Class Teacher';
+
+  // Extra-curricular paragraph (show/hide)
+  var extraPara = document.getElementById('cp-extra-para');
+  var extraSpan = document.getElementById('cp-extra');
+  if (extra) {
+    if (extraSpan) extraSpan.textContent = extra;
+    if (extraPara) extraPara.style.display = 'block';
+  } else {
+    if (extraPara) extraPara.style.display = 'none';
+  }
+
+  // Attendance paragraph (show/hide)
+  var attPara = document.getElementById('cp-att-para');
+  var attSpan = document.getElementById('cp-attendance');
+  if (attendance) {
+    if (attSpan) attSpan.textContent = attendance;
+    if (attPara) attPara.style.display = 'block';
+  } else {
+    if (attPara) attPara.style.display = 'none';
+  }
+
+  var _cpa2=document.getElementById('cert-preview-area'); if(_cpa2){_cpa2.style.display='block';_cpa2.scrollIntoView({behavior:'smooth'});}
 }
 
 function printCharCert() {
@@ -5744,15 +5861,19 @@ function printCharCert() {
     showToast('⚠️ Please preview the certificate first.');
     return;
   }
-  var printWin = window.open('', '_blank', 'width=800,height=700');
-  printWin.document.write('<!DOCTYPE html><html><head><title>Character Certificate</title><style>'+
-    'body{margin:0;padding:20px;font-family:"Times New Roman",Times,serif;color:#111;}'+
-    '@page{size:A4;margin:15mm;}'+
-    '@media print{body{padding:0;}}'+
+  var printWin = window.open('', '_blank', 'width=850,height=1100');
+  printWin.document.write('<!DOCTYPE html><html><head><title>Character Certificate — '+
+    (document.getElementById('cp-name')?document.getElementById('cp-name').textContent:'')+
+    '</title><style>'+
+    '*{box-sizing:border-box;margin:0;padding:0;}'+
+    'body{margin:0;padding:16px;font-family:"Times New Roman",Times,serif;color:#111;background:#fff;}'+
+    '@page{size:A4;margin:12mm;}'+
+    '@media print{body{padding:0;} button{display:none!important;} #cert-printable{margin:0!important;max-width:100%!important;}}'+
     'b{font-weight:bold;}'+
-    '</style></head><body>'+area.outerHTML+'</body></html>');
+    'img{-webkit-print-color-adjust:exact;print-color-adjust:exact;}'+
+    '[style*="opacity"]{-webkit-print-color-adjust:exact;print-color-adjust:exact;}'+
+    '</style></head><body>'+area.outerHTML+'<script>setTimeout(function(){window.print();},600);<\/script></body></html>');
   printWin.document.close();
-  setTimeout(function(){ printWin.print(); }, 500);
 }
 
 function exportCertWord() {
@@ -5782,10 +5903,29 @@ function exportCertWord() {
       populateCertStudentSelect();
       // Set today's date suggestion
       var dateEl = document.getElementById('cert-date-bs');
-      if (dateEl && !dateEl.value) dateEl.value = '2082/02/15';
+      if (dateEl && !dateEl.value) {
+        var bsNow = (typeof getBSDate === 'function') ? getBSDate() : null;
+        dateEl.value = bsNow ? (bsNow.y+'/'+String(bsNow.m).padStart(2,'0')+'/'+String(bsNow.d).padStart(2,'0')) : '2082/02/15';
+      }
       var dateAdEl = document.getElementById('cert-date-ad');
       var now = new Date();
-      if (dateAdEl && !dateAdEl.value) dateAdEl.value = now.getFullYear()+'/'+(now.getMonth()+1<10?'0':'')+(now.getMonth()+1)+'/'+now.getDate();
+      if (dateAdEl && !dateAdEl.value) dateAdEl.value = now.getFullYear()+'/'+(now.getMonth()+1<10?'0':'')+(now.getMonth()+1)+'/'+(now.getDate()<10?'0':'')+now.getDate();
+      // Auto-generate cert number if blank
+      var certNumEl = document.getElementById('cert-number');
+      if (certNumEl && !certNumEl.value) {
+        var bsY = now.getFullYear()+56;
+        try {
+          var allCertNums = JSON.parse(localStorage.getItem('tss_cert_count')||'0');
+          allCertNums++;
+          localStorage.setItem('tss_cert_count', JSON.stringify(allCertNums));
+          certNumEl.value = 'TSS/CC/'+bsY+'/'+String(allCertNums).padStart(3,'0');
+        } catch(e) { certNumEl.value = 'TSS/CC/'+bsY+'/001'; }
+      }
+      // Pre-fill principal from settings
+      var pEl = document.getElementById('cert-principal');
+      if (pEl && !pEl.value && typeof schoolSettings !== 'undefined' && schoolSettings.principal) {
+        pEl.value = schoolSettings.principal;
+      }
     }
   };
 })();
