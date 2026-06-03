@@ -2042,20 +2042,24 @@ function renderStudentList() {
     var profileStatus = (hasDob && hasReg)
       ? '<span class="badge" style="background:#e8f5e9;color:#1b5e20" title="DOB & Reg No set">&#10003; Profile</span>'
       : '<span class="badge" style="background:#fff3e0;color:#e65100" title="DOB or Reg No missing">&#9888; Profile</span>';
-    return '<div class="student-item" style="position:relative">'+
-      '<div style="flex:1;display:flex;align-items:center;gap:10px;cursor:pointer" onclick="quickEnterMarks(\''+s.roll+'\')">'+
-        '<div class="student-avatar">'+initials(s.name)+'</div>'+
-        '<div class="student-info">'+
-          '<div class="student-name">'+s.name+'</div>'+
-          '<div class="student-meta">Roll: <b>'+s.roll+'</b>'+(s.regno?' | Reg: '+s.regno:'')+(s.dobbs?' | DOB(BS): '+s.dobbs:'')+'</div>'+
-        '</div>'+
-      '</div>'+
-      '<span class="badge '+sc+'">'+(s.stream==='Plant Science'?'&#127807; Plant':'&#128218; General')+'</span>'+
-      (hasMarks?'<span class="badge badge-marked">&#10003; Marks</span>':'<span class="badge badge-unmarked">No marks</span>')+
-      profileStatus+
-      '<button onclick="event.stopPropagation();openEditDobRegno(\''+s.roll+'\')" style="background:var(--maroon);color:white;border:none;border-radius:6px;padding:4px 9px;font-size:0.72rem;cursor:pointer;font-weight:600;flex-shrink:0;margin-left:4px">&#9998; Edit</button>'+
-      (s.stream==='General'?'<button onclick="event.stopPropagation();openEditSubjects(\''+s.roll+'\')" style="background:#1565c0;color:white;border:none;border-radius:6px;padding:4px 9px;font-size:0.72rem;cursor:pointer;font-weight:600;flex-shrink:0;margin-left:4px">&#128218; Subjects</button>':'')+
-      '</div>';
+   return '<div class="student-item" style="position:relative;flex-direction:column;align-items:stretch;gap:8px;">'+
+  '<div style="display:flex;align-items:center;gap:10px;cursor:pointer" onclick="quickEnterMarks(\''+s.roll+'\')">'+
+    '<div class="student-avatar">'+initials(s.name)+'</div>'+
+    '<div class="student-info">'+
+      '<div class="student-name">'+s.name+'</div>'+
+      '<div class="student-meta">Roll: <b>'+s.roll+'</b>'+(s.regno?' | Reg: '+s.regno:'')+(s.dobbs?' | DOB(BS): '+s.dobbs:'')+'</div>'+
+    '</div>'+
+    '<span class="badge '+sc+'" style="margin-left:auto;flex-shrink:0">'+(s.stream==='Plant Science'?'&#127807; Plant':'&#128218; General')+'</span>'+
+  '</div>'+
+  '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">'+
+    (hasMarks?'<span class="badge badge-marked">&#10003; Marks</span>':'<span class="badge badge-unmarked">No marks</span>')+
+    profileStatus+
+    '<div style="margin-left:auto;display:flex;gap:6px;flex-wrap:wrap;">'+
+      '<button onclick="event.stopPropagation();openEditDobRegno(\''+s.roll+'\')" style="background:var(--maroon);color:white;border:none;border-radius:6px;padding:5px 11px;font-size:0.75rem;cursor:pointer;font-weight:600;">&#9998; Edit Profile</button>'+
+      (s.stream==='General'?'<button onclick="event.stopPropagation();openEditSubjects(\''+s.roll+'\')" style="background:#1565c0;color:white;border:none;border-radius:6px;padding:5px 11px;font-size:0.75rem;cursor:pointer;font-weight:600;">&#128218; Edit Subjects</button>':'')+
+    '</div>'+
+  '</div>'+
+  '</div>';
   }).join('');
 }
 function quickEnterMarks(roll) {
