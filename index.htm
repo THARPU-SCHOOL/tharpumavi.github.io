@@ -1614,7 +1614,6 @@ function saveUsers(arr) {
   try { localStorage.setItem('tss_users', JSON.stringify(arr)); } catch(e){}
 }
 var USERS = loadUsers();
-var _savedSession = localStorage.getItem('tss_session_user');
 var currentUser = null; // always null until login is completed
 
 // ============================================================
@@ -1665,7 +1664,6 @@ function doLogin() {
   }
   // Valid login — set session
   currentUser = u;
-  try { localStorage.setItem('tss_session_user', u); } catch(e){}
   errEl.style.display = 'none';
   teacherAssignments = loadTeacherAssignments();
   loadApprovalData();
@@ -1703,20 +1701,8 @@ function _showMainApp(matched) {
 document.getElementById('inp-pass').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
 document.getElementById('inp-user').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('inp-pass').focus(); });
 
-// ── Auto-resume saved session ──
+// Auto-login disabled — always show login screen
 (function(){
-  if (_savedSession) {
-    USERS = loadUsers();
-    var found = USERS.find(function(u){ return u.username === _savedSession; });
-    if (found) {
-      currentUser = found.username;
-      teacherAssignments = loadTeacherAssignments();
-      loadApprovalData();
-      loadMarksFromStorage().then(function(){ _showMainApp(found); }).catch(function(){ loadMarksFromStorageFallback(); _showMainApp(found); });
-      return;
-    }
-  }
-  // No saved session — show login
   var _ls3=document.getElementById('login-screen'); if(_ls3) _ls3.style.display='flex';
 })();
 
@@ -3176,24 +3162,7 @@ function exportShare() {
     } catch(e){}
   }
 
-  // Auto-login if session exists
-  var savedUser = localStorage.getItem('tss_session_user');
-  if (savedUser) {
-    var matchedSaved = USERS.find(function(u){ return u.username===savedUser; });
-    if (matchedSaved) {
-      currentUser = savedUser;
-      teacherAssignments = loadTeacherAssignments();
-      loadApprovalData();
-      loadMarksFromStorage().then(function() {
-        _showMainApp(matchedSaved);
-      }).catch(function() {
-        loadMarksFromStorageFallback();
-        _showMainApp(matchedSaved);
-      });
-      return; // Exit early, _showMainApp will call render functions
-    }
-  }
-
+ 
   renderStudentList();
   populateStudentSelects();
   updateSummary();
