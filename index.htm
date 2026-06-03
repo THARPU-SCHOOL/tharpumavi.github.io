@@ -1856,12 +1856,14 @@ var SUBJECTS = {
   "General":[
     {name:"Compulsory English",          thMax:75, prMax:25,credit:4, compulsory:true},
     {name:"Compulsory Nepali",           thMax:75, prMax:25,credit:3, compulsory:true},
-    {name:"Mathematics",                 thMax:100,prMax:0, credit:4},
-    {name:"Accountancy",                 thMax:75, prMax:25,credit:4},
+    {name:"Social Studies & Human Value Education",                 thMax:100,prMax:0, credit:4},
+    {name:"Accounting",                 thMax:75, prMax:25,credit:4},
     {name:"Economics",                   thMax:100,prMax:0, credit:4},
-    {name:"Computer Science",            thMax:75, prMax:25,credit:4},
-    {name:"Social Studies & Life Skills",thMax:75, prMax:25,credit:3},
-    {name:"Health & Physical Education", thMax:50, prMax:50,credit:3}
+    {name:"Business Studies",            thMax:75, prMax:25,credit:4},
+    {name:"Population Studies",thMax:75, prMax:25,credit:3},
+    {name:"Child Development & Learning",thMax:75, prMax:25,credit:3},
+    {name:"Opt. English",thMax:75, prMax:25,credit:3},
+    {name:"Opt. Nepali",thMax:75, prMax:25,credit:3},
   ]
 };
 
@@ -2800,12 +2802,14 @@ var subjectCodes = {
   'Soil Fertility & Nutrient Management':          '8231',
   'Commercial Fruit Crop & Post Harvest Technology':     '8241',
   'Agricultural Entomology':                       '8251',
-  'Mathematics':        '006',
-  'Accountancy':        '221',
+  'Social Studies & Human Value Education':        '006',
+  'Accounting':        '221',
   'Economics':          '219',
-  'Computer Science':   '320',
-  'Social Studies & Life Skills': '010',
-  'Health & Physical Education':  '014'
+  'Population Studies':   '320',
+  'Business Studies': '010',
+  'Child Development & Learning': '010',
+  'Opt. English': '010',
+  'Opt.Nepali':  '014'
 };
 
 var sortedSubs = subs.slice().sort(function(a,b){ return (parseInt(subjectCodes[a.name])||999)-(parseInt(subjectCodes[b.name])||999); });
@@ -5068,10 +5072,14 @@ document.addEventListener('click', function(e){
   var defaultSubjects = [
     {name:'Nepali',        th:75, pr:25, pass:40},
     {name:'English',       th:75, pr:25, pass:40},
-    {name:'Mathematics',   th:75, pr:25, pass:40},
-    {name:'Science',       th:75, pr:25, pass:40},
-    {name:'Social Studies',th:75, pr:25, pass:40},
-    {name:'Optional',      th:75, pr:25, pass:40}
+    {name:'Social Studies and Human Value Education',   th:75, pr:25, pass:40},
+    {name:'Accounting',       th:75, pr:25, pass:40},
+    {name:'Economics',th:75, pr:25, pass:40},
+    {name:'Business Studies',th:75, pr:25, pass:40},
+    {name:'Population Studies',th:75, pr:25, pass:40},
+    {name:'Child Development & Learning',th:75, pr:25, pass:40},
+    {name:'Opt. Nepali',th:75, pr:25, pass:40},
+    {name:'Opt. English',      th:75, pr:25, pass:40}
   ];
 
   function loadSubjects() {
