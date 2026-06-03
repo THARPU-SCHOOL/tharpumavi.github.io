@@ -829,6 +829,8 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
   <button class="btn btn-primary" onclick="window.print()">&#128424; Print</button>
   <button class="btn btn-secondary" onclick="saveResultHTML()">&#11015; Save HTML</button>
   <button class="btn btn-gold" onclick="exportExcel()">&#128202; Export Excel</button>
+  <button class="btn btn-gold" onclick="exportGradePointExcel()">📊 Export GPA &amp; Grade</button>
+<button class="btn btn-gold" onclick="exportTheoryPracticalExcel()">📋 Export Theory/Practical Grades</button>
   <button class="btn btn-success btn-full" style="margin-top:6px" onclick="exportShare()">&#128230; Export &amp; Share File (All Data)</button>
   <button class="btn btn-primary btn-full" style="margin-top:6px;background:#5a1414" onclick="printAllSheets()">&#128438; Bulk Print All Grade Sheets</button>
 </div>
@@ -3051,6 +3053,106 @@ function exportExcel() {
   a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
   a.download='Tharpu_GradeSheet_'+exam.replace(/ /g,'_')+'.csv';
   a.click();
+}
+  // ============================================================
+// EXPORT — Grade Point & Grade per subject
+// ============================================================
+function exportGradePointExcel() {
+  var exam    = document.getElementById('result-exam-sel').value;
+  var streamF = document.getElementById('result-stream-sel').value;
+  var streams = streamF==='all' ? ['Plant Science','General'] : [streamF];
+  var rows    = ['"THARPU SECONDARY SCHOOL"','"'+exam+' — Grade Point & Grade — 2082/83"',''];
+  streams.forEach(function(stream){
+    var slist=students.filter(function(s){ return (streamF==='all'||s.stream===streamF)&&s.stream===stream; });
+    if (!slist.length) return;
+    var subs=SUBJECTS[stream];
+    rows.push('"'+stream+' Stream"');
+    var hdr=['SN','Name','Roll No.'];
+    subs.forEach(function(sub){
+      hdr.push(sub.name+' GP');
+      hdr.push(sub.name+' Grade');
+    });
+    hdr.push('CGPA','Division','Result');
+    rows.push(hdr.map(function(h){ return '"'+h+'"'; }).join(','));
+    slist.forEach(function(st,i){
+      var saved=marksData[getKey(st.roll,exam)]||{};
+      var row=[i+1,st.name,st.roll];
+      subs.forEach(function(sub){
+        var d=saved[sub.name]||{};
+        if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
+          var res=getSubjectResult(d.th||0,d.pr||0,sub.thMax,sub.prMax);
+          row.push(res.gpa!==undefined?res.gpa.toFixed(1):'');
+          row.push(res.grade||'');
+        } else { row.push(''); row.push(''); }
+      });
+      var cr=calcCGPA(subs,saved);
+      var cgpa=cr.allFilled&&cr.totalCredits>0?cr.cgpa.toFixed(2):'';
+      row.push(cgpa);
+      row.push(cr.allFilled?cgpaDiv(parseFloat(cgpa)):'Incomplete');
+      row.push(!cr.allFilled?'Incomplete':cr.anyNG?'Not Graded':'Pass');
+      rows.push(row.map(function(c){ return '"'+c+'"'; }).join(','));
+    });
+    rows.push('');
+  });
+  var csv='\uFEFF'+rows.join('\n');
+  var a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download='Tharpu_GP_Grade_'+exam.replace(/ /g,'_')+'.csv';
+  a.click();
+  showToast('📊 Grade Point & Grade exported!');
+}
+
+// ============================================================
+// EXPORT — Theory Grade & Practical Grade (no marks, grades only)
+// ============================================================
+function exportTheoryPracticalExcel() {
+  var exam    = document.getElementById('result-exam-sel').value;
+  var streamF = document.getElementById('result-stream-sel').value;
+  var streams = streamF==='all' ? ['Plant Science','General'] : [streamF];
+  var rows    = ['"THARPU SECONDARY SCHOOL"','"'+exam+' — Theory & Practical Grades — 2082/83"',''];
+  streams.forEach(function(stream){
+    var slist=students.filter(function(s){ return (streamF==='all'||s.stream===streamF)&&s.stream===stream; });
+    if (!slist.length) return;
+    var subs=SUBJECTS[stream];
+    rows.push('"'+stream+' Stream"');
+    var hdr=['SN','Name','Roll No.'];
+    subs.forEach(function(sub){
+      hdr.push(sub.name+' Th.Grade');
+      if(sub.prMax>0) hdr.push(sub.name+' Pr.Grade');
+      hdr.push(sub.name+' Final Grade');
+    });
+    hdr.push('CGPA','Result');
+    rows.push(hdr.map(function(h){ return '"'+h+'"'; }).join(','));
+    slist.forEach(function(st,i){
+      var saved=marksData[getKey(st.roll,exam)]||{};
+      var row=[i+1,st.name,st.roll];
+      subs.forEach(function(sub){
+        var d=saved[sub.name]||{};
+        if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
+          var res=getSubjectResult(d.th||0,d.pr||0,sub.thMax,sub.prMax);
+          row.push(res.thGrade||'');
+          if(sub.prMax>0) row.push(res.prGrade||'');
+          row.push(res.grade||'');
+        } else {
+          row.push('');
+          if(sub.prMax>0) row.push('');
+          row.push('');
+        }
+      });
+      var cr=calcCGPA(subs,saved);
+      var cgpa=cr.allFilled&&cr.totalCredits>0?cr.cgpa.toFixed(2):'';
+      row.push(cgpa);
+      row.push(!cr.allFilled?'Incomplete':cr.anyNG?'Not Graded':'Pass');
+      rows.push(row.map(function(c){ return '"'+c+'"'; }).join(','));
+    });
+    rows.push('');
+  });
+  var csv='\uFEFF'+rows.join('\n');
+  var a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download='Tharpu_ThPr_Grades_'+exam.replace(/ /g,'_')+'.csv';
+  a.click();
+  showToast('📋 Theory & Practical Grades exported!');
 }
 // ============================================================
 // EXPORT & SHARE — data baked into the HTML file itself
