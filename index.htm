@@ -774,6 +774,8 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
       <button class="filter-tab active" onclick="filterStudents('all',this)">All</button>
       <button class="filter-tab" onclick="filterStudents('Plant Science',this)">&#127807; Plant</button>
       <button class="filter-tab" onclick="filterStudents('General',this)">&#128218; General</button>
+      <button class="filter-tab" onclick="filterStudents('General',this)">&#128218; General</button>
+<button class="btn-sm" style="background:var(--maroon);color:white;border:none;border-radius:7px;padding:6px 13px;font-size:0.8rem;cursor:pointer;font-weight:600;margin-top:8px;width:100%" onclick="openAssignSubjectsPanel()">&#128218; Assign Subjects to General Student</button>
     </div>
     <div class="section-card">
       <div class="section-head">&#128101; Registered Students <span class="count-chip" id="student-count">0</span></div>
@@ -6016,6 +6018,48 @@ function saveEditSubjects() {
     }
   };
 })();
+  // ── ASSIGN SUBJECTS PANEL ──
+function openAssignSubjectsPanel() {
+  var sel = '<select id="assign-sub-student-sel" style="width:100%;padding:0.62rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.93rem;margin-bottom:1rem;">' +
+    '<option value="">-- Select General Student --</option>' +
+    students.filter(function(s){ return s.stream==='General'; }).map(function(s){
+      return '<option value="'+s.roll+'">'+s.name+' ('+s.roll+')</option>';
+    }).join('') +
+    '</select>';
+  var optSubs = SUBJECTS['General'].filter(function(s){ return !s.compulsory; });
+  var checks = optSubs.map(function(sub){
+    return '<label id="assign-lbl-'+sub.name.replace(/\s+/g,'_')+'" style="display:flex;align-items:center;gap:8px;font-size:0.9rem;cursor:pointer;padding:6px 0;border-bottom:1px solid #f0e4cc;">'+
+      '<input type="checkbox" name="assign-opt-sub" value="'+sub.name+'" style="accent-color:var(--maroon);width:17px;height:17px;flex-shrink:0"> '+sub.name+'</label>';
+  }).join('');
+  document.getElementById('assign-subjects-body').innerHTML =
+    '<div class="form-group"><label>Select Student</label>'+sel+'</div>'+
+    '<div style="font-size:0.8rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:6px;">Optional Subjects</div>'+
+    '<div style="background:#e3f2fd;border:1px solid #90caf9;border-radius:8px;padding:0.5rem 0.8rem;font-size:0.78rem;color:#0d47a1;margin-bottom:0.9rem;">Compulsory English & Nepali are always included. Tick optional subjects for this student.</div>'+
+    checks+
+    '<button onclick="saveAssignSubjects()" style="margin-top:1rem;width:100%;padding:0.75rem;background:var(--maroon);color:white;border:none;border-radius:8px;font-size:0.95rem;font-weight:700;cursor:pointer;">&#128190; Save Subjects</button>';
+  document.getElementById('assign-sub-student-sel').onchange = function(){
+    var roll = this.value;
+    if (!roll) return;
+    var chosen = studentOptionals[roll] || SUBJECTS['General'].filter(function(s){ return !s.compulsory; }).map(function(s){ return s.name; });
+    document.querySelectorAll('input[name="assign-opt-sub"]').forEach(function(cb){
+      cb.checked = chosen.indexOf(cb.value) !== -1;
+    });
+  };
+  openModal('assign-subjects-modal');
+}
+function saveAssignSubjects() {
+  var roll = document.getElementById('assign-sub-student-sel').value;
+  if (!roll) { showToast('⚠️ Please select a student first.'); return; }
+  var chosen = [];
+  document.querySelectorAll('input[name="assign-opt-sub"]:checked').forEach(function(cb){ chosen.push(cb.value); });
+  if (!chosen.length) { showToast('⚠️ Please select at least one subject.'); return; }
+  studentOptionals[roll] = chosen;
+  saveStudentOptionals();
+  var st = students.find(function(s){ return s.roll===roll; });
+  showToast('✅ Subjects saved for ' + (st ? st.name : roll));
+  var sel = document.getElementById('marks-student-sel');
+  if (sel && sel.value === roll) loadMarksForm();
+}
 </script>
 <div class="modal-overlay" id="edit-dob-regno-modal">
   <div class="modal-box" style="max-width:380px">
@@ -6045,6 +6089,13 @@ function saveEditSubjects() {
       <button class="btn btn-primary" style="flex:1" onclick="saveEditSubjects()">&#128190; Save</button>
       <button class="btn btn-secondary" onclick="closeModal('edit-subjects-modal')">Cancel</button>
     </div>
+  </div>
+</div>
+  <div class="modal-overlay" id="assign-subjects-modal">
+  <div class="modal-box" style="max-width:420px;max-height:90vh;overflow-y:auto;">
+    <h3>&#128218; Assign Subjects — General Stream</h3>
+    <div id="assign-subjects-body"></div>
+    <button class="btn btn-secondary" style="width:100%;margin-top:0.5rem;" onclick="closeModal('assign-subjects-modal')">Cancel</button>
   </div>
 </div>
 </body>
