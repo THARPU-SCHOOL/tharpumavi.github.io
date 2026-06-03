@@ -3005,7 +3005,7 @@ function exportExcel() {
 // How sharing works:
 //   1. Teacher enters marks → saved in localStorage on their device.
 //   2. Teacher clicks "Export & Share File" → downloads a .html file
-//      that has ALL marks + students embedded as a script block.
+//      that has ALL marks + students embedded as a <script> block.
 //   3. Anyone who opens that .html file (WhatsApp, email, USB, etc.)
 //      sees ALL the saved data immediately — no login needed to VIEW,
 //      and can log in to ADD more marks which then stay on their device.
@@ -4048,20 +4048,6 @@ function exportFeesCSV(){
         <div class="settings-row">
           <div><div class="settings-label">Inline editable gradesheet</div><div class="settings-sub">Edit marks directly in Results tab</div></div>
           <label class="toggle-switch"><input type="checkbox" id="toggle-inline-edit" checked onchange="saveDisplayPrefs()"><span class="toggle-slider"></span></label>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── EXAM RENAME TOOL ── -->
-    <div class="section-card" style="border:2px solid #c8922a;">
-      <div class="section-head" style="background:linear-gradient(135deg,#c8922a,#a07020);">🔁 Move Marks: First Terminal → Annual Examination</div>
-      <div class="section-body">
-        <div class="info-box" style="background:#fff8e1;border-color:#f0c96e;color:#6d4c00;">
-          <b>⚠️ Use once only.</b> This moves all marks saved under <b>First Terminal</b> to <b>Annual Examination</b>. First Terminal will become empty. No marks are lost.
-        </div>
-        <div id="exam-rename-result" style="display:none;margin-bottom:0.7rem;font-size:0.85rem;border-radius:8px;padding:0.6rem 0.9rem;"></div>
-        <div class="btn-row">
-          <button class="btn btn-gold" onclick="renameFirstTerminalToAnnual()">🔁 Move All Marks to Annual Examination</button>
         </div>
       </div>
     </div>
@@ -5966,67 +5952,6 @@ function saveEditSubjects() {
 // Patch buildTransferPayload to include studentOptionals so subject choices sync across devices
 // Patch applyTransferPayload to restore them
 // ─── OPTIONAL SUBJECTS EDITOR ───
-
-// ── EXAM RENAME: First Terminal → Annual Examination ──
-function renameFirstTerminalToAnnual() {
-  var resultEl = document.getElementById('exam-rename-result');
-  var FROM = 'First Terminal';
-  var TO   = 'Annual Examination';
-  var renamed = 0, skipped = 0;
-
-  var keys = Object.keys(marksData);
-  if (!keys.some(function(k){ return k.endsWith('||' + FROM); })) {
-    resultEl.style.cssText = 'display:block;background:#fff3e0;border:1px solid #f0c96e;color:#7d4e00;border-radius:8px;padding:0.6rem 0.9rem;';
-    resultEl.innerHTML = '⚠️ No marks found under <b>' + FROM + '</b>. Nothing to move.';
-    return;
-  }
-  if (!confirm('Move ALL marks from "' + FROM + '" to "' + TO + '"?
-
-First Terminal will become empty. No marks are deleted.
-
-Proceed?')) return;
-
-  keys.forEach(function(k) {
-    if (k.endsWith('||' + FROM)) {
-      var newKey = k.replace('||' + FROM, '||' + TO);
-      if (marksData[newKey] && Object.keys(marksData[newKey]).length > 0) {
-        // Annual Examination already has data — deep merge, FROM wins per subject
-        Object.keys(marksData[k]).forEach(function(sub) {
-          marksData[newKey][sub] = marksData[k][sub];
-        });
-        skipped++;
-      } else {
-        marksData[newKey] = marksData[k];
-        renamed++;
-      }
-      delete marksData[k];
-    }
-  });
-
-  // Also rename locked-grade keys
-  try {
-    var locked = JSON.parse(localStorage.getItem('tss_locked_grades') || '{}');
-    var lChanged = false;
-    Object.keys(locked).forEach(function(k) {
-      if (k.endsWith('||' + FROM)) {
-        var nk = k.replace('||' + FROM, '||' + TO);
-        if (!locked[nk]) locked[nk] = locked[k];
-        delete locked[k]; lChanged = true;
-      }
-    });
-    if (lChanged) localStorage.setItem('tss_locked_grades', JSON.stringify(locked));
-  } catch(e) {}
-
-  saveMarksToStorage().then(function() {
-    updateSummary();
-    renderStudentList();
-    addAudit('Exam Rename', 'Moved ' + (renamed+skipped) + ' records: First Terminal → Annual Examination by ' + currentUser);
-    resultEl.style.cssText = 'display:block;background:#f0fff4;border:1px solid #b2dfc0;color:#1a6e2e;border-radius:8px;padding:0.6rem 0.9rem;';
-    resultEl.innerHTML = '✅ <b>' + (renamed + skipped) + ' student records</b> moved to <b>Annual Examination</b>. First Terminal is now empty.<br>' +
-      '<span style="font-size:0.8rem;color:var(--text-muted)">Go to Results tab → select Annual Examination to verify. Then push to cloud to sync other devices.</span>';
-    showToast('✅ Marks moved to Annual Examination!');
-  });
-}
 
 // Patch showTab to populate cert select when navigating to character-cert
 (function(){
