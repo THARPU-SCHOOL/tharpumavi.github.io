@@ -907,6 +907,11 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
           </div>
         </div>
         <div class="form-group"><label>Academic Year</label><input type="text" id="reg-year" value="2082/83"></div>
+        <!-- Optional subjects for General stream -->
+        <div class="form-group" id="optional-subjects-wrap" style="display:none;">
+          <label>Optional Subjects <small style="text-transform:none;font-weight:400;color:var(--text-muted)">(General stream — tick the subjects this student is enrolled in)</small></label>
+          <div id="optional-subjects-checks" style="display:flex;flex-direction:column;gap:6px;margin-top:4px;"></div>
+        </div>
         <button class="btn btn-primary btn-full" onclick="registerStudent()">&#10133; Add Student</button>
       </div>
     </div>
@@ -1634,20 +1639,10 @@ function _showMainApp(matched) {
 document.getElementById('inp-pass').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
 document.getElementById('inp-user').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('inp-pass').focus(); });
 
-// ── Auto-resume saved session ──
+// ── Auto-login disabled: always require sign-in ──
 (function(){
-  if (_savedSession) {
-    USERS = loadUsers();
-    var found = USERS.find(function(u){ return u.username === _savedSession; });
-    if (found) {
-      currentUser = found.username;
-      teacherAssignments = loadTeacherAssignments();
-      loadApprovalData();
-      loadMarksFromStorage().then(function(){ _showMainApp(found); }).catch(function(){ loadMarksFromStorageFallback(); _showMainApp(found); });
-      return;
-    }
-  }
-  // No saved session — show login
+  // Clear any saved session so the user must sign in every time
+  try { localStorage.removeItem('tss_session_user'); } catch(e){}
   document.getElementById('login-screen').style.display = 'flex';
 })();
 
@@ -1814,8 +1809,8 @@ var SUBJECTS = {
     {name:"Soil Fertility & Nutrient Management",       thMax:50,prMax:50,credit:4}
   ],
   "General":[
-    {name:"Compulsory English",          thMax:75, prMax:25,credit:4},
-    {name:"Compulsory Nepali",           thMax:75, prMax:25,credit:3},
+    {name:"Compulsory English",          thMax:75, prMax:25,credit:4, compulsory:true},
+    {name:"Compulsory Nepali",           thMax:75, prMax:25,credit:3, compulsory:true},
     {name:"Mathematics",                 thMax:100,prMax:0, credit:4},
     {name:"Accountancy",                 thMax:75, prMax:25,credit:4},
     {name:"Economics",                   thMax:100,prMax:0, credit:4},
@@ -1824,6 +1819,22 @@ var SUBJECTS = {
     {name:"Health & Physical Education", thMax:50, prMax:50,credit:3}
   ]
 };
+
+// Per-student optional subject selections (for General stream)
+// Stored as { roll: [subjectName, ...] }
+var studentOptionals = {};
+try { studentOptionals = JSON.parse(localStorage.getItem('tss_student_optionals')||'{}'); } catch(e) {}
+function saveStudentOptionals() {
+  try { localStorage.setItem('tss_student_optionals', JSON.stringify(studentOptionals)); } catch(e) {}
+}
+// Returns the effective subject list for a student
+function getStudentSubjects(st) {
+  if (st.stream !== 'General') return getStudentSubjects(st) || [];
+  var allSubs = SUBJECTS['General'];
+  var chosen = studentOptionals[st.roll];
+  if (!chosen || !chosen.length) return allSubs; // default: all subjects
+  return allSubs.filter(function(sub){ return sub.compulsory || chosen.indexOf(sub.name) !== -1; });
+}
 
 // Helper: get credit hour split for theory/practical based on total credit
 function getCreditSplit(totalCredit, hasPractical) {
@@ -2000,6 +2011,7 @@ function renderStudentList() {
       (hasMarks?'<span class="badge badge-marked">&#10003; Marks</span>':'<span class="badge badge-unmarked">No marks</span>')+
       profileStatus+
       '<button onclick="event.stopPropagation();openEditDobRegno(\''+s.roll+'\')" style="background:var(--maroon);color:white;border:none;border-radius:6px;padding:4px 9px;font-size:0.72rem;cursor:pointer;font-weight:600;flex-shrink:0;margin-left:4px">&#9998; Edit</button>'+
+      (s.stream==='General'?'<button onclick="event.stopPropagation();openEditSubjects(\''+s.roll+'\')" style="background:#1565c0;color:white;border:none;border-radius:6px;padding:4px 9px;font-size:0.72rem;cursor:pointer;font-weight:600;flex-shrink:0;margin-left:4px">&#128218; Subjects</button>':'')+
       '</div>';
   }).join('');
 }
@@ -2029,6 +2041,19 @@ function updateSummary() {
 function selectStream(inp) {
   document.querySelectorAll('.radio-opt').forEach(function(o){ o.classList.remove('selected'); });
   inp.closest('.radio-opt').classList.add('selected');
+  var wrap = document.getElementById('optional-subjects-wrap');
+  var checksEl = document.getElementById('optional-subjects-checks');
+  if (!wrap || !checksEl) return;
+  if (inp.value === 'General') {
+    wrap.style.display = 'block';
+    var optSubs = SUBJECTS['General'].filter(function(s){ return !s.compulsory; });
+    checksEl.innerHTML = optSubs.map(function(sub){
+      return '<label style="display:flex;align-items:center;gap:8px;font-size:0.88rem;cursor:pointer;">'+
+        '<input type="checkbox" name="opt-sub" value="'+sub.name+'" checked style="accent-color:var(--maroon);width:16px;height:16px;"> '+sub.name+'</label>';
+    }).join('');
+  } else {
+    wrap.style.display = 'none';
+  }
 }
 function registerStudent() {
   var name   = document.getElementById('reg-name').value.trim().toUpperCase();
@@ -2041,6 +2066,13 @@ function registerStudent() {
 var dobbs=document.getElementById('reg-dob-bs').value.trim();
 var dobad=document.getElementById('reg-dob-ad').value.trim();
   var newSt={name:name,roll:roll,stream:stream,year:year,regno:regno,dobbs:dobbs,dobad:dobad};
+  // Save optional subject choices for General stream students
+  if (stream === 'General') {
+    var chosen = [];
+    document.querySelectorAll('input[name="opt-sub"]:checked').forEach(function(cb){ chosen.push(cb.value); });
+    studentOptionals[roll] = chosen;
+    saveStudentOptionals();
+  }
   students.push(newSt);
   try {
     var extra=JSON.parse(localStorage.getItem('tss_extra_students')||'[]');
@@ -2076,7 +2108,7 @@ function loadMarksForm() {
   if (!roll) { area.innerHTML=''; return; }
   var st = students.find(function(s){ return s.roll===roll; });
   if (!st) return;
-  var subs  = SUBJECTS[st.stream];
+  var subs  = getStudentSubjects(st);
   var saved = marksData[getKey(roll,exam)] || {};
   var rows  = subs.map(function(sub){
     var k    = sub.name.replace(/\W/g,'_');
@@ -2153,7 +2185,7 @@ function saveMarks(roll,exam) {
   // NOTE: This is wrapped by the Sync Devices module below.
   // The wrapper handles the save + reminder. This base version is kept for reference only.
   var st   = students.find(function(s){ return s.roll===roll; });
-  var subs = SUBJECTS[st.stream];
+  var subs = getStudentSubjects(st);
   var obj  = {};
   subs.forEach(function(sub){
     var k    = sub.name.replace(/\W/g,'_');
@@ -2551,7 +2583,7 @@ function renderResultStats() {
   var topStudents=[];
 
   stList.forEach(function(st){
-    var subs = SUBJECTS[st.stream]||[];
+    var subs = getStudentSubjects(st)||[];
     var saved = marksData[getKey(st.roll,exam)]||{};
     // Count grade distribution separately (doesn't affect CGPA)
     var anyNG=false;
@@ -2695,7 +2727,7 @@ function cgpaDiv(cgpa) {
 function showIndividualSheet(roll,exam) {
   var st=students.find(function(s){ return s.roll===roll; });
   if (!st) return;
-  var subs=SUBJECTS[st.stream];
+  var subs=getStudentSubjects(st);
   var saved=marksData[getKey(roll,exam)]||{};
 
   // Credit hours per subject — use sub.credit from SUBJECTS definition
@@ -2934,7 +2966,7 @@ function exportExcel() {
     var subs=SUBJECTS[stream];
     rows.push('"'+stream+' Stream"');
     var hdr=['SN','Name','Roll No.'];
-    subs.forEach(function(sub){ hdr.push(sub.name+' Grade'); hdr.push(sub.name+' GPA'); });
+    subs.forEach(function(sub){ hdr.push(sub.name+' Grade'); });
     hdr.push('CGPA','Division','Result');
     rows.push(hdr.map(function(h){ return '"'+h+'"'; }).join(','));
     slist.forEach(function(st,i){
@@ -2945,9 +2977,9 @@ function exportExcel() {
         if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
           var t=(d.th||0)+(d.pr||0);
           var gr=getGrade(max>0?t/max*100:0);
-          row.push(gr.g); row.push(gr.gpa.toFixed(1));
+          row.push(gr.g);
           if(gr.g==='NG') ng=true;
-        } else { row.push(''); row.push(''); }
+        } else { row.push(''); }
       });
       // Weighted CGPA: Σ(credit×GPA)/Σ(credit)
       var cr=calcCGPA(subs,saved);
@@ -2987,7 +3019,7 @@ function printAllSheets(){
   if(!list.length){alert('No students found.');return;}
   var w=window.open('','_blank');
   var pages=list.map(function(st){
-    var subs=SUBJECTS[st.stream],saved=marksData[getKey(st.roll,exam)]||{};
+    var subs=getStudentSubjects(st),saved=marksData[getKey(st.roll,exam)]||{};
     var totalGP=0,cnt=0,anyNG=false,allFilled=true;
     var rows=subs.map(function(sub){
       var d=saved[sub.name]||{},max=sub.thMax+sub.prMax,credit=sub.credit||4;
@@ -3255,7 +3287,7 @@ function renderAnalytics() {
 
   students.forEach(function(st){
     var saved = marksData[getKey(st.roll, exam)] || {};
-    var subs = SUBJECTS[st.stream];
+    var subs = getStudentSubjects(st);
     var anyNG=false, allFilled=true;
     subs.forEach(function(sub){
       var d=saved[sub.name]||{};
@@ -3546,7 +3578,7 @@ function openStudentProfile(rollOrEl) { var roll = (rollOrEl && typeof rollOrEl 
   exams.forEach(function(exam){
     var saved = marksData[getKey(st.roll, exam)];
     if (!saved) return;
-    var subs = SUBJECTS[st.stream];
+    var subs = getStudentSubjects(st);
     subs.forEach(function(sub){
       var d=saved[sub.name]||{}, max=sub.thMax+sub.prMax;
       if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
@@ -4431,7 +4463,7 @@ function openStudentProfile(rollOrEl) { var roll = (rollOrEl && typeof rollOrEl 
   var cgpaArr = [];
   exams.forEach(function(ex){
     var saved = marksData[getKey(roll,ex)] || {};
-    var subs = SUBJECTS[st.stream];
+    var subs = getStudentSubjects(st);
     var cr = calcCGPA(subs, saved);
     if(cr.allFilled&&cr.totalCredits) cgpaArr.push({ex:ex,cgpa:cr.cgpa});
   });
@@ -4459,7 +4491,7 @@ function openStudentProfile(rollOrEl) { var roll = (rollOrEl && typeof rollOrEl 
     var html = '';
     ['First Terminal','Second Terminal','Annual Examination','Pre-board'].forEach(function(ex){
       var saved = marksData[getKey(roll,ex)] || {};
-      var subs = SUBJECTS[st.stream];
+      var subs = getStudentSubjects(st);
       var cr = calcCGPA(subs, saved);
       if (!cr.totalCredits && !Object.keys(saved).length) return;
       if (!Object.keys(saved).length) return;
@@ -4540,7 +4572,7 @@ function loadGradeSheetEditable() {
   var rankMap = {};
   if (showRank) {
     var cgpaList = filtered.map(function(st){
-      var saved=marksData[getKey(st.roll,exam)]||{}, subs=SUBJECTS[st.stream];
+      var saved=marksData[getKey(st.roll,exam)]||{}, subs=getStudentSubjects(st);
       var cr=calcCGPA(subs,saved);
       return {roll:st.roll, cgpa:cr.allFilled&&cr.totalCredits?cr.cgpa:null};
     }).filter(function(r){return r.cgpa!==null;});
@@ -4662,7 +4694,7 @@ function gsSaveRow(roll, exam) {
   if (isLocked(roll, exam)) { showToast('🔒 Grades are locked. Unlock first.'); return; }
   var st = students.find(function(s){return s.roll===roll;});
   if (!st) return;
-  var subs = SUBJECTS[st.stream];
+  var subs = getStudentSubjects(st);
   var obj = marksData[getKey(roll, exam)] || {};
   var anyInvalid = false;
   subs.forEach(function(sub) {
@@ -4700,7 +4732,7 @@ function gsSaveRow(roll, exam) {
   showToast('✅ Saved: '+st.name);
   // Refresh CGPA display using weighted formula
   var saved2 = marksData[getKey(roll, exam)] || {};
-  var subs2 = SUBJECTS[st.stream];
+  var subs2 = getStudentSubjects(st);
   var cr2 = calcCGPA(subs2, saved2);
   var cgpaEl = document.getElementById('gs-cgpa-'+roll);
   if(cgpaEl) cgpaEl.innerHTML = '<b>'+(cr2.allFilled&&cr2.totalCredits?cr2.cgpa.toFixed(2):'—')+'</b>';
@@ -4725,7 +4757,7 @@ function renderCompare() {
   var st = students.find(function(s){return s.roll===roll;});
   if (!st) return;
   var exams = ['First Terminal','Second Terminal','Annual Examination','Pre-board'];
-  var subs = SUBJECTS[st.stream];
+  var subs = getStudentSubjects(st);
   var html = '';
   // CGPA progression chart
   html += '<div class="compare-card"><h4>📈 CGPA Progression — '+sanitize(st.name)+'</h4>';
@@ -4839,7 +4871,7 @@ function importBatchCSV() {
     var st = students.find(function(s){return s.roll===roll;});
     if (!st) { err++; errors.push('Line '+(i+1)+': Roll "'+sanitize(roll)+'" not found'); return; }
     if (isLocked(roll, exam)) { err++; errors.push('Line '+(i+1)+': Grades locked for '+sanitize(roll)); return; }
-    var subs = SUBJECTS[st.stream];
+    var subs = getStudentSubjects(st);
     var sub = subs.find(function(s){return s.name.toLowerCase()===subName.toLowerCase();});
     if (!sub) { err++; errors.push('Line '+(i+1)+': Subject "'+sanitize(subName)+'" not found'); return; }
     if (isNaN(th)||th<0||th>sub.thMax) { err++; errors.push('Line '+(i+1)+': Invalid theory mark'); return; }
@@ -5160,7 +5192,7 @@ function toggleAutoRemind(on) {
   var _origSaveMarks = window.saveMarks;
   window.saveMarks = function(roll, exam) {
     var st = students.find(function(s){ return s.roll===roll; });
-    var subs = SUBJECTS[st.stream];
+    var subs = getStudentSubjects(st);
     var obj = {};
     subs.forEach(function(sub){
       var k = sub.name.replace(/\W/g,'_');
@@ -5313,7 +5345,15 @@ function importDataCode() {
 function generateShareLink() {
   var code = getDataCode();
   var encoded = encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify({
-    students: (function(){ try { return JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){ return []; } })(),
+    students: (function(){
+      // Send ALL students so registrations on any device sync everywhere
+      var extra = [];
+      try { extra = JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){}
+      // Merge hard-coded students + extras into one deduplicated list
+      var allSt = students.slice();
+      extra.forEach(function(s){ if (!allSt.some(function(e){ return e.roll===s.roll; })) allSt.push(s); });
+      return allSt;
+    })(),
     marks: marksData
   })))));
   var baseURL = window.location.href.split('?')[0].split('#')[0];
@@ -5401,11 +5441,13 @@ function fbPushMarks() {
   // Read existing cloud data first so we MERGE (not overwrite) other teachers' subjects
   fbRoomRef().once('value').then(function(snap) {
     var existing = snap.val() || {};
-    var mergedMarks = {};
-    Object.assign(mergedMarks, existing.marks || {});
-    Object.assign(mergedMarks, marksData); // local wins for same key
+    // Deep-merge: preserves all teachers' subjects per student-exam block
+    var mergedMarks = _deepMergeMarks(existing.marks || {}, marksData);
+    // Include ALL students (hard-coded + extra) so registrations sync everywhere
     var cloudStudents = existing.students || [];
-    extraStudents.forEach(function(s){
+    var allLocalStudents = students.slice();
+    extraStudents.forEach(function(s){ if (!allLocalStudents.some(function(e){ return e.roll===s.roll; })) allLocalStudents.push(s); });
+    allLocalStudents.forEach(function(s){
       if (!cloudStudents.some(function(e){ return e.roll===s.roll; })) cloudStudents.push(s);
     });
     var payload = {
@@ -5415,7 +5457,7 @@ function fbPushMarks() {
       pushedAt: new Date().toISOString(),
       deviceInfo: navigator.userAgent.substring(0,60)
     };
-    return fbRoomRef().set(payload);
+    return fbRoomRef().set(_fbSanitize(payload));
   }).then(function() {
     fbSetStatus('✅ Marks pushed successfully! Available on all devices now. (' + Object.keys(marksData).length + ' records)', 'ok');
     if(typeof showToast==='function') showToast('☁️ Marks synced to cloud!');
@@ -5433,7 +5475,8 @@ function fbPullMarks() {
     var markCount = Object.keys(data.marks||{}).length;
     var stCount = (data.students||[]).length;
     if (!confirm('Pull ' + markCount + ' mark records and ' + stCount + ' students from cloud?\n\nPushed by: ' + (data.pushedBy||'unknown') + '\nAt: ' + (data.pushedAt||'unknown') + '\n\nExisting local marks will be MERGED.')) return;
-    Object.assign(marksData, data.marks||{});
+    // Deep merge so all teachers' subject marks are combined, not overwritten
+    marksData = _deepMergeMarks(marksData, data.marks||{});
     var extra = [];
     try { extra = JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){}
     (data.students||[]).forEach(function(s){
@@ -5545,27 +5588,55 @@ function setTransferStatus(msg, type) {
   if (fbEl) fbEl.innerHTML = el.innerHTML;
 }
 
+// Deep-merge marks: merges subject-level keys so Teacher 1's English + Teacher 2's Physics both survive.
+// A simple Object.assign would overwrite the entire student-exam object when two teachers push.
+function _deepMergeMarks(base, overlay) {
+  var result = {};
+  // copy base
+  Object.keys(base).forEach(function(k){ result[k] = Object.assign({}, base[k]); });
+  // overlay: for each student-exam key, merge subject by subject
+  Object.keys(overlay).forEach(function(k){
+    if (!result[k]) {
+      result[k] = Object.assign({}, overlay[k]);
+    } else {
+      // k is "roll||exam" — value is {SubjectName: {th:x, pr:y}, ...}
+      Object.keys(overlay[k]).forEach(function(subName){
+        result[k][subName] = overlay[k][subName];
+      });
+    }
+  });
+  return result;
+}
+
+function _fbSanitize(obj) {
+  // Firebase rejects any object containing undefined values anywhere in the tree.
+  // Round-trip through JSON removes undefined keys automatically.
+  try { return JSON.parse(JSON.stringify(obj)); } catch(e) { return {}; }
+}
+
 function buildTransferPayload() {
   // Full snapshot: marks + extra students + attendance + fees + notices + settings
   var payload = {
     v: 3,
-    marks: marksData,
+    marks: _fbSanitize(marksData),
     students: (function(){ try { return JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){ return []; } })(),
     attendance: attData,
     fees: (function(){ try { return JSON.parse(localStorage.getItem('tss_fees')||'{}'); } catch(e){ return {}; } })(),
     notices: (function(){ try { return JSON.parse(localStorage.getItem('tss_notices')||'[]'); } catch(e){ return []; } })(),
     settings: schoolSettings,
+    studentOptionals: studentOptionals,
     pushedBy: currentUser,
     pushedAt: new Date().toISOString(),
     device: navigator.userAgent.substring(0, 60)
   };
-  return payload;
+  return _fbSanitize(payload);
 }
 
 function applyTransferPayload(data, silent) {
   if (!data) return 0;
   var markCount = Object.keys(data.marks||{}).length;
-  Object.assign(marksData, data.marks||{});
+  // Deep merge so subject marks from different teachers are combined, not overwritten
+  marksData = _deepMergeMarks(marksData, data.marks||{});
   // Merge extra students
   var extra = [];
   try { extra = JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){}
@@ -5580,6 +5651,11 @@ function applyTransferPayload(data, silent) {
   if (data.fees) { try { var ef = JSON.parse(localStorage.getItem('tss_fees')||'{}'); Object.assign(ef, data.fees); localStorage.setItem('tss_fees', JSON.stringify(ef)); } catch(e){} }
   // Notices
   if (data.notices && data.notices.length) { try { localStorage.setItem('tss_notices', JSON.stringify(data.notices)); } catch(e){} }
+  // Optional subject choices
+  if (data.studentOptionals) {
+    Object.assign(studentOptionals, data.studentOptionals);
+    saveStudentOptionals();
+  }
   saveMarksToStorage().then(function(){
     renderStudentList();
     try { populateStudentSelects(); } catch(e){}
@@ -5597,10 +5673,8 @@ function terminalPush() {
   // Read existing cloud data first so multiple teachers' marks are MERGED, not overwritten
   _fbDB.ref('schools/' + room).once('value').then(function(snap) {
     var existing = snap.val() || {};
-    // Merge marks: cloud first (preserves other teachers), then local on top
-    var mergedMarks = {};
-    Object.assign(mergedMarks, existing.marks || {});
-    Object.assign(mergedMarks, localPayload.marks || {});
+    // Deep-merge marks: preserves all teachers' subjects, no overwriting
+    var mergedMarks = _deepMergeMarks(existing.marks || {}, localPayload.marks || {});
     // Merge students
     var cloudStudents = existing.students || [];
     (localPayload.students || []).forEach(function(s){
@@ -5615,7 +5689,7 @@ function terminalPush() {
       attendance: mergedAtt,
       fees: mergedFees
     });
-    return _fbDB.ref('schools/' + room).set(finalPayload);
+    return _fbDB.ref('schools/' + room).set(_fbSanitize(finalPayload));
   }).then(function() {
     var cnt = Object.keys(localPayload.marks||{}).length;
     setTransferStatus('✅ Pushed '+cnt+' mark records + attendance + fees to cloud! Room: '+room, 'ok');
@@ -5829,6 +5903,40 @@ function exportCertWord() {
   showToast('📄 Word document downloaded!');
 }
 
+// ─── OPTIONAL SUBJECTS EDITOR ───
+var _editSubjectsRoll = null;
+function openEditSubjects(roll) {
+  var st = students.find(function(s){ return s.roll===roll; });
+  if (!st || st.stream !== 'General') { showToast('Optional subjects are for General stream only.'); return; }
+  _editSubjectsRoll = roll;
+  document.getElementById('edit-subjects-name').textContent = st.name;
+  var optSubs = SUBJECTS['General'].filter(function(s){ return !s.compulsory; });
+  var chosen = studentOptionals[roll] || optSubs.map(function(s){ return s.name; }); // default all
+  document.getElementById('edit-subjects-checks').innerHTML = optSubs.map(function(sub){
+    var checked = chosen.indexOf(sub.name) !== -1 ? 'checked' : '';
+    return '<label style="display:flex;align-items:center;gap:8px;font-size:0.9rem;cursor:pointer;padding:4px 0;">'+
+      '<input type="checkbox" name="edit-opt-sub" value="'+sub.name+'" '+checked+' style="accent-color:var(--maroon);width:16px;height:16px;flex-shrink:0"> '+sub.name+'</label>';
+  }).join('');
+  openModal('edit-subjects-modal');
+}
+function saveEditSubjects() {
+  if (!_editSubjectsRoll) return;
+  var chosen = [];
+  document.querySelectorAll('input[name="edit-opt-sub"]:checked').forEach(function(cb){ chosen.push(cb.value); });
+  studentOptionals[_editSubjectsRoll] = chosen;
+  saveStudentOptionals();
+  closeModal('edit-subjects-modal');
+  var st = students.find(function(s){ return s.roll===_editSubjectsRoll; });
+  showToast('✅ Subjects updated for ' + (st ? st.name : _editSubjectsRoll));
+  // Refresh marks form if this student is currently selected
+  var sel = document.getElementById('marks-student-sel');
+  if (sel && sel.value === _editSubjectsRoll) loadMarksForm();
+}
+
+// Patch buildTransferPayload to include studentOptionals so subject choices sync across devices
+// Patch applyTransferPayload to restore them
+// ─── OPTIONAL SUBJECTS EDITOR ───
+
 // Patch showTab to populate cert select when navigating to character-cert
 (function(){
   var _origShowTab2 = window.showTab;
@@ -5858,6 +5966,21 @@ function exportCertWord() {
     <div class="modal-actions">
       <button class="btn btn-primary" style="flex:1" onclick="saveEditDobRegno()">💾 Save</button>
       <button class="btn btn-secondary" onclick="closeModal('edit-dob-regno-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT OPTIONAL SUBJECTS MODAL -->
+<div class="modal-overlay" id="edit-subjects-modal">
+  <div class="modal-box" style="max-width:400px">
+    <h3>&#128218; Optional Subjects — <span id="edit-subjects-name"></span></h3>
+    <div style="background:#e3f2fd;border:1px solid #90caf9;border-radius:8px;padding:0.5rem 0.8rem;font-size:0.78rem;color:#0d47a1;margin-bottom:0.9rem;">
+      Tick the subjects this student is enrolled in. Compulsory subjects are always included.
+    </div>
+    <div id="edit-subjects-checks" style="display:flex;flex-direction:column;gap:8px;margin-bottom:1rem;"></div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" style="flex:1" onclick="saveEditSubjects()">&#128190; Save</button>
+      <button class="btn btn-secondary" onclick="closeModal('edit-subjects-modal')">Cancel</button>
     </div>
   </div>
 </div>
