@@ -1829,7 +1829,7 @@ function saveStudentOptionals() {
 }
 // Returns the effective subject list for a student
 function getStudentSubjects(st) {
-  if (st.stream !== 'General') return getStudentSubjects(st) || [];
+  if (st.stream !== 'General') return SUBJECTS[st.stream] || [];
   var allSubs = SUBJECTS['General'];
   var chosen = studentOptionals[st.roll];
   if (!chosen || !chosen.length) return allSubs; // default: all subjects
@@ -5511,7 +5511,16 @@ function fbEnableLiveSync() {
     var newMarkCount = Object.keys(data.marks||{}).length;
     var changed = JSON.stringify(data.marks) !== JSON.stringify(marksData);
     if (changed && data.pushedBy && data.pushedBy !== currentUser) {
-      Object.assign(marksData, data.marks||{});
+      // Deep merge so each teacher's subject marks are preserved, not overwritten
+      marksData = _deepMergeMarks(marksData, data.marks||{});
+      // Merge students so registrations from any device appear everywhere
+      var extra2 = [];
+      try { extra2 = JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){}
+      (data.students||[]).forEach(function(s){
+        if (!extra2.some(function(e){ return e.roll===s.roll; })) extra2.push(s);
+        if (!students.some(function(e){ return e.roll===s.roll; })) students.push(s);
+      });
+      try { localStorage.setItem('tss_extra_students', JSON.stringify(extra2)); } catch(e){}
       saveMarksToStorage().then(function(){
         renderStudentList(); populateStudentSelects(); updateSummary();
         if(typeof showToast==='function') showToast('🔄 Auto-synced: '+newMarkCount+' marks from '+data.pushedBy);
@@ -5619,7 +5628,14 @@ function buildTransferPayload() {
   var payload = {
     v: 3,
     marks: _fbSanitize(marksData),
-    students: (function(){ try { return JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){ return []; } })(),
+    students: (function(){
+      var extra = [];
+      try { extra = JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){}
+      // Include ALL students (hardcoded + extra) so registrations on any device sync everywhere
+      var allSt = students.slice();
+      extra.forEach(function(s){ if (!allSt.some(function(e){ return e.roll===s.roll; })) allSt.push(s); });
+      return allSt;
+    })(),
     attendance: attData,
     fees: (function(){ try { return JSON.parse(localStorage.getItem('tss_fees')||'{}'); } catch(e){ return {}; } })(),
     notices: (function(){ try { return JSON.parse(localStorage.getItem('tss_notices')||'[]'); } catch(e){ return []; } })(),
