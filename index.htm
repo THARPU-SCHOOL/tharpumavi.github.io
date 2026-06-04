@@ -1889,10 +1889,17 @@ function getStudentSubjects(st) {
 }
 
 // Helper: get credit hour split for theory/practical based on total credit
-function getCreditSplit(totalCredit, hasPractical) {
+function getCreditSplit(totalCredit, hasPractical, thMax, prMax) {
   if (!hasPractical) return {thCredit: totalCredit, prCredit: 0};
   if (totalCredit === 3) return {thCredit: 2.25, prCredit: 0.75};
-  return {thCredit: 3, prCredit: 1}; // 4 CH
+  // 4 CH split depends on the marks ratio
+  if (totalCredit === 4) {
+    // 75/25 split → 2.75 theory, 1.25 practical
+    if (thMax === 75 && prMax === 25) return {thCredit: 2.75, prCredit: 1.25};
+    // 50/50 split → 2 theory, 2 practical
+    if (thMax === 50 && prMax === 50) return {thCredit: 2, prCredit: 2};
+  }
+  return {thCredit: totalCredit * 0.75, prCredit: totalCredit * 0.25};
 }
 
 // CGPA = Σ(Credit × GradePoint) / Σ(Credit) — NEB weighted formula
@@ -1921,7 +1928,7 @@ function calcTheoryGPA(subs, saved) {
     var th = d.th || 0;
     var thPct = sub.thMax > 0 ? th / sub.thMax * 100 : 0;
     var thGR = getGrade(thPct);
-    var split = getCreditSplit(sub.credit || 4, sub.prMax > 0);
+var split = getCreditSplit(sub.credit || 4, sub.prMax > 0, sub.thMax, sub.prMax);
     totalCreditPoints += split.thCredit * thGR.gpa;
     totalCredits += split.thCredit;
   });
@@ -1938,7 +1945,7 @@ function calcPracticalGPA(subs, saved) {
     var pr = d.pr || 0;
     var prPct = sub.prMax > 0 ? pr / sub.prMax * 100 : 0;
     var prGR = getGrade(prPct);
-    var split = getCreditSplit(sub.credit || 4, true);
+var split = getCreditSplit(sub.credit || 4, true, sub.thMax, sub.prMax);
     totalCreditPoints += split.prCredit * prGR.gpa;
     totalCredits += split.prCredit;
   });
@@ -5651,6 +5658,15 @@ function fbPullMarks() {
     if (!confirm('Pull ' + markCount + ' mark records and ' + stCount + ' students from cloud?\n\nPushed by: ' + (data.pushedBy||'unknown') + '\nAt: ' + (data.pushedAt||'unknown') + '\n\nExisting local marks will be MERGED.')) return;
     // Deep merge so all teachers' subject marks are combined, not overwritten
     marksData = _deepMergeMarks(marksData, data.marks||{});
+    // Restore Firebase-sanitized keys
+(function(){
+  var fixed = {};
+  Object.keys(marksData).forEach(function(k){
+    var restored = k.replace(/__/g, '||');
+    fixed[restored] = marksData[k];
+  });
+  marksData = fixed;
+})();
     var extra = [];
     try { extra = JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){}
     (data.students||[]).forEach(function(s){
@@ -5687,6 +5703,15 @@ function fbEnableLiveSync() {
     if (changed && data.pushedBy && data.pushedBy !== currentUser) {
       // Deep merge so each teacher's subject marks are preserved, not overwritten
       marksData = _deepMergeMarks(marksData, data.marks||{});
+      // Restore Firebase-sanitized keys
+(function(){
+  var fixed = {};
+  Object.keys(marksData).forEach(function(k){
+    var restored = k.replace(/__/g, '||');
+    fixed[restored] = marksData[k];
+  });
+  marksData = fixed;
+})();
       // Merge students so registrations from any device appear everywhere
       var extra2 = [];
       try { extra2 = JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){}
@@ -5797,7 +5822,7 @@ function _fbSanitize(obj) {
     if (o === null || typeof o !== 'object' || Array.isArray(o)) return o;
     var out = {};
     Object.keys(o).forEach(function(k) {
-      var safeKey = k.replace(/[.#$\/\[\]|]/g, '_');
+      var safeKey = k.replace(/[.#$\/\[\]|]g, '_');
       out[safeKey] = sanitizeKeys(o[k]);
     });
     return out;
@@ -5835,6 +5860,15 @@ function applyTransferPayload(data, silent) {
   var markCount = Object.keys(data.marks||{}).length;
   // Deep merge so subject marks from different teachers are combined, not overwritten
   marksData = _deepMergeMarks(marksData, data.marks||{});
+  // Restore Firebase-sanitized keys: "roll__exam" → "roll||exam"
+(function(){
+  var fixed = {};
+  Object.keys(marksData).forEach(function(k){
+    var restored = k.replace(/__/g, '||');
+    fixed[restored] = marksData[k];
+  });
+  marksData = fixed;
+})();
   // Merge extra students
   var extra = [];
   try { extra = JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){}
