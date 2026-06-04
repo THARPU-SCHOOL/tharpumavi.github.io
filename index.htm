@@ -5609,9 +5609,10 @@ function fbPushMarks() {
     allLocalStudents.forEach(function(s){
       if (!cloudStudents.some(function(e){ return e.roll===s.roll; })) cloudStudents.push(s);
     });
-    var payload = {
+  var payload = {
       marks: mergedMarks,
       students: cloudStudents,
+      studentOptionals: studentOptionals,
       pushedBy: currentUser,
       pushedAt: new Date().toISOString(),
       deviceInfo: navigator.userAgent.substring(0,60)
