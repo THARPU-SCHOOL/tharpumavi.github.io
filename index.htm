@@ -15,68 +15,72 @@
 <script>
   // Firebase will be initialized lazily when the Sync tab is used.
   // This prevents network failures from blocking the login screen.
+  // ── Firebase lazy-loader ──
+  // _firebaseReadyCallbacks: list of resolve() functions waiting for SDK
   var _firebaseReadyCallbacks = [];
-  function ensureFirebaseReady() {
-  return new Promise(function(resolve) {
-    // If already loaded, resolve immediately
-    if (typeof firebase !== 'undefined' && firebase.apps && firebase.database) {
-      return resolve();
-    }
-    
-    // Otherwise, wait for SDK to load
-    _firebaseReadyCallbacks.push(resolve);
-    
-    
+  var _firebaseSDKLoading = false;
 
-  function _onFirebaseReady(cb) {
-    if (typeof firebase !== 'undefined' && firebase.apps) { cb(); }
-    else { _firebaseReadyCallbacks.push(cb); }
-  }
- function _loadFirebaseSDK() {
-  if (typeof firebase !== 'undefined') {
-    // Already loaded - trigger callbacks immediately
-    _firebaseReadyCallbacks.forEach(function(cb){ try{cb();}catch(e){} });
-    _firebaseReadyCallbacks = [];
-    return;
-  }
-  
-  var s1 = document.createElement('script');
-  s1.src = 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js';
-  s1.onload = function() {
-    var s2 = document.createElement('script');
-    s2.src = 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js';
-    s2.onload = function() {
-      try {
-        if (!firebase.apps.length) {
-          firebase.initializeApp({
-            apiKey: "AIzaSyAUggBXJWKO0FbVG2QaRhfI-0AysduuOnA",
-            authDomain: "tharpu-mavi.firebaseapp.com",
-            databaseURL: "https://tharpu-mavi-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "tharpu-mavi",
-            storageBucket: "tharpu-mavi.appspot.com",
-            messagingSenderId: "716386428782",
-            appId: "1:716386428782:web:c380a8fa0402be9206037f"
-          });
-        }
-      } catch(e) { console.error('Firebase init error:', e); }
-      
-      // CRITICAL: Trigger all waiting callbacks
+  function _loadFirebaseSDK() {
+    if (_firebaseSDKLoading) return;   // already in-flight
+    _firebaseSDKLoading = true;
+
+    if (typeof firebase !== 'undefined') {
+      // Already available — fire all callbacks immediately
       _firebaseReadyCallbacks.forEach(function(cb){ try{cb();}catch(e){} });
       _firebaseReadyCallbacks = [];
-    };
-    s2.onerror = function() { 
-      console.warn('Firebase database SDK failed to load.'); 
-      _firebaseReadyCallbacks = []; // Clear to prevent infinite wait
-    };
-    document.head.appendChild(s2);
-  };
-  s1.onerror = function() { 
-    console.warn('Firebase app SDK failed to load.'); 
-    _firebaseReadyCallbacks = [];
-  };
-  document.head.appendChild(s1);
-}
+      return;
+    }
 
+    var FB_CFG = {
+      apiKey: "AIzaSyAUggBXJWKO0FbVG2QaRhfI-0AysduuOnA",
+      authDomain: "tharpu-mavi.firebaseapp.com",
+      databaseURL: "https://tharpu-mavi-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "tharpu-mavi",
+      storageBucket: "tharpu-mavi.appspot.com",
+      messagingSenderId: "716386428782",
+      appId: "1:716386428782:web:c380a8fa0402be9206037f"
+    };
+
+    var s1 = document.createElement('script');
+    s1.src = 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js';
+    s1.onload = function() {
+      var s2 = document.createElement('script');
+      s2.src = 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js';
+      s2.onload = function() {
+        try {
+          if (!firebase.apps.length) {
+            firebase.initializeApp(FB_CFG);
+          }
+        } catch(e) { console.error('Firebase init error:', e); }
+        // Fire all waiting promises
+        _firebaseReadyCallbacks.forEach(function(cb){ try{cb();}catch(e){} });
+        _firebaseReadyCallbacks = [];
+      };
+      s2.onerror = function() {
+        console.warn('Firebase database SDK failed to load.');
+        _firebaseReadyCallbacks = [];
+        _firebaseSDKLoading = false;
+      };
+      document.head.appendChild(s2);
+    };
+    s1.onerror = function() {
+      console.warn('Firebase app SDK failed to load.');
+      _firebaseReadyCallbacks = [];
+      _firebaseSDKLoading = false;
+    };
+    document.head.appendChild(s1);
+  }
+
+  // Returns a Promise that resolves once Firebase SDK + DB are ready
+  function ensureFirebaseReady() {
+    return new Promise(function(resolve) {
+      if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length && firebase.database) {
+        return resolve();
+      }
+      _firebaseReadyCallbacks.push(resolve);
+      _loadFirebaseSDK();   // ← this was missing — actually kick off the load
+    });
+  }
 </script>
 <title>Tharpu Secondary School — Result Management System</title>
 <style>
@@ -794,7 +798,6 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
     <div class="filter-tabs">
       <button class="filter-tab active" onclick="filterStudents('all',this)">All</button>
       <button class="filter-tab" onclick="filterStudents('Plant Science',this)">&#127807; Plant</button>
-      <button class="filter-tab" onclick="filterStudents('General',this)">&#128218; General</button>
       <button class="filter-tab" onclick="filterStudents('General',this)">&#128218; General</button>
 <button class="btn-sm" style="background:var(--maroon);color:white;border:none;border-radius:7px;padding:6px 13px;font-size:0.8rem;cursor:pointer;font-weight:600;margin-top:8px;width:100%" onclick="openAssignSubjectsPanel()">&#128218; Assign Subjects to General Student</button>
     </div>
@@ -5685,6 +5688,7 @@ async function fbPushMarks() {
     var payload = {
       marks: mergedMarks,
       students: cloudStudents,
+      studentOptionals: Object.assign({}, (existing.studentOptionals||{}), studentOptionals),
       pushedBy: currentUser,
       pushedAt: new Date().toISOString(),
       deviceInfo: navigator.userAgent.substring(0,60)
@@ -5720,6 +5724,11 @@ async function fbPullMarks() {
       if (!students.some(function(e){ return e.roll===s.roll; })) students.push(s);
     });
     try { localStorage.setItem('tss_extra_students', JSON.stringify(extra)); } catch(e){}
+    // Restore optional subject assignments for General stream
+    if (data.studentOptionals) {
+      Object.assign(studentOptionals, data.studentOptionals);
+      saveStudentOptionals();
+    }
     saveMarksToStorage().then(function(){
       renderStudentList(); populateStudentSelects(); updateSummary();
       fbSetStatus('✅ Pulled ' + markCount + ' mark records from cloud! Last synced by: ' + (data.pushedBy||'unknown'), 'ok');
@@ -5730,8 +5739,8 @@ async function fbPullMarks() {
   });
 }
 
-function fbEnableLiveSync() {
-  if (!fbInit()) return;
+async function fbEnableLiveSync() {
+  if (!(await fbInit())) return;
   if (_fbLiveSyncOff) {
     _fbLiveSyncOff(); _fbLiveSyncOff = null;
     fbSetStatus('⏹️ Live sync disabled.', 'info');
@@ -5757,6 +5766,11 @@ function fbEnableLiveSync() {
         if (!students.some(function(e){ return e.roll===s.roll; })) students.push(s);
       });
       try { localStorage.setItem('tss_extra_students', JSON.stringify(extra2)); } catch(e){}
+      // Restore optional subject assignments for General stream
+      if (data.studentOptionals) {
+        Object.assign(studentOptionals, data.studentOptionals);
+        saveStudentOptionals();
+      }
       saveMarksToStorage().then(function(){
         renderStudentList(); populateStudentSelects(); updateSummary();
         if(typeof showToast==='function') showToast('🔄 Auto-synced: '+newMarkCount+' marks from '+data.pushedBy);
@@ -5925,8 +5939,8 @@ function applyTransferPayload(data, silent) {
   return markCount;
 }
 
-function terminalPush() {
-  if (!fbInit()) { setTransferStatus('❌ Firebase not ready — ensure network access.', 'danger'); return; }
+async function terminalPush() {
+  if (!(await fbInit())) { setTransferStatus('❌ Firebase not ready — ensure network access.', 'danger'); return; }
   setTransferStatus('⏳ Pushing all data to cloud...', 'info');
   var localPayload = buildTransferPayload();
   var room = getTransferRoomId();
@@ -5960,8 +5974,8 @@ function terminalPush() {
   });
 }
 
-function terminalPull() {
-  if (!fbInit()) { setTransferStatus('❌ Firebase not ready.', 'danger'); return; }
+async function terminalPull() {
+  if (!(await fbInit())) { setTransferStatus('❌ Firebase not ready.', 'danger'); return; }
   setTransferStatus('⏳ Pulling data from cloud...', 'info');
   var room = getTransferRoomId();
   _fbDB.ref('schools/' + room).once('value').then(function(snap) {
@@ -5978,8 +5992,8 @@ function terminalPull() {
   });
 }
 
-function terminalLiveSync() {
-  if (!fbInit()) { setTransferStatus('❌ Firebase not ready.', 'danger'); return; }
+async function terminalLiveSync() {
+  if (!(await fbInit())) { setTransferStatus('❌ Firebase not ready.', 'danger'); return; }
   if (_terminalLiveSyncOff) {
     _terminalLiveSyncOff(); _terminalLiveSyncOff = null;
     setTransferStatus('⏹️ Live sync disabled.', 'info');
@@ -6245,6 +6259,20 @@ function openAssignSubjectsPanel() {
 function saveAssignSubjects() {
   var roll = document.getElementById('assign-sub-student-sel').value;
   if (!roll) {
+    showToast('⚠️ Please select a student first.');
+    return;
+  }
+  var chosen = [];
+  document.querySelectorAll('input[name="assign-opt-sub"]:checked').forEach(function(cb){ chosen.push(cb.value); });
+  studentOptionals[roll] = chosen;
+  saveStudentOptionals();
+  closeModal('assign-subjects-modal');
+  var st = students.find(function(s){ return s.roll===roll; });
+  showToast('✅ Subjects assigned for ' + (st ? st.name : roll));
+  // Refresh marks form if this student is currently selected
+  var sel = document.getElementById('marks-student-sel');
+  if (sel && sel.value === roll) loadMarksForm();
+}
 
 </script>
 <div class="modal-overlay" id="edit-dob-regno-modal">
