@@ -5582,6 +5582,70 @@ var FB_CONFIG = {
   messagingSenderId: "716386428782",
   appId: "1:716386428782:web:c380a8fa0402be9206037f"
 };
+function setSyncStatus(msg, color) {
+  var el = document.getElementById('sync-status');
+  if (el) el.innerHTML = '<span style="color:' + (color||'#555') + '">' + msg + '</span>';
+}
+
+function cloudSetup() {
+  var apiKey = (document.getElementById('sync-api-key')||{}).value.trim();
+  if (!apiKey) { setSyncStatus('❌ Please enter your JSONBin API Key.', '#b71c1c'); return; }
+  setSyncStatus('⏳ Creating cloud bin...', '#0d47a1');
+  var payload = buildTransferPayload();
+  fetch('https://api.jsonbin.io/v3/b', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Master-Key': apiKey, 'X-Bin-Name': 'TharPu-Results' },
+    body: JSON.stringify(payload)
+  }).then(function(r){ return r.json(); }).then(function(data) {
+    if (!data.metadata || !data.metadata.id) throw new Error(data.message || 'Unknown error');
+    var binId = data.metadata.id;
+    document.getElementById('sync-bin-id').value = binId;
+    try { localStorage.setItem('tss_sync_api_key', apiKey); localStorage.setItem('tss_sync_bin_id', binId); } catch(e){}
+    document.getElementById('sync-indicator').textContent = '🟢 Configured — Bin: ' + binId;
+    setSyncStatus('✅ Cloud bin created! Bin ID: ' + binId + ' — Share this ID + API Key on other devices.', '#1a6e2e');
+    showToast('☁️ Cloud sync configured!');
+  }).catch(function(e) {
+    setSyncStatus('❌ Setup failed: ' + e.message + ' — Check your API Key.', '#b71c1c');
+  });
+}
+
+function cloudPush() {
+  var apiKey = (document.getElementById('sync-api-key')||{}).value.trim() || (function(){ try { return localStorage.getItem('tss_sync_api_key')||''; } catch(e){ return ''; } })();
+  var binId  = (document.getElementById('sync-bin-id') ||{}).value.trim() || (function(){ try { return localStorage.getItem('tss_sync_bin_id') ||''; } catch(e){ return ''; } })();
+  if (!apiKey || !binId) { setSyncStatus('❌ API Key or Bin ID missing — run Setup first.', '#b71c1c'); return; }
+  setSyncStatus('⏳ Uploading to cloud...', '#0d47a1');
+  var payload = buildTransferPayload();
+  fetch('https://api.jsonbin.io/v3/b/' + binId, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', 'X-Master-Key': apiKey },
+    body: JSON.stringify(payload)
+  }).then(function(r){ return r.json(); }).then(function(data) {
+    if (!data.metadata) throw new Error(data.message || 'Unknown error');
+    setSyncStatus('✅ Uploaded ' + Object.keys(payload.marks||{}).length + ' mark records to cloud!', '#1a6e2e');
+    showToast('⬆️ Marks uploaded to cloud!');
+    addAudit('Cloud Sync', 'Push to JSONBin by ' + currentUser);
+  }).catch(function(e) {
+    setSyncStatus('❌ Upload failed: ' + e.message, '#b71c1c');
+  });
+}
+
+function cloudPull() {
+  var apiKey = (document.getElementById('sync-api-key')||{}).value.trim() || (function(){ try { return localStorage.getItem('tss_sync_api_key')||''; } catch(e){ return ''; } })();
+  var binId  = (document.getElementById('sync-bin-id') ||{}).value.trim() || (function(){ try { return localStorage.getItem('tss_sync_bin_id') ||''; } catch(e){ return ''; } })();
+  if (!apiKey || !binId) { setSyncStatus('❌ API Key or Bin ID missing — enter both and try again.', '#b71c1c'); return; }
+  setSyncStatus('⏳ Loading from cloud...', '#0d47a1');
+  fetch('https://api.jsonbin.io/v3/b/' + binId + '/latest', {
+    headers: { 'X-Master-Key': apiKey }
+  }).then(function(r){ return r.json(); }).then(function(data) {
+    if (!data.record) throw new Error(data.message || 'No data found');
+    var cnt = applyTransferPayload(data.record);
+    setSyncStatus('✅ Loaded ' + cnt + ' mark records from cloud!', '#1a6e2e');
+    showToast('📥 ' + cnt + ' marks loaded from cloud!');
+    addAudit('Cloud Sync', 'Pull from JSONBin by ' + currentUser);
+  }).catch(function(e) {
+    setSyncStatus('❌ Load failed: ' + e.message + ' — Check API Key and Bin ID.', '#b71c1c');
+  });
+}  
 function cloudPush() {
   if (!fbInit()) return;
   fbPushMarks();
