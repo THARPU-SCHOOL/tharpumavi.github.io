@@ -1898,8 +1898,27 @@ var SUBJECTS = {
 var studentOptionals = {};
 try { studentOptionals = JSON.parse(localStorage.getItem('tss_student_optionals')||'{}'); } catch(e) {}
 function saveStudentOptionals() {
-  try { localStorage.setItem('tss_student_optionals', JSON.stringify(studentOptionals)); } catch(e) {}
+  try { 
+    var data = JSON.stringify(studentOptionals);
+    localStorage.setItem('tss_student_optionals', data);
+    console.log('✅ studentOptionals saved:', studentOptionals);
+    
+    // Also save to tss_extra_students so it persists across devices
+    var extra = [];
+    try { extra = JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){}
+    extra.forEach(function(st) {
+      if (st.stream === 'General' && studentOptionals[st.roll]) {
+        st.optionalSubjects = studentOptionals[st.roll];
+      }
+    });
+    localStorage.setItem('tss_extra_students', JSON.stringify(extra));
+    
+  } catch(e) {
+    console.error('❌ Failed to save studentOptionals:', e);
+    alert('Failed to save subject choices: ' + e.message);
+  }
 }
+
 // Returns the effective subject list for a student
 function getStudentSubjects(st) {
   if (st.stream !== 'General') return SUBJECTS[st.stream] || [];
@@ -3327,6 +3346,23 @@ function exportShare() {
     // Show the "you opened a shared file" banner
     var banner = document.getElementById('shared-file-banner');
     if (banner) banner.style.display = 'block';
+      // Load student optionals from localStorage AND from students array
+  try { 
+    studentOptionals = JSON.parse(localStorage.getItem('tss_student_optionals')||'{}'); 
+  } catch(e) { 
+    studentOptionals = {}; 
+  }
+  
+  // Also restore from students.optionalSubjects if stored there
+  students.forEach(function(st) {
+    if (st.stream === 'General' && st.optionalSubjects && st.optionalSubjects.length) {
+      studentOptionals[st.roll] = st.optionalSubjects;
+    }
+  });
+  
+  // Re-save to ensure localStorage is synced
+  saveStudentOptionals();
+
   } else {
     // Own device — load from localStorage
     loadMarksFromStorage();
@@ -6208,17 +6244,8 @@ function openAssignSubjectsPanel() {
 }
 function saveAssignSubjects() {
   var roll = document.getElementById('assign-sub-student-sel').value;
-  if (!roll) { showToast('⚠️ Please select a student first.'); return; }
-  var chosen = [];
-  document.querySelectorAll('input[name="assign-opt-sub"]:checked').forEach(function(cb){ chosen.push(cb.value); });
-  if (!chosen.length) { showToast('⚠️ Please select at least one subject.'); return; }
-  studentOptionals[roll] = chosen;
-  saveStudentOptionals();
-  var st = students.find(function(s){ return s.roll===roll; });
-  showToast('✅ Subjects saved for ' + (st ? st.name : roll));
-  var sel = document.getElementById('marks-student-sel');
-  if (sel && sel.value === roll) loadMarksForm();
-}
+  if (!roll) {
+
 </script>
 <div class="modal-overlay" id="edit-dob-regno-modal">
   <div class="modal-box" style="max-width:380px">
