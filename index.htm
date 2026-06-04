@@ -1840,9 +1840,11 @@ var students = [
   } catch(e){}
 })();
 // Credit hour rules (NEB):
-//   Total 3 CH subject: thCredit=2.25, prCredit=0.75
-//   Total 4 CH subject: thCredit=3,    prCredit=1
-//   Total 5 CH subject: thCredit=3.75,    prCredit=1.25
+//   Total 3 CH subject: thCredit=2.25, prCredit=0.75  (75/25 marks split)
+//   Total 4 CH subject (75/25): thCredit=2.75, prCredit=1.25
+//   Total 4 CH subject (50/50): thCredit=2,    prCredit=2
+//   Total 5 CH subject (75/25): thCredit=3.75, prCredit=1.25
+//   Total 5 CH subject (100/0): thCredit=5,    prCredit=0
 // Theory GPA  = Σ(thCredit × thGradePoint) / Σ(thCredit)
 // Practical GPA= Σ(prCredit × prGradePoint) / Σ(prCredit)
 // Final GPA (CGPA) = Σ(totalCredit × finalGradePoint) / Σ(totalCredit)
@@ -1892,14 +1894,19 @@ function getStudentSubjects(st) {
 function getCreditSplit(totalCredit, hasPractical, thMax, prMax) {
   if (!hasPractical) return {thCredit: totalCredit, prCredit: 0};
   if (totalCredit === 3) return {thCredit: 2.25, prCredit: 0.75};
-  // 4 CH split depends on the marks ratio
   if (totalCredit === 4) {
-    // 75/25 split → 2.75 theory, 1.25 practical
     if (thMax === 75 && prMax === 25) return {thCredit: 2.75, prCredit: 1.25};
-    // 50/50 split → 2 theory, 2 practical
     if (thMax === 50 && prMax === 50) return {thCredit: 2, prCredit: 2};
   }
-  return {thCredit: totalCredit * 0.75, prCredit: totalCredit * 0.25};
+  if (totalCredit === 5) {
+    if (thMax === 75 && prMax === 25) return {thCredit: 3.75, prCredit: 1.25};
+    if (thMax === 50 && prMax === 50) return {thCredit: 2.5, prCredit: 2.5};
+  }
+  // Generic fallback: use marks ratio to split credits
+  var total = thMax + prMax;
+  var thCredit = total > 0 ? totalCredit * (thMax / total) : totalCredit;
+  var prCredit = totalCredit - thCredit;
+  return {thCredit: thCredit, prCredit: prCredit};
 }
 
 // CGPA = Σ(Credit × GradePoint) / Σ(Credit) — NEB weighted formula
