@@ -2607,9 +2607,10 @@ function renderApprovalPanel() {
   if (!relevant.length) { html = '<div class="empty-state"><p>No submissions yet for '+exam+' — '+stream+'.</p></div>'; }
   else {
     html = '<table class="marks-table"><thead><tr><th>Teacher</th><th>Exam</th><th>Stream</th><th>Submitted</th><th>Status</th><th>Actions</th></tr></thead><tbody>';
-    relevant.forEach(function(r,i){
+    relevant.forEach(function(r){
+      var realIdx = approvalRequests.indexOf(r);
       var sc = r.status==='approved'?'apr-approved':r.status==='rejected'?'apr-rejected':'apr-pending';
-      var actions = isAdmin() ? '<button class="btn btn-success" style="padding:3px 8px;font-size:0.72rem;margin-right:3px" onclick="approveMarks('+i+')">✓ Approve</button><button class="btn btn-danger" style="padding:3px 8px;font-size:0.72rem" onclick="rejectMarks('+i+')">✗ Reject</button>' : '';
+      var actions = isAdmin() ? '<button class="btn btn-success" style="padding:3px 8px;font-size:0.72rem;margin-right:3px" onclick="approveMarks('+realIdx+')">✓ Approve</button><button class="btn btn-danger" style="padding:3px 8px;font-size:0.72rem" onclick="rejectMarks('+realIdx+')">✗ Reject</button>' : '';
       html += '<tr><td><b>'+r.teacher+'</b></td><td>'+r.exam+'</td><td>'+r.stream+'</td><td>'+r.submitted+'</td><td><span class="apr-status '+sc+'">'+r.status+'</span></td><td>'+actions+'</td></tr>';
     });
     html += '</tbody></table>';
