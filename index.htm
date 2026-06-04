@@ -5792,9 +5792,17 @@ function _deepMergeMarks(base, overlay) {
 }
 
 function _fbSanitize(obj) {
-  // Firebase rejects any object containing undefined values anywhere in the tree.
-  // Round-trip through JSON removes undefined keys automatically.
-  try { return JSON.parse(JSON.stringify(obj)); } catch(e) { return {}; }
+  // Firebase rejects undefined values and keys containing . # $ / [ ]
+  function sanitizeKeys(o) {
+    if (o === null || typeof o !== 'object' || Array.isArray(o)) return o;
+    var out = {};
+    Object.keys(o).forEach(function(k) {
+      var safeKey = k.replace(/[.#$\/\[\]|]/g, '_');
+      out[safeKey] = sanitizeKeys(o[k]);
+    });
+    return out;
+  }
+  try { return sanitizeKeys(JSON.parse(JSON.stringify(obj))); } catch(e) { return {}; }
 }
 
 function buildTransferPayload() {
