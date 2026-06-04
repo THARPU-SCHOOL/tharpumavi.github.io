@@ -3115,30 +3115,42 @@ function exportTheoryPracticalExcel() {
     if (!slist.length) return;
     var subs=SUBJECTS[stream];
     rows.push('"'+stream+' Stream"');
-    var hdr=['SN','Name','Roll No.'];
-    subs.forEach(function(sub){
-      hdr.push(sub.name+' Th.Grade');
-      if(sub.prMax>0) hdr.push(sub.name+' Pr.Grade');
-      hdr.push(sub.name+' Final Grade');
-    });
-    hdr.push('CGPA','Result');
+   var hdr=['SN','Name','Roll No.'];
+subs.forEach(function(sub){
+  hdr.push(sub.name+' Th.Marks');
+  hdr.push(sub.name+' Th.Grade');
+  if(sub.prMax>0) {
+    hdr.push(sub.name+' Pr.Marks');
+    hdr.push(sub.name+' Pr.Grade');
+  }
+  hdr.push(sub.name+' Total');
+  hdr.push(sub.name+' Final Grade');
+});
+hdr.push('CGPA','Result');
     rows.push(hdr.map(function(h){ return '"'+h+'"'; }).join(','));
     slist.forEach(function(st,i){
       var saved=marksData[getKey(st.roll,exam)]||{};
       var row=[i+1,st.name,st.roll];
-      subs.forEach(function(sub){
-        var d=saved[sub.name]||{};
-        if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
-          var res=getSubjectResult(d.th||0,d.pr||0,sub.thMax,sub.prMax);
-          row.push(res.thGrade||'');
-          if(sub.prMax>0) row.push(res.prGrade||'');
-          row.push(res.grade||'');
-        } else {
-          row.push('');
-          if(sub.prMax>0) row.push('');
-          row.push('');
-        }
-      });
+    subs.forEach(function(sub){
+  var d=saved[sub.name]||{};
+  if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
+    var res=getSubjectResult(d.th||0,d.pr||0,sub.thMax,sub.prMax);
+    row.push(d.th!==undefined?d.th:'');
+    row.push(res.thGrade||'');
+    if(sub.prMax>0){
+      row.push(d.pr!==undefined?d.pr:'');
+      row.push(res.prGrade||'');
+    }
+    row.push((d.th||0)+(d.pr||0));
+    row.push(res.grade||'');
+  } else {
+    row.push('');  // Th.Marks
+    row.push('');  // Th.Grade
+    if(sub.prMax>0){ row.push(''); row.push(''); } // Pr.Marks, Pr.Grade
+    row.push('');  // Total
+    row.push('');  // Final Grade
+  }
+});
       var cr=calcCGPA(subs,saved);
       var cgpa=cr.allFilled&&cr.totalCredits>0?cr.cgpa.toFixed(2):'';
       row.push(cgpa);
