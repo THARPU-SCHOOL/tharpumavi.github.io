@@ -43,6 +43,20 @@
         } catch(e) {}
         _firebaseReadyCallbacks.forEach(function(cb){ try{cb();}catch(e){} });
         _firebaseReadyCallbacks = [];
+        // Ensure Firebase SDK is fully loaded
+function ensureFirebaseReady() {
+  return new Promise(function(resolve) {
+    if (typeof firebase !== 'undefined' && firebase.apps) {
+      if (!firebase.apps.length) {
+        try { firebase.initializeApp(FB_CONFIG); } catch(e) {}
+      }
+      return resolve();
+    }
+    _firebaseReadyCallbacks.push(resolve);
+    if (typeof _loadFirebaseSDK === 'function') _loadFirebaseSDK();
+  });
+}
+
       };
       s2.onerror = function() { console.warn('Firebase database SDK failed to load.'); };
       document.head.appendChild(s2);
@@ -5571,29 +5585,26 @@ var FB_CONFIG = {
 
 var _fbApp = null, _fbDB = null, _fbLiveSyncOff = null;
 
-function fbInit() {
+async function fbInit() {
   try {
+    await ensureFirebaseReady();
     if (_fbApp && _fbDB) return true;
-    if (typeof firebase === 'undefined') {
-      fbSetStatus('⏳ Firebase SDK loading… please try again in a moment.', 'danger');
-      // Trigger load if not already loading
-      if (typeof _loadFirebaseSDK === 'function') _loadFirebaseSDK();
-      return false;
+    
+    if (!firebase.apps.length) {
+      firebase.initializeApp(FB_CONFIG);
     }
-    // Reuse the already-initialized app (initialized at page load)
-    if (firebase.apps.length) {
-      _fbApp = firebase.apps[0];
-    } else {
-      _fbApp = firebase.initializeApp(FB_CONFIG);
-    }
+    _fbApp = firebase.apps[0];
     _fbDB = firebase.database(_fbApp);
+    
     fbSetStatus('✅ Firebase connected!', 'ok');
     return true;
   } catch(e) {
     fbSetStatus('❌ Firebase error: ' + e.message, 'danger');
+    console.error('fbInit error:', e);
     return false;
   }
 }
+
 
 function fbRoomRef() {
   var room = (document.getElementById('fb-room-id')||{value:'tharpu-school-2082'}).value.trim() || 'tharpu-school-2082';
@@ -5607,9 +5618,13 @@ function fbSetStatus(msg, type) {
   el.innerHTML = '<span style="color:'+(colors[type]||'#555')+'">'+msg+'</span>';
 }
 
-function fbPushMarks() {
-  if (!fbInit()) return;
+async function fbPushMarks() {
+  if (!(await fbInit())) {
+    fbSetStatus('❌ Firebase not ready. Wait a moment and try again.', 'danger');
+    return;
+  }
   fbSetStatus('⏳ Pushing marks to cloud...', 'info');
+
   var extraStudents = [];
   try { extraStudents = JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){}
   // Read existing cloud data first so we MERGE (not overwrite) other teachers' subjects
@@ -5640,9 +5655,13 @@ function fbPushMarks() {
   });
 }
 
-function fbPullMarks() {
-  if (!fbInit()) return;
+async function fbPullMarks() {
+  if (!(await fbInit())) {
+    fbSetStatus('❌ Firebase not ready. Wait a moment and try again.', 'danger');
+    return;
+  }
   fbSetStatus('⏳ Pulling marks from cloud...', 'info');
+
   fbRoomRef().once('value').then(function(snap) {
     var data = snap.val();
     if (!data) { fbSetStatus('⚠️ No data found in cloud for this Room ID.', 'warn'); return; }
