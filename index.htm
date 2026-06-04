@@ -1524,12 +1524,14 @@ var DEFAULT_USERS = [
   {username:"ento_teacher", password:"ento123",    role:"subject_teacher", fullname:"Entomology Teacher",        subject:"Agricultural Entomology"},
   {username:"soil_teacher", password:"soil123",    role:"subject_teacher", fullname:"Soil Fertility Teacher",    subject:"Soil Fertility & Nutrient Management"},
   // General stream subject teachers
-  {username:"math_teacher", password:"math123",    role:"subject_teacher", fullname:"Mathematics Teacher",       subject:"Mathematics"},
-  {username:"acc_teacher",  password:"acc123",     role:"subject_teacher", fullname:"Accountancy Teacher",       subject:"Accountancy"},
+  {username:"social_teacher", password:"social123",    role:"subject_teacher", fullname:"Social Studies & Human Value Education Teacher",       subject:"Social Studies & Human Value Education"},
+  {username:"acc_teacher",  password:"acc123",     role:"subject_teacher", fullname:"Accounting Teacher",       subject:"Accounting"},
   {username:"eco_teacher",  password:"eco123",     role:"subject_teacher", fullname:"Economics Teacher",         subject:"Economics"},
-  {username:"comp_teacher", password:"comp123",    role:"subject_teacher", fullname:"Computer Science Teacher",  subject:"Computer Science"},
-  {username:"ss_teacher",   password:"ss123",      role:"subject_teacher", fullname:"Social Studies Teacher",    subject:"Social Studies & Life Skills"},
-  {username:"hpe_teacher",  password:"hpe123",     role:"subject_teacher", fullname:"Health & PE Teacher",       subject:"Health & Physical Education"}
+  {username:"child_teacher", password:"child123",    role:"subject_teacher", fullname:"Child Development & Learning",  subject:"Child Development & Learning"},
+  {username:"ps_teacher",   password:"ps123",      role:"subject_teacher", fullname:"Population Studies Teacher",    subject:"Population Studies"},
+  {username:"bs_teacher",  password:"bs123",     role:"subject_teacher", fullname:"Business Studies Teacher",       subject:"Business Studies"},
+  {username:"opte_teacher",  password:"opte123",     role:"subject_teacher", fullname:"Opt.Engligh Teacher",       subject:"Opt.Engligh"},
+  {username:"optn_teacher",  password:"optn123",     role:"subject_teacher", fullname:"Opt.Nepali Teacher",       subject:"Opt. Nepali"}
 ];
 function loadUsers() {
   try {
@@ -1840,6 +1842,7 @@ var students = [
 // Credit hour rules (NEB):
 //   Total 3 CH subject: thCredit=2.25, prCredit=0.75
 //   Total 4 CH subject: thCredit=3,    prCredit=1
+//   Total 5 CH subject: thCredit=3.75,    prCredit=1.25
 // Theory GPA  = Σ(thCredit × thGradePoint) / Σ(thCredit)
 // Practical GPA= Σ(prCredit × prGradePoint) / Σ(prCredit)
 // Final GPA (CGPA) = Σ(totalCredit × finalGradePoint) / Σ(totalCredit)
@@ -1858,14 +1861,14 @@ var SUBJECTS = {
   "General":[
     {name:"Compulsory English",          thMax:75, prMax:25,credit:4, compulsory:true},
     {name:"Compulsory Nepali",           thMax:75, prMax:25,credit:3, compulsory:true},
-    {name:"Social Studies & Human Value Education",                 thMax:100,prMax:0, credit:4},
-    {name:"Accounting",                 thMax:75, prMax:25,credit:4},
-    {name:"Economics",                   thMax:100,prMax:0, credit:4},
-    {name:"Business Studies",            thMax:75, prMax:25,credit:4},
-    {name:"Population Studies",thMax:75, prMax:25,credit:3},
-    {name:"Child Development & Learning",thMax:75, prMax:25,credit:3},
-    {name:"Opt. English",thMax:75, prMax:25,credit:3},
-    {name:"Opt. Nepali",thMax:75, prMax:25,credit:3},
+    {name:"Social Studies & Human Value Education",                 thMax:100,prMax:0, credit:5},
+    {name:"Accounting",                 thMax:75, prMax:25,credit:5},
+    {name:"Economics",                   thMax:100,prMax:0, credit:5},
+    {name:"Business Studies",            thMax:75, prMax:25,credit:5},
+    {name:"Population Studies",thMax:75, prMax:25,credit:5},
+    {name:"Child Development & Learning",thMax:75, prMax:25,credit:5},
+    {name:"Opt. English",thMax:75, prMax:25,credit:5},
+    {name:"Opt. Nepali",thMax:75, prMax:25,credit:5},
   ]
 };
 
