@@ -5638,9 +5638,10 @@ function fbPushMarks() {
     allLocalStudents.forEach(function(s){
       if (!cloudStudents.some(function(e){ return e.roll===s.roll; })) cloudStudents.push(s);
     });
-    var payload = {
+ var payload = {
       marks: mergedMarks,
       students: cloudStudents,
+      studentOptionals: studentOptionals,
       pushedBy: currentUser,
       pushedAt: new Date().toISOString(),
       deviceInfo: navigator.userAgent.substring(0,60)
@@ -5676,6 +5677,10 @@ function fbPullMarks() {
 })();
     var extra = [];
     try { extra = JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){}
+    if (data.studentOptionals) {
+      Object.assign(studentOptionals, data.studentOptionals);
+      saveStudentOptionals();
+    }
     (data.students||[]).forEach(function(s){
       if (!extra.some(function(e){ return e.roll===s.roll; })) extra.push(s);
       if (!students.some(function(e){ return e.roll===s.roll; })) students.push(s);
@@ -5829,7 +5834,7 @@ function _fbSanitize(obj) {
     if (o === null || typeof o !== 'object' || Array.isArray(o)) return o;
     var out = {};
     Object.keys(o).forEach(function(k) {
-      var safeKey = k.replace(/[.#$\/\[\]|]g, '_');
+      var safeKey = k.replace(/[.#$\/\[\]]g, '_');
       out[safeKey] = sanitizeKeys(o[k]);
     });
     return out;
