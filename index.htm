@@ -1321,7 +1321,7 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
         </div>
         <div id="transfer-status" style="min-height:28px;font-size:0.82rem;padding:6px 0;color:var(--text-muted);">Status: Not connected — click Push or Pull to begin.</div>
         <div class="btn-row">
-         <button class="btn btn-primary" style="flex:1" onclick="setupCloudSync()">⬆️ Push ALL Results to Cloud</button>
+          <button class="btn btn-primary" style="flex:1" onclick="terminalPush()">⬆️ Push ALL Results to Cloud</button>
           <button class="btn btn-success" style="flex:1" onclick="terminalPull()">⬇️ Pull Results from Cloud</button>
         </div>
         <div class="btn-row" style="margin-top:6px;">
@@ -1840,11 +1840,9 @@ var students = [
   } catch(e){}
 })();
 // Credit hour rules (NEB):
-//   Total 3 CH subject: thCredit=2.25, prCredit=0.75  (75/25 marks split)
-//   Total 4 CH subject (75/25): thCredit=2.75, prCredit=1.25
-//   Total 4 CH subject (50/50): thCredit=2,    prCredit=2
-//   Total 5 CH subject (75/25): thCredit=3.75, prCredit=1.25
-//   Total 5 CH subject (100/0): thCredit=5,    prCredit=0
+//   Total 3 CH subject: thCredit=2.25, prCredit=0.75
+//   Total 4 CH subject: thCredit=3,    prCredit=1
+//   Total 5 CH subject: thCredit=3.75,    prCredit=1.25
 // Theory GPA  = Σ(thCredit × thGradePoint) / Σ(thCredit)
 // Practical GPA= Σ(prCredit × prGradePoint) / Σ(prCredit)
 // Final GPA (CGPA) = Σ(totalCredit × finalGradePoint) / Σ(totalCredit)
@@ -1891,22 +1889,10 @@ function getStudentSubjects(st) {
 }
 
 // Helper: get credit hour split for theory/practical based on total credit
-function getCreditSplit(totalCredit, hasPractical, thMax, prMax) {
+function getCreditSplit(totalCredit, hasPractical) {
   if (!hasPractical) return {thCredit: totalCredit, prCredit: 0};
   if (totalCredit === 3) return {thCredit: 2.25, prCredit: 0.75};
-  if (totalCredit === 4) {
-    if (thMax === 75 && prMax === 25) return {thCredit: 2.75, prCredit: 1.25};
-    if (thMax === 50 && prMax === 50) return {thCredit: 2, prCredit: 2};
-  }
-  if (totalCredit === 5) {
-    if (thMax === 75 && prMax === 25) return {thCredit: 3.75, prCredit: 1.25};
-    if (thMax === 50 && prMax === 50) return {thCredit: 2.5, prCredit: 2.5};
-  }
-  // Generic fallback: use marks ratio to split credits
-  var total = thMax + prMax;
-  var thCredit = total > 0 ? totalCredit * (thMax / total) : totalCredit;
-  var prCredit = totalCredit - thCredit;
-  return {thCredit: thCredit, prCredit: prCredit};
+  return {thCredit: 3, prCredit: 1}; // 4 CH
 }
 
 // CGPA = Σ(Credit × GradePoint) / Σ(Credit) — NEB weighted formula
@@ -1935,7 +1921,7 @@ function calcTheoryGPA(subs, saved) {
     var th = d.th || 0;
     var thPct = sub.thMax > 0 ? th / sub.thMax * 100 : 0;
     var thGR = getGrade(thPct);
-var split = getCreditSplit(sub.credit || 4, sub.prMax > 0, sub.thMax, sub.prMax);
+    var split = getCreditSplit(sub.credit || 4, sub.prMax > 0);
     totalCreditPoints += split.thCredit * thGR.gpa;
     totalCredits += split.thCredit;
   });
@@ -1952,7 +1938,7 @@ function calcPracticalGPA(subs, saved) {
     var pr = d.pr || 0;
     var prPct = sub.prMax > 0 ? pr / sub.prMax * 100 : 0;
     var prGR = getGrade(prPct);
-var split = getCreditSplit(sub.credit || 4, true, sub.thMax, sub.prMax);
+    var split = getCreditSplit(sub.credit || 4, true);
     totalCreditPoints += split.prCredit * prGR.gpa;
     totalCredits += split.prCredit;
   });
@@ -5582,72 +5568,7 @@ var FB_CONFIG = {
   messagingSenderId: "716386428782",
   appId: "1:716386428782:web:c380a8fa0402be9206037f"
 };
-function setSyncStatus(msg, color) {
-  var el = document.getElementById('sync-status');
-  if (el) el.innerHTML = '<span style="color:' + (color||'#555') + '">' + msg + '</span>';
-}
 
-function cloudSetup() {
-  var apiKey = (document.getElementById('sync-api-key')||{}).value.trim();
-  if (!apiKey) { setSyncStatus('❌ Please enter your JSONBin API Key.', '#b71c1c'); return; }
-  setSyncStatus('⏳ Creating cloud bin...', '#0d47a1');
-  var payload = buildTransferPayload();
-  fetch('https://api.jsonbin.io/v3/b', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'X-Master-Key': apiKey, 'X-Bin-Name': 'TharPu-Results' },
-    body: JSON.stringify(payload)
-  }).then(function(r){ return r.json(); }).then(function(data) {
-    if (!data.metadata || !data.metadata.id) throw new Error(data.message || 'Unknown error');
-    var binId = data.metadata.id;
-    document.getElementById('sync-bin-id').value = binId;
-    try { localStorage.setItem('tss_sync_api_key', apiKey); localStorage.setItem('tss_sync_bin_id', binId); } catch(e){}
-    document.getElementById('sync-indicator').textContent = '🟢 Configured — Bin: ' + binId;
-    setSyncStatus('✅ Cloud bin created! Bin ID: ' + binId + ' — Share this ID + API Key on other devices.', '#1a6e2e');
-    showToast('☁️ Cloud sync configured!');
-  }).catch(function(e) {
-    setSyncStatus('❌ Setup failed: ' + e.message + ' — Check your API Key.', '#b71c1c');
-  });
-}
-
-function cloudPush() {
-  var apiKey = (document.getElementById('sync-api-key')||{}).value.trim() || (function(){ try { return localStorage.getItem('tss_sync_api_key')||''; } catch(e){ return ''; } })();
-  var binId  = (document.getElementById('sync-bin-id') ||{}).value.trim() || (function(){ try { return localStorage.getItem('tss_sync_bin_id') ||''; } catch(e){ return ''; } })();
-  if (!apiKey || !binId) { setSyncStatus('❌ API Key or Bin ID missing — run Setup first.', '#b71c1c'); return; }
-  setSyncStatus('⏳ Uploading to cloud...', '#0d47a1');
-  var payload = buildTransferPayload();
-  fetch('https://api.jsonbin.io/v3/b/' + binId, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', 'X-Master-Key': apiKey },
-    body: JSON.stringify(payload)
-  }).then(function(r){ return r.json(); }).then(function(data) {
-    if (!data.metadata) throw new Error(data.message || 'Unknown error');
-    setSyncStatus('✅ Uploaded ' + Object.keys(payload.marks||{}).length + ' mark records to cloud!', '#1a6e2e');
-    showToast('⬆️ Marks uploaded to cloud!');
-    try { addAudit('Cloud Sync', 'Push to cloud by ' + currentUser); } catch(e){}
-  }).catch(function(e) {
-    setSyncStatus('❌ Upload failed: ' + e.message, '#b71c1c');
-  });
-}
-
-function setupCloudSync() { cloudPush(); }
-
-function cloudPull() {
-  var apiKey = (document.getElementById('sync-api-key')||{}).value.trim() || (function(){ try { return localStorage.getItem('tss_sync_api_key')||''; } catch(e){ return ''; } })();
-  var binId  = (document.getElementById('sync-bin-id') ||{}).value.trim() || (function(){ try { return localStorage.getItem('tss_sync_bin_id') ||''; } catch(e){ return ''; } })();
-  if (!apiKey || !binId) { setSyncStatus('❌ API Key or Bin ID missing — enter both and try again.', '#b71c1c'); return; }
-  setSyncStatus('⏳ Loading from cloud...', '#0d47a1');
-  fetch('https://api.jsonbin.io/v3/b/' + binId + '/latest', {
-    headers: { 'X-Master-Key': apiKey }
-  }).then(function(r){ return r.json(); }).then(function(data) {
-    if (!data.record) throw new Error(data.message || 'No data found');
-    var cnt = applyTransferPayload(data.record);
-    setSyncStatus('✅ Loaded ' + cnt + ' mark records from cloud!', '#1a6e2e');
-    showToast('📥 ' + cnt + ' marks loaded from cloud!');
-    try { addAudit('Cloud Sync', 'Pull from cloud by ' + currentUser); } catch(e){}
-  }).catch(function(e) {
-    setSyncStatus('❌ Load failed: ' + e.message + ' — Check API Key and Bin ID.', '#b71c1c');
-  });
-}
 var _fbApp = null, _fbDB = null, _fbLiveSyncOff = null;
 
 function fbInit() {
@@ -5703,10 +5624,9 @@ function fbPushMarks() {
     allLocalStudents.forEach(function(s){
       if (!cloudStudents.some(function(e){ return e.roll===s.roll; })) cloudStudents.push(s);
     });
- var payload = {
+    var payload = {
       marks: mergedMarks,
       students: cloudStudents,
-      studentOptionals: studentOptionals,
       pushedBy: currentUser,
       pushedAt: new Date().toISOString(),
       deviceInfo: navigator.userAgent.substring(0,60)
@@ -5731,21 +5651,8 @@ function fbPullMarks() {
     if (!confirm('Pull ' + markCount + ' mark records and ' + stCount + ' students from cloud?\n\nPushed by: ' + (data.pushedBy||'unknown') + '\nAt: ' + (data.pushedAt||'unknown') + '\n\nExisting local marks will be MERGED.')) return;
     // Deep merge so all teachers' subject marks are combined, not overwritten
     marksData = _deepMergeMarks(marksData, data.marks||{});
-    // Restore Firebase-sanitized keys
-(function(){
-  var fixed = {};
-  Object.keys(marksData).forEach(function(k){
-    var restored = k.replace(/__/g, '||');
-    fixed[restored] = marksData[k];
-  });
-  marksData = fixed;
-})();
     var extra = [];
     try { extra = JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){}
-    if (data.studentOptionals) {
-      Object.assign(studentOptionals, data.studentOptionals);
-      saveStudentOptionals();
-    }
     (data.students||[]).forEach(function(s){
       if (!extra.some(function(e){ return e.roll===s.roll; })) extra.push(s);
       if (!students.some(function(e){ return e.roll===s.roll; })) students.push(s);
@@ -5780,15 +5687,6 @@ function fbEnableLiveSync() {
     if (changed && data.pushedBy && data.pushedBy !== currentUser) {
       // Deep merge so each teacher's subject marks are preserved, not overwritten
       marksData = _deepMergeMarks(marksData, data.marks||{});
-      // Restore Firebase-sanitized keys
-(function(){
-  var fixed = {};
-  Object.keys(marksData).forEach(function(k){
-    var restored = k.replace(/__/g, '||');
-    fixed[restored] = marksData[k];
-  });
-  marksData = fixed;
-})();
       // Merge students so registrations from any device appear everywhere
       var extra2 = [];
       try { extra2 = JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){}
@@ -5899,7 +5797,7 @@ function _fbSanitize(obj) {
     if (o === null || typeof o !== 'object' || Array.isArray(o)) return o;
     var out = {};
     Object.keys(o).forEach(function(k) {
-      var safeKey = k.replace(/[.#$\/\[\]]/g, '_');
+      var safeKey = k.replace(/[.#$\/\[\]|]/g, '_');
       out[safeKey] = sanitizeKeys(o[k]);
     });
     return out;
@@ -5937,15 +5835,6 @@ function applyTransferPayload(data, silent) {
   var markCount = Object.keys(data.marks||{}).length;
   // Deep merge so subject marks from different teachers are combined, not overwritten
   marksData = _deepMergeMarks(marksData, data.marks||{});
-  // Restore Firebase-sanitized keys: "roll__exam" → "roll||exam"
-(function(){
-  var fixed = {};
-  Object.keys(marksData).forEach(function(k){
-    var restored = k.replace(/__/g, '||');
-    fixed[restored] = marksData[k];
-  });
-  marksData = fixed;
-})();
   // Merge extra students
   var extra = [];
   try { extra = JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){}
