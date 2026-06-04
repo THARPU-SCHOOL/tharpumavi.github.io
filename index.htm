@@ -1524,14 +1524,12 @@ var DEFAULT_USERS = [
   {username:"ento_teacher", password:"ento123",    role:"subject_teacher", fullname:"Entomology Teacher",        subject:"Agricultural Entomology"},
   {username:"soil_teacher", password:"soil123",    role:"subject_teacher", fullname:"Soil Fertility Teacher",    subject:"Soil Fertility & Nutrient Management"},
   // General stream subject teachers
-  {username:"social_teacher", password:"social123",    role:"subject_teacher", fullname:"Social Studies & Human Value Education Teacher",       subject:"Social Studies & Human Value Education"},
-  {username:"acc_teacher",  password:"acc123",     role:"subject_teacher", fullname:"Accounting Teacher",       subject:"Accounting"},
+  {username:"math_teacher", password:"math123",    role:"subject_teacher", fullname:"Mathematics Teacher",       subject:"Mathematics"},
+  {username:"acc_teacher",  password:"acc123",     role:"subject_teacher", fullname:"Accountancy Teacher",       subject:"Accountancy"},
   {username:"eco_teacher",  password:"eco123",     role:"subject_teacher", fullname:"Economics Teacher",         subject:"Economics"},
-  {username:"child_teacher", password:"child123",    role:"subject_teacher", fullname:"Child Development & Learning",  subject:"Child Development & Learning"},
-  {username:"ps_teacher",   password:"ps123",      role:"subject_teacher", fullname:"Population Studies Teacher",    subject:"Population Studies"},
-  {username:"bs_teacher",  password:"bs123",     role:"subject_teacher", fullname:"Business Studies Teacher",       subject:"Business Studies"},
-  {username:"opte_teacher",  password:"opte123",     role:"subject_teacher", fullname:"Opt.English Teacher",       subject:"Opt.English"},
-  {username:"optn_teacher",  password:"optn123",     role:"subject_teacher", fullname:"Opt.Nepali Teacher",       subject:"Opt.Nepali"}
+  {username:"comp_teacher", password:"comp123",    role:"subject_teacher", fullname:"Computer Science Teacher",  subject:"Computer Science"},
+  {username:"ss_teacher",   password:"ss123",      role:"subject_teacher", fullname:"Social Studies Teacher",    subject:"Social Studies & Life Skills"},
+  {username:"hpe_teacher",  password:"hpe123",     role:"subject_teacher", fullname:"Health & PE Teacher",       subject:"Health & Physical Education"}
 ];
 function loadUsers() {
   try {
@@ -1819,13 +1817,13 @@ var students = [
   {name:"RAMILA KHEBANG",      roll:"10200251",stream:"General",year:"2082/83"},
   {name:"RESHIKA KAMBANG",     roll:"10200252",stream:"General",year:"2082/83"},
   {name:"RUPA ADHIKARI",       roll:"10200253",stream:"General",year:"2082/83"},
-  {name:"SABUNAM LIMBU",       roll:"10200254",stream:"General",year:"2082/83"},
-  {name:"SAJAN MABO",          roll:"10200255",stream:"General",year:"2082/83"},
-  {name:"SANDHYA ADHIKARI",    roll:"10200256",stream:"General",year:"2082/83"},
-  {name:"SARINA KHADKA",       roll:"10200257",stream:"General",year:"2082/83"},
-  {name:"SARU KERUNG",         roll:"10200258",stream:"General",year:"2082/83"},
-  {name:"SAUGAT NUGO",         roll:"10200259",stream:"General",year:"2082/83"},
-  {name:"SHILA DANGI",         roll:"10200260",stream:"General",year:"2082/83"},
+  {name:"SAJAN MABO",          roll:"10200254",stream:"General",year:"2082/83"},
+  {name:"SANDHYA ADHIKARI",    roll:"10200255",stream:"General",year:"2082/83"},
+  {name:"SARINA KHADKA",       roll:"10200256",stream:"General",year:"2082/83"},
+  {name:"SARU KERUNG",         roll:"10200257",stream:"General",year:"2082/83"},
+  {name:"SAUGAT NUGO",         roll:"10200258",stream:"General",year:"2082/83"},
+  {name:"SHILA DANGI",         roll:"10200259",stream:"General",year:"2082/83"},
+  {name:"SABUNAM LIMBU",       roll:"10200260",stream:"General",year:"2082/83"},
   {name:"SUMANA DARJI",        roll:"10200261",stream:"General",year:"2082/83"},
   {name:"SUSMITA NUGO",        roll:"10200262",stream:"General",year:"2082/83"},
   {name:"YUAN SHRESTHA",       roll:"10200263",stream:"General",year:"2082/83"}
@@ -1842,7 +1840,6 @@ var students = [
 // Credit hour rules (NEB):
 //   Total 3 CH subject: thCredit=2.25, prCredit=0.75
 //   Total 4 CH subject: thCredit=3,    prCredit=1
-//   Total 5 CH subject: thCredit=3.75,    prCredit=1.25
 // Theory GPA  = Σ(thCredit × thGradePoint) / Σ(thCredit)
 // Practical GPA= Σ(prCredit × prGradePoint) / Σ(prCredit)
 // Final GPA (CGPA) = Σ(totalCredit × finalGradePoint) / Σ(totalCredit)
@@ -1861,14 +1858,14 @@ var SUBJECTS = {
   "General":[
     {name:"Compulsory English",          thMax:75, prMax:25,credit:4, compulsory:true},
     {name:"Compulsory Nepali",           thMax:75, prMax:25,credit:3, compulsory:true},
-    {name:"Social Studies & Human Value Education",                 thMax:100,prMax:0, credit:5},
-    {name:"Accounting",                 thMax:75, prMax:25,credit:5},
-    {name:"Economics",                   thMax:100,prMax:0, credit:5},
-    {name:"Business Studies",            thMax:75, prMax:25,credit:5},
-    {name:"Population Studies",thMax:75, prMax:25,credit:5},
-    {name:"Child Development & Learning",thMax:75, prMax:25,credit:5},
-    {name:"Opt.English",thMax:75, prMax:25,credit:5},
-    {name:"Opt.Nepali",thMax:75, prMax:25,credit:5},
+    {name:"Social Studies & Human Value Education",                 thMax:100,prMax:0, credit:4},
+    {name:"Accounting",                 thMax:75, prMax:25,credit:4},
+    {name:"Economics",                   thMax:100,prMax:0, credit:4},
+    {name:"Business Studies",            thMax:75, prMax:25,credit:4},
+    {name:"Population Studies",thMax:75, prMax:25,credit:3},
+    {name:"Child Development & Learning",thMax:75, prMax:25,credit:3},
+    {name:"Opt. English",thMax:75, prMax:25,credit:3},
+    {name:"Opt. Nepali",thMax:75, prMax:25,credit:3},
   ]
 };
 
@@ -2607,10 +2604,9 @@ function renderApprovalPanel() {
   if (!relevant.length) { html = '<div class="empty-state"><p>No submissions yet for '+exam+' — '+stream+'.</p></div>'; }
   else {
     html = '<table class="marks-table"><thead><tr><th>Teacher</th><th>Exam</th><th>Stream</th><th>Submitted</th><th>Status</th><th>Actions</th></tr></thead><tbody>';
-    relevant.forEach(function(r){
-      var realIdx = approvalRequests.indexOf(r);
+    relevant.forEach(function(r,i){
       var sc = r.status==='approved'?'apr-approved':r.status==='rejected'?'apr-rejected':'apr-pending';
-      var actions = isAdmin() ? '<button class="btn btn-success" style="padding:3px 8px;font-size:0.72rem;margin-right:3px" onclick="approveMarks('+realIdx+')">✓ Approve</button><button class="btn btn-danger" style="padding:3px 8px;font-size:0.72rem" onclick="rejectMarks('+realIdx+')">✗ Reject</button>' : '';
+      var actions = isAdmin() ? '<button class="btn btn-success" style="padding:3px 8px;font-size:0.72rem;margin-right:3px" onclick="approveMarks('+i+')">✓ Approve</button><button class="btn btn-danger" style="padding:3px 8px;font-size:0.72rem" onclick="rejectMarks('+i+')">✗ Reject</button>' : '';
       html += '<tr><td><b>'+r.teacher+'</b></td><td>'+r.exam+'</td><td>'+r.stream+'</td><td>'+r.submitted+'</td><td><span class="apr-status '+sc+'">'+r.status+'</span></td><td>'+actions+'</td></tr>';
     });
     html += '</tbody></table>';
@@ -2808,14 +2804,14 @@ var subjectCodes = {
   'Soil Fertility & Nutrient Management':          '8231',
   'Commercial Fruit Crop & Post Harvest Technology':     '8241',
   'Agricultural Entomology':                       '8251',
-  'Social Studies & Human Value Education':        '0051',
-  'Accounting':        '1031',
-  'Economics':          '3031',
-  'Population Studies':   '2231',
-  'Business Studies': '2151',
-  'Child Development & Learning': '1151',
-  'Opt. English': '3331',
-  'Opt.Nepali':  '3311'
+  'Social Studies & Human Value Education':        '006',
+  'Accounting':        '221',
+  'Economics':          '219',
+  'Population Studies':   '320',
+  'Business Studies': '010',
+  'Child Development & Learning': '010',
+  'Opt. English': '010',
+  'Opt.Nepali':  '014'
 };
 
 var sortedSubs = subs.slice().sort(function(a,b){ return (parseInt(subjectCodes[a.name])||999)-(parseInt(subjectCodes[b.name])||999); });
@@ -3119,42 +3115,30 @@ function exportTheoryPracticalExcel() {
     if (!slist.length) return;
     var subs=SUBJECTS[stream];
     rows.push('"'+stream+' Stream"');
-   var hdr=['SN','Name','Roll No.'];
-subs.forEach(function(sub){
-  hdr.push(sub.name+' Th.Marks');
-  hdr.push(sub.name+' Th.Grade');
-  if(sub.prMax>0) {
-    hdr.push(sub.name+' Pr.Marks');
-    hdr.push(sub.name+' Pr.Grade');
-  }
-  hdr.push(sub.name+' Total');
-  hdr.push(sub.name+' Final Grade');
-});
-hdr.push('CGPA','Result');
+    var hdr=['SN','Name','Roll No.'];
+    subs.forEach(function(sub){
+      hdr.push(sub.name+' Th.Grade');
+      if(sub.prMax>0) hdr.push(sub.name+' Pr.Grade');
+      hdr.push(sub.name+' Final Grade');
+    });
+    hdr.push('CGPA','Result');
     rows.push(hdr.map(function(h){ return '"'+h+'"'; }).join(','));
     slist.forEach(function(st,i){
       var saved=marksData[getKey(st.roll,exam)]||{};
       var row=[i+1,st.name,st.roll];
-    subs.forEach(function(sub){
-  var d=saved[sub.name]||{};
-  if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
-    var res=getSubjectResult(d.th||0,d.pr||0,sub.thMax,sub.prMax);
-    row.push(d.th!==undefined?d.th:'');
-    row.push(res.thGrade||'');
-    if(sub.prMax>0){
-      row.push(d.pr!==undefined?d.pr:'');
-      row.push(res.prGrade||'');
-    }
-    row.push((d.th||0)+(d.pr||0));
-    row.push(res.grade||'');
-  } else {
-    row.push('');  // Th.Marks
-    row.push('');  // Th.Grade
-    if(sub.prMax>0){ row.push(''); row.push(''); } // Pr.Marks, Pr.Grade
-    row.push('');  // Total
-    row.push('');  // Final Grade
-  }
-});
+      subs.forEach(function(sub){
+        var d=saved[sub.name]||{};
+        if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
+          var res=getSubjectResult(d.th||0,d.pr||0,sub.thMax,sub.prMax);
+          row.push(res.thGrade||'');
+          if(sub.prMax>0) row.push(res.prGrade||'');
+          row.push(res.grade||'');
+        } else {
+          row.push('');
+          if(sub.prMax>0) row.push('');
+          row.push('');
+        }
+      });
       var cr=calcCGPA(subs,saved);
       var cgpa=cr.allFilled&&cr.totalCredits>0?cr.cgpa.toFixed(2):'';
       row.push(cgpa);
@@ -5197,7 +5181,7 @@ document.addEventListener('click', function(e){
     {name:'Population Studies',th:75, pr:25, pass:40},
     {name:'Child Development & Learning',th:75, pr:25, pass:40},
     {name:'Opt. Nepali',th:75, pr:25, pass:40},
-    {name:'Opt.English',      th:75, pr:25, pass:40}
+    {name:'Opt. English',      th:75, pr:25, pass:40}
   ];
 
   function loadSubjects() {
@@ -5625,9 +5609,12 @@ function fbPushMarks() {
     allLocalStudents.forEach(function(s){
       if (!cloudStudents.some(function(e){ return e.roll===s.roll; })) cloudStudents.push(s);
     });
+    // Merge studentOptionals (General stream subject choices) so they sync across devices
+    var mergedOptionals = Object.assign({}, existing.studentOptionals || {}, studentOptionals);
     var payload = {
       marks: mergedMarks,
       students: cloudStudents,
+      studentOptionals: mergedOptionals,
       pushedBy: currentUser,
       pushedAt: new Date().toISOString(),
       deviceInfo: navigator.userAgent.substring(0,60)
@@ -5659,6 +5646,11 @@ function fbPullMarks() {
       if (!students.some(function(e){ return e.roll===s.roll; })) students.push(s);
     });
     try { localStorage.setItem('tss_extra_students', JSON.stringify(extra)); } catch(e){}
+    // Restore studentOptionals (General stream subject choices) from cloud
+    if (data.studentOptionals) {
+      Object.assign(studentOptionals, data.studentOptionals);
+      saveStudentOptionals();
+    }
     saveMarksToStorage().then(function(){
       renderStudentList(); populateStudentSelects(); updateSummary();
       fbSetStatus('✅ Pulled ' + markCount + ' mark records from cloud! Last synced by: ' + (data.pushedBy||'unknown'), 'ok');
@@ -5696,6 +5688,11 @@ function fbEnableLiveSync() {
         if (!students.some(function(e){ return e.roll===s.roll; })) students.push(s);
       });
       try { localStorage.setItem('tss_extra_students', JSON.stringify(extra2)); } catch(e){}
+      // Restore studentOptionals (General stream subject choices) from cloud
+      if (data.studentOptionals) {
+        Object.assign(studentOptionals, data.studentOptionals);
+        saveStudentOptionals();
+      }
       saveMarksToStorage().then(function(){
         renderStudentList(); populateStudentSelects(); updateSummary();
         if(typeof showToast==='function') showToast('🔄 Auto-synced: '+newMarkCount+' marks from '+data.pushedBy);
@@ -5793,17 +5790,9 @@ function _deepMergeMarks(base, overlay) {
 }
 
 function _fbSanitize(obj) {
-  // Firebase rejects undefined values and keys containing . # $ / [ ]
-  function sanitizeKeys(o) {
-    if (o === null || typeof o !== 'object' || Array.isArray(o)) return o;
-    var out = {};
-    Object.keys(o).forEach(function(k) {
-      var safeKey = k.replace(/[.#$\/\[\]]/g, '_');
-      out[safeKey] = sanitizeKeys(o[k]);
-    });
-    return out;
-  }
-  try { return sanitizeKeys(JSON.parse(JSON.stringify(obj))); } catch(e) { return {}; }
+  // Firebase rejects any object containing undefined values anywhere in the tree.
+  // Round-trip through JSON removes undefined keys automatically.
+  try { return JSON.parse(JSON.stringify(obj)); } catch(e) { return {}; }
 }
 
 function buildTransferPayload() {
@@ -5855,13 +5844,11 @@ function applyTransferPayload(data, silent) {
     Object.assign(studentOptionals, data.studentOptionals);
     saveStudentOptionals();
   }
-  // Synchronous fallback so marks survive immediately even if async save is slow
-  try { localStorage.setItem('tss_marks_master', JSON.stringify(marksData)); } catch(e){}
   saveMarksToStorage().then(function(){
     renderStudentList();
     try { populateStudentSelects(); } catch(e){}
     updateSummary();
-    if (!silent && typeof showToast === 'function') showToast('📥 '+markCount+' mark records pulled from cloud!');
+    if (!silent && typeof showToast === 'function') showToast('📥 '+markCount+' mark records pulled from terminal!');
   });
   return markCount;
 }
