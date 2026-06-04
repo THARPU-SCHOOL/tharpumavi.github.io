@@ -5609,12 +5609,9 @@ function fbPushMarks() {
     allLocalStudents.forEach(function(s){
       if (!cloudStudents.some(function(e){ return e.roll===s.roll; })) cloudStudents.push(s);
     });
-    // Merge studentOptionals (General stream subject choices) so they sync across devices
-    var mergedOptionals = Object.assign({}, existing.studentOptionals || {}, studentOptionals);
     var payload = {
       marks: mergedMarks,
       students: cloudStudents,
-      studentOptionals: mergedOptionals,
       pushedBy: currentUser,
       pushedAt: new Date().toISOString(),
       deviceInfo: navigator.userAgent.substring(0,60)
@@ -5646,11 +5643,6 @@ function fbPullMarks() {
       if (!students.some(function(e){ return e.roll===s.roll; })) students.push(s);
     });
     try { localStorage.setItem('tss_extra_students', JSON.stringify(extra)); } catch(e){}
-    // Restore studentOptionals (General stream subject choices) from cloud
-    if (data.studentOptionals) {
-      Object.assign(studentOptionals, data.studentOptionals);
-      saveStudentOptionals();
-    }
     saveMarksToStorage().then(function(){
       renderStudentList(); populateStudentSelects(); updateSummary();
       fbSetStatus('✅ Pulled ' + markCount + ' mark records from cloud! Last synced by: ' + (data.pushedBy||'unknown'), 'ok');
@@ -5688,11 +5680,6 @@ function fbEnableLiveSync() {
         if (!students.some(function(e){ return e.roll===s.roll; })) students.push(s);
       });
       try { localStorage.setItem('tss_extra_students', JSON.stringify(extra2)); } catch(e){}
-      // Restore studentOptionals (General stream subject choices) from cloud
-      if (data.studentOptionals) {
-        Object.assign(studentOptionals, data.studentOptionals);
-        saveStudentOptionals();
-      }
       saveMarksToStorage().then(function(){
         renderStudentList(); populateStudentSelects(); updateSummary();
         if(typeof showToast==='function') showToast('🔄 Auto-synced: '+newMarkCount+' marks from '+data.pushedBy);
