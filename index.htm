@@ -5797,7 +5797,7 @@ function _fbSanitize(obj) {
     if (o === null || typeof o !== 'object' || Array.isArray(o)) return o;
     var out = {};
     Object.keys(o).forEach(function(k) {
-      var safeKey = k.replace(/[.#$\/\[\]|]/g, '_');
+      var safeKey = k.replace(/[.#$\/\[\]]/g, '_');
       out[safeKey] = sanitizeKeys(o[k]);
     });
     return out;
@@ -5854,11 +5854,13 @@ function applyTransferPayload(data, silent) {
     Object.assign(studentOptionals, data.studentOptionals);
     saveStudentOptionals();
   }
+  // Synchronous fallback so marks survive immediately even if async save is slow
+  try { localStorage.setItem('tss_marks_master', JSON.stringify(marksData)); } catch(e){}
   saveMarksToStorage().then(function(){
     renderStudentList();
     try { populateStudentSelects(); } catch(e){}
     updateSummary();
-    if (!silent && typeof showToast === 'function') showToast('📥 '+markCount+' mark records pulled from terminal!');
+    if (!silent && typeof showToast === 'function') showToast('📥 '+markCount+' mark records pulled from cloud!');
   });
   return markCount;
 }
