@@ -3236,7 +3236,7 @@ function exportShare() {
   // Also merge current in-memory marks (may be newer)
   Object.assign(allMarks, marksData);
 
-  var payload = JSON.stringify({ students: students, marks: allMarks });
+var payload = JSON.stringify({ students: students, marks: allMarks, studentOptionals: studentOptionals });
 
   // Read the source HTML — use the original page source, not outerHTML
   // (outerHTML misses doctype and can have stale injected scripts)
@@ -3285,6 +3285,10 @@ function exportShare() {
     if (_savedData.marks) {
       // Merge shared marks on top of any localStorage marks
       Object.assign(marksData, _savedData.marks);
+       if (_savedData.studentOptionals) {
+      Object.assign(studentOptionals, _savedData.studentOptionals);
+      saveStudentOptionals();
+    }
     }
     // Also push these marks into localStorage so any edits here persist
     try { localStorage.setItem('tss_marks_shared', JSON.stringify(_savedData.marks||{})); } catch(e){}
@@ -5449,7 +5453,7 @@ function getDataCode() {
   Object.assign(allMarks, marksData);
   var extraStudents = [];
   try { extraStudents = JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){}
-  var payload = { students: extraStudents, marks: allMarks, ts: Date.now() };
+  var payload = { students: extraStudents, marks: allMarks, studentOptionals: studentOptionals, ts: Date.now() };
   return 'TSSYNC:' + btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
 }
 
@@ -5490,6 +5494,10 @@ function importDataCode() {
       if (!students.some(function(e){ return e.roll===s.roll; })) students.push(s);
     });
     try { localStorage.setItem('tss_extra_students', JSON.stringify(extra)); } catch(e){}
+    if (payload.studentOptionals) {
+      Object.assign(studentOptionals, payload.studentOptionals);
+      saveStudentOptionals();
+    }
     saveMarksToStorage().then(function(){
       renderStudentList(); populateStudentSelects(); updateSummary();
       showToast('✅ '+markCount+' marks imported successfully!');
@@ -5609,7 +5617,7 @@ function fbPushMarks() {
     allLocalStudents.forEach(function(s){
       if (!cloudStudents.some(function(e){ return e.roll===s.roll; })) cloudStudents.push(s);
     });
-  var payload = {
+ var payload = {
       marks: mergedMarks,
       students: cloudStudents,
       studentOptionals: studentOptionals,
@@ -5637,6 +5645,10 @@ function fbPullMarks() {
     if (!confirm('Pull ' + markCount + ' mark records and ' + stCount + ' students from cloud?\n\nPushed by: ' + (data.pushedBy||'unknown') + '\nAt: ' + (data.pushedAt||'unknown') + '\n\nExisting local marks will be MERGED.')) return;
     // Deep merge so all teachers' subject marks are combined, not overwritten
     marksData = _deepMergeMarks(marksData, data.marks||{});
+     if (data.studentOptionals) {
+      Object.assign(studentOptionals, data.studentOptionals);
+      saveStudentOptionals();
+    }
     var extra = [];
     try { extra = JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){}
     (data.students||[]).forEach(function(s){
@@ -5644,6 +5656,10 @@ function fbPullMarks() {
       if (!students.some(function(e){ return e.roll===s.roll; })) students.push(s);
     });
     try { localStorage.setItem('tss_extra_students', JSON.stringify(extra)); } catch(e){}
+    if (payload.studentOptionals) {
+        Object.assign(studentOptionals, payload.studentOptionals);
+        saveStudentOptionals();
+      }
     saveMarksToStorage().then(function(){
       renderStudentList(); populateStudentSelects(); updateSummary();
       fbSetStatus('✅ Pulled ' + markCount + ' mark records from cloud! Last synced by: ' + (data.pushedBy||'unknown'), 'ok');
