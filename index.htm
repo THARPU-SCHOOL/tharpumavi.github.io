@@ -5582,7 +5582,19 @@ var FB_CONFIG = {
   messagingSenderId: "716386428782",
   appId: "1:716386428782:web:c380a8fa0402be9206037f"
 };
+function cloudPush() {
+  if (!fbInit()) return;
+  fbPushMarks();
+}
 
+function setupCloudSync() {
+  if (!fbInit()) return;
+  fbPushMarks();
+}
+  function cloudPull() {
+  if (!fbInit()) return;
+  fbPullMarks();
+}
 var _fbApp = null, _fbDB = null, _fbLiveSyncOff = null;
 
 function fbInit() {
