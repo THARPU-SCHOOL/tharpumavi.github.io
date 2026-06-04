@@ -1531,7 +1531,7 @@ var DEFAULT_USERS = [
   {username:"ps_teacher",   password:"ps123",      role:"subject_teacher", fullname:"Population Studies Teacher",    subject:"Population Studies"},
   {username:"bs_teacher",  password:"bs123",     role:"subject_teacher", fullname:"Business Studies Teacher",       subject:"Business Studies"},
   {username:"opte_teacher",  password:"opte123",     role:"subject_teacher", fullname:"Opt.Engligh Teacher",       subject:"Opt.Engligh"},
-  {username:"optn_teacher",  password:"optn123",     role:"subject_teacher", fullname:"Opt.Nepali Teacher",       subject:"Opt. Nepali"}
+  {username:"optn_teacher",  password:"optn123",     role:"subject_teacher", fullname:"Opt.Nepali Teacher",       subject:"Opt.Nepali"}
 ];
 function loadUsers() {
   try {
@@ -1867,8 +1867,8 @@ var SUBJECTS = {
     {name:"Business Studies",            thMax:75, prMax:25,credit:5},
     {name:"Population Studies",thMax:75, prMax:25,credit:5},
     {name:"Child Development & Learning",thMax:75, prMax:25,credit:5},
-    {name:"Opt. English",thMax:75, prMax:25,credit:5},
-    {name:"Opt. Nepali",thMax:75, prMax:25,credit:5},
+    {name:"Opt.English",thMax:75, prMax:25,credit:5},
+    {name:"Opt.Nepali",thMax:75, prMax:25,credit:5},
   ]
 };
 
@@ -2807,14 +2807,14 @@ var subjectCodes = {
   'Soil Fertility & Nutrient Management':          '8231',
   'Commercial Fruit Crop & Post Harvest Technology':     '8241',
   'Agricultural Entomology':                       '8251',
-  'Social Studies & Human Value Education':        '006',
-  'Accounting':        '221',
-  'Economics':          '219',
-  'Population Studies':   '320',
-  'Business Studies': '010',
-  'Child Development & Learning': '010',
-  'Opt. English': '010',
-  'Opt.Nepali':  '014'
+  'Social Studies & Human Value Education':        '0051',
+  'Accounting':        '1031',
+  'Economics':          '3031',
+  'Population Studies':   '2231',
+  'Business Studies': '2151',
+  'Child Development & Learning': '1151',
+  'Opt. English': '3331',
+  'Opt.Nepali':  '3311'
 };
 
 var sortedSubs = subs.slice().sort(function(a,b){ return (parseInt(subjectCodes[a.name])||999)-(parseInt(subjectCodes[b.name])||999); });
