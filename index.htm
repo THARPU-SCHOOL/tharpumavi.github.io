@@ -5610,17 +5610,43 @@ function cloudSetup() {
 }
 
 function cloudPush() {
-  if (!fbInit()) return;
-  fbPushMarks();
+  var apiKey = (document.getElementById('sync-api-key')||{}).value.trim() || (function(){ try { return localStorage.getItem('tss_sync_api_key')||''; } catch(e){ return ''; } })();
+  var binId  = (document.getElementById('sync-bin-id') ||{}).value.trim() || (function(){ try { return localStorage.getItem('tss_sync_bin_id') ||''; } catch(e){ return ''; } })();
+  if (!apiKey || !binId) { setSyncStatus('❌ API Key or Bin ID missing — run Setup first.', '#b71c1c'); return; }
+  setSyncStatus('⏳ Uploading to cloud...', '#0d47a1');
+  var payload = buildTransferPayload();
+  fetch('https://api.jsonbin.io/v3/b/' + binId, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', 'X-Master-Key': apiKey },
+    body: JSON.stringify(payload)
+  }).then(function(r){ return r.json(); }).then(function(data) {
+    if (!data.metadata) throw new Error(data.message || 'Unknown error');
+    setSyncStatus('✅ Uploaded ' + Object.keys(payload.marks||{}).length + ' mark records to cloud!', '#1a6e2e');
+    showToast('⬆️ Marks uploaded to cloud!');
+    try { addAudit('Cloud Sync', 'Push to cloud by ' + currentUser); } catch(e){}
+  }).catch(function(e) {
+    setSyncStatus('❌ Upload failed: ' + e.message, '#b71c1c');
+  });
 }
 
-function setupCloudSync() {
-  if (!fbInit()) return;
-  fbPushMarks();
-}
-  function cloudPull() {
-  if (!fbInit()) return;
-  fbPullMarks();
+function setupCloudSync() { cloudPush(); }
+
+function cloudPull() {
+  var apiKey = (document.getElementById('sync-api-key')||{}).value.trim() || (function(){ try { return localStorage.getItem('tss_sync_api_key')||''; } catch(e){ return ''; } })();
+  var binId  = (document.getElementById('sync-bin-id') ||{}).value.trim() || (function(){ try { return localStorage.getItem('tss_sync_bin_id') ||''; } catch(e){ return ''; } })();
+  if (!apiKey || !binId) { setSyncStatus('❌ API Key or Bin ID missing — enter both and try again.', '#b71c1c'); return; }
+  setSyncStatus('⏳ Loading from cloud...', '#0d47a1');
+  fetch('https://api.jsonbin.io/v3/b/' + binId + '/latest', {
+    headers: { 'X-Master-Key': apiKey }
+  }).then(function(r){ return r.json(); }).then(function(data) {
+    if (!data.record) throw new Error(data.message || 'No data found');
+    var cnt = applyTransferPayload(data.record);
+    setSyncStatus('✅ Loaded ' + cnt + ' mark records from cloud!', '#1a6e2e');
+    showToast('📥 ' + cnt + ' marks loaded from cloud!');
+    try { addAudit('Cloud Sync', 'Pull from cloud by ' + currentUser); } catch(e){}
+  }).catch(function(e) {
+    setSyncStatus('❌ Load failed: ' + e.message + ' — Check API Key and Bin ID.', '#b71c1c');
+  });
 }
 var _fbApp = null, _fbDB = null, _fbLiveSyncOff = null;
 
