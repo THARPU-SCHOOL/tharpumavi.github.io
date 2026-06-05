@@ -1892,8 +1892,15 @@ function getStudentSubjects(st) {
 }
 
 // Helper: get credit hour split for theory/practical based on total credit
-function getCreditSplit(totalCredit, hasPractical, thMax, prMax) {
+function getCreditSplit(totalCredit, hasPractical, thMax, prMax, subjectName, stream) {
   if (!hasPractical) return {thCredit: totalCredit, prCredit: 0};
+  // Subject+stream-specific overrides
+if (subjectName === 'Compulsory English' && stream === 'General') {
+  return {thCredit: 3, prCredit: 1};   // General: theory 3, practical 1
+}
+if (subjectName === 'Compulsory English' && stream === 'Plant Science') {
+  return {thCredit: 2.75, prCredit: 1.25}; // Technical: theory 2.75, practical 1.25
+}
   if (totalCredit === 3) return {thCredit: 2.25, prCredit: 0.75};
   if (totalCredit === 4) {
     if (thMax === 75 && prMax === 25) return {thCredit: 2.75, prCredit: 1.25};
@@ -1928,7 +1935,7 @@ function calcCGPA(subs, saved) {
 }
 
 // Theory GPA (weighted): Σ(thCredit × thGradePoint) / Σ(thCredit)
-function calcTheoryGPA(subs, saved) {
+function calcTheoryGPA(subs, saved, stream) {
   var totalCreditPoints = 0, totalCredits = 0;
   subs.forEach(function(sub) {
     var d = saved[sub.name] || {};
@@ -1936,7 +1943,7 @@ function calcTheoryGPA(subs, saved) {
     var th = d.th || 0;
     var thPct = sub.thMax > 0 ? th / sub.thMax * 100 : 0;
     var thGR = getGrade(thPct);
-var split = getCreditSplit(sub.credit || 4, sub.prMax > 0, sub.thMax, sub.prMax);
+var split = getCreditSplit(sub.credit || 4, sub.prMax > 0, sub.thMax, sub.prMax, sub.name, stream);
     totalCreditPoints += split.thCredit * thGR.gpa;
     totalCredits += split.thCredit;
   });
@@ -1944,7 +1951,7 @@ var split = getCreditSplit(sub.credit || 4, sub.prMax > 0, sub.thMax, sub.prMax)
 }
 
 // Practical GPA (weighted): Σ(prCredit × prGradePoint) / Σ(prCredit)
-function calcPracticalGPA(subs, saved) {
+function calcPracticalGPA(subs, saved, stream) {
   var totalCreditPoints = 0, totalCredits = 0;
   subs.forEach(function(sub) {
     if (sub.prMax === 0) return;
@@ -1953,7 +1960,7 @@ function calcPracticalGPA(subs, saved) {
     var pr = d.pr || 0;
     var prPct = sub.prMax > 0 ? pr / sub.prMax * 100 : 0;
     var prGR = getGrade(prPct);
-var split = getCreditSplit(sub.credit || 4, true, sub.thMax, sub.prMax);
+var split = getCreditSplit(sub.credit || 4, true, sub.thMax, sub.prMax, sub.name, stream);
     totalCreditPoints += split.prCredit * prGR.gpa;
     totalCredits += split.prCredit;
   });
