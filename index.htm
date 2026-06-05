@@ -831,6 +831,7 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
   <button class="btn btn-gold" onclick="exportExcel()">&#128202; Export Excel</button>
   <button class="btn btn-gold" onclick="exportGradePointExcel()">📊 Export GPA &amp; Grade</button>
 <button class="btn btn-gold" onclick="exportTheoryPracticalExcel()">📋 Export Theory/Practical Grades</button>
+<button class="btn btn-gold" onclick="exportGeneralStudentMarks()" style="background:#1a6e2e;">&#127891; Export General Students (Grades + CGPA)</button>
   <button class="btn btn-success btn-full" style="margin-top:6px" onclick="exportShare()">&#128230; Export &amp; Share File (All Data)</button>
   <button class="btn btn-primary btn-full" style="margin-top:6px;background:#5a1414" onclick="printAllSheets()">&#128438; Bulk Print All Grade Sheets</button>
 </div>
@@ -1865,7 +1866,7 @@ var SUBJECTS = {
     {name:"Compulsory Nepali",           thMax:75, prMax:25,credit:3, compulsory:true},
     {name:"Social Studies & Human Value Education",                 thMax:75, prMax:25, credit:5},
     {name:"Accounting",                 thMax:75, prMax:25,credit:5},
-    {name:"Economics",                   thMax:75,prMax:25, credit:5},
+    {name:"Economics",                   thMax:100,prMax:0, credit:5},
     {name:"Business Studies",            thMax:75, prMax:25,credit:5},
     {name:"Population Studies",thMax:75, prMax:25,credit:5},
     {name:"Child Development & Learning",thMax:75, prMax:25,credit:5},
@@ -3210,6 +3211,74 @@ hdr.push('CGPA','Result');
   a.click();
   showToast('📋 Theory & Practical Grades exported!');
 }
+// ============================================================
+// EXPORT — General Students: each student's own subjects + CGPA only
+// ============================================================
+function exportGeneralStudentMarks() {
+  var exam = document.getElementById('result-exam-sel').value;
+  var genStudents = students.filter(function(s){ return s.stream === 'General'; });
+  if (!genStudents.length) { showToast('⚠️ No General students found.'); return; }
+
+  // Collect all unique subject names across all General students (preserving order from SUBJECTS)
+  var allGeneralSubs = SUBJECTS['General'];
+  var usedSubNames = [];
+  allGeneralSubs.forEach(function(sub){
+    genStudents.forEach(function(st){
+      var stSubs = getStudentSubjects(st);
+      if (stSubs.some(function(s){ return s.name === sub.name; }) && usedSubNames.indexOf(sub.name) === -1) {
+        usedSubNames.push(sub.name);
+      }
+    });
+  });
+
+  var rows = ['"THARPU SECONDARY SCHOOL"', '"'+exam+' — General Stream — Subject Grades & CGPA — 2082/83"', ''];
+  rows.push('"General Stream"');
+
+  // Header: SN, Name, Roll No., [subject grades...], CGPA
+  var hdr = ['SN', 'Name', 'Roll No.'];
+  usedSubNames.forEach(function(name){ hdr.push(name + ' Grade'); });
+  hdr.push('CGPA');
+  rows.push(hdr.map(function(h){ return '"'+h+'"'; }).join(','));
+
+  genStudents.forEach(function(st, i){
+    var saved = marksData[getKey(st.roll, exam)] || {};
+    var stSubs = getStudentSubjects(st);
+    var row = [i+1, st.name, st.roll];
+
+    usedSubNames.forEach(function(subName){
+      // Only fill if this student has this subject
+      var sub = stSubs.find(function(s){ return s.name === subName; });
+      if (!sub) {
+        row.push('N/A');
+        return;
+      }
+      var d = saved[subName] || {};
+      if (d.th !== undefined && (sub.prMax === 0 || d.pr !== undefined)) {
+        var t = (d.th || 0) + (d.pr || 0);
+        var max = sub.thMax + sub.prMax;
+        var gr = getGrade(max > 0 ? t / max * 100 : 0);
+        row.push(gr.g);
+      } else {
+        row.push('');
+      }
+    });
+
+    // CGPA based on student's own subjects
+    var cr = calcCGPA(stSubs, saved);
+    var cgpa = cr.allFilled && cr.totalCredits > 0 ? cr.cgpa.toFixed(2) : '';
+    row.push(cgpa);
+
+    rows.push(row.map(function(c){ return '"'+c+'"'; }).join(','));
+  });
+
+  var csv = '\uFEFF' + rows.join('\n');
+  var a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = 'Tharpu_General_Grades_CGPA_' + exam.replace(/ /g, '_') + '.csv';
+  a.click();
+  showToast('🎓 General Students — Grades & CGPA exported!');
+}
+
 // ============================================================
 // EXPORT & SHARE — data baked into the HTML file itself
 // ============================================================
