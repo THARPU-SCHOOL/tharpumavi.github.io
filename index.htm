@@ -2760,7 +2760,7 @@ function loadGradeSheet() {
         var cgpa=cgpaResult.allFilled&&cgpaResult.totalCredits>0?cgpaResult.cgpa.toFixed(2):'—';
         var _af=cgpaResult.allFilled; var anyNG=cgpaResult.anyNG;
         var res=!_af?'&#9203;':anyNG?'<span style="color:#b71c1c">&#10060; NG</span>':'<span style="color:#1a6e2e">&#9989; Pass</span>';
-        html+='<tr style="'+(idx%2?'background:#fdf6ec':'')+'">'+'<td>'+(idx+1)+'</td>'+'<td style="white-space:nowrap;text-align:left">'+st.name+'</td>'+'<td>'+st.roll+'</td>'+cells+'<td><b>'+(_af?cgpa:'—')+'</b></td>'+'<td>'+res+'</td>'+'<td><button class="btn btn-sm" style="background:var(--maroon);color:white;padding:3px 7px;font-size:0.7rem;border:none;border-radius:5px;cursor:pointer" onclick="showIndividualSheet(''+st.roll+'',''+exam+'')">&#128196;</button></td></tr>';
+        html+='<tr style="'+(idx%2?'background:#fdf6ec':'')+'">'+'<td>'+(idx+1)+'</td>'+'<td style="white-space:nowrap;text-align:left">'+st.name+'</td>'+'<td>'+st.roll+'</td>'+cells+'<td><b>'+(_af?cgpa:'—')+'</b></td>'+'<td>'+res+'</td>'+'<td><button class="btn btn-sm" style="background:var(--maroon);color:white;padding:3px 7px;font-size:0.7rem;border:none;border-radius:5px;cursor:pointer" onclick="showIndividualSheet(this.dataset.roll,this.dataset.exam)" data-roll="'+st.roll+'" data-exam="'+exam+'">&#128196;</button></td></tr>';
       });
       html+='</tbody></table></div>';
     } else {
@@ -2778,7 +2778,7 @@ function loadGradeSheet() {
         html+='<span style="display:flex;align-items:center;gap:10px">';
         html+='<span>CGPA: <b style="color:var(--maroon)">'+cgpa+'</b></span>';
         html+='<span>'+resultStr+'</span>';
-        html+='<button class="btn btn-sm" style="background:var(--maroon);color:white;padding:3px 7px;font-size:0.7rem;border:none;border-radius:5px;cursor:pointer" onclick="showIndividualSheet(''+st.roll+'',''+exam+'')">&#128196; Sheet</button>';
+        html+='<button class="btn btn-sm" style="background:var(--maroon);color:white;padding:3px 7px;font-size:0.7rem;border:none;border-radius:5px;cursor:pointer" onclick="showIndividualSheet(this.dataset.roll,this.dataset.exam)" data-roll="'+st.roll+'" data-exam="'+exam+'">&#128196; Sheet</button>';
         html+='</span></div>';
         html+='<div style="overflow-x:auto"><table class="result-table" style="font-size:0.70rem">';
         html+='<thead><tr style="background:var(--maroon);color:white"><th style="text-align:left">Subject</th><th>Theory GP</th><th>Practical GP</th><th>Final Grade</th><th>GPA</th></tr></thead><tbody>';
