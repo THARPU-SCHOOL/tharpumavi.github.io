@@ -1865,7 +1865,7 @@ var SUBJECTS = {
     {name:"Compulsory Nepali",           thMax:75, prMax:25,credit:3, compulsory:true},
     {name:"Social Studies & Human Value Education",                 thMax:75, prMax:25, credit:5},
     {name:"Accounting",                 thMax:75, prMax:25,credit:5},
-    {name:"Economics",                   thMax:75,prMax:25, credit:5},
+    {name:"Economics",                   thMax:100,prMax:0, credit:5},
     {name:"Business Studies",            thMax:75, prMax:25,credit:5},
     {name:"Population Studies",thMax:75, prMax:25,credit:5},
     {name:"Child Development & Learning",thMax:75, prMax:25,credit:5},
@@ -2736,46 +2736,73 @@ function loadGradeSheet() {
   streams.forEach(function(stream){
     var slist=filtered.filter(function(s){ return s.stream===stream; });
     if (!slist.length) return;
-    var subs=SUBJECTS[stream];
-    html+='<div style="padding:0.8rem 0.8rem 0;font-weight:700;color:var(--maroon)">'+stream+' Stream</div>'+
-      '<div style="overflow-x:auto"><table class="result-table" style="font-size:0.70rem">'+
-      '<thead><tr style="background:var(--maroon);color:white">'+
-      '<th style="text-align:left">SN</th><th style="text-align:left">Name</th><th>Roll</th>';
-    subs.forEach(function(sub){
-      html+='<th>'+sub.name.split(' ').slice(0,2).join(' ')+'<br><small>GPA</small></th>';
-    });
-    html+='<th>CGPA</th><th>Result</th><th>Sheet</th></tr></thead><tbody>';
-    slist.forEach(function(st,idx){
-      var saved=marksData[getKey(st.roll,exam)]||{};
-      var anyNG=false, allFilled=true;
-      var cells=subs.map(function(sub){
-        var d=saved[sub.name]||{};
-        if (d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)) {
-          var th=d.th||0, pr=d.pr||0;
-          var res=getSubjectResult(th,pr,sub.thMax,sub.prMax);
-          if(res.grade==='NG') anyNG=true;
-         return '<td>'+(res.grade==='NG'?'<span style="color:#b71c1c">NG</span>':res.gpa.toFixed(1))+'</td>';
-        } else { allFilled=false; return '<td style="color:#bbb">—</td>'; }
-      }).join('');
-      // Weighted CGPA: Σ(credit×GPA)/Σ(credit)
-      var cgpaResult=calcCGPA(subs,saved);
-      var cgpa=cgpaResult.allFilled&&cgpaResult.totalCredits>0?cgpaResult.cgpa.toFixed(2):'—';
-      var _af=cgpaResult.allFilled;
-      anyNG=cgpaResult.anyNG;
-      var division=!_af?'—':anyNG?'Fail':cgpaDiv(parseFloat(cgpa));
-      var res=!_af?'&#9203;':anyNG?'<span style="color:#b71c1c">&#10060; NG</span>':'<span style="color:#1a6e2e">&#9989; Pass</span>';
-      html+='<tr style="'+(idx%2?'background:#fdf6ec':'')+'" >'+
-        '<td>'+(idx+1)+'</td>'+
-        '<td style="white-space:nowrap;text-align:left">'+st.name+'</td>'+
-        '<td>'+st.roll+'</td>'+
-        cells+
-        '<td><b>'+(_af?cgpa:'—')+'</b></td>'+
-    
-        '<td>'+res+'</td>'+
-        '<td><button class="btn btn-sm" style="background:var(--maroon);color:white;padding:3px 7px;font-size:0.7rem;border:none;border-radius:5px;cursor:pointer" onclick="showIndividualSheet(\''+st.roll+'\',\''+exam+'\')">&#128196;</button></td>'+
-        '</tr>';
-    });
-    html+='</tbody></table></div>';
+    html+='<div style="padding:0.8rem 0.8rem 0;font-weight:700;color:var(--maroon)">'+stream+' Stream</div>';
+    if (stream !== 'General') {
+      // Plant Science: fixed subjects — shared header table
+      var subs=SUBJECTS[stream];
+      html+='<div style="overflow-x:auto"><table class="result-table" style="font-size:0.70rem">'+
+        '<thead><tr style="background:var(--maroon);color:white">'+
+        '<th style="text-align:left">SN</th><th style="text-align:left">Name</th><th>Roll</th>';
+      subs.forEach(function(sub){
+        html+='<th>'+sub.name.split(' ').slice(0,2).join(' ')+'<br><small>GPA</small></th>';
+      });
+      html+='<th>CGPA</th><th>Result</th><th>Sheet</th></tr></thead><tbody>';
+      slist.forEach(function(st,idx){
+        var saved=marksData[getKey(st.roll,exam)]||{};
+        var cells=subs.map(function(sub){
+          var d=saved[sub.name]||{};
+          if (d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)) {
+            var res=getSubjectResult(d.th||0,d.pr||0,sub.thMax,sub.prMax);
+            return '<td>'+(res.grade==='NG'?'<span style="color:#b71c1c">NG</span>':res.gpa.toFixed(1))+'</td>';
+          } else { return '<td style="color:#bbb">—</td>'; }
+        }).join('');
+        var cgpaResult=calcCGPA(subs,saved);
+        var cgpa=cgpaResult.allFilled&&cgpaResult.totalCredits>0?cgpaResult.cgpa.toFixed(2):'—';
+        var _af=cgpaResult.allFilled; var anyNG=cgpaResult.anyNG;
+        var res=!_af?'&#9203;':anyNG?'<span style="color:#b71c1c">&#10060; NG</span>':'<span style="color:#1a6e2e">&#9989; Pass</span>';
+        html+='<tr style="'+(idx%2?'background:#fdf6ec':'')+'">'+'<td>'+(idx+1)+'</td>'+'<td style="white-space:nowrap;text-align:left">'+st.name+'</td>'+'<td>'+st.roll+'</td>'+cells+'<td><b>'+(_af?cgpa:'—')+'</b></td>'+'<td>'+res+'</td>'+'<td><button class="btn btn-sm" style="background:var(--maroon);color:white;padding:3px 7px;font-size:0.7rem;border:none;border-radius:5px;cursor:pointer" onclick="showIndividualSheet(''+st.roll+'',''+exam+'')">&#128196;</button></td></tr>';
+      });
+      html+='</tbody></table></div>';
+    } else {
+      // General stream: each student has their own assigned subjects — render per-student card
+      slist.forEach(function(st,idx){
+        var stSubs=getStudentSubjects(st);
+        var saved=marksData[getKey(st.roll,exam)]||{};
+        var cgpaResult=calcCGPA(stSubs,saved);
+        var cgpa=cgpaResult.allFilled&&cgpaResult.totalCredits>0?cgpaResult.cgpa.toFixed(2):'—';
+        var _af=cgpaResult.allFilled; var anyNG=cgpaResult.anyNG;
+        var resultStr=!_af?'&#9203; Pending':anyNG?'<span style="color:#b71c1c">&#10060; NG</span>':'<span style="color:#1a6e2e">&#9989; Pass</span>';
+        html+='<div style="margin:0.5rem 0;border:1px solid var(--border);border-radius:8px;overflow:hidden">';
+        html+='<div style="background:var(--cream-dark);padding:5px 10px;display:flex;align-items:center;justify-content:space-between;font-size:0.8rem">';
+        html+='<span><b>'+(idx+1)+'. '+st.name+'</b>   Roll: '+st.roll+'</span>';
+        html+='<span style="display:flex;align-items:center;gap:10px">';
+        html+='<span>CGPA: <b style="color:var(--maroon)">'+cgpa+'</b></span>';
+        html+='<span>'+resultStr+'</span>';
+        html+='<button class="btn btn-sm" style="background:var(--maroon);color:white;padding:3px 7px;font-size:0.7rem;border:none;border-radius:5px;cursor:pointer" onclick="showIndividualSheet(''+st.roll+'',''+exam+'')">&#128196; Sheet</button>';
+        html+='</span></div>';
+        html+='<div style="overflow-x:auto"><table class="result-table" style="font-size:0.70rem">';
+        html+='<thead><tr style="background:var(--maroon);color:white"><th style="text-align:left">Subject</th><th>Theory GP</th><th>Practical GP</th><th>Final Grade</th><th>GPA</th></tr></thead><tbody>';
+        stSubs.forEach(function(sub,si){
+          var d=saved[sub.name]||{};
+          if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
+            var res=getSubjectResult(d.th||0,d.pr||0,sub.thMax,sub.prMax);
+            html+='<tr style="'+(si%2?'background:#fdf6ec':'')+'">'+
+              '<td style="text-align:left">'+sub.name+'</td>'+
+              '<td>'+res.thGpa.toFixed(1)+' ('+res.thGrade+')</td>'+
+              '<td>'+(sub.prMax>0?res.prGpa.toFixed(1)+' ('+res.prGrade+')':'—')+'</td>'+
+              '<td>'+(res.grade==='NG'?'<span style="color:#b71c1c">NG</span>':'<b>'+res.grade+'</b>')+'</td>'+
+              '<td><b>'+(res.grade==='NG'?'0.0':res.gpa.toFixed(1))+'</b></td>'+
+              '</tr>';
+          } else {
+            html+='<tr style="'+(si%2?'background:#fdf6ec':'')+'">'+
+              '<td style="text-align:left;color:#888">'+sub.name+' <small>(pending)</small></td>'+
+              '<td style="color:#bbb">—</td><td style="color:#bbb">—</td><td style="color:#bbb">—</td><td style="color:#bbb">—</td>'+
+              '</tr>';
+          }
+        });
+        html+='</tbody></table></div></div>';
+      });
+    }
   });
   html+='<div style="padding:0.7rem;font-size:0.72rem;color:var(--text-muted)">Generated: '+new Date().toLocaleString()+' | Tharpu Secondary School</div></div>';
   area.innerHTML=html;
@@ -2827,7 +2854,7 @@ var subjectCodes = {
   'Population Studies':   '2231',
   'Business Studies': '2151',
   'Child Development & Learning': '1151',
-  'Opt. English': '3331',
+  'Opt English': '3331',
   'Opt Nepali':  '3311'
 };
 
