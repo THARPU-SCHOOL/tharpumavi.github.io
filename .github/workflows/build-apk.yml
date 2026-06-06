@@ -38,6 +38,9 @@ jobs:
       - name: Decode Keystore
         run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > my-release-key.jks
 
+      - name: Debug keystore
+        run: keytool -list -keystore my-release-key.jks -storepass ${{ secrets.KEYSTORE_PASSWORD }} -alias ${{ secrets.KEY_ALIAS }}
+
       - name: Build APK
         run: |
           cd pwa2apk && node bin/pwa2apk.js \
@@ -46,26 +49,15 @@ jobs:
             --package com.tharpumavi.app \
             --output ../dist
 
-     - name: Debug - Check keystore
-        run: |
-          echo "Checking keystore file..."
-          ls -la my-release-key.jks
-          echo "Testing keystore password..."
-          keytool -list -keystore my-release-key.jks -storepass ${{ secrets.KEYSTORE_PASSWORD }} -alias ${{ secrets.KEY_ALIAS }}
-
-      - name: Debug - Find APK
-        run: |
-          echo "Looking for APK files..."
-          find . -name "*.apk" 2>/dev/null
-          echo "Build tools available:"
-          ls $ANDROID_SDK_ROOT/build-tools/
+      - name: Find APK
+        run: find . -name "*.apk" 2>/dev/null
 
       - name: Sign APK
         run: |
           BUILD_TOOLS=$(ls $ANDROID_SDK_ROOT/build-tools | tail -1)
-          echo "Using build tools: $BUILD_TOOLS"
           APK_FILE=$(find . -name "*.apk" | head -1)
-          echo "Signing APK: $APK_FILE"
+          echo "Build tools version: $BUILD_TOOLS"
+          echo "APK file: $APK_FILE"
           $ANDROID_SDK_ROOT/build-tools/$BUILD_TOOLS/apksigner sign \
             --ks my-release-key.jks \
             --ks-pass pass:${{ secrets.KEYSTORE_PASSWORD }} \
