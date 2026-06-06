@@ -15,7 +15,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '20'
 
       - name: Set up Java 17
         uses: actions/setup-java@v4
@@ -23,36 +23,41 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Install Bubblewrap CLI
-        run: npm install -g @bubblewrap/cli
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Accept Android licenses
+        run: yes | sdkmanager --licenses || true
+
+      - name: Clone pwa2apk
+        run: git clone https://github.com/Tonihj77-T/pwa2apk.git
+
+      - name: Install pwa2apk
+        run: cd pwa2apk && npm install
 
       - name: Decode Keystore
-        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android.keystore
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > my-release-key.jks
 
-      - name: Create Bubblewrap config
+      - name: Build APK
         run: |
-          mkdir -p ~/.bubblewrap
-          cat > ~/.bubblewrap/config.json << EOF
-          {
-            "jdkPath": "$JAVA_HOME",
-            "androidSdkPath": "$ANDROID_SDK_ROOT"
-          }
-          EOF
+          cd pwa2apk && node bin/pwa2apk.js \
+            --url https://tharpu-school.github.io/tharpumavi.github.io/ \
+            --name "Tharpu Mavi" \
+            --package com.tharpumavi.app \
+            --output ../dist
 
-      - name: Initialize TWA project
-        run: bubblewrap init --manifest https://tharpu-school.github.io/tharpumavi.github.io/manifest.json
-        env:
-          BUBBLEWRAP_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          BUBBLEWRAP_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-
-      - name: Build Signed APK
-        run: bubblewrap build --signingKeyPath=./android.keystore --signingKeyAlias=${{ secrets.KEY_ALIAS }}
-        env:
-          BUBBLEWRAP_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          BUBBLEWRAP_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      - name: Sign APK
+        run: |
+          $ANDROID_SDK_ROOT/build-tools/$(ls $ANDROID_SDK_ROOT/build-tools | tail -1)/apksigner sign \
+            --ks my-release-key.jks \
+            --ks-pass pass:${{ secrets.KEYSTORE_PASSWORD }} \
+            --key-pass pass:${{ secrets.KEY_PASSWORD }} \
+            --ks-key-alias ${{ secrets.KEY_ALIAS }} \
+            --out dist/app-signed.apk \
+            dist/*.apk
 
       - name: Upload Signed APK
         uses: actions/upload-artifact@v4
         with:
           name: signed-apk
-          path: ./*.apk
+          path: dist/app-signed.apk
