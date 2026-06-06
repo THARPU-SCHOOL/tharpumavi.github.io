@@ -45,67 +45,46 @@ jobs:
             --package com.tharpumavi.app \
             --output ../dist
 
-      - name: Debug - Show generated Gradle wrapper
-        run: |
-          echo "=== gradle-wrapper.properties ==="
-          cat dist/android-project/gradle/wrapper/gradle-wrapper.properties
-          echo ""
-          echo "=== project build.gradle ==="
-          cat dist/android-project/build.gradle || cat dist/android-project/build.gradle.kts || echo "not found"
-          echo ""
-          echo "=== app build.gradle ==="
-          cat dist/android-project/app/build.gradle || cat dist/android-project/app/build.gradle.kts || echo "not found"
-
-      - name: Force Gradle 8.11.1
-        run: |
-          WRAPPER="dist/android-project/gradle/wrapper/gradle-wrapper.properties"
-          # Overwrite entire file to be safe
-          cat > "$WRAPPER" << 'EOF'
-          distributionBase=GRADLE_USER_HOME
-          distributionPath=wrapper/dists
-          distributionUrl=https\://services.gradle.org/distributions/gradle-8.11.1-bin.zip
-          networkTimeout=10000
-          validateDistributionUrl=true
-          zipStoreBase=GRADLE_USER_HOME
-          zipStorePath=wrapper/dists
-          EOF
-          echo "=== Verified wrapper ==="
-          cat "$WRAPPER"
-
-      - name: Downgrade AGP to be compatible with Gradle 8
-        run: |
-          BUILD="dist/android-project/build.gradle"
-          BUILD_KTS="dist/android-project/build.gradle.kts"
-          if [ -f "$BUILD" ]; then
-            sed -i "s/com.android.tools.build:gradle:[0-9.]*/com.android.tools.build:gradle:8.2.2/g" "$BUILD"
-            echo "=== project build.gradle after patch ==="
-            cat "$BUILD"
-          fi
-          if [ -f "$BUILD_KTS" ]; then
-            sed -i "s/com.android.application.*version \"[0-9.]*\"/com.android.application\" version \"8.2.2\"/g" "$BUILD_KTS"
-            echo "=== project build.gradle.kts after patch ==="
-            cat "$BUILD_KTS"
-          fi
-
       - name: Decode Keystore
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         run: |
           echo "$KEYSTORE_BASE64" | base64 --decode > dist/android-project/my-release-key.jks
 
+      - name: Patch Gradle files
+        run: |
+          PROJECT="dist/android-project"
+
+          # Fix 1: Downgrade Gradle to 8.3 (8.5 has config mutation bug with androidbrowserhelper)
+          cat > "$PROJECT/gradle/wrapper/gradle-wrapper.properties" << 'EOF'
+          distributionBase=GRADLE_USER_HOME
+          distributionPath=wrapper/dists
+          distributionUrl=https\://services.gradle.org/distributions/gradle-8.3-bin.zip
+          networkTimeout=10000
+          validateDistributionUrl=true
+          zipStoreBase=GRADLE_USER_HOME
+          zipStorePath=wrapper/dists
+          EOF
+
+          # Fix 2: The app/build.gradle expects RELEASE_STORE_FILE property, not android.injected.*
+          # Add signing properties to gradle.properties so the signingConfigs block picks them up
+          cat >> "$PROJECT/gradle.properties" << EOF
+
+          RELEASE_STORE_FILE=$(pwd)/$PROJECT/my-release-key.jks
+          RELEASE_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}
+          RELEASE_KEY_ALIAS=${{ secrets.KEY_ALIAS }}
+          RELEASE_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}
+          EOF
+
+          # Fix 3: Suppress known compat warnings
+          echo "android.suppressUnsupportedCompileSdk=34" >> "$PROJECT/gradle.properties"
+          echo "android.useAndroidX=true" >> "$PROJECT/gradle.properties"
+
       - name: Build and Sign APK with Gradle
-        env:
-          KSPASS: ${{ secrets.KEYSTORE_PASSWORD }}
-          KSALIAS: ${{ secrets.KEY_ALIAS }}
-          KEYPASS: ${{ secrets.KEY_PASSWORD }}
         run: |
           cd dist/android-project
           chmod +x gradlew
-          ./gradlew assembleRelease \
-            -Pandroid.injected.signing.store.file=$(pwd)/my-release-key.jks \
-            -Pandroid.injected.signing.store.password="$KSPASS" \
-            -Pandroid.injected.signing.key.alias="$KSALIAS" \
-            -Pandroid.injected.signing.key.password="$KEYPASS"
+          ./gradlew assembleRelease --stacktrace
 
       - name: Find signed APK
         run: find dist -name "*.apk" 2>/dev/null
