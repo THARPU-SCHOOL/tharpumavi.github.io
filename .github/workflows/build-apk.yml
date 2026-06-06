@@ -45,46 +45,77 @@ jobs:
             --package com.tharpumavi.app \
             --output ../dist
 
-      - name: Decode Keystore
-        env:
-          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
-        run: |
-          echo "$KEYSTORE_BASE64" | base64 --decode > dist/android-project/my-release-key.jks
-
-      - name: Patch Gradle files
+      - name: Patch Android project
         run: |
           PROJECT="dist/android-project"
 
-          # Fix 1: Downgrade Gradle to 8.3 (8.5 has config mutation bug with androidbrowserhelper)
+          # 1. Pin Gradle to 7.6.1 — last version where androidbrowserhelper works cleanly
           cat > "$PROJECT/gradle/wrapper/gradle-wrapper.properties" << 'EOF'
           distributionBase=GRADLE_USER_HOME
           distributionPath=wrapper/dists
-          distributionUrl=https\://services.gradle.org/distributions/gradle-8.3-bin.zip
+          distributionUrl=https\://services.gradle.org/distributions/gradle-7.6.1-bin.zip
           networkTimeout=10000
           validateDistributionUrl=true
           zipStoreBase=GRADLE_USER_HOME
           zipStorePath=wrapper/dists
           EOF
 
-          # Fix 2: The app/build.gradle expects RELEASE_STORE_FILE property, not android.injected.*
-          # Add signing properties to gradle.properties so the signingConfigs block picks them up
-          cat >> "$PROJECT/gradle.properties" << EOF
-
-          RELEASE_STORE_FILE=$(pwd)/$PROJECT/my-release-key.jks
-          RELEASE_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}
-          RELEASE_KEY_ALIAS=${{ secrets.KEY_ALIAS }}
-          RELEASE_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}
+          # 2. Pin AGP to 7.4.2 — compatible with Gradle 7.6.1
+          cat > "$PROJECT/build.gradle" << 'EOF'
+          buildscript {
+              repositories {
+                  google()
+                  mavenCentral()
+              }
+              dependencies {
+                  classpath 'com.android.tools.build:gradle:7.4.2'
+              }
+          }
+          allprojects {
+              repositories {
+                  google()
+                  mavenCentral()
+                  maven { url "https://jitpack.io" }
+              }
+          }
+          task clean(type: Delete) {
+              delete rootProject.buildDir
+          }
           EOF
 
-          # Fix 3: Suppress known compat warnings
-          echo "android.suppressUnsupportedCompileSdk=34" >> "$PROJECT/gradle.properties"
-          echo "android.useAndroidX=true" >> "$PROJECT/gradle.properties"
+          # 3. Fix gradle.properties
+          cat > "$PROJECT/gradle.properties" << 'EOF'
+          org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8
+          android.useAndroidX=true
+          android.enableJetifier=true
+          EOF
 
-      - name: Build and Sign APK with Gradle
+          # 4. Verify
+          echo "=== wrapper ==="
+          cat "$PROJECT/gradle/wrapper/gradle-wrapper.properties"
+          echo "=== build.gradle ==="
+          cat "$PROJECT/build.gradle"
+
+      - name: Decode Keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 --decode > dist/android-project/my-release-key.jks
+
+      - name: Build and Sign APK
+        env:
+          KSPASS: ${{ secrets.KEYSTORE_PASSWORD }}
+          KSALIAS: ${{ secrets.KEY_ALIAS }}
+          KEYPASS: ${{ secrets.KEY_PASSWORD }}
         run: |
           cd dist/android-project
           chmod +x gradlew
-          ./gradlew assembleRelease --stacktrace
+          ./gradlew assembleRelease \
+            -PRELEASE_STORE_FILE=$(pwd)/my-release-key.jks \
+            -PRELEASE_STORE_PASSWORD="$KSPASS" \
+            -PRELEASE_KEY_ALIAS="$KSALIAS" \
+            -PRELEASE_KEY_PASSWORD="$KEYPASS" \
+            --stacktrace
 
       - name: Find signed APK
         run: find dist -name "*.apk" 2>/dev/null
