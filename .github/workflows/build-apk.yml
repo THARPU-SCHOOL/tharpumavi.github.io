@@ -43,21 +43,23 @@ jobs:
             --name "Tharpu Mavi" \
             --package com.tharpumavi.app \
             --output ../dist
+          echo "Exit code: $?"
 
-      - name: Find all APK files
-        run: find . -name "*.apk" 2>/dev/null
-
-      - name: Copy APK to dist root
+      - name: Show all files after build
         run: |
-          APK=$(find . -name "*.apk" | head -1)
-          echo "Found APK: $APK"
-          cp "$APK" dist/app-release.apk
+          echo "=== dist folder ==="
+          find dist -type f 2>/dev/null || echo "dist empty"
+          echo "=== android.project folder ==="
+          find dist/android.project -type f 2>/dev/null || echo "no android.project"
+          echo "=== ALL files in workspace ==="
+          find . -type f -name "*.apk" 2>/dev/null || echo "no apk found"
+          find . -type f -name "*.aab" 2>/dev/null || echo "no aab found"
 
       - name: Sign APK
         uses: r0adkll/sign-android-release@v1
         id: sign_app
         with:
-          releaseDirectory: dist
+          releaseDirectory: dist/android.project
           signingKeyBase64: ${{ secrets.KEYSTORE_BASE64 }}
           alias: ${{ secrets.KEY_ALIAS }}
           keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
