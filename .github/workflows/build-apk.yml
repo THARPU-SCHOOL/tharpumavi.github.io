@@ -45,11 +45,47 @@ jobs:
             --package com.tharpumavi.app \
             --output ../dist
 
-      - name: Force Gradle 8.11.1 (fix Gradle 10 incompatibility)
+      - name: Debug - Show generated Gradle wrapper
         run: |
-          WRAPPER=dist/android-project/gradle/wrapper/gradle-wrapper.properties
-          sed -i 's|distributionUrl=.*|distributionUrl=https\\://services.gradle.org/distributions/gradle-8.11.1-bin.zip|' "$WRAPPER"
+          echo "=== gradle-wrapper.properties ==="
+          cat dist/android-project/gradle/wrapper/gradle-wrapper.properties
+          echo ""
+          echo "=== project build.gradle ==="
+          cat dist/android-project/build.gradle || cat dist/android-project/build.gradle.kts || echo "not found"
+          echo ""
+          echo "=== app build.gradle ==="
+          cat dist/android-project/app/build.gradle || cat dist/android-project/app/build.gradle.kts || echo "not found"
+
+      - name: Force Gradle 8.11.1
+        run: |
+          WRAPPER="dist/android-project/gradle/wrapper/gradle-wrapper.properties"
+          # Overwrite entire file to be safe
+          cat > "$WRAPPER" << 'EOF'
+          distributionBase=GRADLE_USER_HOME
+          distributionPath=wrapper/dists
+          distributionUrl=https\://services.gradle.org/distributions/gradle-8.11.1-bin.zip
+          networkTimeout=10000
+          validateDistributionUrl=true
+          zipStoreBase=GRADLE_USER_HOME
+          zipStorePath=wrapper/dists
+          EOF
+          echo "=== Verified wrapper ==="
           cat "$WRAPPER"
+
+      - name: Downgrade AGP to be compatible with Gradle 8
+        run: |
+          BUILD="dist/android-project/build.gradle"
+          BUILD_KTS="dist/android-project/build.gradle.kts"
+          if [ -f "$BUILD" ]; then
+            sed -i "s/com.android.tools.build:gradle:[0-9.]*/com.android.tools.build:gradle:8.2.2/g" "$BUILD"
+            echo "=== project build.gradle after patch ==="
+            cat "$BUILD"
+          fi
+          if [ -f "$BUILD_KTS" ]; then
+            sed -i "s/com.android.application.*version \"[0-9.]*\"/com.android.application\" version \"8.2.2\"/g" "$BUILD_KTS"
+            echo "=== project build.gradle.kts after patch ==="
+            cat "$BUILD_KTS"
+          fi
 
       - name: Decode Keystore
         env:
