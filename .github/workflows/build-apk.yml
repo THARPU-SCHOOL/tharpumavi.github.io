@@ -30,98 +30,96 @@ jobs:
       - name: Accept Android licenses
         run: yes | sdkmanager --licenses || true
 
-      - name: Clone pwa2apk
-        run: git clone https://github.com/Tonihj77-T/pwa2apk.git
-
-      - name: Install pwa2apk
-        run: cd pwa2apk && npm install
-
-      - name: Generate Android project
-        run: |
-          mkdir -p dist
-          cd pwa2apk && node bin/pwa2apk.js \
-            --url https://tharpu-school.github.io/tharpumavi.github.io/ \
-            --name "Tharpu Mavi" \
-            --package com.tharpumavi.app \
-            --output ../dist
-
-      - name: Patch Android project
-        run: |
-          PROJECT="dist/android-project"
-
-          # 1. Pin Gradle to 7.6.1 — last version where androidbrowserhelper works cleanly
-          cat > "$PROJECT/gradle/wrapper/gradle-wrapper.properties" << 'EOF'
-          distributionBase=GRADLE_USER_HOME
-          distributionPath=wrapper/dists
-          distributionUrl=https\://services.gradle.org/distributions/gradle-7.6.1-bin.zip
-          networkTimeout=10000
-          validateDistributionUrl=true
-          zipStoreBase=GRADLE_USER_HOME
-          zipStorePath=wrapper/dists
-          EOF
-
-          # 2. Pin AGP to 7.4.2 — compatible with Gradle 7.6.1
-          cat > "$PROJECT/build.gradle" << 'EOF'
-          buildscript {
-              repositories {
-                  google()
-                  mavenCentral()
-              }
-              dependencies {
-                  classpath 'com.android.tools.build:gradle:7.4.2'
-              }
-          }
-          allprojects {
-              repositories {
-                  google()
-                  mavenCentral()
-                  maven { url "https://jitpack.io" }
-              }
-          }
-          task clean(type: Delete) {
-              delete rootProject.buildDir
-          }
-          EOF
-
-          # 3. Fix gradle.properties
-          cat > "$PROJECT/gradle.properties" << 'EOF'
-          org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8
-          android.useAndroidX=true
-          android.enableJetifier=true
-          EOF
-
-          # 4. Verify
-          echo "=== wrapper ==="
-          cat "$PROJECT/gradle/wrapper/gradle-wrapper.properties"
-          echo "=== build.gradle ==="
-          cat "$PROJECT/build.gradle"
+      - name: Install Bubblewrap
+        run: npm install -g @bubblewrap/cli
 
       - name: Decode Keystore
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         run: |
-          echo "$KEYSTORE_BASE64" | base64 --decode > dist/android-project/my-release-key.jks
+          mkdir -p twa
+          echo "$KEYSTORE_BASE64" | base64 --decode > twa/my-release-key.jks
+
+      - name: Configure Bubblewrap (skip interactive setup)
+        run: |
+          mkdir -p ~/.bubblewrap
+          cat > ~/.bubblewrap/config.json << EOF
+          {
+            "jdkPath": "$JAVA_HOME",
+            "androidSdkPath": "/usr/local/lib/android/sdk"
+          }
+          EOF
+
+      - name: Create twa-manifest.json
+        env:
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          cat > twa/twa-manifest.json << EOF
+          {
+            "packageId": "com.tharpumavi.app",
+            "host": "tharpu-school.github.io",
+            "name": "Tharpu Mavi",
+            "launcherName": "Tharpu Mavi",
+            "display": "standalone",
+            "themeColor": "#FFFFFF",
+            "navigationColor": "#000000",
+            "navigationColorDark": "#000000",
+            "navigationDividerColor": "#000000",
+            "navigationDividerColorDark": "#000000",
+            "backgroundColor": "#FFFFFF",
+            "enableNotifications": false,
+            "startUrl": "/tharpumavi.github.io/",
+            "iconUrl": "https://tharpu-school.github.io/tharpumavi.github.io/icons/icon-512x512.png",
+            "maskableIconUrl": "https://tharpu-school.github.io/tharpumavi.github.io/icons/icon-512x512.png",
+            "monochromeIconUrl": "https://tharpu-school.github.io/tharpumavi.github.io/icons/icon-512x512.png",
+            "shortcuts": [],
+            "webManifestUrl": "https://tharpu-school.github.io/tharpumavi.github.io/manifest.json",
+            "signingKey": {
+              "path": "./my-release-key.jks",
+              "alias": "$KEY_ALIAS"
+            },
+            "appVersionCode": 1,
+            "appVersionName": "1.0.0",
+            "isChromeOSOnly": false,
+            "isMetaQuest": false,
+            "fullScopeUrl": "https://tharpu-school.github.io/tharpumavi.github.io/",
+            "minSdkVersion": 21,
+            "orientation": "default",
+            "fingerprints": [],
+            "alphaDependencies": { "enabled": false },
+            "enableSiteSettingsShortcut": true,
+            "isTrustedWebActivity": true,
+            "serviceAccountJsonFile": "",
+            "fallbackType": "customtabs",
+            "features": {},
+            "additionalTrustedOrigins": [],
+            "retainedBundles": []
+          }
+          EOF
+
+      - name: Generate Android project with Bubblewrap
+        run: |
+          cd twa
+          bubblewrap update --skipPwaValidation
 
       - name: Build and Sign APK
         env:
-          KSPASS: ${{ secrets.KEYSTORE_PASSWORD }}
-          KSALIAS: ${{ secrets.KEY_ALIAS }}
-          KEYPASS: ${{ secrets.KEY_PASSWORD }}
+          BUBBLEWRAP_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          BUBBLEWRAP_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          cd dist/android-project
-          chmod +x gradlew
-          ./gradlew assembleRelease \
-            -PRELEASE_STORE_FILE=$(pwd)/my-release-key.jks \
-            -PRELEASE_STORE_PASSWORD="$KSPASS" \
-            -PRELEASE_KEY_ALIAS="$KSALIAS" \
-            -PRELEASE_KEY_PASSWORD="$KEYPASS" \
-            --stacktrace
+          cd twa
+          bubblewrap build \
+            --skipPwaValidation \
+            --signingKeyPath="./my-release-key.jks" \
+            --signingKeyAlias="${{ secrets.KEY_ALIAS }}"
 
-      - name: Find signed APK
-        run: find dist -name "*.apk" 2>/dev/null
+      - name: Find APK
+        run: find twa -name "*.apk" 2>/dev/null
 
       - name: Upload Signed APK
         uses: actions/upload-artifact@v4
         with:
           name: signed-apk
-          path: dist/android-project/app/build/outputs/apk/release/*.apk
+          path: twa/app-release-signed.apk
