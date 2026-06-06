@@ -35,7 +35,7 @@ jobs:
       - name: Install pwa2apk
         run: cd pwa2apk && npm install
 
-      - name: Build APK
+      - name: Generate Android project
         run: |
           mkdir -p dist
           cd pwa2apk && node bin/pwa2apk.js \
@@ -43,30 +43,32 @@ jobs:
             --name "Tharpu Mavi" \
             --package com.tharpumavi.app \
             --output ../dist
-          echo "Exit code: $?"
 
-      - name: Show all files after build
+      - name: Decode Keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         run: |
-          echo "=== dist folder ==="
-          find dist -type f 2>/dev/null || echo "dist empty"
-          echo "=== android.project folder ==="
-          find dist/android.project -type f 2>/dev/null || echo "no android.project"
-          echo "=== ALL files in workspace ==="
-          find . -type f -name "*.apk" 2>/dev/null || echo "no apk found"
-          find . -type f -name "*.aab" 2>/dev/null || echo "no aab found"
+          echo "$KEYSTORE_BASE64" | base64 --decode > dist/android-project/my-release-key.jks
 
-      - name: Sign APK
-        uses: r0adkll/sign-android-release@v1
-        id: sign_app
-        with:
-          releaseDirectory: dist/android.project
-          signingKeyBase64: ${{ secrets.KEYSTORE_BASE64 }}
-          alias: ${{ secrets.KEY_ALIAS }}
-          keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
+      - name: Build and Sign APK with Gradle
+        env:
+          KSPASS: ${{ secrets.KEYSTORE_PASSWORD }}
+          KSALIAS: ${{ secrets.KEY_ALIAS }}
+          KEYPASS: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          cd dist/android-project
+          chmod +x gradlew
+          ./gradlew assembleRelease \
+            -Pandroid.injected.signing.store.file=$(pwd)/my-release-key.jks \
+            -Pandroid.injected.signing.store.password="$KSPASS" \
+            -Pandroid.injected.signing.key.alias="$KSALIAS" \
+            -Pandroid.injected.signing.key.password="$KEYPASS"
+
+      - name: Find signed APK
+        run: find dist -name "*.apk" 2>/dev/null
 
       - name: Upload Signed APK
         uses: actions/upload-artifact@v4
         with:
           name: signed-apk
-          path: ${{ steps.sign_app.outputs.signedReleaseFile }}
+          path: dist/android-project/app/build/outputs/apk/release/*.apk
