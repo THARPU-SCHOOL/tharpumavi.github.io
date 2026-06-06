@@ -38,17 +38,14 @@ jobs:
       - name: Decode Keystore
         run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > my-release-key.jks
 
-        - name: Test password
+      - name: Test password
+        env:
+          KSPASS: ${{ secrets.KEYSTORE_PASSWORD }}
+          KSALIAS: ${{ secrets.KEY_ALIAS }}
         run: |
           echo "Password length: ${#KSPASS}"
           echo "Alias: $KSALIAS"
           keytool -list -keystore my-release-key.jks -storepass "$KSPASS" -alias "$KSALIAS"
-        env:
-          KSPASS: ${{ secrets.KEYSTORE_PASSWORD }}
-          KSALIAS: ${{ secrets.KEY_ALIAS }}
-
-      - name: Debug keystore
-        run: keytool -list -keystore my-release-key.jks -storepass ${{ secrets.KEYSTORE_PASSWORD }} -alias ${{ secrets.KEY_ALIAS }}
 
       - name: Build APK
         run: |
@@ -62,16 +59,20 @@ jobs:
         run: find . -name "*.apk" 2>/dev/null
 
       - name: Sign APK
+        env:
+          KSPASS: ${{ secrets.KEYSTORE_PASSWORD }}
+          KSALIAS: ${{ secrets.KEY_ALIAS }}
+          KEYPASS: ${{ secrets.KEY_PASSWORD }}
         run: |
           BUILD_TOOLS=$(ls $ANDROID_SDK_ROOT/build-tools | tail -1)
           APK_FILE=$(find . -name "*.apk" | head -1)
-          echo "Build tools version: $BUILD_TOOLS"
-          echo "APK file: $APK_FILE"
+          echo "Build tools: $BUILD_TOOLS"
+          echo "APK: $APK_FILE"
           $ANDROID_SDK_ROOT/build-tools/$BUILD_TOOLS/apksigner sign \
             --ks my-release-key.jks \
-            --ks-pass pass:${{ secrets.KEYSTORE_PASSWORD }} \
-            --key-pass pass:${{ secrets.KEY_PASSWORD }} \
-            --ks-key-alias ${{ secrets.KEY_ALIAS }} \
+            --ks-pass pass:"$KSPASS" \
+            --key-pass pass:"$KEYPASS" \
+            --ks-key-alias "$KSALIAS" \
             --out dist/app-signed.apk \
             "$APK_FILE"
 
