@@ -2784,9 +2784,9 @@ var rows=sortedSubs.map(function(sub,i){
 
     // Three signatures below the gradesheet
     '<div style="display:flex;justify-content:space-between;margin-top:32px;font-size:11px">'+
-      '<div style="text-align:center"><div style="height:40px"></div><div style="border-top:1px solid #000;width:150px;padding-top:4px"><b>Checked by</b><br>(Class Teacher)(ROSHAN NIROULA)</div></div>'+
-      '<div style="text-align:center"><div style="height:40px"></div><div style="border-top:1px solid #000;width:150px;padding-top:4px"><b>Prepared by</b></div></div>'+
-      '<div style="text-align:center"><div style="height:40px"></div><div style="border-top:1px solid #000;width:150px;padding-top:4px"><b>Verified by</b><br>(Head Teacher)</div></div>'+
+      '<div style="text-align:center"><div style="height:40px"></div><div style="border-top:1px solid #000;width:150px;padding-top:4px"><b>Checked by</b><br>(Class Teacher)<br><span style="font-size:11px">'+getTeacherName()+'</span></div></div>'+
+      '<div style="text-align:center"><div style="height:40px"></div><div style="border-top:1px solid #000;width:150px;padding-top:4px"><b>Prepared by</b><br><span style="font-size:11px">'+getPreparedByName()+'</span></div></div>'+
+      '<div style="text-align:center"><div style="height:40px"></div><div style="border-top:1px solid #000;width:150px;padding-top:4px"><b>Verified by</b><br>(Head Teacher)<br><span style="font-size:11px">'+getPrincipalName()+'</span></div></div>'+
     '</div>'+
 
     // Print button
@@ -3130,9 +3130,9 @@ function printAllSheets(){
       '<table><thead><tr><th>Code</th><th>Subject</th><th>CH</th><th>Grade Point</th><th>Grade</th><th>Final Grade</th><th>Remarks</th></tr></thead><tbody>'+rows+'</tbody></table>'+
       '<div style="margin-top:10px;font-size:13px"><b>CGPA: '+cgpa+'</b></div>'+
       '<div style="display:flex;justify-content:space-between;margin-top:28px;font-size:11px">'+
-        '<div style="text-align:center"><div style="height:32px"></div><div style="border-top:1px solid #000;width:130px;padding-top:4px"><b>Checked by</b><br>(Class Teacher)</div></div>'+
-        '<div style="text-align:center"><div style="height:32px"></div><div style="border-top:1px solid #000;width:130px;padding-top:4px"><b>Prepared by</b></div></div>'+
-        '<div style="text-align:center"><div style="height:32px"></div><div style="border-top:1px solid #000;width:130px;padding-top:4px"><b>Verified by</b><br>(Head Teacher)</div></div>'+
+        '<div style="text-align:center"><div style="height:32px"></div><div style="border-top:1px solid #000;width:130px;padding-top:4px"><b>Checked by</b><br>(Class Teacher)<br><span style="font-size:11px">'+getTeacherName()+'</span></div></div>'+
+        '<div style="text-align:center"><div style="height:32px"></div><div style="border-top:1px solid #000;width:130px;padding-top:4px"><b>Prepared by</b><br><span style="font-size:11px">'+getPreparedByName()+'</span></div></div>'+
+        '<div style="text-align:center"><div style="height:32px"></div><div style="border-top:1px solid #000;width:130px;padding-top:4px"><b>Verified by</b><br>(Head Teacher)<br><span style="font-size:11px">'+getPrincipalName()+'</span></div></div>'+
       '</div>'+
     '</div>'+backPage;
   }).join('');
@@ -4084,8 +4084,11 @@ function exportFeesCSV(){
         <div class="form-group"><label>Principal Name</label>
           <input type="text" id="set-principal" value="">
         </div>
-        <div class="form-group"><label>Class Teacher</label>
+        <div class="form-group"><label>Checked by (Class Teacher)</label>
           <input type="text" id="set-teacher" value="">
+        </div>
+        <div class="form-group"><label>Prepared by</label>
+          <input type="text" id="set-preparedby" value="">
         </div>
         <div class="btn-row">
           <button class="btn btn-primary" onclick="saveSchoolSettings()">💾 Save Settings</button>
@@ -4276,7 +4279,7 @@ try { schoolSettings = JSON.parse(localStorage.getItem('tss_settings')||'{}'); }
 
 function loadSchoolSettings() {
   var def = {name:'THARPU SECONDARY SCHOOL',address:'Yangwarak-4, Panchthar, Koshi Province, Nepal',
-    code:'TSS-PAN-2082',year:'2082/83',principal:'',teacher:''};
+    code:'TSS-PAN-2082',year:'2082/83',principal:'',teacher:'',preparedby:''};
   Object.assign(def, schoolSettings);
   var f = function(id, v) { var el = document.getElementById(id); if(el) el.value = v; };
   f('set-school-name', def.name);
@@ -4285,6 +4288,7 @@ function loadSchoolSettings() {
   f('set-acad-year', def.year);
   f('set-principal', def.principal);
   f('set-teacher', def.teacher);
+  f('set-preparedby', def.preparedby);
 }
 function saveSchoolSettings() {
   schoolSettings = {
@@ -4293,7 +4297,8 @@ function saveSchoolSettings() {
     code: sanitize(document.getElementById('set-school-code').value.trim()),
     year: sanitize(document.getElementById('set-acad-year').value.trim()),
     principal: sanitize(document.getElementById('set-principal').value.trim()),
-    teacher: sanitize(document.getElementById('set-teacher').value.trim())
+    teacher: sanitize(document.getElementById('set-teacher').value.trim()),
+    preparedby: sanitize(document.getElementById('set-preparedby').value.trim())
   };
   try { localStorage.setItem('tss_settings', JSON.stringify(schoolSettings)); } catch(e) {}
   showToast('🏫 School settings saved!');
@@ -4302,6 +4307,9 @@ function saveSchoolSettings() {
 function getSchoolName() { return schoolSettings.name || 'THARPU SECONDARY SCHOOL'; }
 function getSchoolAddress() { return schoolSettings.address || 'Yangwarak-4, Panchthar, Koshi Province, Nepal'; }
 function getAcadYear() { return schoolSettings.year || '2082/83'; }
+function getPrincipalName() { return schoolSettings.principal || ''; }
+function getTeacherName() { return schoolSettings.teacher || ''; }
+function getPreparedByName() { return schoolSettings.preparedby || ''; }
 
 // ═══════════════════════════════════════════════════════
 //  DISPLAY PREFERENCES
