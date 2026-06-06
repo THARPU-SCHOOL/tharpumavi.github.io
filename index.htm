@@ -4066,7 +4066,20 @@ function exportFeesCSV(){
 
   <!-- ══ SETTINGS TAB ══ -->
   <div class="tab-panel" id="tab-settings">
-    <div class="section-card">
+
+    <!-- SETTINGS QUICK NAV -->
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem;">
+      <a href="#set-school-info" style="font-size:0.73rem;padding:4px 10px;background:var(--maroon);color:white;border-radius:20px;text-decoration:none;font-weight:600;">🏫 School</a>
+      <a href="#set-display" style="font-size:0.73rem;padding:4px 10px;background:var(--maroon);color:white;border-radius:20px;text-decoration:none;font-weight:600;">🎨 Display</a>
+      <a href="#set-exams" style="font-size:0.73rem;padding:4px 10px;background:var(--maroon);color:white;border-radius:20px;text-decoration:none;font-weight:600;">📝 Exams</a>
+      <a href="#set-print" style="font-size:0.73rem;padding:4px 10px;background:var(--maroon);color:white;border-radius:20px;text-decoration:none;font-weight:600;">🖨 Print</a>
+      <a href="#set-security" style="font-size:0.73rem;padding:4px 10px;background:var(--maroon);color:white;border-radius:20px;text-decoration:none;font-weight:600;">🔑 Security</a>
+      <a href="#set-backup" style="font-size:0.73rem;padding:4px 10px;background:var(--maroon);color:white;border-radius:20px;text-decoration:none;font-weight:600;">📦 Backup</a>
+      <a href="#set-danger" style="font-size:0.73rem;padding:4px 10px;background:#b71c1c;color:white;border-radius:20px;text-decoration:none;font-weight:600;">⚠️ Danger</a>
+    </div>
+
+    <!-- 1. SCHOOL INFORMATION -->
+    <div class="section-card" id="set-school-info">
       <div class="section-head">🏫 School Information</div>
       <div class="section-body">
         <div class="form-group"><label>School Name</label>
@@ -4078,8 +4091,17 @@ function exportFeesCSV(){
         <div class="form-group"><label>School Code</label>
           <input type="text" id="set-school-code" value="TSS-PAN-2082">
         </div>
+        <div class="form-group"><label>Phone / Contact</label>
+          <input type="text" id="set-school-phone" placeholder="e.g. 023-XXXXXX">
+        </div>
+        <div class="form-group"><label>Email</label>
+          <input type="text" id="set-school-email" placeholder="school@example.edu.np">
+        </div>
         <div class="form-group"><label>Academic Year</label>
           <input type="text" id="set-acad-year" value="2082/83">
+        </div>
+        <div class="form-group"><label>Grade / Class Level</label>
+          <input type="text" id="set-grade-level" placeholder="e.g. Grade XI" value="Grade XI">
         </div>
         <div class="form-group"><label>Principal Name</label>
           <input type="text" id="set-principal" value="">
@@ -4090,59 +4112,248 @@ function exportFeesCSV(){
         <div class="form-group"><label>Prepared by</label>
           <input type="text" id="set-preparedby" value="">
         </div>
+        <div class="form-group"><label>Affiliation / Board</label>
+          <input type="text" id="set-affiliation" value="National Examinations Board (NEB)">
+        </div>
         <div class="btn-row">
-          <button class="btn btn-primary" onclick="saveSchoolSettings()">💾 Save Settings</button>
+          <button class="btn btn-primary" onclick="saveSchoolSettings()">💾 Save School Info</button>
         </div>
       </div>
     </div>
 
-    <div class="section-card">
+    <!-- 2. DISPLAY PREFERENCES -->
+    <div class="section-card" id="set-display">
       <div class="section-head">🎨 Display Preferences</div>
       <div class="section-body">
         <div class="settings-row">
-          <div><div class="settings-label">Dark Mode</div></div>
+          <div><div class="settings-label">🌙 Dark Mode</div><div class="settings-sub">Switch to dark theme</div></div>
           <label class="toggle-switch"><input type="checkbox" id="toggle-dark" onchange="toggleDarkMode(this.checked)"><span class="toggle-slider"></span></label>
         </div>
         <div class="settings-row">
-          <div><div class="settings-label">Color-code grade cells</div><div class="settings-sub">Highlight pass/fail in green/red</div></div>
+          <div><div class="settings-label">🎨 Color-code grade cells</div><div class="settings-sub">Highlight pass/fail in green/red</div></div>
           <label class="toggle-switch"><input type="checkbox" id="toggle-hl" checked onchange="saveDisplayPrefs()"><span class="toggle-slider"></span></label>
         </div>
         <div class="settings-row">
-          <div><div class="settings-label">Show rank column</div></div>
+          <div><div class="settings-label">🏆 Show rank column</div><div class="settings-sub">Display class rank in grade sheet</div></div>
           <label class="toggle-switch"><input type="checkbox" id="toggle-rank" checked onchange="saveDisplayPrefs()"><span class="toggle-slider"></span></label>
         </div>
         <div class="settings-row">
-          <div><div class="settings-label">Inline editable gradesheet</div><div class="settings-sub">Edit marks directly in Results tab</div></div>
+          <div><div class="settings-label">✏️ Inline editable gradesheet</div><div class="settings-sub">Edit marks directly in Results tab</div></div>
           <label class="toggle-switch"><input type="checkbox" id="toggle-inline-edit" checked onchange="saveDisplayPrefs()"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-label">📊 Show CGPA on student list</div><div class="settings-sub">Show latest GPA badge next to each student</div></div>
+          <label class="toggle-switch"><input type="checkbox" id="toggle-show-cgpa" onchange="saveDisplayPrefs()"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-label">🔔 Sound on save</div><div class="settings-sub">Play a soft chime when marks are saved</div></div>
+          <label class="toggle-switch"><input type="checkbox" id="toggle-sound" onchange="saveDisplayPrefs()"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-label">📱 Compact view</div><div class="settings-sub">Smaller padding for small screens</div></div>
+          <label class="toggle-switch"><input type="checkbox" id="toggle-compact" onchange="applyCompactMode(this.checked);saveDisplayPrefs()"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-label">🌊 Animations</div><div class="settings-sub">Smooth tab and card transitions</div></div>
+          <label class="toggle-switch"><input type="checkbox" id="toggle-anim" checked onchange="applyAnimations(this.checked);saveDisplayPrefs()"><span class="toggle-slider"></span></label>
+        </div>
+        <div style="margin-top:1rem">
+          <label style="font-size:0.8rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.4px;">🎨 Theme Color</label>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
+            <div class="color-chip" onclick="applyThemeColor('#7B1C1C','#5a1414')" style="background:#7B1C1C;width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid #f0c96e;" title="Default Maroon"></div>
+            <div class="color-chip" onclick="applyThemeColor('#1565c0','#0d47a1')" style="background:#1565c0;width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid transparent;" title="Blue"></div>
+            <div class="color-chip" onclick="applyThemeColor('#1b5e20','#145218')" style="background:#1b5e20;width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid transparent;" title="Green"></div>
+            <div class="color-chip" onclick="applyThemeColor('#4a148c','#38006b')" style="background:#4a148c;width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid transparent;" title="Purple"></div>
+            <div class="color-chip" onclick="applyThemeColor('#bf360c','#8d2408')" style="background:#bf360c;width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid transparent;" title="Deep Orange"></div>
+            <div class="color-chip" onclick="applyThemeColor('#37474f','#263238')" style="background:#37474f;width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid transparent;" title="Slate"></div>
+          </div>
+        </div>
+        <div style="margin-top:1rem">
+          <label style="font-size:0.8rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.4px;">🔤 Font Size</label>
+          <select id="set-font-size" onchange="applyFontSize(this.value)" style="width:100%;padding:0.62rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.93rem;background:var(--cream);">
+            <option value="small">Small (compact)</option>
+            <option value="normal" selected>Normal (default)</option>
+            <option value="large">Large (accessibility)</option>
+          </select>
         </div>
       </div>
     </div>
 
+    <!-- 3. EXAM CONFIGURATION -->
+    <div class="section-card" id="set-exams">
+      <div class="section-head">📝 Exam Configuration</div>
+      <div class="section-body">
+        <div class="info-box">Customize the list of examinations shown in dropdowns throughout the app.</div>
+        <div id="exam-list-editor">
+          <div class="form-group"><label>Examination Names <small style="font-weight:400;text-transform:none">(one per line)</small></label>
+            <textarea id="set-exam-names" class="import-textarea" rows="6" placeholder="First Terminal&#10;Second Terminal&#10;Annual Examination&#10;Pre-board">First Terminal
+Second Terminal
+Annual Examination
+Pre-board</textarea>
+          </div>
+        </div>
+        <div class="form-group" style="margin-top:0.5rem">
+          <label>Default Exam (selected on startup)</label>
+          <select id="set-default-exam" style="width:100%;padding:0.62rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.93rem;background:var(--cream);">
+            <option value="First Terminal">First Terminal</option>
+            <option value="Second Terminal">Second Terminal</option>
+            <option value="Annual Examination">Annual Examination</option>
+            <option value="Pre-board">Pre-board</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Pass Mark Threshold (Theory default %)</label>
+          <input type="number" id="set-pass-threshold" value="35" min="1" max="60" placeholder="e.g. 35">
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="saveExamSettings()">💾 Save Exam Settings</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. PRINT / GRADE SHEET SETTINGS -->
+    <div class="section-card" id="set-print">
+      <div class="section-head">🖨️ Grade Sheet & Print Settings</div>
+      <div class="section-body">
+        <div class="settings-row">
+          <div><div class="settings-label">Show attendance on grade sheet</div></div>
+          <label class="toggle-switch"><input type="checkbox" id="toggle-print-att" onchange="savePrintPrefs()"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-label">Show CGPA on grade sheet</div></div>
+          <label class="toggle-switch"><input type="checkbox" id="toggle-print-cgpa" checked onchange="savePrintPrefs()"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-label">Show remarks column</div></div>
+          <label class="toggle-switch"><input type="checkbox" id="toggle-print-remarks" onchange="savePrintPrefs()"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-label">Show school logo on print</div></div>
+          <label class="toggle-switch"><input type="checkbox" id="toggle-print-logo" checked onchange="savePrintPrefs()"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-label">Show watermark on print</div></div>
+          <label class="toggle-switch"><input type="checkbox" id="toggle-print-watermark" checked onchange="savePrintPrefs()"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="form-group" style="margin-top:0.8rem">
+          <label>Grade Sheet Footer Note</label>
+          <input type="text" id="set-footer-note" placeholder="e.g. This is a computer-generated result." value="This is a computer-generated result.">
+        </div>
+        <div class="form-group">
+          <label>Remarks on certificate (good character description)</label>
+          <textarea id="set-cert-conduct" class="import-textarea" rows="2" placeholder="e.g. good">good</textarea>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="savePrintPrefs()">💾 Save Print Settings</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. NOTIFICATION / ALERT SETTINGS -->
     <div class="section-card">
+      <div class="section-head">🔔 Notification & Alert Settings</div>
+      <div class="section-body">
+        <div class="settings-row">
+          <div><div class="settings-label">Auto-remind to sync after saving marks</div><div class="settings-sub">Ask to export/sync after each marks save</div></div>
+          <label class="toggle-switch"><input type="checkbox" id="auto-remind-toggle" onchange="toggleAutoRemind(this.checked)"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-label">Notify on pending approval requests</div><div class="settings-sub">Show badge on Teacher Portal when marks await approval</div></div>
+          <label class="toggle-switch"><input type="checkbox" id="toggle-approval-notif" checked onchange="saveDisplayPrefs()"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-label">Show motivational quote on dashboard</div></div>
+          <label class="toggle-switch"><input type="checkbox" id="toggle-mot-banner" checked onchange="toggleMotBanner(this.checked)"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="form-group" style="margin-top:0.8rem">
+          <label>Custom motivational quote (leave blank for random)</label>
+          <input type="text" id="set-custom-quote" placeholder="e.g. Knowledge is power." value="">
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="saveNotifSettings()">💾 Save</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. SECURITY SETTINGS -->
+    <div class="section-card" id="set-security">
+      <div class="section-head">🔐 Security Settings</div>
+      <div class="section-body">
+        <div class="settings-row">
+          <div><div class="settings-label">Encrypt stored marks</div><div class="settings-sub">AES encryption for marks in browser storage</div></div>
+          <label class="toggle-switch"><input type="checkbox" id="toggle-encrypt" checked onchange="saveSecurityPrefs()"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-label">Auto-lock after inactivity</div><div class="settings-sub">Require login again after 30 min idle</div></div>
+          <label class="toggle-switch"><input type="checkbox" id="toggle-autolock" onchange="saveSecurityPrefs()"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="form-group" style="margin-top:0.8rem">
+          <label>Auto-lock timeout (minutes)</label>
+          <input type="number" id="set-lock-timeout" value="30" min="5" max="480" placeholder="30">
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="saveSecurityPrefs()">💾 Save Security Settings</button>
+        </div>
+        <hr style="margin:1rem 0;border-color:var(--cream-dark)">
+        <p style="font-size:0.82rem;font-weight:700;color:var(--text-muted);margin-bottom:0.7rem;">🔑 Change Password</p>
+        <div class="form-group"><label>Current Password</label>
+          <input type="password" id="cp-old" placeholder="Current password">
+        </div>
+        <div class="form-group"><label>New Password</label>
+          <input type="password" id="cp-new" placeholder="Min 8 characters">
+        </div>
+        <div class="form-group"><label>Confirm New Password</label>
+          <input type="password" id="cp-new2" placeholder="Repeat new password">
+        </div>
+        <div id="cp-msg" style="display:none;font-size:0.83rem;margin-bottom:0.5rem;border-radius:8px;padding:0.5rem 0.8rem;"></div>
+        <button class="btn btn-primary" onclick="changePassword()">🔑 Change Password</button>
+        <hr style="margin:1rem 0;border-color:var(--cream-dark)">
+        <p style="font-size:0.82rem;font-weight:700;color:var(--text-muted);margin-bottom:0.3rem;">👁 Active Session</p>
+        <div id="active-session-info" style="font-size:0.8rem;color:var(--text-muted);padding:0.4rem 0"></div>
+        <button class="btn btn-secondary" style="margin-top:0.5rem" onclick="forceLogoutAll()">🚪 Log Out All Sessions</button>
+      </div>
+    </div>
+
+    <!-- 7. BACKUP & RESTORE -->
+    <div class="section-card" id="set-backup">
       <div class="section-head">📦 Backup &amp; Restore</div>
       <div class="section-body">
+        <div id="backup-info" style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.8rem"></div>
         <div class="btn-row">
-          <button class="btn btn-primary" onclick="backupAllData()">📥 Download Full Backup</button>
-          <button class="btn btn-secondary" onclick="document.getElementById('restore-file').click()">📤 Restore from Backup</button>
+          <button class="btn btn-primary" onclick="backupAllData()">📥 Download Full Backup (.json)</button>
+          <button class="btn btn-gold" onclick="exportBackupCSV()">📊 Export All Marks CSV</button>
+        </div>
+        <div class="btn-row" style="margin-top:0.5rem">
+          <button class="btn btn-secondary" onclick="document.getElementById('restore-file').click()">📤 Restore from Backup (.json)</button>
           <input type="file" id="restore-file" accept=".json" style="display:none" onchange="restoreFromBackup(this)">
         </div>
         <div class="info-box" style="margin-top:0.8rem">
-          <b>⚠ Restore overwrites all current data.</b> Download a backup first!
+          <b>⚠ Restore overwrites all current data.</b> Always download a backup first!
         </div>
+        <hr style="margin:1rem 0;border-color:var(--cream-dark)">
+        <p style="font-size:0.82rem;font-weight:700;color:var(--text-muted);margin-bottom:0.5rem;">📥 Batch Marks Import (CSV Paste)</p>
+        <div class="info-box" style="margin-bottom:0.5rem">
+          CSV format: <b>Roll,SubjectName,Theory,Practical,Exam</b><br>
+          Example: <code>10200205,Compulsory English,65,20,First Terminal</code>
+        </div>
+        <div class="form-group">
+          <label>CSV Data</label>
+          <textarea class="import-textarea" id="batch-csv" rows="5" placeholder="10200205,Compulsory English,65,20,First Terminal&#10;10200206,Physics,70,22,First Terminal"></textarea>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="importBatchCSV()">📥 Import Marks</button>
+          <button class="btn btn-secondary" onclick="document.getElementById('batch-csv').value=''">🗑 Clear</button>
+        </div>
+        <div id="import-result" style="margin-top:0.5rem;font-size:0.82rem;color:var(--text-muted)"></div>
       </div>
     </div>
 
-    <!-- ☁️ CLOUD SYNC SECTION -->
+    <!-- 8. CLOUD SYNC SECTION (JSONBin) -->
     <div class="section-card" id="cloud-sync-card">
-      <div class="section-head">☁️ Cloud Sync — Access from Any Device</div>
+      <div class="section-head">☁️ Cloud Sync — JSONBin (Secondary Method)</div>
       <div class="section-body">
         <div class="info-box" style="background:#e8f0fe;border-color:#4a90d9;color:#1a3a6e;">
-          <b>☁️ How Cloud Sync works:</b><br>
-          1. Go to <b><a href="https://jsonbin.io" target="_blank" style="color:#1a3a6e">jsonbin.io</a></b> → Sign up free<br>
-          2. Get your <b>API Key</b> from the dashboard<br>
-          3. Paste it below and click <b>"Setup Cloud Sync"</b><br>
-          4. From then on, every Save automatically uploads to the cloud.<br>
-          5. On any other device (mobile/laptop), paste the same API Key + Bin ID → click <b>"Load from Cloud"</b> to get all marks instantly.
+          <b>ℹ️ Tip:</b> For real-time sync, use the <b>📲 Sync Devices</b> tab (Firebase). This section is an alternate method using jsonbin.io.
         </div>
         <div class="form-group">
           <label>JSONBin API Key</label>
@@ -4159,53 +4370,75 @@ function exportFeesCSV(){
           <button class="btn btn-secondary" onclick="cloudPull()">⬇️ Load from Cloud</button>
         </div>
         <div style="margin-top:0.6rem;font-size:0.75rem;color:var(--text-muted);">
-          Cloud Sync Status: <span id="sync-indicator">⬜ Not configured</span>
+          Status: <span id="sync-indicator">⬜ Not configured</span>
         </div>
       </div>
     </div>
 
+    <!-- 9. AUDIT TRAIL -->
     <div class="section-card">
-      <div class="section-head">📋 Audit Trail</div>
+      <div class="section-head" style="justify-content:space-between">
+        📋 Audit Trail
+        <button class="btn-sm" onclick="exportAuditCSV()" style="margin-left:auto">📊 Export</button>
+      </div>
       <div class="section-body" style="padding:0" id="audit-list">
         <div class="empty-state"><p>No audit records yet.</p></div>
       </div>
     </div>
 
+    <!-- 10. STORAGE DIAGNOSTICS -->
     <div class="section-card">
-      <div class="section-head">📥 Batch Marks Import (CSV Paste)</div>
+      <div class="section-head">🗄️ Storage &amp; Diagnostics</div>
       <div class="section-body">
-        <div class="info-box">
-          Paste CSV: <b>Roll,SubjectName,Theory,Practical,Exam</b><br>
-          Example: <code>10200205,Compulsory English,65,20,First Terminal</code>
+        <div id="storage-diag" style="font-size:0.82rem;color:var(--text-muted);margin-bottom:0.8rem">
+          <button class="btn btn-secondary" onclick="refreshStorageDiag()">🔍 Check Storage Usage</button>
         </div>
-        <div class="form-group">
-          <label>CSV Data</label>
-          <textarea class="import-textarea" id="batch-csv" rows="6" placeholder="10200205,Compulsory English,65,20,First Terminal&#10;10200206,Physics,70,22,First Terminal"></textarea>
+        <div class="settings-row">
+          <div><div class="settings-label">Enable console debug logs</div><div class="settings-sub">Useful for troubleshooting sync issues</div></div>
+          <label class="toggle-switch"><input type="checkbox" id="toggle-debug" onchange="window._tssDebug=this.checked;showToast(this.checked?'🐛 Debug on':'Debug off')"><span class="toggle-slider"></span></label>
         </div>
-        <div class="btn-row">
-          <button class="btn btn-primary" onclick="importBatchCSV()">📥 Import Marks</button>
-          <button class="btn btn-secondary" onclick="document.getElementById('batch-csv').value=''">🗑 Clear</button>
+        <div class="btn-row" style="margin-top:0.8rem">
+          <button class="btn btn-secondary" onclick="clearSyncCache()">🔄 Clear Sync Cache</button>
+          <button class="btn btn-secondary" onclick="rebuildStudentIndex()">🔧 Rebuild Student Index</button>
         </div>
-        <div id="import-result" style="margin-top:0.5rem;font-size:0.82rem;color:var(--text-muted)"></div>
       </div>
     </div>
 
-    <div class="section-card">
-      <div class="section-head">🔑 Change Password</div>
+    <!-- 11. ABOUT & DANGER ZONE -->
+    <div class="section-card" id="set-danger" style="border:1.5px solid #b71c1c">
+      <div class="section-head" style="background:#b71c1c">⚠️ Danger Zone</div>
       <div class="section-body">
-        <div class="form-group"><label>Current Password</label>
-          <input type="password" id="cp-old" placeholder="Current password">
+        <div class="info-box" style="background:#ffebee;border-color:#b71c1c;color:#7a0000;margin-bottom:1rem">
+          <b>These actions cannot be undone.</b> Always download a full backup before proceeding.
         </div>
-        <div class="form-group"><label>New Password</label>
-          <input type="password" id="cp-new" placeholder="Min 8 characters">
+        <div class="btn-row" style="flex-direction:column;gap:8px">
+          <button class="btn btn-danger btn-full" onclick="clearAllMarksConfirm()">🗑️ Clear All Marks Data</button>
+          <button class="btn btn-danger btn-full" onclick="clearExtraStudentsConfirm()">🗑️ Remove All Extra-Registered Students</button>
+          <button class="btn btn-danger btn-full" onclick="resetAllSettingsConfirm()">🔄 Reset All Settings to Default</button>
+          <button class="btn btn-danger btn-full" onclick="nukeClearConfirm()">💣 Full Data Wipe (marks + students + settings)</button>
         </div>
-        <div class="form-group"><label>Confirm New Password</label>
-          <input type="password" id="cp-new2" placeholder="Repeat new password">
-        </div>
-        <div id="cp-msg" style="display:none;font-size:0.83rem;margin-bottom:0.5rem;border-radius:8px;padding:0.5rem 0.8rem;"></div>
-        <button class="btn btn-primary" onclick="changePassword()">🔑 Change Password</button>
       </div>
     </div>
+
+    <!-- 12. ABOUT -->
+    <div class="section-card">
+      <div class="section-head">ℹ️ About</div>
+      <div class="section-body" style="font-size:0.82rem;color:var(--text-muted);line-height:1.7">
+        <b style="color:var(--maroon);font-size:0.95rem">Tharpu Secondary School — Result Management System</b><br>
+        Version: <b>PRO 2082</b> &nbsp;|&nbsp; Platform: Web App (PWA)<br>
+        School Code: <span id="about-school-code">TSS-PAN-2082</span><br>
+        Affiliation: National Examinations Board (NEB), Nepal<br>
+        <br>
+        <b>Storage:</b> Encrypted local browser storage + optional Firebase cloud sync<br>
+        <b>Offline:</b> Fully functional without internet<br>
+        <br>
+        <div style="background:var(--cream);border-radius:8px;padding:0.6rem 0.8rem;font-size:0.75rem">
+          Built for Tharpu Secondary School, Yangwarak-4, Panchthar, Koshi Province, Nepal.<br>
+          For support, contact your system administrator.
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- ══ STUDENT PROFILE MODAL ══ -->
@@ -4279,7 +4512,9 @@ try { schoolSettings = JSON.parse(localStorage.getItem('tss_settings')||'{}'); }
 
 function loadSchoolSettings() {
   var def = {name:'THARPU SECONDARY SCHOOL',address:'Yangwarak-4, Panchthar, Koshi Province, Nepal',
-    code:'TSS-PAN-2082',year:'2082/83',principal:'',teacher:'',preparedby:''};
+    code:'TSS-PAN-2082',year:'2082/83',principal:'',teacher:'',preparedby:'',
+    phone:'',email:'',gradeLevel:'Grade XI',affiliation:'National Examinations Board (NEB)',
+    footerNote:'This is a computer-generated result.',certConduct:'good',customQuote:''};
   Object.assign(def, schoolSettings);
   var f = function(id, v) { var el = document.getElementById(id); if(el) el.value = v; };
   f('set-school-name', def.name);
@@ -4289,6 +4524,15 @@ function loadSchoolSettings() {
   f('set-principal', def.principal);
   f('set-teacher', def.teacher);
   f('set-preparedby', def.preparedby);
+  f('set-school-phone', def.phone||'');
+  f('set-school-email', def.email||'');
+  f('set-grade-level', def.gradeLevel||'Grade XI');
+  f('set-affiliation', def.affiliation||'National Examinations Board (NEB)');
+  f('set-footer-note', def.footerNote||'This is a computer-generated result.');
+  f('set-cert-conduct', def.certConduct||'good');
+  f('set-custom-quote', def.customQuote||'');
+  var aboutEl = document.getElementById('about-school-code');
+  if(aboutEl) aboutEl.textContent = def.code;
 }
 function saveSchoolSettings() {
   schoolSettings = {
@@ -4298,11 +4542,20 @@ function saveSchoolSettings() {
     year: sanitize(document.getElementById('set-acad-year').value.trim()),
     principal: sanitize(document.getElementById('set-principal').value.trim()),
     teacher: sanitize(document.getElementById('set-teacher').value.trim()),
-    preparedby: sanitize(document.getElementById('set-preparedby').value.trim())
+    preparedby: sanitize(document.getElementById('set-preparedby').value.trim()),
+    phone: sanitize((document.getElementById('set-school-phone')||{value:''}).value.trim()),
+    email: sanitize((document.getElementById('set-school-email')||{value:''}).value.trim()),
+    gradeLevel: sanitize((document.getElementById('set-grade-level')||{value:'Grade XI'}).value.trim()),
+    affiliation: sanitize((document.getElementById('set-affiliation')||{value:''}).value.trim()),
+    footerNote: sanitize((document.getElementById('set-footer-note')||{value:''}).value.trim()),
+    certConduct: sanitize((document.getElementById('set-cert-conduct')||{value:'good'}).value.trim()),
+    customQuote: sanitize((document.getElementById('set-custom-quote')||{value:''}).value.trim())
   };
   try { localStorage.setItem('tss_settings', JSON.stringify(schoolSettings)); } catch(e) {}
   showToast('🏫 School settings saved!');
   addAudit('Settings', 'School info updated by '+currentUser);
+  var aboutEl = document.getElementById('about-school-code');
+  if(aboutEl) aboutEl.textContent = schoolSettings.code;
 }
 function getSchoolName() { return schoolSettings.name || 'THARPU SECONDARY SCHOOL'; }
 function getSchoolAddress() { return schoolSettings.address || 'Yangwarak-4, Panchthar, Koshi Province, Nepal'; }
@@ -4336,6 +4589,403 @@ function toggleDarkMode(on) {
   document.body.classList.toggle('dark-mode', on);
   saveDisplayPrefs();
 }
+
+// ═══════════════════════════════════════════════════════
+//  EXTENDED SETTINGS FUNCTIONS
+// ═══════════════════════════════════════════════════════
+
+function applyThemeColor(main, dark) {
+  document.documentElement.style.setProperty('--maroon', main);
+  document.documentElement.style.setProperty('--maroon-dark', dark);
+  document.documentElement.style.setProperty('--maroon-light', main);
+  try {
+    var prefs = JSON.parse(localStorage.getItem('tss_display_prefs')||'{}');
+    prefs.themeMain = main; prefs.themeDark = dark;
+    localStorage.setItem('tss_display_prefs', JSON.stringify(prefs));
+  } catch(e){}
+  showToast('🎨 Theme color applied!');
+}
+
+function applyCompactMode(on) {
+  document.body.classList.toggle('compact-mode', on);
+  if (on && !document.getElementById('compact-style')) {
+    var s = document.createElement('style');
+    s.id = 'compact-style';
+    s.textContent = '.tab-panel{padding:0.5rem}.section-body{padding:0.6rem}.form-group{margin-bottom:0.5rem}.student-item{padding:0.5rem 0.8rem}.settings-row{padding:0.45rem 0}';
+    document.head.appendChild(s);
+  } else if (!on) {
+    var s2 = document.getElementById('compact-style');
+    if(s2) s2.remove();
+  }
+}
+
+function applyAnimations(on) {
+  if (!on && !document.getElementById('no-anim-style')) {
+    var s = document.createElement('style');
+    s.id = 'no-anim-style';
+    s.textContent = '*, *::before, *::after { animation: none !important; transition: none !important; }';
+    document.head.appendChild(s);
+  } else if (on) {
+    var s2 = document.getElementById('no-anim-style');
+    if(s2) s2.remove();
+  }
+}
+
+function applyFontSize(size) {
+  var sizes = {small:'13px', normal:'15px', large:'17px'};
+  document.documentElement.style.fontSize = sizes[size] || '15px';
+  try {
+    var prefs = JSON.parse(localStorage.getItem('tss_display_prefs')||'{}');
+    prefs.fontSize = size;
+    localStorage.setItem('tss_display_prefs', JSON.stringify(prefs));
+  } catch(e){}
+  showToast('🔤 Font size: ' + size);
+}
+
+function loadExtendedDisplayPrefs() {
+  try {
+    var prefs = JSON.parse(localStorage.getItem('tss_display_prefs')||'{}');
+    if (prefs.themeMain) applyThemeColor(prefs.themeMain, prefs.themeDark||prefs.themeMain);
+    if (prefs.fontSize) {
+      applyFontSize(prefs.fontSize);
+      var el = document.getElementById('set-font-size');
+      if(el) el.value = prefs.fontSize;
+    }
+    if (prefs.compact) applyCompactMode(true);
+    if (prefs.animations===false) applyAnimations(false);
+    var checks = {
+      'toggle-show-cgpa': prefs.showCGPA,
+      'toggle-sound': prefs.sound,
+      'toggle-compact': prefs.compact,
+      'toggle-anim': prefs.animations !== false,
+      'toggle-approval-notif': prefs.approvalNotif !== false
+    };
+    Object.keys(checks).forEach(function(id){
+      var el = document.getElementById(id);
+      if(el) el.checked = !!checks[id];
+    });
+  } catch(e){}
+}
+
+var _origSaveDisplayPrefs = saveDisplayPrefs;
+saveDisplayPrefs = function() {
+  _origSaveDisplayPrefs();
+  try {
+    var prefs = JSON.parse(localStorage.getItem('tss_display_prefs')||'{}');
+    prefs.showCGPA = (document.getElementById('toggle-show-cgpa')||{}).checked;
+    prefs.sound = (document.getElementById('toggle-sound')||{}).checked;
+    prefs.compact = (document.getElementById('toggle-compact')||{}).checked;
+    prefs.animations = (document.getElementById('toggle-anim')||{checked:true}).checked;
+    prefs.approvalNotif = (document.getElementById('toggle-approval-notif')||{checked:true}).checked;
+    localStorage.setItem('tss_display_prefs', JSON.stringify(prefs));
+  } catch(e){}
+};
+
+function saveExamSettings() {
+  try {
+    var names = (document.getElementById('set-exam-names')||{value:''}).value.trim()
+      .split('\n').map(function(s){return s.trim();}).filter(Boolean);
+    if (!names.length) { showToast('⚠️ Enter at least one exam name.'); return; }
+    var defaultExam = (document.getElementById('set-default-exam')||{value:'First Terminal'}).value;
+    var passThreshold = parseInt((document.getElementById('set-pass-threshold')||{value:'35'}).value)||35;
+    var examSettings = {names: names, defaultExam: defaultExam, passThreshold: passThreshold};
+    localStorage.setItem('tss_exam_settings', JSON.stringify(examSettings));
+    // Update all exam dropdowns
+    var selects = document.querySelectorAll('#marks-exam-sel, #result-exam-sel, #tportal-exam-sel');
+    selects.forEach(function(sel){
+      var cur = sel.value;
+      sel.innerHTML = names.map(function(n){
+        return '<option value="'+n+'"'+(n===cur?' selected':'')+'>'+ sanitize(n)+'</option>';
+      }).join('');
+    });
+    showToast('📝 Exam settings saved!');
+    addAudit('ExamSettings', names.length + ' exams configured by '+currentUser);
+  } catch(e) { showToast('❌ Error saving exam settings: '+e.message); }
+}
+
+function savePrintPrefs() {
+  try {
+    var prefs = {
+      showAttendance: (document.getElementById('toggle-print-att')||{}).checked,
+      showCGPA: (document.getElementById('toggle-print-cgpa')||{checked:true}).checked,
+      showRemarks: (document.getElementById('toggle-print-remarks')||{}).checked,
+      showLogo: (document.getElementById('toggle-print-logo')||{checked:true}).checked,
+      showWatermark: (document.getElementById('toggle-print-watermark')||{checked:true}).checked,
+      footerNote: sanitize((document.getElementById('set-footer-note')||{value:''}).value.trim()),
+      certConduct: sanitize((document.getElementById('set-cert-conduct')||{value:'good'}).value.trim())
+    };
+    localStorage.setItem('tss_print_prefs', JSON.stringify(prefs));
+    // Save footer/conduct into school settings too
+    if (schoolSettings) {
+      schoolSettings.footerNote = prefs.footerNote;
+      schoolSettings.certConduct = prefs.certConduct;
+      localStorage.setItem('tss_settings', JSON.stringify(schoolSettings));
+    }
+    showToast('🖨️ Print settings saved!');
+  } catch(e) {}
+}
+
+function loadPrintPrefs() {
+  try {
+    var prefs = JSON.parse(localStorage.getItem('tss_print_prefs')||'{}');
+    var f = function(id, v) { var el = document.getElementById(id); if(el) el.checked = v; };
+    f('toggle-print-att', !!prefs.showAttendance);
+    f('toggle-print-cgpa', prefs.showCGPA !== false);
+    f('toggle-print-remarks', !!prefs.showRemarks);
+    f('toggle-print-logo', prefs.showLogo !== false);
+    f('toggle-print-watermark', prefs.showWatermark !== false);
+    var n = document.getElementById('set-footer-note');
+    if(n && prefs.footerNote) n.value = prefs.footerNote;
+    var c = document.getElementById('set-cert-conduct');
+    if(c && prefs.certConduct) c.value = prefs.certConduct;
+  } catch(e){}
+}
+
+function saveNotifSettings() {
+  try {
+    var q = sanitize((document.getElementById('set-custom-quote')||{value:''}).value.trim());
+    if (schoolSettings) { schoolSettings.customQuote = q; localStorage.setItem('tss_settings', JSON.stringify(schoolSettings)); }
+    if (q) {
+      var qEl = document.getElementById('mot-quote');
+      var aEl = document.getElementById('mot-attr');
+      if(qEl) qEl.textContent = '\u201c'+q+'\u201d';
+      if(aEl) aEl.textContent = '\u2014 Your School';
+    }
+    showToast('🔔 Notification settings saved!');
+  } catch(e){}
+}
+
+function toggleMotBanner(on) {
+  var el = document.getElementById('mot-banner');
+  if(el) el.style.display = on ? '' : 'none';
+  try {
+    var prefs = JSON.parse(localStorage.getItem('tss_display_prefs')||'{}');
+    prefs.motBanner = on;
+    localStorage.setItem('tss_display_prefs', JSON.stringify(prefs));
+  } catch(e){}
+}
+
+function saveSecurityPrefs() {
+  try {
+    var prefs = {
+      encrypt: (document.getElementById('toggle-encrypt')||{checked:true}).checked,
+      autolock: (document.getElementById('toggle-autolock')||{}).checked,
+      lockTimeout: parseInt((document.getElementById('set-lock-timeout')||{value:'30'}).value)||30
+    };
+    localStorage.setItem('tss_security_prefs', JSON.stringify(prefs));
+    showToast('🔐 Security settings saved!');
+    // Start auto-lock timer if enabled
+    if (prefs.autolock) startAutoLockTimer(prefs.lockTimeout);
+    else clearAutoLockTimer();
+  } catch(e){}
+}
+
+function loadSecurityPrefs() {
+  try {
+    var prefs = JSON.parse(localStorage.getItem('tss_security_prefs')||'{}');
+    var el;
+    el = document.getElementById('toggle-encrypt'); if(el) el.checked = prefs.encrypt !== false;
+    el = document.getElementById('toggle-autolock'); if(el) el.checked = !!prefs.autolock;
+    el = document.getElementById('set-lock-timeout'); if(el) el.value = prefs.lockTimeout||30;
+    if (prefs.autolock) startAutoLockTimer(prefs.lockTimeout||30);
+  } catch(e){}
+}
+
+var _autoLockTimer = null;
+var _lastActivity = Date.now();
+function startAutoLockTimer(minutes) {
+  clearAutoLockTimer();
+  var ms = (minutes||30) * 60 * 1000;
+  ['click','keydown','touchstart','mousemove'].forEach(function(ev){
+    document.removeEventListener(ev, _resetAutoLock);
+    document.addEventListener(ev, _resetAutoLock, {passive:true});
+  });
+  _autoLockTimer = setInterval(function(){
+    if (Date.now() - _lastActivity > ms && currentUser) {
+      clearAutoLockTimer();
+      doLogout();
+      showToast('🔒 Auto-locked due to inactivity.');
+    }
+  }, 30000);
+}
+function _resetAutoLock() { _lastActivity = Date.now(); }
+function clearAutoLockTimer() {
+  if(_autoLockTimer) { clearInterval(_autoLockTimer); _autoLockTimer=null; }
+}
+
+function forceLogoutAll() {
+  if(!confirm('Log out from this session and clear session data?')) return;
+  try { localStorage.removeItem('tss_session_user'); } catch(e){}
+  doLogout();
+  showToast('🚪 Logged out from all sessions.');
+}
+
+function exportAuditCSV() {
+  if (!auditLog.length) { showToast('No audit records to export.'); return; }
+  var rows = ['"User","Action","Detail","Time"'];
+  auditLog.forEach(function(a){
+    rows.push('"'+(a.user||'')+'","'+(a.action||'')+'","'+(a.detail||'').replace(/"/g,"'")+'","'+(a.time||'')+'"');
+  });
+  var a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(rows.join('\n'));
+  a.download = 'AuditTrail_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+  showToast('📊 Audit CSV exported!');
+}
+
+function exportBackupCSV() {
+  // Export all marks as a flat CSV
+  var rows = ['"Roll","Student","Stream","Subject","Theory","Practical","Exam"'];
+  students.forEach(function(st){
+    var subs = getStudentSubjects(st);
+    ['First Terminal','Second Terminal','Annual Examination','Pre-board'].forEach(function(exam){
+      var saved = marksData[getKey(st.roll,exam)] || {};
+      subs.forEach(function(sub){
+        var entry = saved[sub.name];
+        if (!entry) return;
+        var th = (entry.th !== undefined) ? entry.th : '';
+        var pr = (entry.pr !== undefined) ? entry.pr : '';
+        rows.push('"'+st.roll+'","'+st.name.replace(/"/g,"'")+'","'+st.stream+'","'+sub.name.replace(/"/g,"'")+'","'+th+'","'+pr+'","'+exam+'"');
+      });
+    });
+  });
+  var a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(rows.join('\n'));
+  a.download = 'AllMarks_'+getSchoolName().replace(/\s+/g,'_')+'_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+  showToast('📊 All marks CSV exported!');
+}
+
+function refreshStorageDiag() {
+  var el = document.getElementById('storage-diag');
+  if (!el) return;
+  try {
+    var total = 0;
+    var keys = [];
+    for(var i=0;i<localStorage.length;i++){
+      var k = localStorage.key(i);
+      if(k && k.startsWith('tss_')) {
+        var v = localStorage.getItem(k)||'';
+        total += v.length;
+        keys.push({k:k, size: Math.round(v.length/1024*10)/10});
+      }
+    }
+    var totalKB = Math.round(total/1024*10)/10;
+    var html = '<div style="background:var(--cream);border-radius:8px;padding:0.7rem;font-size:0.78rem;margin-bottom:0.7rem;">' +
+      '<b>Storage used:</b> ' + totalKB + ' KB<br>' +
+      '<b>Mark records:</b> ' + Object.keys(marksData).length + '<br>' +
+      '<b>Students:</b> ' + students.length + '<br>' +
+      '<b>Keys:</b><br>' +
+      keys.map(function(x){ return '&nbsp;&nbsp;' + x.k + ': ' + x.size + ' KB'; }).join('<br>') +
+      '</div>' +
+      '<button class="btn btn-secondary" onclick="refreshStorageDiag()" style="font-size:0.78rem;padding:4px 10px">🔍 Refresh</button>';
+    el.innerHTML = html;
+  } catch(e) { el.innerHTML = 'Could not read storage: '+e.message; }
+}
+
+function clearSyncCache() {
+  if(!confirm('Clear sync cache? This will remove temporary sync state but NOT your marks data.')) return;
+  try {
+    ['tss_sync_ts','tss_fb_last','tss_sync_indicator'].forEach(function(k){ localStorage.removeItem(k); });
+  } catch(e){}
+  showToast('🔄 Sync cache cleared.');
+}
+
+function rebuildStudentIndex() {
+  try {
+    renderStudentList(); populateStudentSelects(); updateSummary();
+    showToast('🔧 Student index rebuilt!');
+  } catch(e) { showToast('❌ Error: '+e.message); }
+}
+
+function clearAllMarksConfirm() {
+  if(!confirm('⚠️ CLEAR ALL MARKS?\n\nThis will permanently delete ALL mark records for all students and all exams.\n\nThis CANNOT be undone. Are you absolutely sure?')) return;
+  if(!confirm('Second confirmation: Delete ALL marks data permanently?')) return;
+  marksData = {};
+  saveMarksToStorage().then(function(){
+    updateSummary(); renderStudentList();
+    addAudit('DangerZone', 'ALL marks cleared by '+currentUser);
+    showToast('🗑️ All marks deleted.');
+  });
+}
+
+function clearExtraStudentsConfirm() {
+  if(!confirm('Remove all extra-registered students?\n\nHard-coded students will remain. This removes only students added via the Register tab.')) return;
+  try {
+    localStorage.removeItem('tss_extra_students');
+    students = students.filter(function(s){
+      return !['tss_extra_students'].length; // keep original
+    });
+    // Reload page to reset to defaults
+    showToast('🗑️ Extra students removed. Reloading…');
+    setTimeout(function(){ location.reload(); }, 1200);
+  } catch(e) { showToast('❌ Error: '+e.message); }
+}
+
+function resetAllSettingsConfirm() {
+  if(!confirm('Reset all settings to factory defaults?\n\nSchool info, display prefs, exam settings, and print settings will be cleared. Marks data will NOT be deleted.')) return;
+  ['tss_settings','tss_display_prefs','tss_print_prefs','tss_security_prefs','tss_exam_settings'].forEach(function(k){
+    try { localStorage.removeItem(k); } catch(e){}
+  });
+  location.reload();
+}
+
+function nukeClearConfirm() {
+  if(!confirm('⚠️⚠️⚠️ FULL DATA WIPE\n\nThis will delete EVERYTHING:\n• All marks\n• All students\n• All settings\n• All backups stored here\n\nThere is NO undo. Are you absolutely sure?')) return;
+  if(!confirm('FINAL CONFIRMATION: Wipe all data forever?')) return;
+  var toKeep = ['tss_session_user'];
+  var keysToRemove = [];
+  for(var i=0;i<localStorage.length;i++){
+    var k=localStorage.key(i);
+    if(k&&k.startsWith('tss_')&&toKeep.indexOf(k)===-1) keysToRemove.push(k);
+  }
+  keysToRemove.forEach(function(k){ try{ localStorage.removeItem(k); }catch(e){} });
+  showToast('💣 All data wiped. Reloading…');
+  setTimeout(function(){ location.reload(); }, 1000);
+}
+
+function loadActiveSessionInfo() {
+  var el = document.getElementById('active-session-info');
+  if (!el) return;
+  if (currentUser) {
+    var user = USERS.find(function(u){ return u.username===currentUser; });
+    el.innerHTML = '<span style="color:var(--maroon);font-weight:700">'+currentUser+'</span>' +
+      (user ? ' (' + (user.fullname||'') + ' — ' + (user.role||'teacher') + ')' : '') +
+      '<br>Session started: ' + (new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}));
+  } else {
+    el.textContent = 'Not logged in.';
+  }
+}
+
+function loadBackupInfo() {
+  var el = document.getElementById('backup-info');
+  if(!el) return;
+  var markCount = Object.keys(marksData).length;
+  var stCount = students.length;
+  var lastBackup = localStorage.getItem('tss_last_backup');
+  el.innerHTML = '📊 <b>'+markCount+'</b> mark records · <b>'+stCount+'</b> students' +
+    (lastBackup ? ' · Last backup: <b>'+new Date(parseInt(lastBackup)).toLocaleDateString()+'</b>' : ' · No backup yet');
+}
+
+// ── Hook into showTab to load settings-specific data ──
+(function(){
+  var _origShowTabSettings = window.showTab;
+  window.showTab = function(id, btn) {
+    if (typeof _origShowTabSettings === 'function') _origShowTabSettings(id, btn);
+    if (id === 'settings') {
+      setTimeout(function(){
+        loadSchoolSettings();
+        loadDisplayPrefs();
+        loadExtendedDisplayPrefs();
+        loadPrintPrefs();
+        loadSecurityPrefs();
+        renderAuditList();
+        loadActiveSessionInfo();
+        loadBackupInfo();
+      }, 50);
+    }
+  };
+})();
 
 // ═══════════════════════════════════════════════════════
 //  GRADE LOCK SYSTEM
@@ -4894,6 +5544,7 @@ function backupAllData() {
   a.download = 'Tharpu_Backup_'+new Date().toISOString().slice(0,10)+'.json';
   a.click();
   setTimeout(function(){URL.revokeObjectURL(a.href);},2000);
+  try { localStorage.setItem('tss_last_backup', Date.now().toString()); } catch(e){}
   addAudit('Backup', 'Full backup downloaded by '+currentUser);
   showToast('📥 Backup downloaded!');
 }
@@ -5510,14 +6161,23 @@ function fbSetStatus(msg, type) {
 
 function fbPushMarks() {
   if (!fbInit()) return;
-  fbSetStatus('⏳ Pushing marks to cloud...', 'info');
+  var recordCount = Object.keys(marksData).length;
+  fbSetStatus('⏳ Connecting to cloud… ('+recordCount+' records)', 'info');
   var extraStudents = [];
   try { extraStudents = JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){}
+
+  // Timeout safety — show warning if no response in 10s
+  var pushTimeout = setTimeout(function(){
+    fbSetStatus('⚠️ Cloud is taking longer than expected. Check your internet connection.', 'warn');
+  }, 10000);
+
   // Read existing cloud data first so we MERGE (not overwrite) other teachers' subjects
   fbRoomRef().once('value').then(function(snap) {
     var existing = snap.val() || {};
+    fbSetStatus('⏳ Merging and uploading ' + recordCount + ' records…', 'info');
     // Deep-merge: preserves all teachers' subjects per student-exam block
     var mergedMarks = _deepMergeMarks(existing.marks || {}, marksData);
+    var mergedCount = Object.keys(mergedMarks).length;
     // Include ALL students (hard-coded + extra) so registrations sync everywhere
     var cloudStudents = existing.students || [];
     var allLocalStudents = students.slice();
@@ -5525,43 +6185,68 @@ function fbPushMarks() {
     allLocalStudents.forEach(function(s){
       if (!cloudStudents.some(function(e){ return e.roll===s.roll; })) cloudStudents.push(s);
     });
- var payload = {
+    var payload = {
       marks: mergedMarks,
       students: cloudStudents,
       studentOptionals: studentOptionals,
       pushedBy: currentUser,
       pushedAt: new Date().toISOString(),
-      deviceInfo: navigator.userAgent.substring(0,60)
+      deviceInfo: navigator.userAgent.substring(0,60),
+      version: 2
     };
-    return fbRoomRef().set(_fbSanitize(payload));
-  }).then(function() {
-    fbSetStatus('✅ Marks pushed successfully! Available on all devices now. (' + Object.keys(marksData).length + ' records)', 'ok');
-    if(typeof showToast==='function') showToast('☁️ Marks synced to cloud!');
+    return fbRoomRef().set(_fbSanitize(payload)).then(function(){ return mergedCount; });
+  }).then(function(mergedCount) {
+    clearTimeout(pushTimeout);
+    var now = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    fbSetStatus('✅ Push complete! ' + (mergedCount||recordCount) + ' records in cloud · Last push: ' + now, 'ok');
+    if(typeof showToast==='function') showToast('☁️ ' + recordCount + ' records pushed to cloud!');
+    addAudit('CloudPush', recordCount + ' mark records pushed by ' + currentUser);
+    logActivity('☁️', 'Cloud push: ' + recordCount + ' records', '#e3f2fd');
   }).catch(function(e) {
-    fbSetStatus('❌ Push failed: ' + e.message + ' — Check Firebase config and database rules.', 'danger');
+    clearTimeout(pushTimeout);
+    var hint = e.message.includes('permission') ? ' — Set Firebase database rules to allow read/write.' :
+               e.message.includes('network') ? ' — Check your internet connection.' : '';
+    fbSetStatus('❌ Push failed: ' + e.message + hint, 'danger');
+    if(typeof showToast==='function') showToast('❌ Push failed — ' + e.message.substring(0,50));
   });
 }
 
 function fbPullMarks() {
   if (!fbInit()) return;
-  fbSetStatus('⏳ Pulling marks from cloud...', 'info');
+  fbSetStatus('⏳ Connecting to cloud…', 'info');
+
+  var pullTimeout = setTimeout(function(){
+    fbSetStatus('⚠️ Pull is taking longer than expected. Check your internet connection.', 'warn');
+  }, 10000);
+
   fbRoomRef().once('value').then(function(snap) {
+    clearTimeout(pullTimeout);
     var data = snap.val();
-    if (!data) { fbSetStatus('⚠️ No data found in cloud for this Room ID.', 'warn'); return; }
+    if (!data) { fbSetStatus('⚠️ No data found in cloud for Room ID: "' + (document.getElementById('fb-room-id')||{value:'?'}).value + '". Make sure the Room ID matches the device that pushed.', 'warn'); return; }
     var markCount = Object.keys(data.marks||{}).length;
     var stCount = (data.students||[]).length;
-    if (!confirm('Pull ' + markCount + ' mark records and ' + stCount + ' students from cloud?\n\nPushed by: ' + (data.pushedBy||'unknown') + '\nAt: ' + (data.pushedAt||'unknown') + '\n\nExisting local marks will be MERGED.')) return;
+    var localCount = Object.keys(marksData).length;
+    var pushedAt = data.pushedAt ? new Date(data.pushedAt).toLocaleString() : 'unknown';
+    if (!confirm('📥 Pull from cloud?\n\n' +
+        '☁️ Cloud: ' + markCount + ' mark records, ' + stCount + ' students\n' +
+        '📱 Local: ' + localCount + ' mark records\n\n' +
+        'Pushed by: ' + (data.pushedBy||'unknown') + '\n' +
+        'At: ' + pushedAt + '\n\n' +
+        'Local marks will be MERGED (not deleted).\nOK to continue?')) return;
+
+    fbSetStatus('⏳ Merging ' + markCount + ' cloud records with ' + localCount + ' local records…', 'info');
+
     // Deep merge so all teachers' subject marks are combined, not overwritten
     marksData = _deepMergeMarks(marksData, data.marks||{});
     // Restore Firebase-sanitized keys
-(function(){
-  var fixed = {};
-  Object.keys(marksData).forEach(function(k){
-    var restored = k.replace(/__/g, '||');
-    fixed[restored] = marksData[k];
-  });
-  marksData = fixed;
-})();
+    (function(){
+      var fixed = {};
+      Object.keys(marksData).forEach(function(k){
+        var restored = k.replace(/__/g, '||');
+        fixed[restored] = marksData[k];
+      });
+      marksData = fixed;
+    })();
     var extra = [];
     try { extra = JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){}
     if (data.studentOptionals) {
@@ -5575,11 +6260,19 @@ function fbPullMarks() {
     try { localStorage.setItem('tss_extra_students', JSON.stringify(extra)); } catch(e){}
     saveMarksToStorage().then(function(){
       renderStudentList(); populateStudentSelects(); updateSummary();
-      fbSetStatus('✅ Pulled ' + markCount + ' mark records from cloud! Last synced by: ' + (data.pushedBy||'unknown'), 'ok');
-      if(typeof showToast==='function') showToast('📥 ' + markCount + ' marks pulled from cloud!');
+      var finalCount = Object.keys(marksData).length;
+      var now = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+      fbSetStatus('✅ Pull complete! ' + finalCount + ' records now on device · Last pull: ' + now + ' · Synced from: ' + (data.pushedBy||'unknown'), 'ok');
+      if(typeof showToast==='function') showToast('📥 Pull complete! ' + finalCount + ' total records.');
+      addAudit('CloudPull', markCount + ' records pulled. Merged to ' + finalCount + ' total by ' + currentUser);
+      logActivity('📥', 'Cloud pull: ' + markCount + ' records from ' + (data.pushedBy||'cloud'), '#e8f5e9');
     });
   }).catch(function(e) {
-    fbSetStatus('❌ Pull failed: ' + e.message, 'danger');
+    clearTimeout(pullTimeout);
+    var hint = e.message.includes('permission') ? ' — Check Firebase database rules (must allow read).' :
+               e.message.includes('network') ? ' — Check your internet connection.' : '';
+    fbSetStatus('❌ Pull failed: ' + e.message + hint, 'danger');
+    if(typeof showToast==='function') showToast('❌ Pull failed — ' + e.message.substring(0,50));
   });
 }
 
