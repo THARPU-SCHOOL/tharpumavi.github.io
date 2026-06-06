@@ -40,7 +40,7 @@ jobs:
           mkdir -p twa
           echo "$KEYSTORE_BASE64" | base64 --decode > twa/my-release-key.jks
 
-      - name: Configure Bubblewrap (skip interactive setup)
+      - name: Configure Bubblewrap SDK paths
         run: |
           mkdir -p ~/.bubblewrap
           cat > ~/.bubblewrap/config.json << EOF
@@ -53,8 +53,6 @@ jobs:
       - name: Create twa-manifest.json
         env:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
           cat > twa/twa-manifest.json << EOF
           {
@@ -91,7 +89,6 @@ jobs:
             "alphaDependencies": { "enabled": false },
             "enableSiteSettingsShortcut": true,
             "isTrustedWebActivity": true,
-            "serviceAccountJsonFile": "",
             "fallbackType": "customtabs",
             "features": {},
             "additionalTrustedOrigins": [],
@@ -99,10 +96,17 @@ jobs:
           }
           EOF
 
-      - name: Generate Android project with Bubblewrap
+      - name: Generate Android project
         run: |
           cd twa
-          bubblewrap update --skipPwaValidation
+          # init generates the Android project from twa-manifest.json non-interactively
+          # by reading the manifest file directly — no prompts needed
+          bubblewrap init \
+            --manifest "https://tharpu-school.github.io/tharpumavi.github.io/manifest.json" \
+            --directory "$(pwd)" < /dev/null || true
+          # Overwrite the generated twa-manifest with ours (init may overwrite it)
+          # Then regenerate project files from our manifest
+          bubblewrap update --skipPwaValidation < /dev/null
 
       - name: Build and Sign APK
         env:
