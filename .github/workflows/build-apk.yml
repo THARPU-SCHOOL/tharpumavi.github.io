@@ -38,6 +38,15 @@ jobs:
       - name: Decode Keystore
         run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > my-release-key.jks
 
+        - name: Test password
+        run: |
+          echo "Password length: ${#KSPASS}"
+          echo "Alias: $KSALIAS"
+          keytool -list -keystore my-release-key.jks -storepass "$KSPASS" -alias "$KSALIAS"
+        env:
+          KSPASS: ${{ secrets.KEYSTORE_PASSWORD }}
+          KSALIAS: ${{ secrets.KEY_ALIAS }}
+
       - name: Debug keystore
         run: keytool -list -keystore my-release-key.jks -storepass ${{ secrets.KEYSTORE_PASSWORD }} -alias ${{ secrets.KEY_ALIAS }}
 
