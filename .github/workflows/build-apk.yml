@@ -44,8 +44,16 @@ jobs:
             --package com.tharpumavi.app \
             --output ../dist
 
-      - name: Find unsigned APK
-        run: find . -name "*.apk" 2>/dev/null
+      - name: Find all APK files
+        run: |
+          echo "=== Searching entire workspace ==="
+          find . -name "*.apk" 2>/dev/null
+          echo "=== Contents of dist ==="
+          ls -la dist/ || echo "dist folder empty or missing"
+          echo "=== Contents of pwa2apk ==="
+          ls -la pwa2apk/ || true
+          echo "=== Contents of pwa2apk/dist ==="
+          ls -la pwa2apk/dist/ || true
 
       - name: Sign APK
         uses: r0adkll/sign-android-release@v1
