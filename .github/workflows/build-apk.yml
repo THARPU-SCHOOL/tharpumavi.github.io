@@ -45,15 +45,13 @@ jobs:
             --output ../dist
 
       - name: Find all APK files
+        run: find . -name "*.apk" 2>/dev/null
+
+      - name: Copy APK to dist root
         run: |
-          echo "=== Searching entire workspace ==="
-          find . -name "*.apk" 2>/dev/null
-          echo "=== Contents of dist ==="
-          ls -la dist/ || echo "dist folder empty or missing"
-          echo "=== Contents of pwa2apk ==="
-          ls -la pwa2apk/ || true
-          echo "=== Contents of pwa2apk/dist ==="
-          ls -la pwa2apk/dist/ || true
+          APK=$(find . -name "*.apk" | head -1)
+          echo "Found APK: $APK"
+          cp "$APK" dist/app-release.apk
 
       - name: Sign APK
         uses: r0adkll/sign-android-release@v1
