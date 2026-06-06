@@ -46,15 +46,33 @@ jobs:
             --package com.tharpumavi.app \
             --output ../dist
 
+     - name: Debug - Check keystore
+        run: |
+          echo "Checking keystore file..."
+          ls -la my-release-key.jks
+          echo "Testing keystore password..."
+          keytool -list -keystore my-release-key.jks -storepass ${{ secrets.KEYSTORE_PASSWORD }} -alias ${{ secrets.KEY_ALIAS }}
+
+      - name: Debug - Find APK
+        run: |
+          echo "Looking for APK files..."
+          find . -name "*.apk" 2>/dev/null
+          echo "Build tools available:"
+          ls $ANDROID_SDK_ROOT/build-tools/
+
       - name: Sign APK
         run: |
-          $ANDROID_SDK_ROOT/build-tools/$(ls $ANDROID_SDK_ROOT/build-tools | tail -1)/apksigner sign \
+          BUILD_TOOLS=$(ls $ANDROID_SDK_ROOT/build-tools | tail -1)
+          echo "Using build tools: $BUILD_TOOLS"
+          APK_FILE=$(find . -name "*.apk" | head -1)
+          echo "Signing APK: $APK_FILE"
+          $ANDROID_SDK_ROOT/build-tools/$BUILD_TOOLS/apksigner sign \
             --ks my-release-key.jks \
             --ks-pass pass:${{ secrets.KEYSTORE_PASSWORD }} \
             --key-pass pass:${{ secrets.KEY_PASSWORD }} \
             --ks-key-alias ${{ secrets.KEY_ALIAS }} \
             --out dist/app-signed.apk \
-            dist/*.apk
+            "$APK_FILE"
 
       - name: Upload Signed APK
         uses: actions/upload-artifact@v4
