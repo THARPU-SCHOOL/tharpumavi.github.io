@@ -911,10 +911,6 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
           <input type="text" id="cert-date-ad" placeholder="e.g. 2025/05/29">
         </div>
         <div class="form-group">
-          <label>Certificate Number</label>
-          <input type="text" id="cert-number" placeholder="e.g. TSS/CC/2082/001">
-        </div>
-        <div class="form-group">
           <label>Purpose / Reason for Certificate</label>
           <input type="text" id="cert-purpose" placeholder="e.g. Higher Education / Employment / General Purpose">
         </div>
@@ -922,10 +918,40 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
           <label>Principal Name</label>
           <input type="text" id="cert-principal" value="Mr./Ms. [Principal Name]" placeholder="Full name of principal">
         </div>
+        <div class="form-group">
+          <label>Conduct / Character Rating</label>
+          <select id="cert-conduct">
+            <option value="good">Good</option>
+            <option value="very good">Very Good</option>
+            <option value="excellent">Excellent</option>
+            <option value="satisfactory">Satisfactory</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Custom Remarks <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#aaa;">(optional — appended after conduct line)</span></label>
+          <input type="text" id="cert-remarks" placeholder="e.g. He/She was an active participant in school events.">
+        </div>
+        <div class="form-group">
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+            <input type="checkbox" id="cert-show-grade" style="accent-color:var(--maroon);width:16px;height:16px;">
+            <span>Include Academic Grade / GPA in Certificate</span>
+          </label>
+        </div>
         <div class="btn-row">
           <button class="btn btn-primary" onclick="previewCharCert()">👁️ Preview Certificate</button>
           <button class="btn btn-gold" onclick="printCharCert()">🖨️ Print Certificate</button>
           <button class="btn btn-success" onclick="exportCertWord()">📄 Export Word</button>
+          <button class="btn btn-secondary" onclick="copyCertText()">📋 Copy Text</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ISSUE HISTORY -->
+    <div class="section-card" style="margin-bottom:1rem;">
+      <div class="section-head">🗂️ Certificate Issue History</div>
+      <div class="section-body" style="padding:0.6rem 1rem;">
+        <div id="cert-history-list" style="font-size:0.82rem;color:var(--text-muted);">
+          <div style="text-align:center;padding:0.7rem 0;color:#bbb;">No certificates issued yet this session.</div>
         </div>
       </div>
     </div>
@@ -989,10 +1015,15 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
               </p>
 
               <p style="text-align:justify;font-size:0.9rem;margin-bottom:0.5rem;line-height:1.8;">
-                During his/her stay at this institution, his/her conduct and character were found to be <b>good</b>.
+                During his/her stay at this institution, his/her conduct and character were found to be <b><span id="cp-conduct">good</span></b>.
                 He/She has not been involved in any immoral, unethical, or unlawful activity and has always
                 maintained respectful behaviour towards teachers and fellow students,
                 following all rules and regulations of this school.
+                <span id="cp-remarks"></span>
+              </p>
+
+              <p id="cp-grade-line" style="display:none;text-align:justify;font-size:0.9rem;margin-bottom:0.5rem;line-height:1.8;">
+                He/She has secured a GPA of <b><span id="cp-gpa">—</span></b> (<b><span id="cp-grade">—</span></b>) in the academic examination of <b><span id="cp-year2">2081/82</span></b>.
               </p>
 
               <p style="text-align:justify;font-size:0.9rem;margin-bottom:0.9rem;line-height:1.8;">
@@ -6658,10 +6689,14 @@ function previewCharCert() {
   var st = students.find(function(s){ return s.roll === roll; });
   if (!st) return;
 
+  var certNo = (document.getElementById('cert-number') ? (document.getElementById('cert-number').value||'').trim() : '') || '—';
   var dateBS = document.getElementById('cert-date-bs').value.trim() || '—';
   var dateAD = document.getElementById('cert-date-ad').value.trim();
   var purpose = document.getElementById('cert-purpose').value.trim() || 'General Purpose';
   var principal = document.getElementById('cert-principal').value.trim() || 'Principal';
+  var conduct = document.getElementById('cert-conduct') ? document.getElementById('cert-conduct').value : 'good';
+  var remarks = document.getElementById('cert-remarks') ? document.getElementById('cert-remarks').value.trim() : '';
+  var showGrade = document.getElementById('cert-show-grade') ? document.getElementById('cert-show-grade').checked : false;
 
   // Fill certificate fields
   document.getElementById('cp-name').textContent    = st.name;
@@ -6671,7 +6706,6 @@ function previewCharCert() {
   document.getElementById('cp-dob-ad').textContent  = st.dobad || '—';
   document.getElementById('cp-stream').textContent  = st.stream || '—';
   document.getElementById('cp-year').textContent    = st.year   || '2081/82';
-  document.getElementById('cp-cert-no').textContent = certNo;
   document.getElementById('cp-date-bs').textContent = dateBS;
   document.getElementById('cp-date').textContent    = dateAD || '—';
   document.getElementById('cp-purpose').textContent = purpose;
@@ -6681,6 +6715,49 @@ function previewCharCert() {
   document.getElementById('cp-father').textContent  = st.father || '—';
   document.getElementById('cp-mother').textContent  = st.mother || '—';
   document.getElementById('cp-gender-text').textContent = st.gender === 'Female' ? 'daughter' : 'son/daughter';
+
+  // Conduct, remarks, grade
+  document.getElementById('cp-conduct').textContent = conduct;
+  var remarksEl = document.getElementById('cp-remarks');
+  if (remarksEl) remarksEl.textContent = remarks ? ' ' + remarks : '';
+  var gradeLine = document.getElementById('cp-grade-line');
+  if (gradeLine) {
+    if (showGrade) {
+      // Try to compute GPA from stored marks
+      var mEntry = marksData && marksData[roll];
+      var gpaVal = '—', gradeVal = '—';
+      if (mEntry) {
+        var subs = getStudentSubjects(roll);
+        var total = 0, count = 0;
+        subs.forEach(function(sub){
+          var th = parseFloat(mEntry[sub.name+'_th']||0), pr = parseFloat(mEntry[sub.name+'_pr']||0);
+          var fm = sub.hasPractical ? (th+pr) : th;
+          var gp = getGradePoint(fm, sub.fullMark || (sub.hasPractical?75:100));
+          if (!isNaN(gp)){ total+=gp; count++; }
+        });
+        if (count){ gpaVal = (total/count).toFixed(2); gradeVal = gpToGrade(total/count); }
+      }
+      document.getElementById('cp-gpa').textContent = gpaVal;
+      document.getElementById('cp-grade').textContent = gradeVal;
+      document.getElementById('cp-year2').textContent = st.year || '2081/82';
+      gradeLine.style.display = '';
+    } else {
+      gradeLine.style.display = 'none';
+    }
+  }
+
+  // Log to issue history
+  var histList = document.getElementById('cert-history-list');
+  if (histList) {
+    var now2 = new Date();
+    var timeStr = now2.getHours()+':'+(now2.getMinutes()<10?'0':'')+now2.getMinutes();
+    var entry = document.createElement('div');
+    entry.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--cream-dark);';
+    entry.innerHTML = '<span>📜 <b>'+st.name+'</b> &nbsp;<span style="color:#aaa;font-size:0.75rem;">(Roll: '+st.roll+')</span></span>'+
+      '<span style="color:var(--text-muted);font-size:0.75rem;">'+purpose+' &nbsp;·&nbsp; '+timeStr+'</span>';
+    if (histList.querySelector('div[style*="text-align:center"]')) histList.innerHTML = '';
+    histList.prepend(entry);
+  }
 
   document.getElementById('cert-preview-area').style.display = 'block';
   document.getElementById('cert-preview-area').scrollIntoView({behavior:'smooth'});
@@ -6719,6 +6796,26 @@ function exportCertWord() {
   a.href = url; a.download = 'CharacterCertificate_'+name.replace(/\s+/g,'_')+'.doc'; a.click();
   setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
   showToast('📄 Word document downloaded!');
+}
+
+function copyCertText() {
+  var area = document.getElementById('cert-printable');
+  if (!area || document.getElementById('cert-preview-area').style.display === 'none') {
+    showToast('⚠️ Please preview the certificate first.'); return;
+  }
+  var text = area.innerText || area.textContent;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function(){
+      showToast('📋 Certificate text copied to clipboard!');
+    }).catch(function(){ showToast('⚠️ Could not copy. Try manually.'); });
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); showToast('📋 Certificate text copied!'); }
+    catch(e) { showToast('⚠️ Copy not supported on this browser.'); }
+    document.body.removeChild(ta);
+  }
 }
 
 // ─── OPTIONAL SUBJECTS EDITOR ───
