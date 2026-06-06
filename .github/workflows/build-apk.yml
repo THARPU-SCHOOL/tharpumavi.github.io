@@ -8,6 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -43,6 +44,12 @@ jobs:
             --name "Tharpu Mavi" \
             --package com.tharpumavi.app \
             --output ../dist
+
+      - name: Force Gradle 8.11.1 (fix Gradle 10 incompatibility)
+        run: |
+          WRAPPER=dist/android-project/gradle/wrapper/gradle-wrapper.properties
+          sed -i 's|distributionUrl=.*|distributionUrl=https\\://services.gradle.org/distributions/gradle-8.11.1-bin.zip|' "$WRAPPER"
+          cat "$WRAPPER"
 
       - name: Decode Keystore
         env:
