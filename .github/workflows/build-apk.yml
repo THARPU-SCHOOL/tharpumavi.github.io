@@ -49,9 +49,8 @@ jobs:
           mkdir -p twa-app/app/src/main/res/mipmap-xxhdpi
           mkdir -p twa-app/app/src/main/res/mipmap-xxxhdpi
           mkdir -p twa-app/gradle/wrapper
-          mkdir -p twa-app/app/src/main/res/xml
 
-          # School logo icons
+          # ── School logo icons ─────────────────────────────────────
           curl -sL "https://raw.githubusercontent.com/THARPU-SCHOOL/tharpumavi.github.io/main/THARPU%20SECONDARY%20SCHOOL.jpeg" \
             -o /tmp/logo.jpg
           convert /tmp/logo.jpg -resize 48x48   twa-app/app/src/main/res/mipmap-mdpi/ic_launcher.png
@@ -59,9 +58,10 @@ jobs:
           convert /tmp/logo.jpg -resize 96x96   twa-app/app/src/main/res/mipmap-xhdpi/ic_launcher.png
           convert /tmp/logo.jpg -resize 144x144 twa-app/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
           convert /tmp/logo.jpg -resize 192x192 twa-app/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+          # Splash logo (bigger)
           convert /tmp/logo.jpg -resize 300x300 twa-app/app/src/main/res/drawable/splash_logo.png
 
-          # Gradle wrapper
+          # ── Gradle wrapper ────────────────────────────────────────
           curl -sL "https://github.com/gradle/gradle/raw/v7.6.1/gradle/wrapper/gradle-wrapper.jar" \
             -o twa-app/gradle/wrapper/gradle-wrapper.jar
           curl -sL "https://raw.githubusercontent.com/gradle/gradle/v7.6.1/gradlew" \
@@ -128,9 +128,7 @@ jobs:
               }
               buildTypes {
                   release {
-                      minifyEnabled true
-                      shrinkResources true
-                      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+                      minifyEnabled false
                       signingConfig signingConfigs.release
                   }
               }
@@ -146,51 +144,25 @@ jobs:
           }
           EOF
 
-          # ProGuard rules
-          cat > twa-app/app/proguard-rules.pro << 'EOF'
-          -keep class com.tharpumavi.app.** { *; }
-          -keepattributes *Annotation*
-          -dontwarn okhttp3.**
-          -dontwarn javax.annotation.**
-          EOF
-
-          # Network security config - HTTPS only, no cleartext
-          cat > twa-app/app/src/main/res/xml/network_security_config.xml << 'EOF'
-          <?xml version="1.0" encoding="utf-8"?>
-          <network-security-config>
-              <base-config cleartextTrafficPermitted="false">
-                  <trust-anchors>
-                      <certificates src="system"/>
-                  </trust-anchors>
-              </base-config>
-              <domain-config cleartextTrafficPermitted="false">
-                  <domain includeSubdomains="true">tharpu-school.github.io</domain>
-              </domain-config>
-          </network-security-config>
-          EOF
-
-          # AndroidManifest.xml
+          # ── AndroidManifest.xml ───────────────────────────────────
           cat > twa-app/app/src/main/AndroidManifest.xml << 'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <manifest xmlns:android="http://schemas.android.com/apk/res/android">
               <uses-permission android:name="android.permission.INTERNET"/>
               <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
               <application
-                  android:allowBackup="false"
+                  android:allowBackup="true"
                   android:label="Tharpu Mavi"
                   android:icon="@mipmap/ic_launcher"
                   android:roundIcon="@mipmap/ic_launcher"
                   android:supportsRtl="true"
                   android:usesCleartextTraffic="false"
-                  android:networkSecurityConfig="@xml/network_security_config"
-                  android:debuggable="false"
                   android:theme="@style/AppTheme">
                   <activity
                       android:name=".SplashActivity"
                       android:exported="true"
                       android:theme="@style/SplashTheme"
-                      android:noHistory="true"
-                      android:screenOrientation="portrait">
+                      android:noHistory="true">
                       <intent-filter>
                           <action android:name="android.intent.action.MAIN"/>
                           <category android:name="android.intent.category.LAUNCHER"/>
@@ -199,13 +171,12 @@ jobs:
                   <activity
                       android:name=".MainActivity"
                       android:exported="false"
-                      android:screenOrientation="portrait"
                       android:configChanges="orientation|screenSize|keyboardHidden"/>
               </application>
           </manifest>
           EOF
 
-          # SplashActivity.java
+          # ── SplashActivity.java ───────────────────────────────────
           cat > twa-app/app/src/main/java/com/tharpumavi/app/SplashActivity.java << 'EOF'
           package com.tharpumavi.app;
 
@@ -227,7 +198,7 @@ jobs:
           }
           EOF
 
-          # MainActivity.java - fully secured
+          # ── MainActivity.java ─────────────────────────────────────
           cat > twa-app/app/src/main/java/com/tharpumavi/app/MainActivity.java << 'EOF'
           package com.tharpumavi.app;
 
@@ -237,11 +208,6 @@ jobs:
           import android.net.NetworkInfo;
           import android.os.Bundle;
           import android.view.View;
-          import android.webkit.ConsoleMessage;
-          import android.webkit.GeolocationPermissions;
-          import android.webkit.JsResult;
-          import android.webkit.PermissionRequest;
-          import android.webkit.WebChromeClient;
           import android.webkit.WebResourceError;
           import android.webkit.WebResourceRequest;
           import android.webkit.WebSettings;
@@ -257,81 +223,44 @@ jobs:
               private SwipeRefreshLayout swipeRefresh;
               private ProgressBar progressBar;
               private LinearLayout offlineLayout;
-
-              private static final String ALLOWED_HOST = "tharpu-school.github.io";
-              private static final String START_URL =
-                  "https://tharpu-school.github.io/tharpumavi.github.io/";
+              private static final String URL = "https://tharpu-school.github.io/tharpumavi.github.io/";
 
               @Override
               protected void onCreate(Bundle savedInstanceState) {
                   super.onCreate(savedInstanceState);
                   setContentView(R.layout.activity_main);
 
-                  webView      = findViewById(R.id.webview);
+                  webView = findViewById(R.id.webview);
                   swipeRefresh = findViewById(R.id.swipeRefresh);
-                  progressBar  = findViewById(R.id.progressBar);
+                  progressBar = findViewById(R.id.progressBar);
                   offlineLayout = findViewById(R.id.offlineLayout);
                   Button retryBtn = findViewById(R.id.retryBtn);
 
-                  // Fullscreen immersive
+                  // Fullscreen
                   getWindow().getDecorView().setSystemUiVisibility(
                       View.SYSTEM_UI_FLAG_FULLSCREEN |
                       View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
                       View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                   );
 
-                  swipeRefresh.setColorSchemeColors(0xFF1565C0, 0xFF0D47A1, 0xFF42A5F5);
+                  // SwipeRefresh colors
+                  swipeRefresh.setColorSchemeColors(
+                      0xFF1565C0, 0xFF0D47A1, 0xFF42A5F5
+                  );
 
-                  // ── Secure WebSettings ──────────────────────────
-                  WebSettings s = webView.getSettings();
-                  s.setJavaScriptEnabled(true);
-                  s.setDomStorageEnabled(true);
-                  s.setLoadWithOverviewMode(true);
-                  s.setUseWideViewPort(true);
-                  s.setCacheMode(WebSettings.LOAD_DEFAULT);
-                  s.setUserAgentString(
+                  // WebView settings
+                  WebSettings settings = webView.getSettings();
+                  settings.setJavaScriptEnabled(true);
+                  settings.setDomStorageEnabled(true);
+                  settings.setLoadWithOverviewMode(true);
+                  settings.setUseWideViewPort(true);
+                  settings.setCacheMode(WebSettings.LOAD_DEFAULT);
+                  settings.setUserAgentString(
                       "Mozilla/5.0 (Linux; Android 13; Pixel 7) " +
                       "AppleWebKit/537.36 (KHTML, like Gecko) " +
                       "Chrome/120.0.0.0 Mobile Safari/537.36"
                   );
 
-                  // Security hardening
-                  s.setAllowFileAccess(false);
-                  s.setAllowContentAccess(false);
-                  s.setAllowFileAccessFromFileURLs(false);
-                  s.setAllowUniversalAccessFromFileURLs(false);
-                  s.setSaveFormData(false);
-                  s.setSavePassword(false);
-                  s.setGeolocationEnabled(false);
-                  s.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
-
-                  // Disable debugging in release
-                  WebView.setWebContentsDebuggingEnabled(false);
-
-                  // ── Secure WebChromeClient ──────────────────────
-                  webView.setWebChromeClient(new WebChromeClient() {
-                      // Block JS alerts/confirms (prevent JS dialog abuse)
-                      @Override public boolean onJsAlert(WebView v, String url, String msg, JsResult r) {
-                          r.cancel(); return true;
-                      }
-                      @Override public boolean onJsConfirm(WebView v, String url, String msg, JsResult r) {
-                          r.cancel(); return true;
-                      }
-                      // Block geolocation requests
-                      @Override public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback cb) {
-                          cb.invoke(origin, false, false);
-                      }
-                      // Block camera/mic/other permission requests
-                      @Override public void onPermissionRequest(PermissionRequest request) {
-                          request.deny();
-                      }
-                      // Suppress console logs
-                      @Override public boolean onConsoleMessage(ConsoleMessage msg) {
-                          return true;
-                      }
-                  });
-
-                  // ── Secure WebViewClient ────────────────────────
                   webView.setWebViewClient(new WebViewClient() {
                       @Override
                       public void onPageStarted(WebView view, String url, android.graphics.Bitmap favicon) {
@@ -345,8 +274,8 @@ jobs:
                           swipeRefresh.setRefreshing(false);
                       }
                       @Override
-                      public void onReceivedError(WebView view, WebResourceRequest req, WebResourceError err) {
-                          if (req.isForMainFrame()) {
+                      public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                          if (request.isForMainFrame()) {
                               progressBar.setVisibility(View.GONE);
                               webView.setVisibility(View.GONE);
                               offlineLayout.setVisibility(View.VISIBLE);
@@ -356,12 +285,10 @@ jobs:
                       @Override
                       public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                           String url = request.getUrl().toString();
-                          String host = request.getUrl().getHost();
-                          // Strict whitelist — only allow your domain
-                          if (host != null && host.equals(ALLOWED_HOST) && url.startsWith("https://")) {
-                              return false; // load in app
+                          if (url.startsWith("https://tharpu-school.github.io")) {
+                              return false;
                           }
-                          return true; // block everything else
+                          return true;
                       }
                   });
 
@@ -379,12 +306,12 @@ jobs:
                       if (isOnline()) {
                           offlineLayout.setVisibility(View.GONE);
                           webView.setVisibility(View.VISIBLE);
-                          webView.loadUrl(START_URL);
+                          webView.loadUrl(URL);
                       }
                   });
 
                   if (isOnline()) {
-                      webView.loadUrl(START_URL);
+                      webView.loadUrl(URL);
                   } else {
                       offlineLayout.setVisibility(View.VISIBLE);
                       webView.setVisibility(View.GONE);
@@ -392,33 +319,23 @@ jobs:
               }
 
               private boolean isOnline() {
-                  ConnectivityManager cm = (ConnectivityManager)
-                      getSystemService(Context.CONNECTIVITY_SERVICE);
+                  ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                   NetworkInfo info = cm.getActiveNetworkInfo();
                   return info != null && info.isConnected();
               }
 
               @Override
               public void onBackPressed() {
-                  if (webView.canGoBack()) webView.goBack();
-                  else super.onBackPressed();
-              }
-
-              // Clear WebView data on app exit
-              @Override
-              protected void onDestroy() {
-                  if (webView != null) {
-                      webView.clearCache(true);
-                      webView.clearHistory();
-                      webView.clearFormData();
-                      webView.destroy();
+                  if (webView.canGoBack()) {
+                      webView.goBack();
+                  } else {
+                      super.onBackPressed();
                   }
-                  super.onDestroy();
               }
           }
           EOF
 
-          # Splash layout
+          # ── activity_splash.xml ───────────────────────────────────
           cat > twa-app/app/src/main/res/layout/activity_splash.xml << 'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -440,6 +357,7 @@ jobs:
                   android:textColor="#FFFFFF"
                   android:textSize="28sp"
                   android:textStyle="bold"
+                  android:fontFamily="sans-serif-medium"
                   android:layout_marginBottom="8dp"/>
               <TextView
                   android:layout_width="wrap_content"
@@ -450,13 +368,14 @@ jobs:
           </LinearLayout>
           EOF
 
-          # Main layout
+          # ── activity_main.xml ─────────────────────────────────────
           cat > twa-app/app/src/main/res/layout/activity_main.xml << 'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="#FFFFFF">
+
               <ProgressBar
                   android:id="@+id/progressBar"
                   style="@android:style/Widget.Material.ProgressBar.Horizontal"
@@ -466,16 +385,19 @@ jobs:
                   android:indeterminate="true"
                   android:indeterminateTint="#1565C0"
                   android:visibility="gone"/>
+
               <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                   android:id="@+id/swipeRefresh"
                   android:layout_width="match_parent"
                   android:layout_height="match_parent"
                   android:layout_below="@id/progressBar">
+
                   <WebView
                       android:id="@+id/webview"
                       android:layout_width="match_parent"
                       android:layout_height="match_parent"/>
               </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
               <LinearLayout
                   android:id="@+id/offlineLayout"
                   android:layout_width="match_parent"
@@ -484,6 +406,7 @@ jobs:
                   android:gravity="center"
                   android:background="#FFFFFF"
                   android:visibility="gone">
+
                   <TextView
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
@@ -520,6 +443,7 @@ jobs:
           </RelativeLayout>
           EOF
 
+          # ── styles.xml ────────────────────────────────────────────
           cat > twa-app/app/src/main/res/values/styles.xml << 'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <resources>
