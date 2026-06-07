@@ -28,6 +28,9 @@ jobs:
       - name: Install Android build tools
         run: sdkmanager "build-tools;34.0.0" "platforms;android-34"
 
+      - name: Install ImageMagick
+        run: sudo apt-get install -y imagemagick
+
       - name: Decode Keystore
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
@@ -38,19 +41,28 @@ jobs:
         run: |
           mkdir -p twa-app/app/src/main/java/com/tharpumavi/app
           mkdir -p twa-app/app/src/main/res/values
-          mkdir -p twa-app/app/src/main/res/layout
+          mkdir -p twa-app/app/src/main/res/mipmap-mdpi
           mkdir -p twa-app/app/src/main/res/mipmap-hdpi
+          mkdir -p twa-app/app/src/main/res/mipmap-xhdpi
+          mkdir -p twa-app/app/src/main/res/mipmap-xxhdpi
+          mkdir -p twa-app/app/src/main/res/mipmap-xxxhdpi
           mkdir -p twa-app/gradle/wrapper
 
-          # ── gradle wrapper jar ────────────────────────────────────
+          # Download school logo and generate all icon sizes
+          curl -sL "https://raw.githubusercontent.com/THARPU-SCHOOL/tharpumavi.github.io/main/THARPU%20SECONDARY%20SCHOOL.jpeg" \
+            -o /tmp/logo.jpg
+          convert /tmp/logo.jpg -resize 48x48   twa-app/app/src/main/res/mipmap-mdpi/ic_launcher.png
+          convert /tmp/logo.jpg -resize 72x72   twa-app/app/src/main/res/mipmap-hdpi/ic_launcher.png
+          convert /tmp/logo.jpg -resize 96x96   twa-app/app/src/main/res/mipmap-xhdpi/ic_launcher.png
+          convert /tmp/logo.jpg -resize 144x144 twa-app/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+          convert /tmp/logo.jpg -resize 192x192 twa-app/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+
           curl -sL "https://github.com/gradle/gradle/raw/v7.6.1/gradle/wrapper/gradle-wrapper.jar" \
             -o twa-app/gradle/wrapper/gradle-wrapper.jar
-
           curl -sL "https://raw.githubusercontent.com/gradle/gradle/v7.6.1/gradlew" \
             -o twa-app/gradlew
           chmod +x twa-app/gradlew
 
-          # ── gradle wrapper properties ─────────────────────────────
           cat > twa-app/gradle/wrapper/gradle-wrapper.properties << 'EOF'
           distributionBase=GRADLE_USER_HOME
           distributionPath=wrapper/dists
@@ -59,13 +71,11 @@ jobs:
           zipStorePath=wrapper/dists
           EOF
 
-          # ── settings.gradle ───────────────────────────────────────
           cat > twa-app/settings.gradle << 'EOF'
           rootProject.name = "TharpuMavi"
           include ':app'
           EOF
 
-          # ── project-level build.gradle ────────────────────────────
           cat > twa-app/build.gradle << 'EOF'
           buildscript {
               repositories {
@@ -84,13 +94,11 @@ jobs:
           }
           EOF
 
-          # ── gradle.properties ─────────────────────────────────────
           cat > twa-app/gradle.properties << 'EOF'
           org.gradle.jvmargs=-Xmx2048m
           android.useAndroidX=true
           EOF
 
-          # ── app/build.gradle — NO external dependencies ───────────
           cat > twa-app/app/build.gradle << EOF
           plugins {
               id 'com.android.application'
@@ -129,7 +137,6 @@ jobs:
           }
           EOF
 
-          # ── AndroidManifest.xml ───────────────────────────────────
           cat > twa-app/app/src/main/AndroidManifest.xml << 'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <manifest xmlns:android="http://schemas.android.com/apk/res/android">
@@ -137,6 +144,8 @@ jobs:
               <application
                   android:allowBackup="true"
                   android:label="Tharpu Mavi"
+                  android:icon="@mipmap/ic_launcher"
+                  android:roundIcon="@mipmap/ic_launcher"
                   android:supportsRtl="true"
                   android:usesCleartextTraffic="false"
                   android:theme="@style/AppTheme">
@@ -153,7 +162,6 @@ jobs:
           </manifest>
           EOF
 
-          # ── MainActivity.java ─────────────────────────────────────
           cat > twa-app/app/src/main/java/com/tharpumavi/app/MainActivity.java << 'EOF'
           package com.tharpumavi.app;
 
@@ -181,6 +189,11 @@ jobs:
                   settings.setCacheMode(WebSettings.LOAD_DEFAULT);
                   settings.setLoadWithOverviewMode(true);
                   settings.setUseWideViewPort(true);
+                  settings.setUserAgentString(
+                      "Mozilla/5.0 (Linux; Android 13; Pixel 7) " +
+                      "AppleWebKit/537.36 (KHTML, like Gecko) " +
+                      "Chrome/120.0.0.0 Mobile Safari/537.36"
+                  );
 
                   webView.setWebViewClient(new WebViewClient() {
                       @Override
@@ -193,7 +206,6 @@ jobs:
                       }
                   });
 
-                  // Hide system UI for fullscreen
                   getWindow().getDecorView().setSystemUiVisibility(
                       View.SYSTEM_UI_FLAG_FULLSCREEN |
                       View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
@@ -214,8 +226,6 @@ jobs:
           }
           EOF
 
-          # ── layout (not needed since we set view programmatically) ─
-          # ── styles.xml ────────────────────────────────────────────
           cat > twa-app/app/src/main/res/values/styles.xml << 'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <resources>
@@ -227,16 +237,12 @@ jobs:
           </resources>
           EOF
 
-          # ── strings.xml ───────────────────────────────────────────
           cat > twa-app/app/src/main/res/values/strings.xml << 'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <resources>
               <string name="app_name">Tharpu Mavi</string>
           </resources>
           EOF
-
-          echo "=== Project structure ==="
-          find twa-app -type f | sort
 
       - name: Build Release APK
         env:
