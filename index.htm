@@ -7063,6 +7063,31 @@ function saveAssignSubjects() {
     <button class="btn btn-secondary" style="width:100%;margin-top:0.5rem;" onclick="closeModal('assign-subjects-modal')">Cancel</button>
   </div>
 </div>
+<script>
+// cert-date-bs: auto-convert to AD and Enter key moves to AD field
+(function(){
+  var bsEl = document.getElementById('cert-date-bs');
+  var adEl = document.getElementById('cert-date-ad');
+  if (!bsEl || !adEl) return;
+  bsEl.addEventListener('input', function () {
+    var val = this.value.replace(/[^0-9]/g, '');
+    if (val.length > 4) val = val.slice(0, 4) + '/' + val.slice(4);
+    if (val.length > 7) val = val.slice(0, 7) + '/' + val.slice(7);
+    if (val.length > 10) val = val.slice(0, 10);
+    this.value = val;
+    adEl.value = '';
+    var parts = val.split('/');
+    if (parts.length === 3 && parts[2].length === 2) {
+      var y = Number(parts[0]), m = Number(parts[1]), d = Number(parts[2]);
+      var result = bsToAd(y, m, d);
+      if (result) adEl.value = result.year + '/' + pad(result.month) + '/' + pad(result.day);
+    }
+  });
+  bsEl.addEventListener('keydown', function(e){
+    if (e.key === 'Enter') { e.preventDefault(); adEl.focus(); }
+  });
+})();
+</script>
 </body>
 </html>
 
