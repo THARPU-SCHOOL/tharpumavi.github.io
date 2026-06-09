@@ -7064,10 +7064,9 @@ function saveAssignSubjects() {
   </div>
 </div>
 <script>
-// cert-date-bs: auto-convert to AD and Enter key moves to AD field
-(function(){
-  var bsEl = document.getElementById('cert-date-bs');
-  var adEl = document.getElementById('cert-date-ad');
+function _attachBsAdConverter(bsId, adId) {
+  var bsEl = document.getElementById(bsId);
+  var adEl = document.getElementById(adId);
   if (!bsEl || !adEl) return;
   bsEl.addEventListener('input', function () {
     var val = this.value.replace(/[^0-9]/g, '');
@@ -7086,7 +7085,9 @@ function saveAssignSubjects() {
   bsEl.addEventListener('keydown', function(e){
     if (e.key === 'Enter') { e.preventDefault(); adEl.focus(); }
   });
-})();
+}
+_attachBsAdConverter('cert-date-bs', 'cert-date-ad');
+_attachBsAdConverter('edit-dob-bs', 'edit-dob-ad');
 </script>
 </body>
 </html>
