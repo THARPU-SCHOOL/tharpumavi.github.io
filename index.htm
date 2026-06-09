@@ -6758,7 +6758,18 @@ function openEditDobRegno(roll) {
   if (!st) return;
   document.getElementById('edit-modal-name').textContent = st.name;
   document.getElementById('edit-dob-bs').value  = st.dobbs || '';
-  document.getElementById('edit-dob-ad').value  = st.dobad || '';
+  // Auto-convert BS → AD on open
+  (function() {
+    var bsVal = st.dobbs || '';
+    var parts = bsVal.split('/');
+    if (parts.length === 3 && parts[0].length === 4 && parts[1] && parts[2]) {
+      var y = Number(parts[0]), m = Number(parts[1]), d = Number(parts[2]);
+      var res = bsToAd(y, m, d);
+      document.getElementById('edit-dob-ad').value = res ? res.year + '/' + pad(res.month) + '/' + pad(res.day) : (st.dobad || '');
+    } else {
+      document.getElementById('edit-dob-ad').value = st.dobad || '';
+    }
+  })();
   document.getElementById('edit-regno').value   = st.regno || '';
   openModal('edit-dob-regno-modal');
 }
@@ -7076,7 +7087,7 @@ function _attachBsAdConverter(bsId, adId) {
     this.value = val;
     adEl.value = '';
     var parts = val.split('/');
-    if (parts.length === 3 && parts[2].length === 2) {
+    if (parts.length === 3 && parts[0].length === 4 && parts[1].length >= 1 && parts[2].length >= 1) {
       var y = Number(parts[0]), m = Number(parts[1]), d = Number(parts[2]);
       var result = bsToAd(y, m, d);
       if (result) adEl.value = result.year + '/' + pad(result.month) + '/' + pad(result.day);
