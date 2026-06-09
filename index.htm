@@ -852,6 +852,126 @@ input:checked+.toggle-slider:before{transform:translateX(18px);}
 <div class="form-group"><label>Registration No.</label><input type="text" id="reg-regno" placeholder="e.g. 2023-12345"></div>
 <div class="form-group"><label>Date of Birth (B.S.)</label><input type="text" id="reg-dob-bs" placeholder="e.g. 2062/05/15"></div>
 <div class="form-group"><label>Date of Birth (A.D.)</label><input type="text" id="reg-dob-ad" placeholder="e.g. 2005/08/31"></div>
+        <script>
+const BS_YEAR_START = 1970;
+const BS_CALENDAR = [
+  [31,31,32,32,31,30,30,30,29,29,30,30],
+  [31,31,32,31,31,31,30,29,30,29,30,30],
+  [31,32,31,32,31,30,30,30,29,30,29,31],
+  [30,32,31,32,31,30,30,30,29,30,30,30],
+  [31,31,32,31,31,30,30,30,29,30,30,30],
+  [31,31,32,31,31,30,30,30,29,30,29,31],
+  [31,31,31,32,31,31,30,29,30,29,30,30],
+  [31,31,32,32,31,30,30,29,30,29,30,30],
+  [31,32,31,32,31,30,30,30,29,29,30,31],
+  [30,32,31,32,31,30,30,30,29,30,29,31],
+  [31,31,32,31,31,31,30,29,30,29,30,30],
+  [31,31,32,31,31,30,30,30,29,30,30,30],
+  [31,31,32,32,31,30,30,30,29,29,30,30],
+  [31,32,31,32,31,30,30,29,30,29,30,30],
+  [31,32,31,32,31,30,30,30,29,30,29,31],
+  [31,31,31,32,31,31,29,30,29,30,29,31],
+  [31,31,32,31,31,31,30,29,30,29,30,30],
+  [31,31,32,31,32,30,30,29,30,29,30,30],
+  [31,32,31,32,31,30,30,30,29,29,30,31],
+  [30,32,31,32,31,30,30,30,29,30,29,31],
+  [31,31,32,31,31,30,30,30,29,30,30,30],
+  [31,31,32,32,31,30,30,30,29,29,30,30],
+  [31,32,31,32,31,30,30,29,30,29,30,30],
+  [31,32,31,32,31,30,30,30,29,30,29,31],
+  [31,31,31,32,31,31,30,29,30,29,30,30],
+  [31,31,32,31,31,31,30,29,30,29,30,30],
+  [31,32,31,32,31,30,30,30,29,29,30,31],
+  [30,32,31,32,31,30,30,30,29,30,29,31],
+  [31,31,32,31,31,30,30,30,29,30,30,30],
+  [31,31,32,32,31,30,30,30,29,29,30,30],
+  [31,32,31,31,31,31,30,29,30,29,30,30],
+  [30,32,31,32,31,30,30,29,30,29,30,30],
+  [31,32,31,32,31,30,30,30,29,30,29,31],
+  [31,31,31,32,31,31,30,29,30,29,30,30],
+  [31,31,32,31,31,31,30,29,30,29,30,30],
+  [31,32,31,32,31,30,30,30,29,29,30,31],
+  [30,32,31,32,31,30,30,30,29,30,29,31],
+  [31,31,32,31,31,30,30,30,29,30,30,30],
+  [31,31,32,32,31,30,30,30,29,29,30,30],
+  [31,32,31,31,31,31,30,29,30,29,30,30],
+  [31,31,32,32,31,30,30,29,30,29,30,30],
+  [31,32,31,32,31,30,30,30,29,30,29,31],
+  [31,31,31,32,31,31,30,29,30,29,30,30],
+  [31,31,32,31,31,31,30,29,30,29,30,30],
+  [31,32,31,32,31,30,30,30,29,30,29,31],
+  [30,32,31,32,31,30,30,30,29,30,30,30],
+  [31,31,32,32,31,30,30,30,29,29,30,30],
+  [31,32,31,31,31,31,30,29,30,29,30,30],
+  [31,31,32,32,31,30,30,29,30,29,30,30],
+  [31,32,31,32,31,30,30,30,29,30,29,31],
+  [31,31,32,32,31,31,30,29,30,29,30,30],
+  [31,31,32,32,31,30,30,30,29,30,29,31],
+  [31,32,31,32,31,30,30,30,29,30,30,30],
+  [31,31,32,31,31,31,30,29,30,29,30,30],
+  [31,31,32,32,31,30,30,30,29,30,29,31],
+  [30,32,31,32,31,30,30,30,29,30,30,30],
+  [31,31,32,31,31,31,30,29,30,29,30,30],
+  [31,32,31,32,31,30,30,30,29,30,29,31],
+  [30,32,31,32,31,30,30,30,29,30,30,30],
+];
+
+const AD_MONTH_DAYS = [31,28,31,30,31,30,31,31,30,31,30,31];
+const AD_START = { year: 2013, month: 4, day: 13 };
+
+function isLeapYear(y) {
+  return (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0;
+}
+
+function bsToAd(bsYear, bsMonth, bsDay) {
+  const idx = bsYear - BS_YEAR_START;
+  if (idx < 0 || idx >= BS_CALENDAR.length) return null;
+  if (bsMonth < 1 || bsMonth > 12) return null;
+  if (bsDay < 1 || bsDay > BS_CALENDAR[idx][bsMonth - 1]) return null;
+
+  let totalDays = 0;
+  for (let y = 0; y < idx; y++)
+    for (let m = 0; m < 12; m++) totalDays += BS_CALENDAR[y][m];
+  for (let m = 0; m < bsMonth - 1; m++) totalDays += BS_CALENDAR[idx][m];
+  totalDays += bsDay - 1;
+
+  let adYear = AD_START.year, adMonth = AD_START.month, adDay = AD_START.day;
+  let remaining = totalDays;
+
+  while (remaining > 0) {
+    const dim = (adMonth === 2 && isLeapYear(adYear)) ? 29 : AD_MONTH_DAYS[adMonth - 1];
+    const left = dim - adDay;
+    if (remaining <= left) { adDay += remaining; remaining = 0; }
+    else {
+      remaining -= (left + 1); adDay = 1; adMonth++;
+      if (adMonth > 12) { adMonth = 1; adYear++; }
+    }
+  }
+  return { year: adYear, month: adMonth, day: adDay };
+}
+
+function pad(n) { return String(n).padStart(2, '0'); }
+
+document.getElementById('reg-dob-bs').addEventListener('input', function () {
+  let val = this.value.replace(/[^0-9]/g, '');
+  if (val.length > 4) val = val.slice(0, 4) + '/' + val.slice(4);
+  if (val.length > 7) val = val.slice(0, 7) + '/' + val.slice(7);
+  if (val.length > 10) val = val.slice(0, 10);
+  this.value = val;
+
+  document.getElementById('reg-dob-ad').value = '';
+
+  const parts = val.split('/');
+  if (parts.length === 3 && parts[2].length === 2) {
+    const [y, m, d] = parts.map(Number);
+    const result = bsToAd(y, m, d);
+    if (result) {
+      document.getElementById('reg-dob-ad').value =
+        `${result.year}/${pad(result.month)}/${pad(result.day)}`;
+    }
+  }
+});
+</script>
         <div class="form-group">
           <label>Stream</label>
           <div class="radio-group">
