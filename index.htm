@@ -7043,7 +7043,7 @@ function saveAssignSubjects() {
     <div style="background:#fff8e1;border:1px solid #f0c96e;border-radius:8px;padding:0.5rem 0.8rem;font-size:0.78rem;color:#6d4c00;margin-bottom:0.9rem;">
       These details appear on the printed Grade Sheet. Fill them carefully.
     </div>
-    <div class="form-group"><label>Date of Birth (B.S.)</label><input type="text" id="edit-dob-bs" placeholder="e.g. 2062/05/15"></div>
+    <div class="form-group"><label>Date of Birth (B.S.)</label><input type="text" id="edit-dob-bs" placeholder="e.g. 2062/05/15" oninput="(function(el){var val=el.value.replace(/[^0-9]/g,'');if(val.length>4)val=val.slice(0,4)+'/'+val.slice(4);if(val.length>7)val=val.slice(0,7)+'/'+val.slice(7);if(val.length>10)val=val.slice(0,10);el.value=val;var adEl=document.getElementById('edit-dob-ad');adEl.value='';var parts=val.split('/');if(parts.length===3&&parts[0].length===4&&parts[1].length>=1&&parts[2].length>=1){var r=bsToAd(Number(parts[0]),Number(parts[1]),Number(parts[2]));if(r)adEl.value=r.year+'/'+pad(r.month)+'/'+pad(r.day);}})(this)"></div>
     <div class="form-group"><label>Date of Birth (A.D.)</label><input type="text" id="edit-dob-ad" placeholder="e.g. 2005/08/31"></div>
     <div class="form-group"><label>Registration No.</label><input type="text" id="edit-regno" placeholder="e.g. 2023-12345"></div>
     <div class="modal-actions">
@@ -7098,7 +7098,7 @@ function _attachBsAdConverter(bsId, adId) {
   });
 }
 _attachBsAdConverter('cert-date-bs', 'cert-date-ad');
-_attachBsAdConverter('edit-dob-bs', 'edit-dob-ad');
+// edit-dob-bs uses inline oninput handler for reliable BS→AD conversion
 </script>
 </body>
 </html>
