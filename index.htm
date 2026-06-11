@@ -1246,6 +1246,20 @@ document.getElementById('reg-dob-bs').addEventListener('input', function () {
               <!-- Issue Date -->
               <div style="font-size:0.9rem;margin-bottom:1.5rem;font-style:italic;">
                 Date : <b><span id="cp-date-bs">——————</span></b>
+                <!-- Hidden spans for JS to populate — required by previewCharCert() -->
+<span id="cp-roll" style="display:none"></span>
+<span id="cp-regno" style="display:none"></span>
+<span id="cp-dob-ad" style="display:none"></span>
+<span id="cp-stream" style="display:none"></span>
+<span id="cp-year" style="display:none"></span>
+<span id="cp-date" style="display:none"></span>
+<span id="cp-purpose" style="display:none"></span>
+<span id="cp-gender-text" style="display:none"></span>
+<span id="cp-conduct" style="display:none"></span>
+<span id="cp-remarks" style="display:none"></span>
+<div id="cp-grade-line" style="display:none">
+  GPA: <span id="cp-gpa"></span> | Grade: <span id="cp-grade"></span> | Year: <span id="cp-year2"></span>
+</div>
               </div>
               <!-- 3 Signatures -->
               <div style="display:flex;justify-content:space-between;align-items:flex-end;">
