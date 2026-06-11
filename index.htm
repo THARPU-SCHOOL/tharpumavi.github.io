@@ -1129,8 +1129,8 @@ document.getElementById('reg-dob-bs').addEventListener('input', function () {
           <input type="text" id="cert-slc-year" placeholder="e.g. 2081">
         </div>
         <div class="form-group">
-          <label>Division</label>
-          <input type="text" id="cert-division" placeholder="e.g. I">
+          <label>GradePoint</label>
+          <input type="text" id="cert-GradePoint" placeholder="e.g. I">
         </div>
         <div class="form-group">
           <label>Distinction</label>
@@ -1175,7 +1175,7 @@ document.getElementById('reg-dob-bs').addEventListener('input', function () {
             <div style="position:absolute;inset:7px;border:1.5px solid #c00;pointer-events:none;"></div>
 
             <!-- Diagonal watermark -->
-            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-35deg);opacity:0.08;pointer-events:none;text-align:center;z-index:0;">
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(10deg);opacity:0.1;pointer-events:none;text-align:center;z-index:0;">
               <img src="THARPU SECONDARY SCHOOL.jpeg" style="width:300px;height:300px;object-fit:contain;" onerror="this.style.display='none';this.nextSibling.style.display='block'">
               <div style="display:none;font-size:60px;font-weight:900;color:#7B1C1C;letter-spacing:4px;">TSS</div>
             </div>
@@ -1193,7 +1193,7 @@ document.getElementById('reg-dob-bs').addEventListener('input', function () {
 
                 <!-- School name center -->
                 <div style="flex:1;text-align:center;padding:0 12px;">
-                  <div style="font-size:2.08rem;font-weight:900;letter-spacing:1.5px;color:#7B1C1C;text-transform:uppercase;">THARPU SECONDARY SCHOOL</div>
+                  <div style="font-size:1.96rem;font-weight:900;letter-spacing:1.5px;color:#7B1C1C;text-transform:uppercase;">THARPU SECONDARY SCHOOL</div>
                   <div style="font-size:1.05rem;color:#333;margin-top:1px;">YANGWARAK-4, PANCHTHAR </div>
                   <div style="font-size:1.45rem;color:#333;margin-top:1px;">KOSHI PROVINCE, NEPAL</div>
                   <div style="margin:0.4rem auto 0;border-top:2.5px solid #7B1C1C;border-bottom:1px solid #c8922a;padding:3px 0;max-width:320px;">
@@ -1222,7 +1222,7 @@ document.getElementById('reg-dob-bs').addEventListener('input', function () {
                 <b><span id="cp-ward">——</span></b>
                 ..... studied in this School in Grade XI in 2082/83 B.S.</span></b> He/She passed the <b>Annual</b> examination of Grade XI conducted by School in 2083 B.S. (2026 A.D.)
                 with GPA
-                <b><span id="cp-GradePoint">——</span></b>
+                <b><span id="cp-GradePoint">——</span></b> .........
               </p>
 
               <p style="text-align:justify;font-size:0.95rem;margin-bottom:0.5rem;line-height:2;font-style:italic;">
@@ -6904,7 +6904,7 @@ function previewCharCert() {
   s('cp-from-year',  g('cert-from-year'));
   s('cp-to-year',    g('cert-to-year'));
   s('cp-slc-year',   g('cert-slc-year'));
-  s('cp-division',   g('cert-division'));
+  s('cp-GradePoint',   g('cert-GradePoint'));
   s('cp-distinction',g('cert-distinction'));
 
   // Conduct, remarks, grade
