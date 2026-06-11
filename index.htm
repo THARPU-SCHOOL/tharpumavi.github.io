@@ -1133,8 +1133,12 @@ document.getElementById('reg-dob-bs').addEventListener('input', function () {
           <input type="text" id="cert-GradePoint" placeholder="e.g. I">
         </div>
         <div class="form-group">
-          <label>Parent Name</label>
-          <input type="text" id="cert-ParentName" placeholder="e.g. Mr/Ms Ram">
+          <label>father</label>
+          <input type="text" id="cert-father" placeholder="e.g. Mr/Ms Ram">
+        </div>
+        <div class="form-group">
+          <label>mother</label>
+          <input type="text" id="cert-mother" placeholder="e.g. Mr/Ms Ram">
         </div>
           <label>Custom Remarks <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#aaa;">(optional — appended after conduct line)</span></label>
           <input type="text" id="cert-remarks" placeholder="e.g. He/She was an active participant in school events.">
@@ -3962,223 +3966,6 @@ renderStudentList = function() {
   }).join('');
 };
 
-// ══════════════════════════════════════════════════════════════
-// NOTICES
-// ══════════════════════════════════════════════════════════════
-var notices = [];
-try { notices = JSON.parse(localStorage.getItem('tss_notices')||'[]'); } catch(e){}
-// Default notices
-if (!notices.length) notices = [
-  {id:1, title:'First Terminal Exam Schedule Released', body:'First Terminal examinations will commence from 2082 Kartik 15. All students must carry their admit cards.', type:'urgent', by:'admin', date:'2082/07/01'},
-  {id:2, title:'School Closed – Dashain Holidays', body:'School will remain closed from Ashwin 25 to Kartik 05 on the occasion of Dashain festival.', type:'info', by:'admin', date:'2082/06/24'},
-  {id:3, title:'Parent-Teacher Meeting', body:'A parent-teacher meeting is scheduled for Kartik 10 at 10:00 AM in the school hall.', type:'general', by:'admin', date:'2082/07/05'}
-];
-function saveNotices(){ try{localStorage.setItem('tss_notices',JSON.stringify(notices));}catch(e){} }
-function renderNotices(){
-  var el=document.getElementById('notice-list');
-  if(!el)return;
-  if(!notices.length){el.innerHTML='<div class="empty-state"><div class="empty-icon">📢</div><p>No notices yet.</p></div>';return;}
-  el.innerHTML=notices.map(function(n,i){
-    return '<div class="notice-item">'+
-      '<div class="notice-dot '+n.type+'"></div>'+
-      '<div style="flex:1">'+
-        '<div class="notice-title">'+n.title+'</div>'+
-        '<div class="notice-meta">Posted by <b>'+n.by+'</b> &middot; '+n.date+'</div>'+
-        '<div class="notice-body">'+n.body+'</div>'+
-      '</div>'+
-      '<button onclick="deleteNotice('+i+')" style="background:none;border:none;cursor:pointer;font-size:1rem;color:#b71c1c;padding:2px 6px;">🗑</button>'+
-    '</div>';
-  }).join('');
-}
-function openAddNotice(){openModal('notice-modal');}
-function saveNotice(){
-  var t=document.getElementById('n-title').value.trim();
-  var b=document.getElementById('n-body').value.trim();
-  var tp=document.getElementById('n-type').value;
-  if(!t||!b){showToast('Please fill title and message.');return;}
-  var bs=getBSDate();
-  notices.unshift({id:Date.now(),title:t,body:b,type:tp,by:currentUser,date:bs.y+'/'+String(bs.m).padStart(2,'0')+'/'+String(bs.d).padStart(2,'0')});
-  saveNotices();renderNotices();
-  document.getElementById('n-title').value='';
-  document.getElementById('n-body').value='';
-  closeModal('notice-modal');
-  showToast('📢 Notice posted!');
-  logActivity('📢','"'+t+'" notice posted','#fff3e0');
-}
-function deleteNotice(i){
-  if(!confirm('Delete this notice?'))return;
-  notices.splice(i,1);saveNotices();renderNotices();showToast('Notice deleted.');
-}
-
-// ══════════════════════════════════════════════════════════════
-// FEES
-// ══════════════════════════════════════════════════════════════
-var feeData = {};
-try { feeData = JSON.parse(localStorage.getItem('tss_fees')||'{}'); } catch(e){}
-var _curFeeRoll = '';
-function saveFeeData(){ try{localStorage.setItem('tss_fees',JSON.stringify(feeData));}catch(e){} }
-function renderFees(){
-  var stream=document.getElementById('fee-stream-sel')?document.getElementById('fee-stream-sel').value:'all';
-  var list=document.getElementById('fee-list');
-  var sumEl=document.getElementById('fee-summary');
-  if(!list)return;
-  var filtered=students.filter(function(s){return stream==='all'||s.stream===stream;});
-  if(!filtered.length){list.innerHTML='<div class="empty-state"><p>No students.</p></div>';return;}
-  var totalFees=0,totalPaid=0;
-  list.innerHTML=filtered.map(function(st){
-    var fd=feeData[st.roll]||{total:5000,paid:0,date:'',remarks:''};
-    var pct=fd.total?Math.round(fd.paid/fd.total*100):0;
-    var status=pct>=100?'paid':pct>0?'partial':'due';
-    var statusLabel=pct>=100?'Paid':pct>0?'Partial':'Due';
-    totalFees+=fd.total; totalPaid+=fd.paid;
-    return '<div class="fee-row">'+
-      '<div class="fee-status fee-'+status+'"></div>'+
-      '<div style="flex:1">'+
-        '<div class="fee-name">'+st.name+'</div>'+
-        '<div style="font-size:0.72rem;color:var(--text-muted)">Rs. '+fd.paid+' / Rs. '+fd.total+
-        (fd.date?' &middot; '+fd.date:'')+
-        '</div>'+
-        '<div class="prog-wrap"><div class="prog-fill" style="width:'+pct+'%;background:'+(pct>=100?'#2e7d32':pct>0?'#f9a825':'#e0e0e0')+'"></div></div>'+
-      '</div>'+
-      '<span class="fee-badge '+status+'">'+statusLabel+'</span>'+
-      '<button onclick="openFeeModal(\''+st.roll+'\')" style="background:none;border:none;cursor:pointer;font-size:1rem;padding:2px 6px;">✏️</button>'+
-    '</div>';
-  }).join('');
-  // Summary
-  var overallPct=totalFees?Math.round(totalPaid/totalFees*100):0;
-  if(sumEl) sumEl.innerHTML=
-    '<div style="display:flex;gap:10px;flex-wrap:wrap;">'+
-    '<div style="flex:1;min-width:100px"><div style="font-size:0.75rem;color:var(--text-muted);font-weight:700;">Total Receivable</div><div style="font-size:1.2rem;font-weight:800;color:var(--maroon)">Rs. '+totalFees.toLocaleString()+'</div></div>'+
-    '<div style="flex:1;min-width:100px"><div style="font-size:0.75rem;color:var(--text-muted);font-weight:700;">Collected</div><div style="font-size:1.2rem;font-weight:800;color:#2e7d32">Rs. '+totalPaid.toLocaleString()+'</div></div>'+
-    '<div style="flex:1;min-width:100px"><div style="font-size:0.75rem;color:var(--text-muted);font-weight:700;">Outstanding</div><div style="font-size:1.2rem;font-weight:800;color:#b71c1c">Rs. '+(totalFees-totalPaid).toLocaleString()+'</div></div>'+
-    '</div>'+
-    '<div class="prog-wrap" style="margin-top:0.7rem;height:12px"><div class="prog-fill" style="width:'+overallPct+'%;background:var(--success)"></div></div>'+
-    '<div style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;">'+overallPct+'% of fees collected</div>';
-}
-function openFeeModal(roll){
-  _curFeeRoll=roll;
-  var st=students.find(function(s){return s.roll===roll;});
-  var fd=feeData[roll]||{total:5000,paid:0,date:'',remarks:''};
-  document.getElementById('fee-modal-name').textContent=st?st.name:'';
-  document.getElementById('fee-total').value=fd.total;
-  document.getElementById('fee-paid-amt').value=fd.paid;
-  document.getElementById('fee-date').value=fd.date||'';
-  document.getElementById('fee-remarks').value=fd.remarks||'';
-  openModal('fee-modal');
-}
-function saveFee(){
-  if(!_curFeeRoll)return;
-  var tot=parseInt(document.getElementById('fee-total').value)||5000;
-  var paid=parseInt(document.getElementById('fee-paid-amt').value)||0;
-  var dt=document.getElementById('fee-date').value.trim();
-  var rem=document.getElementById('fee-remarks').value.trim();
-  feeData[_curFeeRoll]={total:tot,paid:Math.min(paid,tot),date:dt,remarks:rem};
-  saveFeeData();renderFees();closeModal('fee-modal');
-  showToast('💰 Fee updated!');
-  logActivity('💰','Fee updated for '+(_curFeeRoll),'#e8f5e9');
-}
-
-// ══════════════════════════════════════════════════════════════
-// TIMETABLE
-// ══════════════════════════════════════════════════════════════
-var TT = {
-  'Plant Science': {
-    periods: ['P1\n8:00','P2\n8:45','Break','P3\n9:45','P4\n10:30','Lunch','P5\n12:30','P6\n1:15'],
-    Mon:['English','Nepali','—','Physics','Chemistry','—','Biology','Agri'],
-    Tue:['Physics','English','—','Agri','Nepali','—','Chemistry','Biology'],
-    Wed:['Chemistry','Biology','—','English','Agri','—','Physics','Nepali'],
-    Thu:['Agri','Physics','—','Biology','English','—','Nepali','Chemistry'],
-    Fri:['Biology','Chemistry','—','Nepali','Physics','—','Agri','English'],
-    Sat:['English','Agri','—','Chemistry','Biology','—','Physics','Nepali']
-  },
-  'General': {
-    periods: ['P1\n8:00','P2\n8:45','Break','P3\n9:45','P4\n10:30','Lunch','P5\n12:30','P6\n1:15'],
-    Mon:['English','Nepali','—','Math','Economics','—','Computer','Accounts'],
-    Tue:['Math','English','—','Accounts','Nepali','—','Economics','Computer'],
-    Wed:['Economics','Computer','—','English','Accounts','—','Math','Nepali'],
-    Thu:['Accounts','Math','—','Computer','English','—','Nepali','Economics'],
-    Fri:['Computer','Economics','—','Nepali','Math','—','Accounts','English'],
-    Sat:['English','Accounts','—','Economics','Computer','—','Math','Nepali']
-  }
-};
-var TT_COLORS = {
-  'English':'tt-eng','Nepali':'tt-nep','Physics':'tt-sci','Chemistry':'tt-sci',
-  'Biology':'tt-sci','Agri':'tt-agr','Math':'tt-math','Economics':'tt-eng',
-  'Computer':'tt-nep','Accounts':'tt-math','—':'tt-break'
-};
-function renderTimetable(){
-  var stream=document.getElementById('tt-stream-sel')?document.getElementById('tt-stream-sel').value:'Plant Science';
-  var tt=TT[stream]; if(!tt)return;
-  var days=['Mon','Tue','Wed','Thu','Fri','Sat'];
-  var html='<div class="tt-grid">';
-  // Header row
-  html+='<div class="tt-cell tt-hdr">Period</div>';
-  days.forEach(function(d){html+='<div class="tt-cell tt-hdr">'+d+'</div>';});
-  // Period rows
-  tt.periods.forEach(function(per,pi){
-    var isBreak = per==='Break'||per==='Lunch';
-    html+='<div class="tt-cell tt-time">'+per.replace('\n','<br>')+'</div>';
-    days.forEach(function(day){
-      var subj = tt[day][pi];
-      var cls = isBreak||subj==='—'?'tt-break':(TT_COLORS[subj]||'');
-      var disp = isBreak?(per==='Lunch'?'🍱 Lunch':'☕ Break'):subj;
-      html+='<div class="tt-cell '+cls+'">'+disp+'</div>';
-    });
-  });
-  html+='</div>';
-  document.getElementById('tt-grid-area').innerHTML=html;
-}
-
-// ══════════════════════════════════════════════════════════════
-// EXAM SCHEDULE
-// ══════════════════════════════════════════════════════════════
-var examSchedule = [];
-try { examSchedule = JSON.parse(localStorage.getItem('tss_exam_schedule')||'[]'); } catch(e){}
-if(!examSchedule.length) examSchedule=[
-  {id:1,name:'First Terminal',subject:'All Subjects',date:'2082/07/15',time:'10:00 AM',stream:'All',status:'upcoming'},
-  {id:2,name:'First Terminal',subject:'Physics',date:'2082/07/16',time:'10:00 AM – 1:00 PM',stream:'Plant Science',status:'upcoming'},
-  {id:3,name:'First Terminal',subject:'Mathematics',date:'2082/07/16',time:'10:00 AM – 1:00 PM',stream:'General',status:'upcoming'},
-  {id:4,name:'Pre-board',subject:'All Subjects',date:'2082/09/01',time:'10:00 AM',stream:'All',status:'upcoming'}
-];
-function saveExamSchedule(){ try{localStorage.setItem('tss_exam_schedule',JSON.stringify(examSchedule));}catch(e){} }
-function renderExamSchedule(){
-  var el=document.getElementById('exam-schedule-list');
-  if(!el)return;
-  if(!examSchedule.length){el.innerHTML='<div class="empty-state"><div class="empty-icon">📝</div><p>No exams scheduled.</p></div>';return;}
-  el.innerHTML=examSchedule.map(function(ex,i){
-    var parts=ex.date.split('/');
-    var day=parts[2]||'?';
-    var mon=BS_MONTHS[parseInt(parts[1]||1)-1]||'';
-    return '<div class="exam-item">'+
-      '<div class="exam-date-box"><div class="edb-day">'+day+'</div><div class="edb-mon">'+mon.substring(0,3)+'</div></div>'+
-      '<div class="exam-info">'+
-        '<div class="exam-name">'+ex.name+' — '+ex.subject+'</div>'+
-        '<div class="exam-sub">'+ex.time+' &middot; '+ex.stream+'</div>'+
-      '</div>'+
-      '<span class="exam-status exam-'+ex.status+'">'+ex.status+'</span>'+
-      '<button onclick="deleteExam('+i+')" style="background:none;border:none;cursor:pointer;font-size:1rem;padding:2px 6px;color:#b71c1c">🗑</button>'+
-    '</div>';
-  }).join('');
-}
-function openAddExam(){openModal('exam-modal');}
-function saveExam(){
-  var n=document.getElementById('ex-name').value.trim();
-  var s=document.getElementById('ex-subject').value.trim();
-  var d=document.getElementById('ex-date').value.trim();
-  var t=document.getElementById('ex-time').value.trim();
-  var st=document.getElementById('ex-stream').value;
-  if(!n||!s||!d){showToast('Please fill all required fields.');return;}
-  examSchedule.push({id:Date.now(),name:n,subject:s,date:d,time:t,stream:st,status:'upcoming'});
-  saveExamSchedule();renderExamSchedule();closeModal('exam-modal');
-  ['ex-name','ex-subject','ex-date','ex-time'].forEach(function(id){document.getElementById(id).value='';});
-  showToast('📝 Exam scheduled!');
-  logActivity('📝',n+' — '+s+' scheduled','#e3f2fd');
-}
-function deleteExam(i){
-  if(!confirm('Remove this exam?'))return;
-  examSchedule.splice(i,1);saveExamSchedule();renderExamSchedule();
-}
-
 // ── Patch showTab to load new tabs ──
 var __origShowTab = showTab;
 showTab = function(id, btn) {
@@ -5231,96 +5018,6 @@ function renderAuditList() {
 }
 
 // ═══════════════════════════════════════════════════════
-//  NOTIFICATIONS
-// ═══════════════════════════════════════════════════════
-var notifications = [];
-try { notifications = JSON.parse(localStorage.getItem('tss_notifs')||'[]'); } catch(e) {}
-
-function addNotif(icon, title, body) {
-  notifications.unshift({icon:icon,title:sanitize(title),body:sanitize(body),time:new Date().toLocaleString(),read:false});
-  if (notifications.length > 50) notifications = notifications.slice(0,50);
-  try { localStorage.setItem('tss_notifs', JSON.stringify(notifications)); } catch(e) {}
-  updateNotifBadge();
-}
-function updateNotifBadge() {
-  try {
-    var unread = notifications ? notifications.filter(function(n){return !n.read;}).length : 0;
-    var pending = 0;
-    try {
-      loadApprovalData();
-      pending = approvalRequests.filter(function(r){ return r.status==='pending'; }).length;
-    } catch(e){}
-    var total = unread + (isAdmin() ? pending : 0);
-    var badge = document.getElementById('notif-badge');
-    if (badge) {
-      badge.textContent = total > 9 ? '9+' : (total || '');
-      badge.style.display = total > 0 ? 'flex' : 'none';
-    }
-  } catch(e){}
-}
-function renderNotifs() {
-  var el = document.getElementById('notif-list');
-  if (!el) return;
-  if (!notifications.length) { el.innerHTML='<div class="empty-state"><div class="empty-icon">🔔</div><p>No notifications.</p></div>'; return; }
-  notifications.forEach(function(n){n.read=true;});
-  try { localStorage.setItem('tss_notifs', JSON.stringify(notifications)); } catch(e) {}
-  updateNotifBadge();
-  el.innerHTML = notifications.map(function(n){
-    return '<div class="notif-item '+(n.read?'':'unread')+'">'+
-      '<div class="notif-icon">'+n.icon+'</div>'+
-      '<div class="notif-body"><div class="notif-title">'+n.title+'</div><div>'+n.body+'</div>'+
-      '<div class="notif-time">'+n.time+'</div></div></div>';
-  }).join('');
-}
-function clearAllNotifs() {
-  notifications=[];
-  try { localStorage.setItem('tss_notifs','[]'); } catch(e) {}
-  renderNotifs(); updateNotifBadge();
-  showToast('🔔 All notifications cleared');
-}
-
-// ═══════════════════════════════════════════════════════
-//  WHATSAPP / SMS SIMULATION
-// ═══════════════════════════════════════════════════════
-function previewWAMsg() {
-  var roll = document.getElementById('wa-student-sel').value;
-  var tmpl = document.getElementById('wa-template').value;
-  if (!roll) { showToast('Select a student first'); return; }
-  var st = students.find(function(s){return s.roll===roll;});
-  if (!st) return;
-  var msgs = {
-    result: 'Dear Parent/Guardian,\nThis is to inform you that the result for '+st.name+' (Roll: '+st.roll+') for '+
-      'the recent examination has been published. Please visit school to collect the grade sheet.\n— '+getSchoolName(),
-    absent: 'Dear Parent/Guardian,\nYour ward '+st.name+' (Roll: '+st.roll+') was absent today ('+
-      new Date().toLocaleDateString()+'). Please ensure regular attendance.\n— '+getSchoolName(),
-    fee: 'Dear Parent/Guardian,\nThis is a reminder that fee payment for '+st.name+' (Roll: '+st.roll+') is due.'+
-      ' Please clear the dues at the earliest.\n— '+getSchoolName(),
-    exam: 'Dear Parent/Guardian,\nUpcoming examination schedule has been posted for '+st.name+' (Roll: '+st.roll+').'+
-      ' Please ensure your ward is well-prepared.\n— '+getSchoolName()
-  };
-  document.getElementById('wa-preview').value = msgs[tmpl] || '';
-}
-function sendWAAlert() {
-  previewWAMsg();
-  var roll = document.getElementById('wa-student-sel').value;
-  var mobile = sanitize(document.getElementById('wa-mobile').value.trim());
-  var st = students.find(function(s){return s.roll===roll;});
-  if (!st || !roll) { showToast('Select a student first'); return; }
-  var msg = document.getElementById('wa-preview').value;
-  if (!msg) { previewWAMsg(); return; }
-  // Log the simulated send
-  addNotif('📱','Alert Sent','Simulated alert sent to '+st.name+(mobile?' ('+sanitize(mobile)+')':''));
-  addAudit('Alert', 'Alert simulated for '+st.name+' to '+sanitize(mobile));
-  showToast('📱 Alert simulated & logged!');
-  // Actually open WhatsApp if mobile provided
-  if (mobile) {
-    var encoded = encodeURIComponent(msg);
-    var clean = mobile.replace(/[^0-9+]/g,'');
-    if (clean.length >= 10) window.open('https://wa.me/'+clean+'?text='+encoded,'_blank');
-  }
-}
-
-// ═══════════════════════════════════════════════════════
 //  CONTACT INFO & NOTES PER STUDENT
 // ═══════════════════════════════════════════════════════
 var contactData = {};
@@ -5652,66 +5349,6 @@ function gsSaveRow(roll, exam) {
   var cr2 = calcCGPA(subs2, saved2);
   var cgpaEl = document.getElementById('gs-cgpa-'+roll);
   if(cgpaEl) cgpaEl.innerHTML = '<b>'+(cr2.allFilled&&cr2.totalCredits?cr2.cgpa.toFixed(2):'—')+'</b>';
-}
-
-// ═══════════════════════════════════════════════════════
-//  MULTI-EXAM COMPARISON
-// ═══════════════════════════════════════════════════════
-function populateCompareSelects() {
-  var sel = document.getElementById('cmp-student-sel');
-  if (!sel) return;
-  var cur = sel.value;
-  sel.innerHTML = '<option value="">-- Choose student --</option>';
-  students.forEach(function(s){ sel.innerHTML += '<option value="'+s.roll+'">'+sanitize(s.name)+'</option>'; });
-  if(cur) sel.value=cur;
-}
-function renderCompare() {
-  var roll = document.getElementById('cmp-student-sel').value;
-  var body = document.getElementById('compare-body');
-  if (!body) return;
-  if (!roll) { body.innerHTML=''; return; }
-  var st = students.find(function(s){return s.roll===roll;});
-  if (!st) return;
-  var exams = ['First Terminal','Second Terminal','Annual Examination','Pre-board'];
-  var subs = getStudentSubjects(st);
-  var html = '';
-  // CGPA progression chart
-  html += '<div class="compare-card"><h4>📈 CGPA Progression — '+sanitize(st.name)+'</h4>';
-  var cgpaData = exams.map(function(ex){
-    var saved=marksData[getKey(roll,ex)]||{};
-    var cr=calcCGPA(subs,saved);
-    return {ex:ex,cgpa:cr.allFilled&&cr.totalCredits?cr.cgpa:null,anyNG:cr.anyNG};
-  });
-  var maxCGPA = 4.0;
-  cgpaData.forEach(function(r){
-    var pct = r.cgpa!==null ? Math.round(r.cgpa/maxCGPA*100) : 0;
-    var color = r.cgpa===null ? 'var(--border)' : r.anyNG ? '#b71c1c' : r.cgpa>=3.6 ? '#1a6e2e' : r.cgpa>=2.8 ? '#1565c0' : r.cgpa>=2.0 ? '#f9a825' : '#b71c1c';
-    html += '<div class="prog-compare-row">'+
-      '<div class="pcr-name" title="'+sanitize(r.ex)+'">'+sanitize(r.ex.replace(' Examination','').replace(' Terminal','T'))+'</div>'+
-      '<div class="prog-compare-bar"><div class="prog-compare-fill" style="width:'+pct+'%;background:'+color+'"></div></div>'+
-      '<div class="pcr-val">'+(r.cgpa!==null?r.cgpa.toFixed(2):'—')+'</div></div>';
-  });
-  html += '</div>';
-  // Per-subject comparison table
-  html += '<div class="compare-card"><h4>📊 Subject-wise Comparison</h4>'+
-    '<div style="overflow-x:auto"><table class="marks-table"><thead><tr>'+
-    '<th style="text-align:left">Subject</th>';
-  exams.forEach(function(ex){html+='<th>'+sanitize(ex.split(' ')[0])+'</th>';});
-  html += '</tr></thead><tbody>';
-  subs.forEach(function(sub){
-    html += '<tr><td style="font-size:0.77rem">'+sanitize(sub.name)+'</td>';
-    exams.forEach(function(ex){
-      var saved=marksData[getKey(roll,ex)]||{}, d=saved[sub.name]||{}, max=sub.thMax+sub.prMax;
-      if(d.th!==undefined&&(sub.prMax===0||d.pr!==undefined)){
-        var t=(d.th||0)+(d.pr||0),gr=getGrade(max?t/max*100:0);
-        var hlCls=gr.gpa>=3.6?'hl-excellent':gr.gpa>=2.8?'hl-good':gr.gpa>=2.0?'hl-warning':'hl-danger';
-        html+='<td class="'+hlCls+'" style="font-weight:700">'+gr.g+'</td>';
-      } else html+='<td style="color:#ccc">—</td>';
-    });
-    html += '</tr>';
-  });
-  html += '</tbody></table></div></div>';
-  body.innerHTML = html;
 }
 
 // ═══════════════════════════════════════════════════════
@@ -6143,60 +5780,6 @@ function toggleAutoRemind(on) {
   };
 })();
 
-// ── Method 2: QR Code Sync ──
-function generateSyncQR() {
-  var allMarks = {};
-  try {
-    for (var i=0; i<localStorage.length; i++) {
-      var k=localStorage.key(i);
-      if (k && k.startsWith('tss_marks_')) {
-        try { var d=JSON.parse(localStorage.getItem(k)||'{}'); Object.assign(allMarks, d); } catch(e){}
-      }
-    }
-  } catch(e){}
-  Object.assign(allMarks, marksData);
-
-  var payload = { students: students.filter(function(s){
-    var extra = [];
-    try { extra = JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){}
-    return extra.some(function(e){ return e.roll===s.roll; });
-  }), marks: allMarks };
-
-  var encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
-  var count = Object.keys(allMarks).length;
-
-  if (encoded.length > 2900) {
-    // Too large for QR — show chunked copy-paste instead
-    var area = document.getElementById('qr-area');
-    area.innerHTML = '<div class="info-box" style="background:#fff3cd;border-color:#f0ad4e;color:#7d4e00;text-align:left">⚠️ Data is too large for a QR code ('+count+' records). Please use <b>Method 1 (Export File)</b> or <b>Method 3 (Copy-Paste Code)</b> instead.</div>';
-    return;
-  }
-
-  var currentURL = window.location.href.split('?')[0].split('#')[0];
-  var qrURL = currentURL + '?syncdata=' + encodeURIComponent(encoded);
-
-  var area = document.getElementById('qr-area');
-  area.innerHTML =
-    '<div id="qr-canvas-wrap" style="background:white;display:inline-block;padding:12px;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,0.15)"></div>' +
-    '<div style="margin-top:0.7rem;font-size:0.78rem;color:var(--text-muted)">Contains <b>'+count+'</b> mark records + '+payload.students.length+' extra students</div>';
-
-  try {
-    new QRCode(document.getElementById('qr-canvas-wrap'), {
-      text: qrURL,
-      width: 220,
-      height: 220,
-      colorDark: '#000000',
-      colorLight: '#ffffff',
-      correctLevel: QRCode.CorrectLevel.M
-    });
-  } catch(e) {
-    area.innerHTML = '<div class="info-box" style="background:#fff3cd;border-color:#f0ad4e;color:#7d4e00">⚠️ Could not generate QR code. Please use Method 3 (Copy-Paste Code) instead.<br><small>Error: '+e.message+'</small></div>';
-  }
-
-  document.getElementById('qr-instructions').style.display = 'block';
-  showToast('📷 QR code ready — scan with phone!');
-}
-
 // ── Method 3: Copy-Paste Data Code ──
 function getDataCode() {
   var allMarks = {};
@@ -6260,33 +5843,6 @@ function importDataCode() {
   } catch(e) {
     alert('❌ Failed to import. The data code may be corrupted or incomplete.\n\nError: '+e.message);
   }
-}
-
-// ── Method 4: Shareable URL ──
-function generateShareLink() {
-  var code = getDataCode();
-  var encoded = encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify({
-    students: (function(){
-      // Send ALL students so registrations on any device sync everywhere
-      var extra = [];
-      try { extra = JSON.parse(localStorage.getItem('tss_extra_students')||'[]'); } catch(e){}
-      // Merge hard-coded students + extras into one deduplicated list
-      var allSt = students.slice();
-      extra.forEach(function(s){ if (!allSt.some(function(e){ return e.roll===s.roll; })) allSt.push(s); });
-      return allSt;
-    })(),
-    marks: marksData
-  })))));
-  var baseURL = window.location.href.split('?')[0].split('#')[0];
-  var link = baseURL + '?syncdata=' + encoded;
-  var area = document.getElementById('share-link-area');
-  if (link.length > 8000) {
-    area.innerHTML = '<div class="info-box" style="background:#fff3cd;border-color:#f0ad4e;color:#7d4e00;">⚠️ Data too large for a URL ('+(Object.keys(marksData).length)+' records). Use Method 1 (Export File) or Method 3 (Copy-Paste) instead.</div>';
-    return;
-  }
-  area.innerHTML = '<div style="word-break:break-all;background:var(--cream-dark);padding:0.7rem;border-radius:8px;font-size:0.72rem;font-family:monospace;margin-bottom:0.5rem;">'+link.substring(0,120)+'...</div><div style="font-size:0.78rem;color:var(--text-muted)">Contains '+Object.keys(marksData).length+' mark records. Send this link via WhatsApp — tap to open and marks auto-load.</div>';
-  window._syncShareLink = link;
-  showToast('🔗 Share link ready!');
 }
 
 function copyShareLink() {
@@ -6905,7 +6461,9 @@ function previewCharCert() {
   s('cp-to-year',    g('cert-to-year'));
   s('cp-slc-year',   g('cert-slc-year'));
   s('cp-GradePoint',   g('cert-GradePoint'));
-  s('cp-ParentName',g('cert-ParentName'));
+  s('cp-father',g('cert-father'));
+  s('cp-mother',g('cert-mother'));
+
 
   // Conduct, remarks, grade
   document.getElementById('cp-conduct').textContent = conduct;
