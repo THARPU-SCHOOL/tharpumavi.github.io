@@ -1269,47 +1269,7 @@ document.getElementById('reg-dob-bs').addEventListener('input', function () {
     </div>
   </div>
 
-  <!-- FEES TAB -->
-  <div class="tab-panel" id="tab-fees">
-    <div class="section-card">
-      <div class="section-head">💰 Fee Management</div>
-      <div class="section-body">
-        <div class="form-group">
-          <label>Stream Filter</label>
-          <select id="fee-stream-sel" onchange="renderFees()">
-            <option value="all">All Streams</option>
-            <option value="Plant Science">🌿 Plant Science</option>
-            <option value="General">📘 General</option>
-          </select>
-        </div>
-        <div style="display:flex;gap:8px;margin-bottom:0.8rem;flex-wrap:wrap;font-size:0.78rem;">
-          <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:#2e7d32;display:inline-block"></span>Paid</span>
-          <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:#f9a825;display:inline-block"></span>Partial</span>
-          <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:#b71c1c;display:inline-block"></span>Due</span>
-        </div>
-      </div>
-      <div id="fee-list"></div>
-    </div>
-    <div class="section-card">
-      <div class="section-head">📊 Fee Summary</div>
-      <div class="section-body" id="fee-summary"></div>
-    </div>
-    <div class="btn-row"><button class="btn btn-gold btn-full" onclick="exportFeesCSV()">📊 Export Fee Report CSV</button></div>
-    <!-- Fee update modal -->
-    <div class="modal-overlay" id="fee-modal">
-      <div class="modal-box">
-        <h3>💰 Update Fee — <span id="fee-modal-name"></span></h3>
-        <div class="form-group"><label>Annual Fee (Rs.)</label><input type="number" id="fee-total" value="5000" min="0"></div>
-        <div class="form-group"><label>Amount Paid (Rs.)</label><input type="number" id="fee-paid-amt" value="0" min="0"></div>
-        <div class="form-group"><label>Last Payment Date</label><input type="text" id="fee-date" placeholder="e.g. 2082/01/15"></div>
-        <div class="form-group"><label>Remarks</label><input type="text" id="fee-remarks" placeholder="e.g. First installment"></div>
-        <div class="modal-actions">
-          <button class="btn btn-primary" style="flex:1" onclick="saveFee()">💾 Save</button>
-          <button class="btn btn-secondary" onclick="closeModal('fee-modal')">Cancel</button>
-        </div>
-      </div>
-    </div>
-  </div>
+
 
 
 
@@ -1710,66 +1670,66 @@ function deleteUser(i) {
 // DATA
 // ============================================================
 var students = [
-  {name:"BINITA DAHAL",       roll:"10200205",stream:"Plant Science",year:"2082/83"},
-  {name:"BINOD DAHAL",        roll:"10200206",stream:"Plant Science",year:"2082/83"},
-  {name:"DIBYA MABO",         roll:"10200207",stream:"Plant Science",year:"2082/83"},
-  {name:"JENI LAKSAM",        roll:"10200208",stream:"Plant Science",year:"2082/83"},
-  {name:"MISEK LINGDEN",      roll:"10200209",stream:"Plant Science",year:"2082/83"},
-  {name:"NABIN ADHIKARI",     roll:"10200210",stream:"Plant Science",year:"2082/83"},
-  {name:"NILIMA MAGAR",       roll:"10200211",stream:"Plant Science",year:"2082/83"},
-  {name:"NISKARSHA ADHIKARI", roll:"10200212",stream:"Plant Science",year:"2082/83"},
-  {name:"PRAJU SIWAKOTI",     roll:"10200213",stream:"Plant Science",year:"2082/83"},
-  {name:"PRERIT KAMBANG",     roll:"10200214",stream:"Plant Science",year:"2082/83"},
-  {name:"PUJA SUBEDI",        roll:"10200215",stream:"Plant Science",year:"2082/83"},
-  {name:"RAMESH KUMAR PAUDEL",roll:"10200216",stream:"Plant Science",year:"2082/83"},
-  {name:"RITU PARA MABO",     roll:"10200217",stream:"Plant Science",year:"2082/83"},
-  {name:"SAGAR YONGHANG",     roll:"10200218",stream:"Plant Science",year:"2082/83"},
-  {name:"SOBHIYA YONGHANG",   roll:"10200219",stream:"Plant Science",year:"2082/83"},
-  {name:"SUDARSHAN KOIRALA",  roll:"10200220",stream:"Plant Science",year:"2082/83"},
-  {name:"SUJAN KATUWAL",      roll:"10200221",stream:"Plant Science",year:"2082/83"},
+  {name:"BINITA DAHAL",       roll:"10200205",stream:"Plant Science",year:"2082/83",regno:"831020080001",dobbs:"2066/04/27",dobad:"2009/08/14"},
+  {name:"BINOD DAHAL",        roll:"10200206",stream:"Plant Science",year:"2082/83",regno:"831020080002",dobbs:"2066/07/22",dobad:"2009/11/11"},
+  {name:"DIBYA MABO",         roll:"10200207",stream:"Plant Science",year:"2082/83",regno:"831020080003",dobbs:"2065/07/17",dobad:"2008/11/05"},
+  {name:"JENI LAKSAM",        roll:"10200208",stream:"Plant Science",year:"2082/83",regno:"831020080004",dobbs:"2066/03/08",dobad:"2009/06/25"},
+  {name:"MISEK LINGDEN",      roll:"10200209",stream:"Plant Science",year:"2082/83",regno:"831020080005",dobbs:"2065/05/11",dobad:"2008/08/30"},
+  {name:"NABIN ADHIKARI",     roll:"10200210",stream:"Plant Science",year:"2082/83",regno:"831020080006",dobbs:"2065/05/22",dobad:"2008/09/10"},
+  {name:"NILIMA MAGAR",       roll:"10200211",stream:"Plant Science",year:"2082/83",regno:"831020080007",dobbs:"2067/01/09",dobad:"2010/04/25"},
+  {name:"NISKARSHA ADHIKARI", roll:"10200212",stream:"Plant Science",year:"2082/83",regno:"831020080008",dobbs:"2065/11/09",dobad:"2009/02/24"},
+  {name:"PRAJU SIWAKOTI",     roll:"10200213",stream:"Plant Science",year:"2082/83",regno:"831020080009",dobbs:"2066/04/22",dobad:"2009/08/09"},
+  {name:"PRERIT KAMBANG",     roll:"10200214",stream:"Plant Science",year:"2082/83",regno:"831020080010",dobbs:"2067/01/01",dobad:"2010/04/17"},
+  {name:"PUJA SUBEDI",        roll:"10200215",stream:"Plant Science",year:"2082/83",regno:"831020080011",dobbs:"2067/06/27",dobad:"2010/10/16"},
+  {name:"RAMESH KUMAR PAUDEL",roll:"10200216",stream:"Plant Science",year:"2082/83",regno:"831020080012",dobbs:"2058/04/13",dobad:"2001/07/30"},
+  {name:"RITU PARA MABO",     roll:"10200217",stream:"Plant Science",year:"2082/83",regno:"831020080013",dobbs:"2064/03/15",dobad:"2007/07/03"},
+  {name:"SAGAR YONGHANG",     roll:"10200218",stream:"Plant Science",year:"2082/83",regno:"831020080014",dobbs:"2065/07/10",dobad:"2008/10/29"},
+  {name:"SOBHIYA YONGHANG",   roll:"10200219",stream:"Plant Science",year:"2082/83",regno:"831020080015",dobbs:"2066/08/21",dobad:"2009/12/10"},
+  {name:"SUDARSHAN KOIRALA",  roll:"10200220",stream:"Plant Science",year:"2082/83",regno:"831020080016",dobbs:"2067/02/27",dobad:"2010/06/13"},
+  {name:"SUJAN KATUWAL",      roll:"10200221",stream:"Plant Science",year:"2082/83",regno:"831020080017",dobbs:"2064/01/20",dobad:"2007/05/06"},
   // General stream students (roll numbers 10200222–10200263)
-  {name:"AARPI LIMBU",         roll:"10200222",stream:"General",year:"2082/83"},
-  {name:"AARYAN BEGHA",        roll:"10200223",stream:"General",year:"2082/83"},
-  {name:"AAWAJ KARKI",         roll:"10200224",stream:"General",year:"2082/83"},
-  {name:"ANIL KOIRALA",        roll:"10200225",stream:"General",year:"2082/83"},
-  {name:"ANJANA KHADKA",       roll:"10200226",stream:"General",year:"2082/83"},
-  {name:"ANSIKA SIGU",         roll:"10200227",stream:"General",year:"2082/83"},
-  {name:"ARUNIMA MABO",        roll:"10200228",stream:"General",year:"2082/83"},
-  {name:"ASHIS ANGTHUPO",      roll:"10200229",stream:"General",year:"2082/83"},
-  {name:"BALIHANG MABO",       roll:"10200230",stream:"General",year:"2082/83"},
-  {name:"BIBAS KHEBANG",       roll:"10200231",stream:"General",year:"2082/83"},
-  {name:"BIBIHANG BEGHA",      roll:"10200232",stream:"General",year:"2082/83"},
-  {name:"BINITA PARA MABO",    roll:"10200233",stream:"General",year:"2082/83"},
-  {name:"BINITA SIGU",         roll:"10200234",stream:"General",year:"2082/83"},
-  {name:"BISAL PALUNGWA LIMBU",roll:"10200235",stream:"General",year:"2082/83"},
-  {name:"DIL MAYA YONGHANG",   roll:"10200236",stream:"General",year:"2082/83"},
-  {name:"DIPSAN SELING",       roll:"10200237",stream:"General",year:"2082/83"},
-  {name:"HILLIHANG SEWA",      roll:"10200238",stream:"General",year:"2082/83"},
-  {name:"ICHHINGHANG MABO",    roll:"10200239",stream:"General",year:"2082/83"},
-  {name:"KAJAL LIMBU",         roll:"10200240",stream:"General",year:"2082/83"},
-  {name:"LAXMAN MABO",         roll:"10200241",stream:"General",year:"2082/83"},
-  {name:"MAN MAYA KAMBANG",    roll:"10200242",stream:"General",year:"2082/83"},
-  {name:"MANISA BHATTARAI",    roll:"10200243",stream:"General",year:"2082/83"},
-  {name:"MINA YONGHANG",       roll:"10200244",stream:"General",year:"2082/83"},
-  {name:"NIRMALA SUBEDI",      roll:"10200245",stream:"General",year:"2082/83"},
-  {name:"NISCHAL KAMBANG",     roll:"10200246",stream:"General",year:"2082/83"},
-  {name:"NISUM YONGHANG",      roll:"10200247",stream:"General",year:"2082/83"},
-  {name:"NUMA KHEBANG",        roll:"10200248",stream:"General",year:"2082/83"},
-  {name:"PRAGYA SUNDAS",       roll:"10200249",stream:"General",year:"2082/83"},
-  {name:"PUJA YONGHANG",       roll:"10200250",stream:"General",year:"2082/83"},
-  {name:"RAMILA KHEBANG",      roll:"10200251",stream:"General",year:"2082/83"},
-  {name:"RESHIKA KAMBANG",     roll:"10200252",stream:"General",year:"2082/83"},
-  {name:"RUPA ADHIKARI",       roll:"10200253",stream:"General",year:"2082/83"},
-  {name:"SABUNAM LIMBU",       roll:"10200254",stream:"General",year:"2082/83"},
-  {name:"SAJAN MABO",          roll:"10200255",stream:"General",year:"2082/83"},
-  {name:"SANDHYA ADHIKARI",    roll:"10200256",stream:"General",year:"2082/83"},
-  {name:"SARINA KHADKA",       roll:"10200257",stream:"General",year:"2082/83"},
-  {name:"SARU KERUNG",         roll:"10200258",stream:"General",year:"2082/83"},
-  {name:"SAUGAT NUGO",         roll:"10200259",stream:"General",year:"2082/83"},
-  {name:"SHILA DANGI",         roll:"10200260",stream:"General",year:"2082/83"},
-  {name:"SUMANA DARJI",        roll:"10200261",stream:"General",year:"2082/83"},
-  {name:"SUSMITA NUGO",        roll:"10200262",stream:"General",year:"2082/83"},
-  {name:"YUAN SHRESTHA",       roll:"10200263",stream:"General",year:"2082/83"}
+  {name:"AARPI LIMBU",         roll:"10200222",stream:"General",year:"2082/83",regno:"831020080018",dobbs:"2065/08/26",dobad:"2008/12/14"},
+  {name:"AARYAN BEGHA",        roll:"10200223",stream:"General",year:"2082/83",regno:"831020080019",dobbs:"2066/03/09",dobad:"2009/06/26"},
+  {name:"AAWAJ KARKI",         roll:"10200224",stream:"General",year:"2082/83",regno:"831020080020",dobbs:"2066/05/10",dobad:"2009/08/29"},
+  {name:"ANIL KOIRALA",        roll:"10200225",stream:"General",year:"2082/83",regno:"831020080021",dobbs:"2064/01/21",dobad:"2007/05/07"},
+  {name:"ANJANA KHADKA",       roll:"10200226",stream:"General",year:"2082/83",regno:"831020080022",dobbs:"2066/01/26",dobad:"2009/05/12"},
+  {name:"ANSIKA SIGU",         roll:"10200227",stream:"General",year:"2082/83",regno:"831020080023",dobbs:"2067/04/29",dobad:"2010/08/17"},
+  {name:"ARUNIMA MABO",        roll:"10200228",stream:"General",year:"2082/83",regno:"831020080024",dobbs:"2065/02/08",dobad:"2008/05/24"},
+  {name:"ASHIS ANGTHUPO",      roll:"10200229",stream:"General",year:"2082/83",regno:"831020080025",dobbs:"2066/07/16",dobad:"2009/11/05"},
+  {name:"BALIHANG MABO",       roll:"10200230",stream:"General",year:"2082/83",regno:"831020080026",dobbs:"2066/11/22",dobad:"2010/03/09"},
+  {name:"BIBAS KHEBANG",       roll:"10200231",stream:"General",year:"2082/83",regno:"831020080027",dobbs:"2065/09/22",dobad:"2009/01/09"},
+  {name:"BIBIHANG BEGHA",      roll:"10200232",stream:"General",year:"2082/83",regno:"831020080028",dobbs:"2065/07/08",dobad:"2008/10/27"},
+  {name:"BINITA PARA MABO",    roll:"10200233",stream:"General",year:"2082/83",regno:"831020080029",dobbs:"2059/05/20",dobad:"2002/09/08"},
+  {name:"BINITA SIGU",         roll:"10200234",stream:"General",year:"2082/83",regno:"831020080030",dobbs:"2065/01/05",dobad:"2008/04/20"},
+  {name:"BISAL PALUNGWA LIMBU",roll:"10200235",stream:"General",year:"2082/83",regno:"831020080031",dobbs:"2066/04/01",dobad:"2009/07/19"},
+  {name:"DIL MAYA YONGHANG",   roll:"10200236",stream:"General",year:"2082/83",regno:"831020080032",dobbs:"2067/10/20",dobad:"2011/02/06"},
+  {name:"DIPSAN SELING",       roll:"10200237",stream:"General",year:"2082/83",regno:"831020080033",dobbs:"2067/02/13",dobad:"2010/05/30"},
+  {name:"HILLIHANG SEWA",      roll:"10200238",stream:"General",year:"2082/83",regno:"831020080034",dobbs:"2063/06/11",dobad:"2006/09/30"},
+  {name:"ICHHINGHANG MABO",    roll:"10200239",stream:"General",year:"2082/83",regno:"831020080035",dobbs:"2064/03/29",dobad:"2007/07/17"},
+  {name:"KAJAL LIMBU",         roll:"10200240",stream:"General",year:"2082/83",regno:"831020080036",dobbs:"2068/03/12",dobad:"2011/06/30"},
+  {name:"LAXMAN MABO",         roll:"10200241",stream:"General",year:"2082/83",regno:"831020080037",dobbs:"2063/07/16",dobad:"2006/11/05"},
+  {name:"MAN MAYA KAMBANG",    roll:"10200242",stream:"General",year:"2082/83",regno:"831020080038",dobbs:"2062/11/02",dobad:"2006/02/17"},
+  {name:"MANISA BHATTARAI",    roll:"10200243",stream:"General",year:"2082/83",regno:"831020080039",dobbs:"2067/03/03",dobad:"2010/06/20"},
+  {name:"MINA YONGHANG",       roll:"10200244",stream:"General",year:"2082/83",regno:"831020080040",dobbs:"2065/07/24",dobad:"2008/11/12"},
+  {name:"NIRMALA SUBEDI",      roll:"10200245",stream:"General",year:"2082/83",regno:"831020080041",dobbs:"2066/10/13",dobad:"2010/01/30"},
+  {name:"NISCHAL KAMBANG",     roll:"10200246",stream:"General",year:"2082/83",regno:"831020080042",dobbs:"2066/06/18",dobad:"2009/10/07"},
+  {name:"NISUM YONGHANG",      roll:"10200247",stream:"General",year:"2082/83",regno:"831020080043",dobbs:"2066/02/27",dobad:"2009/06/13"},
+  {name:"NUMA KHEBANG",        roll:"10200248",stream:"General",year:"2082/83",regno:"831020080044",dobbs:"2065/10/09",dobad:"2009/01/25"},
+  {name:"PRAGYA SUNDAS",       roll:"10200249",stream:"General",year:"2082/83",regno:"831020080045",dobbs:"2050/07/26",dobad:"1993/11/13"},
+  {name:"PUJA YONGHANG",       roll:"10200250",stream:"General",year:"2082/83",regno:"831020080046",dobbs:"2064/10/26",dobad:"2008/02/12"},
+  {name:"RAMILA KHEBANG",      roll:"10200251",stream:"General",year:"2082/83",regno:"831020080047",dobbs:"2051/06/10",dobad:"1994/09/28"},
+  {name:"RESHIKA KAMBANG",     roll:"10200252",stream:"General",year:"2082/83",regno:"831020080048",dobbs:"2065/11/28",dobad:"2009/03/15"},
+  {name:"RUPA ADHIKARI",       roll:"10200253",stream:"General",year:"2082/83",regno:"831020080049",dobbs:"2064/06/06",dobad:"2007/09/26"},
+  {name:"SABUNAM LIMBU",       roll:"10200254",stream:"General",year:"2082/83",regno:"831020080050",dobbs:"2068/06/10",dobad:"2011/09/30"},
+  {name:"SAJAN MABO",          roll:"10200255",stream:"General",year:"2082/83",regno:"831020080051",dobbs:"2064/09/18",dobad:"2008/01/05"},
+  {name:"SANDHYA ADHIKARI",    roll:"10200256",stream:"General",year:"2082/83",regno:"831020080052",dobbs:"2066/11/02",dobad:"2010/02/17"},
+  {name:"SARINA KHADKA",       roll:"10200257",stream:"General",year:"2082/83",regno:"831020080053",dobbs:"2066/11/01",dobad:"2010/02/16"},
+  {name:"SARU KERUNG",         roll:"10200258",stream:"General",year:"2082/83",regno:"831020080054",dobbs:"2066/02/29",dobad:"2009/06/15"},
+  {name:"SAUGAT NUGO",         roll:"10200259",stream:"General",year:"2082/83",regno:"831020080055",dobbs:"2066/04/02",dobad:"2009/07/20"},
+  {name:"SHILA DANGI",         roll:"10200260",stream:"General",year:"2082/83",regno:"831020080056",dobbs:"2066/02/02",dobad:"2009/05/19"},
+  {name:"SUMANA DARJI",        roll:"10200261",stream:"General",year:"2082/83",regno:"831020080057",dobbs:"2065/10/20",dobad:"2009/02/05"},
+  {name:"SUSMITA NUGO",        roll:"10200262",stream:"General",year:"2082/83",regno:"831020080058",dobbs:"2066/01/27",dobad:"2009/05/13"},
+  {name:"YUAN SHRESTHA",       roll:"10200263",stream:"General",year:"2082/83",regno:"831020080059",dobbs:"2065/05/31",dobad:"2008/09/19"}
 ];
 // Merge any previously registered (extra) students back in
 (function(){
