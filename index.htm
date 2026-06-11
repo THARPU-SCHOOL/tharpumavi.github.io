@@ -1104,6 +1104,38 @@ document.getElementById('reg-dob-bs').addEventListener('input', function () {
           </select>
         </div>
         <div class="form-group">
+          <div class="form-group">
+          <label>District</label>
+          <input type="text" id="cert-district" placeholder="e.g. Panchthar">
+        </div>
+        <div class="form-group">
+          <label>VDC / Municipality</label>
+          <input type="text" id="cert-municipality" placeholder="e.g. Yangwarak">
+        </div>
+        <div class="form-group">
+          <label>Ward No.</label>
+          <input type="text" id="cert-ward" placeholder="e.g. 4">
+        </div>
+        <div class="form-group">
+          <label>Studied From (B.S. Year)</label>
+          <input type="text" id="cert-from-year" placeholder="e.g. 2079">
+        </div>
+        <div class="form-group">
+          <label>Studied To (B.S. Year)</label>
+          <input type="text" id="cert-to-year" placeholder="e.g. 2081">
+        </div>
+        <div class="form-group">
+          <label>SLC / SEE Exam Year</label>
+          <input type="text" id="cert-slc-year" placeholder="e.g. 2081">
+        </div>
+        <div class="form-group">
+          <label>Division</label>
+          <input type="text" id="cert-division" placeholder="e.g. I">
+        </div>
+        <div class="form-group">
+          <label>Distinction</label>
+          <input type="text" id="cert-distinction" placeholder="e.g. With Distinction">
+        </div>
           <label>Custom Remarks <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#aaa;">(optional — appended after conduct line)</span></label>
           <input type="text" id="cert-remarks" placeholder="e.g. He/She was an active participant in school events.">
         </div>
@@ -1176,44 +1208,45 @@ document.getElementById('reg-dob-bs').addEventListener('input', function () {
 
               </div>
 
-              <!-- Body -->
-              <p style="text-align:justify;font-size:0.9rem;margin-bottom:0.5rem;line-height:1.8;">
-                This is to certify that Ms./Mr. <b><u><span id="cp-name">———————————————</span></u></b>,
-                <span id="cp-gender-text">son/daughter</span> of <b><span id="cp-father">———————————</span></b>
-                and <b><span id="cp-mother">———————————</span></b>,
-                bearing Roll No. <b><span id="cp-roll">———</span></b>,
-                Registration No. <b><span id="cp-regno">——————————</span></b>,
-                Date of Birth: <b><span id="cp-dob-bs">——————</span></b> B.S.
-                (<b><span id="cp-dob-ad">——————</span></b> A.D.)
-                has been a student of Grade XI (<b><span id="cp-stream">——————</span></b>) of this school
-                for the academic year <b><span id="cp-year">2081/82</span></b>
-                under the National Examinations Board (NEB), Nepal.
+          <!-- Body -->
+              <p style="text-align:justify;font-size:0.95rem;margin-bottom:0.5rem;line-height:2;font-style:italic;">
+                It is certified that Mr/Miss
+                <b><u><span id="cp-name">———————————————————</span></u></b>
+                ................Son/Daughter of
+                Mr <b><span id="cp-father">——————————————</span></b>
+                &nbsp;Mrs <b><span id="cp-mother">——————————————</span></b>
+                ......... an inhabitant of
+                <b><span id="cp-district">——————————</span></b>
+                District, <b><span id="cp-municipality">——————————</span></b>
+                ........... Municipality ward No.
+                <b><span id="cp-ward">——</span></b>
+                ..... studied in this institute from the year of
+                <b><span id="cp-from-year">——————</span></b>
+                .................. to
+                <b><span id="cp-to-year">——————</span></b>
+                .......... B.S. He/She passed the <b>S.L.C.</b> examination of
+                <b><span id="cp-slc-year">——————</span></b>
+                ............... conducted by Nepal Government Ministry of Education Board
+                and placed in the
+                <b><span id="cp-division">——</span></b>
+                ........... division
+                <b><span id="cp-distinction">——————————</span></b>.
               </p>
 
-              <p style="text-align:justify;font-size:0.9rem;margin-bottom:0.5rem;line-height:1.8;">
-                During his/her stay at this institution, his/her conduct and character were found to be <b><span id="cp-conduct">good</span></b>.
-                He/She has not been involved in any immoral, unethical, or unlawful activity and has always
-                maintained respectful behaviour towards teachers and fellow students,
-                following all rules and regulations of this school.
-                <span id="cp-remarks"></span>
+              <p style="text-align:justify;font-size:0.95rem;margin-bottom:0.5rem;line-height:2;font-style:italic;">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;His/her date of birth according to the school record is
+                <b><span id="cp-dob-bs">——————</span></b>.
+                He/she bore a good moral character while at school.
               </p>
 
-              <p id="cp-grade-line" style="display:none;text-align:justify;font-size:0.9rem;margin-bottom:0.5rem;line-height:1.8;">
-                He/She has secured a GPA of <b><span id="cp-gpa">—</span></b> (<b><span id="cp-grade">—</span></b>) in the academic examination of <b><span id="cp-year2">2081/82</span></b>.
-              </p>
-
-              <p style="text-align:justify;font-size:0.9rem;margin-bottom:0.9rem;line-height:1.8;">
-                This certificate is issued on his/her request for the purpose of
-                <b><u><span id="cp-purpose">——————————————</span></u></b>.
-                We wish him/her every success in his/her future endeavours.
+              <p style="font-size:0.95rem;margin-bottom:1.4rem;font-style:italic;">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I wish him/her every success in life.
               </p>
 
               <!-- Issue Date -->
-              <div style="font-size:0.88rem;margin-bottom:1.5rem;">
-                Issue Date : <b><span id="cp-date-bs">——————</span></b> B.S. &nbsp;&nbsp;
-                ( <b><span id="cp-date">——————</span></b> A.D. )
+              <div style="font-size:0.9rem;margin-bottom:1.5rem;font-style:italic;">
+                Date : <b><span id="cp-date-bs">——————</span></b>
               </div>
-
               <!-- 3 Signatures -->
               <div style="display:flex;justify-content:space-between;align-items:flex-end;">
                 <div style="text-align:center;font-size:0.82rem;min-width:110px;">
@@ -1670,66 +1703,66 @@ function deleteUser(i) {
 // DATA
 // ============================================================
 var students = [
-  {name:"BINITA DAHAL",       roll:"10200205",stream:"Plant Science",year:"2082/83",regno:"831020080001",dobbs:"2066/04/27",dobad:"2009/08/14"},
-  {name:"BINOD DAHAL",        roll:"10200206",stream:"Plant Science",year:"2082/83",regno:"831020080002",dobbs:"2066/07/22",dobad:"2009/11/11"},
-  {name:"DIBYA MABO",         roll:"10200207",stream:"Plant Science",year:"2082/83",regno:"831020080003",dobbs:"2065/07/17",dobad:"2008/11/05"},
-  {name:"JENI LAKSAM",        roll:"10200208",stream:"Plant Science",year:"2082/83",regno:"831020080004",dobbs:"2066/03/08",dobad:"2009/06/25"},
-  {name:"MISEK LINGDEN",      roll:"10200209",stream:"Plant Science",year:"2082/83",regno:"831020080005",dobbs:"2065/05/11",dobad:"2008/08/30"},
-  {name:"NABIN ADHIKARI",     roll:"10200210",stream:"Plant Science",year:"2082/83",regno:"831020080006",dobbs:"2065/05/22",dobad:"2008/09/10"},
-  {name:"NILIMA MAGAR",       roll:"10200211",stream:"Plant Science",year:"2082/83",regno:"831020080007",dobbs:"2067/01/09",dobad:"2010/04/25"},
-  {name:"NISKARSHA ADHIKARI", roll:"10200212",stream:"Plant Science",year:"2082/83",regno:"831020080008",dobbs:"2065/11/09",dobad:"2009/02/24"},
-  {name:"PRAJU SIWAKOTI",     roll:"10200213",stream:"Plant Science",year:"2082/83",regno:"831020080009",dobbs:"2066/04/22",dobad:"2009/08/09"},
-  {name:"PRERIT KAMBANG",     roll:"10200214",stream:"Plant Science",year:"2082/83",regno:"831020080010",dobbs:"2067/01/01",dobad:"2010/04/17"},
-  {name:"PUJA SUBEDI",        roll:"10200215",stream:"Plant Science",year:"2082/83",regno:"831020080011",dobbs:"2067/06/27",dobad:"2010/10/16"},
-  {name:"RAMESH KUMAR PAUDEL",roll:"10200216",stream:"Plant Science",year:"2082/83",regno:"831020080012",dobbs:"2058/04/13",dobad:"2001/07/30"},
-  {name:"RITU PARA MABO",     roll:"10200217",stream:"Plant Science",year:"2082/83",regno:"831020080013",dobbs:"2064/03/15",dobad:"2007/07/03"},
-  {name:"SAGAR YONGHANG",     roll:"10200218",stream:"Plant Science",year:"2082/83",regno:"831020080014",dobbs:"2065/07/10",dobad:"2008/10/29"},
-  {name:"SOBHIYA YONGHANG",   roll:"10200219",stream:"Plant Science",year:"2082/83",regno:"831020080015",dobbs:"2066/08/21",dobad:"2009/12/10"},
-  {name:"SUDARSHAN KOIRALA",  roll:"10200220",stream:"Plant Science",year:"2082/83",regno:"831020080016",dobbs:"2067/02/27",dobad:"2010/06/13"},
-  {name:"SUJAN KATUWAL",      roll:"10200221",stream:"Plant Science",year:"2082/83",regno:"831020080017",dobbs:"2064/01/20",dobad:"2007/05/06"},
+  {name:"BINITA DAHAL",       roll:"10200205",stream:"Plant Science",year:"2082/83",regno:"831020080001",dobbs:"2066/04/27",dobad:"2009/08/11"},
+  {name:"BINOD DAHAL",        roll:"10200206",stream:"Plant Science",year:"2082/83",regno:"831020080002",dobbs:"2066/07/22",dobad:"2009/11/07"},
+  {name:"DIBYA MABO",         roll:"10200207",stream:"Plant Science",year:"2082/83",regno:"831020080003",dobbs:"2065/07/17",dobad:"2008/11/02"},
+  {name:"JENI LAKSAM",        roll:"10200208",stream:"Plant Science",year:"2082/83",regno:"831020080004",dobbs:"2066/03/08",dobad:"2009/06/22"},
+  {name:"MISEK LINGDEN",      roll:"10200209",stream:"Plant Science",year:"2082/83",regno:"831020080005",dobbs:"2065/05/11",dobad:"2008/08/36"},
+  {name:"NABIN ADHIKARI",     roll:"10200210",stream:"Plant Science",year:"2082/83",regno:"831020080006",dobbs:"2065/05/22",dobad:"2008/09/06"},
+  {name:"NILIMA MAGAR",       roll:"10200211",stream:"Plant Science",year:"2082/83",regno:"831020080007",dobbs:"2067/01/09",dobad:"2010/04/22"},
+  {name:"NISKARSHA ADHIKARI", roll:"10200212",stream:"Plant Science",year:"2082/83",regno:"831020080008",dobbs:"2065/11/09",dobad:"2009/02/20"},
+  {name:"PRAJU SIWAKOTI",     roll:"10200213",stream:"Plant Science",year:"2082/83",regno:"831020080009",dobbs:"2066/04/22",dobad:"2009/08/06"},
+  {name:"PRERIT KAMBANG",     roll:"10200214",stream:"Plant Science",year:"2082/83",regno:"831020080010",dobbs:"2067/01/01",dobad:"2010/04/14"},
+  {name:"PUJA SUBEDI",        roll:"10200215",stream:"Plant Science",year:"2082/83",regno:"831020080011",dobbs:"2067/06/27",dobad:"2010/10/13"},
+  {name:"RAMESH KUMAR PAUDEL",roll:"10200216",stream:"Plant Science",year:"2082/83",regno:"831020080012",dobbs:"2058/04/13",dobad:"2001/07/28"},
+  {name:"RITU PARA MABO",     roll:"10200217",stream:"Plant Science",year:"2082/83",regno:"831020080013",dobbs:"2064/03/15",dobad:"2007/07/29"},
+  {name:"SAGAR YONGHANG",     roll:"10200218",stream:"Plant Science",year:"2082/83",regno:"831020080014",dobbs:"2065/07/10",dobad:"2008/10/26"},
+  {name:"SOBHIYA YONGHANG",   roll:"10200219",stream:"Plant Science",year:"2082/83",regno:"831020080015",dobbs:"2066/08/21",dobad:"2009/12/06"},
+  {name:"SUDARSHAN KOIRALA",  roll:"10200220",stream:"Plant Science",year:"2082/83",regno:"831020080016",dobbs:"2067/02/27",dobad:"2010/06/10"},
+  {name:"SUJAN KATUWAL",      roll:"10200221",stream:"Plant Science",year:"2082/83",regno:"831020080017",dobbs:"2064/01/20",dobad:"2007/05/03"},
   // General stream students (roll numbers 10200222–10200263)
-  {name:"AARPI LIMBU",         roll:"10200222",stream:"General",year:"2082/83",regno:"831020080018",dobbs:"2065/08/26",dobad:"2008/12/14"},
-  {name:"AARYAN BEGHA",        roll:"10200223",stream:"General",year:"2082/83",regno:"831020080019",dobbs:"2066/03/09",dobad:"2009/06/26"},
-  {name:"AAWAJ KARKI",         roll:"10200224",stream:"General",year:"2082/83",regno:"831020080020",dobbs:"2066/05/10",dobad:"2009/08/29"},
-  {name:"ANIL KOIRALA",        roll:"10200225",stream:"General",year:"2082/83",regno:"831020080021",dobbs:"2064/01/21",dobad:"2007/05/07"},
-  {name:"ANJANA KHADKA",       roll:"10200226",stream:"General",year:"2082/83",regno:"831020080022",dobbs:"2066/01/26",dobad:"2009/05/12"},
-  {name:"ANSIKA SIGU",         roll:"10200227",stream:"General",year:"2082/83",regno:"831020080023",dobbs:"2067/04/29",dobad:"2010/08/17"},
-  {name:"ARUNIMA MABO",        roll:"10200228",stream:"General",year:"2082/83",regno:"831020080024",dobbs:"2065/02/08",dobad:"2008/05/24"},
-  {name:"ASHIS ANGTHUPO",      roll:"10200229",stream:"General",year:"2082/83",regno:"831020080025",dobbs:"2066/07/16",dobad:"2009/11/05"},
-  {name:"BALIHANG MABO",       roll:"10200230",stream:"General",year:"2082/83",regno:"831020080026",dobbs:"2066/11/22",dobad:"2010/03/09"},
-  {name:"BIBAS KHEBANG",       roll:"10200231",stream:"General",year:"2082/83",regno:"831020080027",dobbs:"2065/09/22",dobad:"2009/01/09"},
-  {name:"BIBIHANG BEGHA",      roll:"10200232",stream:"General",year:"2082/83",regno:"831020080028",dobbs:"2065/07/08",dobad:"2008/10/27"},
-  {name:"BINITA PARA MABO",    roll:"10200233",stream:"General",year:"2082/83",regno:"831020080029",dobbs:"2059/05/20",dobad:"2002/09/08"},
-  {name:"BINITA SIGU",         roll:"10200234",stream:"General",year:"2082/83",regno:"831020080030",dobbs:"2065/01/05",dobad:"2008/04/20"},
-  {name:"BISAL PALUNGWA LIMBU",roll:"10200235",stream:"General",year:"2082/83",regno:"831020080031",dobbs:"2066/04/01",dobad:"2009/07/19"},
-  {name:"DIL MAYA YONGHANG",   roll:"10200236",stream:"General",year:"2082/83",regno:"831020080032",dobbs:"2067/10/20",dobad:"2011/02/06"},
-  {name:"DIPSAN SELING",       roll:"10200237",stream:"General",year:"2082/83",regno:"831020080033",dobbs:"2067/02/13",dobad:"2010/05/30"},
-  {name:"HILLIHANG SEWA",      roll:"10200238",stream:"General",year:"2082/83",regno:"831020080034",dobbs:"2063/06/11",dobad:"2006/09/30"},
-  {name:"ICHHINGHANG MABO",    roll:"10200239",stream:"General",year:"2082/83",regno:"831020080035",dobbs:"2064/03/29",dobad:"2007/07/17"},
-  {name:"KAJAL LIMBU",         roll:"10200240",stream:"General",year:"2082/83",regno:"831020080036",dobbs:"2068/03/12",dobad:"2011/06/30"},
-  {name:"LAXMAN MABO",         roll:"10200241",stream:"General",year:"2082/83",regno:"831020080037",dobbs:"2063/07/16",dobad:"2006/11/05"},
-  {name:"MAN MAYA KAMBANG",    roll:"10200242",stream:"General",year:"2082/83",regno:"831020080038",dobbs:"2062/11/02",dobad:"2006/02/17"},
-  {name:"MANISA BHATTARAI",    roll:"10200243",stream:"General",year:"2082/83",regno:"831020080039",dobbs:"2067/03/03",dobad:"2010/06/20"},
-  {name:"MINA YONGHANG",       roll:"10200244",stream:"General",year:"2082/83",regno:"831020080040",dobbs:"2065/07/24",dobad:"2008/11/12"},
-  {name:"NIRMALA SUBEDI",      roll:"10200245",stream:"General",year:"2082/83",regno:"831020080041",dobbs:"2066/10/13",dobad:"2010/01/30"},
-  {name:"NISCHAL KAMBANG",     roll:"10200246",stream:"General",year:"2082/83",regno:"831020080042",dobbs:"2066/06/18",dobad:"2009/10/07"},
-  {name:"NISUM YONGHANG",      roll:"10200247",stream:"General",year:"2082/83",regno:"831020080043",dobbs:"2066/02/27",dobad:"2009/06/13"},
-  {name:"NUMA KHEBANG",        roll:"10200248",stream:"General",year:"2082/83",regno:"831020080044",dobbs:"2065/10/09",dobad:"2009/01/25"},
+  {name:"AARPI LIMBU",         roll:"10200222",stream:"General",year:"2082/83",regno:"831020080018",dobbs:"2065/08/26",dobad:"2008/12/11"},
+  {name:"AARYAN BEGHA",        roll:"10200223",stream:"General",year:"2082/83",regno:"831020080019",dobbs:"2066/03/09",dobad:"2009/06/23"},
+  {name:"AAWAJ KARKI",         roll:"10200224",stream:"General",year:"2082/83",regno:"831020080020",dobbs:"2066/05/10",dobad:"2009/08/26"},
+  {name:"ANIL KOIRALA",        roll:"10200225",stream:"General",year:"2082/83",regno:"831020080021",dobbs:"2064/01/21",dobad:"2007/05/04"},
+  {name:"ANJANA KHADKA",       roll:"10200226",stream:"General",year:"2082/83",regno:"831020080022",dobbs:"2066/01/26",dobad:"2009/05/09"},
+  {name:"ANSIKA SIGU",         roll:"10200227",stream:"General",year:"2082/83",regno:"831020080023",dobbs:"2067/04/29",dobad:"2010/08/14"},
+  {name:"ARUNIMA MABO",        roll:"10200228",stream:"General",year:"2082/83",regno:"831020080024",dobbs:"2065/02/08",dobad:"2008/05/21"},
+  {name:"ASHIS ANGTHUPO",      roll:"10200229",stream:"General",year:"2082/83",regno:"831020080025",dobbs:"2066/07/16",dobad:"2009/11/01"},
+  {name:"BALIHANG MABO",       roll:"10200230",stream:"General",year:"2082/83",regno:"831020080026",dobbs:"2066/11/22",dobad:"2010/03/06"},
+  {name:"BIBAS KHEBANG",       roll:"10200231",stream:"General",year:"2082/83",regno:"831020080027",dobbs:"2065/09/22",dobad:"2009/01/06"},
+  {name:"BIBIHANG BEGHA",      roll:"10200232",stream:"General",year:"2082/83",regno:"831020080028",dobbs:"2065/07/08",dobad:"2008/10/24"},
+  {name:"BINITA PARA MABO",    roll:"10200233",stream:"General",year:"2082/83",regno:"831020080029",dobbs:"2059/05/20",dobad:"2002/09/05"},
+  {name:"BINITA SIGU",         roll:"10200234",stream:"General",year:"2082/83",regno:"831020080030",dobbs:"2065/01/05",dobad:"2008/04/17"},
+  {name:"BISAL PALUNGWA LIMBU",roll:"10200235",stream:"General",year:"2082/83",regno:"831020080031",dobbs:"2066/04/01",dobad:"2009/07/16"},
+  {name:"DIL MAYA YONGHANG",   roll:"10200236",stream:"General",year:"2082/83",regno:"831020080032",dobbs:"2067/10/20",dobad:"2011/02/03"},
+  {name:"DIPSAN SELING",       roll:"10200237",stream:"General",year:"2082/83",regno:"831020080033",dobbs:"2067/02/13",dobad:"2010/05/27"},
+  {name:"HILLIHANG SEWA",      roll:"10200238",stream:"General",year:"2082/83",regno:"831020080034",dobbs:"2063/06/11",dobad:"2006/09/27"},
+  {name:"ICHHINGHANG MABO",    roll:"10200239",stream:"General",year:"2082/83",regno:"831020080035",dobbs:"2064/03/29",dobad:"2007/07/14"},
+  {name:"KAJAL LIMBU",         roll:"10200240",stream:"General",year:"2082/83",regno:"831020080036",dobbs:"2068/03/12",dobad:"2011/06/26"},
+  {name:"LAXMAN MABO",         roll:"10200241",stream:"General",year:"2082/83",regno:"831020080037",dobbs:"2063/07/16",dobad:"2006/11/02"},
+  {name:"MAN MAYA KAMBANG",    roll:"10200242",stream:"General",year:"2082/83",regno:"831020080038",dobbs:"2062/11/02",dobad:"2006/02/14"},
+  {name:"MANISA BHATTARAI",    roll:"10200243",stream:"General",year:"2082/83",regno:"831020080039",dobbs:"2067/03/03",dobad:"2010/06/17"},
+  {name:"MINA YONGHANG",       roll:"10200244",stream:"General",year:"2082/83",regno:"831020080040",dobbs:"2065/07/24",dobad:"2008/11/09"},
+  {name:"NIRMALA SUBEDI",      roll:"10200245",stream:"General",year:"2082/83",regno:"831020080041",dobbs:"2066/10/13",dobad:"2010/01/27"},
+  {name:"NISCHAL KAMBANG",     roll:"10200246",stream:"General",year:"2082/83",regno:"831020080042",dobbs:"2066/06/18",dobad:"2009/10/04"},
+  {name:"NISUM YONGHANG",      roll:"10200247",stream:"General",year:"2082/83",regno:"831020080043",dobbs:"2066/02/27",dobad:"2009/06/10"},
+  {name:"NUMA KHEBANG",        roll:"10200248",stream:"General",year:"2082/83",regno:"831020080044",dobbs:"2065/10/09",dobad:"2009/01/22"},
   {name:"PRAGYA SUNDAS",       roll:"10200249",stream:"General",year:"2082/83",regno:"831020080045",dobbs:"2050/07/26",dobad:"1993/11/13"},
-  {name:"PUJA YONGHANG",       roll:"10200250",stream:"General",year:"2082/83",regno:"831020080046",dobbs:"2064/10/26",dobad:"2008/02/12"},
-  {name:"RAMILA KHEBANG",      roll:"10200251",stream:"General",year:"2082/83",regno:"831020080047",dobbs:"2051/06/10",dobad:"1994/09/28"},
-  {name:"RESHIKA KAMBANG",     roll:"10200252",stream:"General",year:"2082/83",regno:"831020080048",dobbs:"2065/11/28",dobad:"2009/03/15"},
-  {name:"RUPA ADHIKARI",       roll:"10200253",stream:"General",year:"2082/83",regno:"831020080049",dobbs:"2064/06/06",dobad:"2007/09/26"},
-  {name:"SABUNAM LIMBU",       roll:"10200254",stream:"General",year:"2082/83",regno:"831020080050",dobbs:"2068/06/10",dobad:"2011/09/30"},
-  {name:"SAJAN MABO",          roll:"10200255",stream:"General",year:"2082/83",regno:"831020080051",dobbs:"2064/09/18",dobad:"2008/01/05"},
-  {name:"SANDHYA ADHIKARI",    roll:"10200256",stream:"General",year:"2082/83",regno:"831020080052",dobbs:"2066/11/02",dobad:"2010/02/17"},
-  {name:"SARINA KHADKA",       roll:"10200257",stream:"General",year:"2082/83",regno:"831020080053",dobbs:"2066/11/01",dobad:"2010/02/16"},
-  {name:"SARU KERUNG",         roll:"10200258",stream:"General",year:"2082/83",regno:"831020080054",dobbs:"2066/02/29",dobad:"2009/06/15"},
-  {name:"SAUGAT NUGO",         roll:"10200259",stream:"General",year:"2082/83",regno:"831020080055",dobbs:"2066/04/02",dobad:"2009/07/20"},
-  {name:"SHILA DANGI",         roll:"10200260",stream:"General",year:"2082/83",regno:"831020080056",dobbs:"2066/02/02",dobad:"2009/05/19"},
-  {name:"SUMANA DARJI",        roll:"10200261",stream:"General",year:"2082/83",regno:"831020080057",dobbs:"2065/10/20",dobad:"2009/02/05"},
-  {name:"SUSMITA NUGO",        roll:"10200262",stream:"General",year:"2082/83",regno:"831020080058",dobbs:"2066/01/27",dobad:"2009/05/13"},
-  {name:"YUAN SHRESTHA",       roll:"10200263",stream:"General",year:"2082/83",regno:"831020080059",dobbs:"2065/05/31",dobad:"2008/09/19"}
+  {name:"PUJA YONGHANG",       roll:"10200250",stream:"General",year:"2082/83",regno:"831020080046",dobbs:"2064/10/26",dobad:"2008/02/09"},
+  {name:"RAMILA KHEBANG",      roll:"10200251",stream:"General",year:"2082/83",regno:"831020080047",dobbs:"2051/06/10",dobad:"1994/09/26"},
+  {name:"RESHIKA KAMBANG",     roll:"10200252",stream:"General",year:"2082/83",regno:"831020080048",dobbs:"2065/11/28",dobad:"2009/03/11"},
+  {name:"RUPA ADHIKARI",       roll:"10200253",stream:"General",year:"2082/83",regno:"831020080049",dobbs:"2064/06/06",dobad:"2007/09/22"},
+  {name:"SABUNAM LIMBU",       roll:"10200254",stream:"General",year:"2082/83",regno:"831020080050",dobbs:"2068/06/10",dobad:"2011/09/27"},
+  {name:"SAJAN MABO",          roll:"10200255",stream:"General",year:"2082/83",regno:"831020080051",dobbs:"2064/09/18",dobad:"2008/01/03"},
+  {name:"SANDHYA ADHIKARI",    roll:"10200256",stream:"General",year:"2082/83",regno:"831020080052",dobbs:"2066/11/02",dobad:"2010/02/14"},
+  {name:"SARINA KHADKA",       roll:"10200257",stream:"General",year:"2082/83",regno:"831020080053",dobbs:"2066/11/01",dobad:"2010/02/13"},
+  {name:"SARU KERUNG",         roll:"10200258",stream:"General",year:"2082/83",regno:"831020080054",dobbs:"2066/02/29",dobad:"2009/06/12"},
+  {name:"SAUGAT NUGO",         roll:"10200259",stream:"General",year:"2082/83",regno:"831020080055",dobbs:"2064/04/02",dobad:"2007/07/18"},
+  {name:"SHILA DANGI",         roll:"10200260",stream:"General",year:"2082/83",regno:"831020080056",dobbs:"2066/02/02",dobad:"2009/05/16"},
+  {name:"SUMANA DARJI",        roll:"10200261",stream:"General",year:"2082/83",regno:"831020080057",dobbs:"2065/10/20",dobad:"2009/02/03"},
+  {name:"SUSMITA NUGO",        roll:"10200262",stream:"General",year:"2082/83",regno:"831020080058",dobbs:"2066/01/27",dobad:"2009/05/10"},
+  {name:"YUAN SHRESTHA",       roll:"10200263",stream:"General",year:"2082/83",regno:"831020080059",dobbs:"2065/05/31",dobad:"2008/09/16"}
 ];
 // Merge any previously registered (extra) students back in
 (function(){
@@ -2896,8 +2929,7 @@ var rows=sortedSubs.map(function(sub,i){
 '<div class="info-line"><span class="label">STUDENT NAME :</span><span class="dotline">&nbsp;'+st.name+'&nbsp;</span></div>'+
 '<div class="info-line"><span class="label">DATE OF BIRTH :</span><span class="dotline">&nbsp;'+(st.dobbs||'_______________')+'&nbsp;</span><span class="label">B.S. &nbsp;&nbsp;&nbsp;(&nbsp;</span><span class="dotline">&nbsp;'+(st.dobad||'_______________')+'&nbsp;</span><span class="label">A.D.)</span></div>'+
 '<div class="info-line"><span class="label">REGISTRATION NO</span><span class="dotline">&nbsp;'+(st.regno||'_______________')+'&nbsp;</span><span class="label">&nbsp;SYMBOL NO:</span><span class="dotline">&nbsp;'+st.roll+'&nbsp;</span><span class="label">&nbsp;&nbsp;GRADE : XI</span></div>'+ 
-      '<div class="info-line"><span class="label">IN THE <b>'+exam.toUpperCase()+'</b> CONDUCTED BY SCHOOL IN</span><span class="dotline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="label">B.S.</span></div>'+
-      '<div class="info-line"><span class="label">(&nbsp;</span><span class="dotline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="label">&nbsp;A.D.) ARE GIVEN BELOW.</span></div>'+
+      '<div class="info-line"><span class="label">IN THE <b>'+exam.toUpperCase()+'</b> CONDUCTED BY SCHOOL IN  2083 B.S. (2026 A.D)<b>'+dateStr+'</b> ARE GIVEN BELOW.</span></div>'+
     '</div>'+
 
     // Main table
@@ -6857,6 +6889,17 @@ function previewCharCert() {
   document.getElementById('cp-father').textContent  = st.father || '—';
   document.getElementById('cp-mother').textContent  = st.mother || '—';
   document.getElementById('cp-gender-text').textContent = st.gender === 'Female' ? 'daughter' : 'son/daughter';
+  // New Munal-style fields
+  var g = function(id){ var el=document.getElementById(id); return el ? el.value.trim() : ''; };
+  var s = function(id,val){ var el=document.getElementById(id); if(el) el.textContent = val||'—'; };
+  s('cp-district',   g('cert-district'));
+  s('cp-municipality',        g('cert-municipality'));
+  s('cp-ward',       g('cert-ward'));
+  s('cp-from-year',  g('cert-from-year'));
+  s('cp-to-year',    g('cert-to-year'));
+  s('cp-slc-year',   g('cert-slc-year'));
+  s('cp-division',   g('cert-division'));
+  s('cp-distinction',g('cert-distinction'));
 
   // Conduct, remarks, grade
   document.getElementById('cp-conduct').textContent = conduct;
