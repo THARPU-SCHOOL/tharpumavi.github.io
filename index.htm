@@ -2814,9 +2814,39 @@ var rows=sortedSubs.map(function(sub,i){
   var today=new Date();
   var dateStr=today.getFullYear()+'/'+(today.getMonth()+1)+'/'+(today.getDate());
 
+  var safeName=st.name.replace(/[^a-zA-Z0-9 _-]/g,'').trim().replace(/\s+/g,'_');
   var w=window.open('','_blank');
   w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8">'+
     '<title>Grade Sheet — '+st.name+'</title>'+
+    '<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"><\/script>'+
+    '<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"><\/script>'+
+    '<script>'+
+    'function downloadGradesheetPDF(){'+
+      'var btn=document.getElementById("btn-download-pdf");'+
+      'btn.disabled=true;btn.textContent="Generating...";'+
+      'var pages=document.querySelectorAll(".page");'+
+      'var fileName="GradeSheet_'+safeName+'_'+st.roll+'.pdf";'+
+      'var {jsPDF}=window.jspdf;'+
+      'var pdf=new jsPDF({orientation:"portrait",unit:"mm",format:"a4"});'+
+      'var pArr=Array.from(pages);'+
+      'function capturePage(i){'+
+        'if(i>=pArr.length){pdf.save(fileName);btn.disabled=false;btn.innerHTML="&#11015; Download PDF";return;}'+
+        'html2canvas(pArr[i],{scale:2,useCORS:true,backgroundColor:"#ffffff"}).then(function(canvas){'+
+          'var imgData=canvas.toDataURL("image/jpeg",0.95);'+
+          'var pgW=pdf.internal.pageSize.getWidth();'+
+          'var pgH=pdf.internal.pageSize.getHeight();'+
+          'var ratio=Math.min(pgW/canvas.width,pgH/canvas.height);'+
+          'var imgW=canvas.width*ratio;'+
+          'var imgH=canvas.height*ratio;'+
+          'var xOff=(pgW-imgW)/2;'+
+          'if(i>0) pdf.addPage();'+
+          'pdf.addImage(imgData,"JPEG",xOff,0,imgW,imgH);'+
+          'capturePage(i+1);'+
+        '});'+
+      '}'+
+      'capturePage(0);'+
+    '}'+
+    '<\/script>'+
     '<style>'+
     '*{box-sizing:border-box;margin:0;padding:0}'+
     'body{font-family:Arial,sans-serif;font-size:12px;color:#000;background:#fff;padding:20px}'+
@@ -2934,7 +2964,8 @@ var rows=sortedSubs.map(function(sub,i){
     // Print button
     '<div style="text-align:center;margin-top:14px">'+
     ((!st.dobbs||!st.regno)?'<div style="background:#fff3e0;border:1px solid #f0ad4e;border-radius:8px;padding:8px 12px;font-size:11px;color:#7d4e00;margin-bottom:10px;text-align:left">⚠️ <b>DOB or Registration No. is missing.</b> Close this window, go to the Students tab, click <b>✎ Edit</b> next to this student\'s name, and fill in the details before printing.</div>':'')+
-      '<button onclick="window.print()" style="background:#7B1C1C;color:white;border:none;padding:8px 24px;border-radius:6px;font-size:13px;cursor:pointer">&#128424; Print / Save PDF</button>'+
+      '<button onclick="window.print()" style="background:#7B1C1C;color:white;border:none;padding:8px 24px;border-radius:6px;font-size:13px;cursor:pointer;margin-right:10px">&#128424; Print / Save PDF</button>'+
+      '<button id="btn-download-pdf" onclick="downloadGradesheetPDF()" style="background:#1a6e2e;color:white;border:none;padding:8px 24px;border-radius:6px;font-size:13px;cursor:pointer">&#11015; Download PDF</button>'+
     '</div>'+
 
     '</div>'+ // end front .page
