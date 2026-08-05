@@ -2823,16 +2823,18 @@ var rows=sortedSubs.map(function(sub,i){
     '<script>'+
     'function downloadGradesheetPDF(){'+
       'var btn=document.getElementById("btn-download-pdf");'+
+      'var btnArea=document.getElementById("btn-action-area");'+
       'btn.disabled=true;btn.textContent="Generating...";'+
+      'btnArea.style.display="none";'+
       'var pages=document.querySelectorAll(".page");'+
       'var fileName="GradeSheet_'+safeName+'_'+st.roll+'.pdf";'+
       'var {jsPDF}=window.jspdf;'+
       'var pdf=new jsPDF({orientation:"portrait",unit:"mm",format:"a4"});'+
       'var pArr=Array.from(pages);'+
       'function capturePage(i){'+
-        'if(i>=pArr.length){pdf.save(fileName);btn.disabled=false;btn.innerHTML="&#11015; Download PDF";return;}'+
-        'html2canvas(pArr[i],{scale:2,useCORS:true,backgroundColor:"#ffffff"}).then(function(canvas){'+
-          'var imgData=canvas.toDataURL("image/jpeg",0.95);'+
+        'if(i>=pArr.length){pdf.save(fileName);btnArea.style.display="";btn.disabled=false;btn.innerHTML="&#11015; Download PDF";return;}'+
+        'html2canvas(pArr[i],{scale:3,useCORS:true,backgroundColor:"#ffffff"}).then(function(canvas){'+
+          'var imgData=canvas.toDataURL("image/jpeg",1.0);'+
           'var pgW=pdf.internal.pageSize.getWidth();'+
           'var pgH=pdf.internal.pageSize.getHeight();'+
           'var ratio=Math.min(pgW/canvas.width,pgH/canvas.height);'+
@@ -2961,14 +2963,14 @@ var rows=sortedSubs.map(function(sub,i){
       '<div style="text-align:center"><div style="height:40px"></div><div style="border-top:1px solid #000;width:150px;padding-top:4px"><b>Verified by</b><br>(Head Teacher)<br><span style="font-size:11px">'+getPrincipalName()+'</span></div></div>'+
     '</div>'+
 
-    // Print button
-    '<div style="text-align:center;margin-top:14px">'+
+    '</div>'+ // end front .page
+
+    // Print/Download buttons — OUTSIDE .page so they never appear in the PDF
+    '<div id="btn-action-area" style="text-align:center;margin:14px auto 0;max-width:740px">'+
     ((!st.dobbs||!st.regno)?'<div style="background:#fff3e0;border:1px solid #f0ad4e;border-radius:8px;padding:8px 12px;font-size:11px;color:#7d4e00;margin-bottom:10px;text-align:left">⚠️ <b>DOB or Registration No. is missing.</b> Close this window, go to the Students tab, click <b>✎ Edit</b> next to this student\'s name, and fill in the details before printing.</div>':'')+
       '<button onclick="window.print()" style="background:#7B1C1C;color:white;border:none;padding:8px 24px;border-radius:6px;font-size:13px;cursor:pointer;margin-right:10px">&#128424; Print / Save PDF</button>'+
       '<button id="btn-download-pdf" onclick="downloadGradesheetPDF()" style="background:#1a6e2e;color:white;border:none;padding:8px 24px;border-radius:6px;font-size:13px;cursor:pointer">&#11015; Download PDF</button>'+
     '</div>'+
-
-    '</div>'+ // end front .page
 
     // ── BACK PAGE ──
     '<div class="page" style="page-break-before:always">'+
@@ -6509,4 +6511,5 @@ _attachBsAdConverter('cert-date-bs', 'cert-date-ad');
 </script>
 </body>
 </html>
+
 
