@@ -2725,7 +2725,7 @@ function cgpaDiv(cgpa) {
 function showIndividualSheet(roll,exam) {
   var st=students.find(function(s){ return s.roll===roll; });
   if (!st) return;
-  var subs=getStudentSubjects(st);
+  var subs = (st.stream === 'General') ? SUBJECTS['General'] : getStudentSubjects(st);
   var saved=marksData[getKey(roll,exam)]||{};
 
   // Credit hours per subject — use sub.credit from SUBJECTS definition
@@ -3248,7 +3248,7 @@ function printAllSheets(){
     '• CGPA = Σ(Credit Hours × Grade Point) ÷ Σ(Credit Hours) — weighted by credit hours.</div>'+
     '</div>';
   var pages=list.map(function(st){
-    var subs=getStudentSubjects(st),saved=marksData[getKey(st.roll,exam)]||{};
+    var subs=(st.stream==='General')?SUBJECTS['General']:getStudentSubjects(st),saved=marksData[getKey(st.roll,exam)]||{};
     var totCP=0,totCR=0,anyNG=false;
     var rows=subs.map(function(sub){
       var d=saved[sub.name]||{},credit=sub.credit||4;
