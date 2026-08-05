@@ -3281,7 +3281,7 @@ function printAllSheets(){
     '• CGPA = Σ(Credit Hours × Grade Point) ÷ Σ(Credit Hours) — weighted by credit hours.</div>'+
     '</div>';
   var pages=list.map(function(st){
-    var subs=(st.stream==='General')?SUBJECTS['General']:getStudentSubjects(st),saved=marksData[getKey(st.roll,exam)]||{};
+    var subs=getStudentSubjects(st),saved=marksData[getKey(st.roll,exam)]||{};
     var totCP=0,totCR=0,anyNG=false;
     var rows=subs.map(function(sub){
       var d=saved[sub.name]||{},credit=sub.credit||4;
@@ -3405,9 +3405,7 @@ function exportShare() {
     // Show the "you opened a shared file" banner
     var banner = document.getElementById('shared-file-banner');
     if (banner) banner.style.display = 'block';
-  } else {
-    // Own device — load from localStorage
-    loadMarksFromStorage();
+} else {
     // Also load any previously registered extra students
     try {
       var extra = JSON.parse(localStorage.getItem('tss_extra_students')||'[]');
@@ -3415,7 +3413,7 @@ function exportShare() {
         if (!students.some(function(e){ return e.roll===s.roll; })) students.push(s);
       });
     } catch(e){}
-  }
+  }  
 
   // Auto-login if session exists
   var savedUser = localStorage.getItem('tss_session_user');
